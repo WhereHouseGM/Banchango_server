@@ -6,6 +6,7 @@ import com.banchango.tools.ObjectMaker;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.UserEmailInUseException;
+import com.banchango.users.exception.UserIdNotFoundException;
 import com.banchango.users.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,16 +37,23 @@ public class UsersService {
         }
         Optional<Users> user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
         if(user.isPresent()) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
-            org.json.simple.JSONArray jsonArray = ObjectMaker.getSimpleJSONArray();
-            org.json.simple.JSONObject jTemp = ObjectMaker.getSimpleJSONObject();
-            jTemp.putAll(user.get().convertMap());
-            jsonArray.add(jTemp);
-            jsonObject.put("User", jsonArray);
-            return jsonObject;
+            return ObjectMaker.getJSONObjectWithUserInfo(user.get());
         }
         else {
             throw new UserNotFoundException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    public org.json.simple.JSONObject viewUserInfo(Integer userId) throws Exception{
+        if(userId == null) throw new Exception();
+        Optional<Users> user = usersRepository.findById(userId);
+        if(user.isPresent()) {
+            return ObjectMaker.getJSONObjectWithUserInfo(user.get());
+        }
+        else {
+            throw new UserIdNotFoundException();
         }
     }
 }
