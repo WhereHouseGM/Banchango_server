@@ -11,7 +11,6 @@ import com.banchango.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
