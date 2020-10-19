@@ -43,8 +43,6 @@ public class UsersApiController {
 
     @PostMapping("/v1/auth/sign-in")
     public void signIn(@RequestBody UserSigninRequestDto requestDto, HttpServletResponse response) {
-        System.out.println("EMAIL : " + requestDto.getEmail());
-        System.out.println("PASSWORD : " + requestDto.getPassword());
         try {
             org.json.simple.JSONObject jsonObject = usersService.signIn(requestDto);
             WriteToClient.send(response, jsonObject, HttpServletResponse.SC_OK);
