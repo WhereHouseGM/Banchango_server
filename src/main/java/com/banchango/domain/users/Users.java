@@ -1,5 +1,6 @@
 package com.banchango.domain.users;
 
+import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,15 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    public void updateUserInfo(UserSignupRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
+        this.type = UserType.valueOf(requestDto.getType());
+        this.companyName = requestDto.getCompanyName();
+        this.telephoneNumber = requestDto.getTelephoneNumber();
+        this.phoneNumber = requestDto.getPhoneNumber();
+    }
     public Users(UserSignupRequestDto dto) {
         this.name = dto.getName();
         this.email = dto.getEmail();

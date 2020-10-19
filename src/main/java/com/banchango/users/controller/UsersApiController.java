@@ -11,6 +11,7 @@ import com.banchango.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -59,6 +60,24 @@ public class UsersApiController {
         } catch(UserNotFoundException exception) {
             org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
             WriteToClient.send(response, jsonObject, HttpServletResponse.SC_NOT_FOUND);
+        } catch(Exception exception) {
+            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/v1/users/{userId}")
+    public void updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId, HttpServletResponse response) {
+        try {
+            org.json.simple.JSONObject jsonObject = usersService.updateUserInfo(userId, requestDto);
+            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_OK);
+        } catch(UserIdNotFoundException | UserEmailInUseException exception) {
+            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
+            if(exception instanceof UserIdNotFoundException) {
+                WriteToClient.send(response, jsonObject, HttpServletResponse.SC_NOT_FOUND);
+            }
+            else if(exception instanceof UserEmailInUseException) {
+                WriteToClient.send(response, jsonObject, HttpServletResponse.SC_CONFLICT);
+            }
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }

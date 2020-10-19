@@ -47,12 +47,27 @@ public class UsersService {
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     public org.json.simple.JSONObject viewUserInfo(Integer userId) throws Exception{
-        if(userId == null) throw new Exception();
         Optional<Users> user = usersRepository.findById(userId);
         if(user.isPresent()) {
             return ObjectMaker.getJSONObjectWithUserInfo(user.get());
         }
         else {
+            throw new UserIdNotFoundException();
+        }
+    }
+
+    @Transactional
+    @SuppressWarnings("unchecked")
+    public org.json.simple.JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto) throws Exception {
+        Optional<Users> optionalUser = usersRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+        if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+            throw new UserEmailInUseException();
+        }
+        Users user = optionalUser.get();
+        user.updateUserInfo(requestDto);
+        return ObjectMaker.getJSONObjectWithUserInfo(user);
+    } else {
             throw new UserIdNotFoundException();
         }
     }
