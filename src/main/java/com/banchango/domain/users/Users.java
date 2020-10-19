@@ -1,5 +1,6 @@
 package com.banchango.domain.users;
 
+import com.banchango.users.dto.UserSignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,8 +18,11 @@ public class Users {
     @Column(nullable = false, length = 64)
     private String password;
 
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(nullable = false, length = 10)
     private String name;
+
+    @Column(nullable = false, length = 30, unique = true)
+    private String email;
 
     @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
@@ -36,4 +40,15 @@ public class Users {
     @Column(columnDefinition = "enum('USER', 'ADMIN') DEFAULT 'USER'")
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    public Users(UserSignupRequestDto dto) {
+        this.name = dto.getName();
+        this.email = dto.getEmail();
+        this.password = dto.getPassword();
+        this.type = UserType.valueOf(dto.getType());
+        this.telephoneNumber = dto.getTelephoneNumber();
+        this.companyName = dto.getCompanyName();
+        this.phoneNumber = dto.getPhoneNumber();
+        this.role = UserRole.USER;
+    }
 }
