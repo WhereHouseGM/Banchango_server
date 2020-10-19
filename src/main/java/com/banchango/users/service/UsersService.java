@@ -29,6 +29,7 @@ public class UsersService {
     }
 
     @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public org.json.simple.JSONObject signIn(UserSigninRequestDto requestDto) throws Exception{
         if(requestDto.getEmail() == null || requestDto.getPassword() == null) {
             throw new Exception();
