@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashMap;
 
 @NoArgsConstructor
 @Getter
@@ -50,5 +51,17 @@ public class Users {
         this.companyName = dto.getCompanyName();
         this.phoneNumber = dto.getPhoneNumber();
         this.role = UserRole.USER;
+    }
+
+    public HashMap<String, Object> convertMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("name", name);
+        map.put("email", email);
+        map.put("type", type);
+        map.put("telephoneNumber", telephoneNumber);
+        map.put("phoneNumber", phoneNumber);
+        map.put("companyName", companyName);
+        return map;
     }
 }
