@@ -16,7 +16,7 @@ public class UsersService {
 
     @Transactional
     @SuppressWarnings("unchecked")
-    public Integer signUp(UserSignupRequestDto requestDto) throws  Exception {
+    public Integer signUp(UserSignupRequestDto requestDto) throws Exception {
         if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new UserEmailInUseException();
         }

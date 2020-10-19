@@ -6,9 +6,7 @@ import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.UserEmailInUseException;
 import com.banchango.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
@@ -32,12 +30,12 @@ public class UsersApiController {
             jTemp.putAll(requestDto.convertMap(id));
             jsonArray.add(jTemp);
             jsonObject.put("User", jsonArray);
-            WriteToClient.send(response, jsonObject, HttpStatus.CREATED);
+            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_CREATED);
         } catch(UserEmailInUseException exception) {
             org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
-            WriteToClient.send(response, jsonObject, HttpStatus.CONFLICT);
+            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_CONFLICT);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpStatus.BAD_REQUEST);
+            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

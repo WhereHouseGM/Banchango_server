@@ -28,13 +28,13 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Column(name = "telephoneNumber", length = 20)
+    @Column(name = "telephonenumber", length = 20)
     private String telephoneNumber;
 
-    @Column(name = "companyName", length = 20)
+    @Column(name = "companyname", length = 20)
     private String companyName;
 
-    @Column(name = "phoneNumber", length = 20)
+    @Column(name = "phonenumber", length = 20)
     private String phoneNumber;
 
     @Column(columnDefinition = "enum('USER', 'ADMIN') DEFAULT 'USER'")
