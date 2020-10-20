@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashMap;
 
 @NoArgsConstructor
 @Getter
@@ -18,6 +19,13 @@ public class DeliveryTypes {
     @Column(length = 30)
     private String name;
 
-    @Column(name = "agencyWarehouseDetailId")
+    @Column(name = "agencywarehousedetailid")
     private Integer agencyWarehouseDetailId;
+
+    public HashMap<String, Object> convertMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("name", name);
+        return map;
+    }
 }
