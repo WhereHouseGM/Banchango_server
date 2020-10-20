@@ -30,9 +30,9 @@ public class WarehousesApiController {
 
     // TODO : 창고 목록 조회 API
     @GetMapping("/v1/warehouses")
-    public void getAllWarehouses(@RequestParam(name = "address", required = true) String address,
-                                 @RequestParam(name = "limit", required = true) Integer limit,
-                                 @RequestParam(name = "offset", required = true) Integer offset,
+    public void getAllWarehouses(@RequestParam(name = "address") String address,
+                                 @RequestParam(name = "limit") Integer limit,
+                                 @RequestParam(name = "offset") Integer offset,
                                  HttpServletResponse response) {
 
     }

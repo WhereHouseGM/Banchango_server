@@ -21,9 +21,9 @@ public class WarehouseReviews {
     @Column(nullable = false, length = 200)
     private String content;
 
-    @Column(name = "writerId")
+    @Column(name = "writerid")
     private Integer writerId;
 
-    @Column(name = "warehouseId")
+    @Column(name = "warehouseid")
     private Integer warehouseId;
 }
