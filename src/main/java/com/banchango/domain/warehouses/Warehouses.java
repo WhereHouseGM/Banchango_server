@@ -15,75 +15,75 @@ public class Warehouses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "canUse", columnDefinition = "tinyint(1) DEFAULT 1")
+    @Column(name = "canuse", columnDefinition = "tinyint(1) DEFAULT 1")
     private Integer canUse;
 
-    @Column(name = "serviceType")
+    @Column(name = "servicetype")
     private ServiceType serviceType;
 
-    @Column(name = "landArea")
+    @Column(name = "landarea")
     private Integer landArea;
 
-    @Column(name = "totalArea")
+    @Column(name = "totalarea")
     private Integer totalArea;
 
     @Column(length = 100)
     private String address;
 
-    @Column(name = "addressDetail", length = 100)
+    @Column(name = "addressdetail", length = 100)
     private String addressDetail;
 
     @Column(length = 400)
     private String description;
 
-    @Column(name = "availableWeekdays")
+    @Column(name = "availableweekdays")
     private Integer availableWeekdays;
 
-    @Column(name = "openAt")
+    @Column(name = "openat")
     @Temporal(TemporalType.TIME)
     private Date openAt;
 
-    @Column(name = "closeAt")
+    @Column(name = "closeat")
     @Temporal(TemporalType.TIME)
     private Date closeAt;
 
-    @Column(name = "availableTimeDetail", length = 100)
+    @Column(name = "availabletimedetail", length = 100)
     private String availableTimeDetail;
 
-    @Column(name = "cctvExist")
+    @Column(name = "cctvexist")
     private Integer cctvExist;
 
-    @Column(name = "securityCompanyExist")
+    @Column(name = "securitycompanyexist")
     private Integer securityCompanyExist;
 
-    @Column(name = "securityCompanyName", length = 100)
+    @Column(name = "securitycompanyname", length = 100)
     private String securityCompanyName;
 
-    @Column(name = "doorLockExist")
+    @Column(name = "doorlockexist")
     private Integer doorLockExist;
 
-    @Column(name = "airConditioningType", columnDefinition = "ENUM('HEATING', 'COOLING', 'NONE') DEFAULT 'NONE'")
+    @Column(name = "airconditioningtype", columnDefinition = "ENUM('HEATING', 'COOLING', 'NONE') DEFAULT 'NONE'")
     @Enumerated(EnumType.STRING)
     private AirConditioningType airConditioningType;
 
-    @Column(name = "workerExist")
+    @Column(name = "workerexist")
     private Integer workerExist;
 
-    @Column(name = "insuranceExist")
+    @Column(name = "insuranceexist")
     private Integer insuranceExist;
 
-    @Column(name = "insuranceName", length = 100)
+    @Column(name = "insurancename", length = 100)
     private String insuranceName;
 
-    @Column(name = "canPickup")
+    @Column(name = "canpickup")
     private Integer canPickup;
 
-    @Column(name = "canPark")
+    @Column(name = "canpark")
     private Integer canPark;
 
-    @Column(name = "parkingScale")
+    @Column(name = "parkingscale")
     private Integer parkingScale;
 
-    @Column(name = "ownerId")
+    @Column(name = "ownerid")
     private Integer ownerId;
 }
