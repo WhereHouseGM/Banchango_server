@@ -57,4 +57,8 @@ public class WarehouseReviewsService {
         jsonObject.put("writer", ObjectMaker.getJSONObjectWithUserInfo(usersRepository.findById(writerId).get()));
         return jsonObject;
     }
+
+    public void delete(int reviewId, int warehouseId) throws Exception {
+        reviewsRepository.deleteByIdAndWarehouseId(reviewId, warehouseId);
+    }
 }

@@ -8,4 +8,5 @@ import java.util.List;
 public interface WarehouseReviewsRepository extends JpaRepository<WarehouseReviews, Integer> {
 
     List<WarehouseReviews> findByWarehouseId(Integer warehouseId, Pageable pageable);
+    void deleteByIdAndWarehouseId(Integer reviewId, Integer warehouseId);
 }

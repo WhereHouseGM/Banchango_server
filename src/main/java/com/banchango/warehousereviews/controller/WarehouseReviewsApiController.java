@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+// TODO : JWT 검사 과정
 @RequiredArgsConstructor
 @RestController
 public class WarehouseReviewsApiController {
@@ -34,6 +35,17 @@ public class WarehouseReviewsApiController {
     public void register(@PathVariable Integer warehouseId, @RequestBody WarehouseReviewInsertRequestDto requestDto, HttpServletResponse response) {
         try {
             WriteToClient.send(response, reviewsService.register(warehouseId, requestDto), HttpServletResponse.SC_OK);
+        } catch(Exception exception) {
+            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/v1/warehouses/{warehouseId}/reviews/{reviewId}")
+    public void delete(@PathVariable Integer warehouseId, @PathVariable Integer reviewId, HttpServletResponse response) {
+        try {
+            if(reviewId == null || warehouseId == null) throw new Exception();
+            reviewsService.delete(reviewId, warehouseId);
+            WriteToClient.send(response, null, HttpServletResponse.SC_NO_CONTENT);
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
