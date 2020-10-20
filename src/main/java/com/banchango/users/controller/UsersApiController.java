@@ -35,13 +35,6 @@ public class UsersApiController {
     @PostMapping("/v1/auth/sign-up")
     public void signUp(@RequestBody UserSignupRequestDto requestDto, HttpServletResponse response) {
         try {
-//            int id = usersService.signUp(requestDto);
-//            org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
-//            org.json.simple.JSONArray jsonArray = ObjectMaker.getSimpleJSONArray();
-//            org.json.simple.JSONObject jTemp = ObjectMaker.getSimpleJSONObject();
-//            jTemp.putAll(requestDto.convertMap(id));
-//            jsonArray.add(jTemp);
-//            jsonObject.put("User", jsonArray);
             WriteToClient.send(response, usersService.signUp(requestDto), HttpServletResponse.SC_CREATED);
         } catch(UserEmailInUseException exception) {
             org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
