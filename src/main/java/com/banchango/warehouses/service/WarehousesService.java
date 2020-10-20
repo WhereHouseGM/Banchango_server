@@ -2,8 +2,10 @@ package com.banchango.warehouses.service;
 
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
+import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.tools.ObjectMaker;
+import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +32,11 @@ public class WarehousesService {
         }
         jsonObject.put("types", jsonArray);
         return jsonObject;
+    }
+
+    @Transactional
+    public void delete(Integer warehouseId) throws Exception {
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        warehousesRepository.delete(warehouse);
     }
 }
