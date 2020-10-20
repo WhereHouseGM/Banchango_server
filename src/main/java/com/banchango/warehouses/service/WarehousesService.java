@@ -34,6 +34,7 @@ public class WarehousesService {
         return jsonObject;
     }
 
+    // TODO : 연관된 테이블 정보도 모두 삭제(더미 데이터 없어서 못함 ㅠ)
     @Transactional
     public void delete(Integer warehouseId) throws Exception {
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
