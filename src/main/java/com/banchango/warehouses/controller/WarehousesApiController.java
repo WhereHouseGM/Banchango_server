@@ -28,6 +28,15 @@ public class WarehousesApiController {
         WriteToClient.send(response, warehousesService.getDeliveryTypes(), HttpServletResponse.SC_OK);
     }
 
+    // TODO : 창고 목록 조회 API
+    @GetMapping("/v1/warehouses")
+    public void getAllWarehouses(@RequestParam(name = "address", required = true) String address,
+                                 @RequestParam(name = "limit", required = true) Integer limit,
+                                 @RequestParam(name = "offset", required = true) Integer offset,
+                                 HttpServletResponse response) {
+
+    }
+
     // TODO : warehouseId로 조회된 Entity가 없을 때 NOT FOUND ? 아니면 BAD REQUEST?
     @DeleteMapping("/v1/warehouses/{warehouseId}")
     public void delete(@PathVariable Integer warehouseId, HttpServletResponse response) {
@@ -39,5 +48,17 @@ public class WarehousesApiController {
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    // TODO : 특정 창고 정보 조회 API
+    @GetMapping("/v1/warehouses/{warehouseId}")
+    public void getWarehouseById(@PathVariable Integer warehouseId, HttpServletResponse response) {
+
+    }
+
+    // TODO : 창고 정보 수정 API
+    @PatchMapping("/v1/warehouses/{warehouseId}")
+    public void updateWarehouseInfo(@PathVariable Integer warehouseId, HttpServletResponse response) {
+
     }
 }
