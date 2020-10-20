@@ -1,5 +1,6 @@
 package com.banchango.domain.warehousereviews;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,12 @@ public class WarehouseReviews {
 
     @Column(name = "warehouseid")
     private Integer warehouseId;
+
+    @Builder
+    public WarehouseReviews(Integer rating, String content, Integer writerId, Integer warehouseId) {
+        this.rating = rating;
+        this.content = content;
+        this.writerId = writerId;
+        this.warehouseId = warehouseId;
+    }
 }
