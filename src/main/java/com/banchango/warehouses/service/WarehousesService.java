@@ -34,7 +34,7 @@ public class WarehousesService {
         return jsonObject;
     }
 
-    // TODO : 연관된 테이블 정보도 모두 삭제(더미 데이터 없어서 못함 ㅠ)
+    // TODO : 연관된 테이블들이 ON DELETE SET NULL 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
     @Transactional
     public void delete(Integer warehouseId) throws Exception {
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
