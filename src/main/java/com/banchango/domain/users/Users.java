@@ -2,6 +2,7 @@ package com.banchango.domain.users;
 
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -52,14 +53,16 @@ public class Users {
         this.telephoneNumber = requestDto.getTelephoneNumber();
         this.phoneNumber = requestDto.getPhoneNumber();
     }
-    public Users(UserSignupRequestDto dto) {
-        this.name = dto.getName();
-        this.email = dto.getEmail();
-        this.password = dto.getPassword();
-        this.type = UserType.valueOf(dto.getType());
-        this.telephoneNumber = dto.getTelephoneNumber();
-        this.companyName = dto.getCompanyName();
-        this.phoneNumber = dto.getPhoneNumber();
+
+    @Builder
+    public Users(String name, String email, String password, UserType userType, String telephoneNumber, String companyName, String phoneNumber) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.type = userType;
+        this.telephoneNumber = telephoneNumber;
+        this.companyName = companyName;
+        this.phoneNumber = phoneNumber;
         this.role = UserRole.USER;
     }
 

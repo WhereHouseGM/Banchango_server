@@ -1,5 +1,6 @@
 package com.banchango.users.service;
 
+import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.tools.ObjectMaker;
@@ -21,12 +22,20 @@ public class UsersService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public Integer signUp(UserSignupRequestDto requestDto) throws Exception {
+    public org.json.simple.JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
         if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new UserEmailInUseException();
         }
-        Users user = new Users(requestDto);
-        return usersRepository.save(user).getId();
+        Users user = Users.builder().name(requestDto.getName())
+                .email(requestDto.getEmail())
+                .password(requestDto.getPassword())
+                .userType(UserType.valueOf(requestDto.getType()))
+                .telephoneNumber(requestDto.getTelephoneNumber())
+                .companyName(requestDto.getCompanyName())
+                .phoneNumber(requestDto.getPhoneNumber())
+                .build();
+        Users savedUser = usersRepository.save(user);
+        return ObjectMaker.getJSONObjectWithUserInfo(savedUser);
     }
 
     @Transactional(readOnly = true)
