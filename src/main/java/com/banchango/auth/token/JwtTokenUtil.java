@@ -13,14 +13,14 @@ import java.util.function.Function;
 public class JwtTokenUtil {
 
     private static final String SECRET_KEY = "secret_key";
-    private static final int REFRESH_TOKEN_EXPIRATION = 86400 * 7;
-    private static final int ACCESS_TOKEN_EXPIRATION = 86400;
+    private static final int REFRESH_TOKEN_EXPIRATION = 86400000 * 7;
+    private static final int ACCESS_TOKEN_EXPIRATION = 86400000;
 
-    public static String extractUsername(String token) {
+    public static String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public static Date extractExpiration(String token) {
+    private static Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
@@ -33,8 +33,8 @@ public class JwtTokenUtil {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
-    private static boolean isTokenExpired(String token) {
-        return false;
+    public static boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
     }
 
     public static String generateAccessToken(Integer userId) {
@@ -64,7 +64,7 @@ public class JwtTokenUtil {
     }
 
     public static boolean validateToken(String token, Integer userId) {
-        String userName = extractUsername(token);
+        String userName = extractUserId(token);
         return (userName.equals(userId) && !isTokenExpired(token));
     }
 }

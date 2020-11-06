@@ -1,5 +1,6 @@
 package com.banchango.users.service;
 
+import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -46,7 +47,11 @@ public class UsersService {
         }
         Optional<Users> user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
         if(user.isPresent()) {
-            return ObjectMaker.getJSONObjectWithUserInfo(user.get());
+            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithUserInfo(user.get());
+            jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(user.get().getId()));
+            jsonObject.put("refreshToken", JwtTokenUtil.generateRefreshToken(user.get().getId()));
+            jsonObject.put("tokenType", "Bearer");
+            return jsonObject;
         }
         else {
             throw new UserNotFoundException();
