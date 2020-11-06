@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NewAgencyWarehouseDetailDto {
+public class NewAgencyWarehouseDetailDto extends NewWarehouseDetailDto{
 
     private String type;
     private String[] mainItemTypes;

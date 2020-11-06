@@ -29,11 +29,14 @@ public class NewWarehouseFormDto {
     private boolean canPickup;
     private boolean canPark;
     private int parkingScale;
+    private int[] attachmentIds;
     // TODO : attachmentIds(array[integer])
+
     private NewLocationFormDto location;
     private int landArea;
     private int totalArea;
     private String types;
+    private NewWarehouseDetailDto additionalInfo;
     // TODO : one of NewAgencyWarehousDetailDto, NewGeneralWarehouseDetailFormDto
 
 }

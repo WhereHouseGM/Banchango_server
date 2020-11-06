@@ -5,6 +5,10 @@ import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.tools.ObjectMaker;
+import com.banchango.warehouses.dto.NewAgencyWarehouseDetailDto;
+import com.banchango.warehouses.dto.NewGeneralWarehouseDetailFormDto;
+import com.banchango.warehouses.dto.NewWarehouseDetailDto;
+import com.banchango.warehouses.dto.NewWarehouseFormDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,29 @@ public class WarehousesService {
 
     private final WarehousesRepository warehousesRepository;
     private final DeliveryTypesRepository deliveryTypesRepository;
+
+
+    @Transactional
+    @SuppressWarnings("unchecked")
+    // TODO : Service code.
+    public org.json.simple.JSONObject save(NewWarehouseFormDto newWarehouseFormDto) {
+        NewWarehouseDetailDto dto = newWarehouseFormDto.getAdditionalInfo();
+        org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
+        try {
+            if (dto instanceof NewAgencyWarehouseDetailDto) {
+                NewAgencyWarehouseDetailDto detailDto = (NewAgencyWarehouseDetailDto) dto;
+
+
+            } else if (dto instanceof NewGeneralWarehouseDetailFormDto) {
+                NewGeneralWarehouseDetailFormDto formDto = (NewGeneralWarehouseDetailFormDto) dto;
+            } else {
+                throw new IllegalArgumentException();
+            }
+        } catch(IllegalArgumentException exception) {
+            jsonObject = ObjectMaker.getJSONObjectWithException(exception);
+        }
+        return jsonObject;
+    }
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")

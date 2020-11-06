@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NewGeneralWarehouseDetailFormDto {
+public class NewGeneralWarehouseDetailFormDto extends NewWarehouseDetailDto{
     private int montylyFee;
     private int depositFee;
     private int maintenanceFee;
