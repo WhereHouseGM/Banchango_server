@@ -1,15 +1,19 @@
+package com.urssu.bum.incubating.security.util
+
+import com.urssu.bum.incubating.security.SecurityProperty
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.*
 import kotlin.collections.HashMap
 
 @Component
-class JwtTokenUtil {
-    private val SECRET_KEY = "secret key"
-    private val REFRESH_TOKEN_EXPIRATION = 86400*7
-    private val ACCESS_TOKEN_EXPIRATION = 86400
+class JwtTokenUtil @Autowired constructor(
+        private val securityProperty: SecurityProperty
+) {
     fun extractUsername(token: String): String {
         return extractClaim(token, Claims::getSubject)
     }
@@ -24,37 +28,37 @@ class JwtTokenUtil {
     }
 
     private fun extractAllClaims(token: String): Claims {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).body
+        return Jwts.parser().setSigningKey(securityProperty.SECRET).parseClaimsJws(token).body
     }
 
     private fun isTokenExpired(token: String): Boolean {
         return extractExpiration(token).before(Date())
     }
 
-    fun generateAccessToken(userId: Int): String {
+    fun generateAccessToken(userDetails: UserDetails): String {
         val claims: Map<String, Any> = HashMap()
-        return createAccessToken(claims, userId.toString())
+        return createAccessToken(claims, userDetails.username)
     }
 
     private fun createAccessToken(claims: Map<String, Any>, subject: String): String {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(Date(System.currentTimeMillis()))
-                .setExpiration(Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact()
+                .setExpiration(Date(System.currentTimeMillis() + securityProperty.ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, securityProperty.SECRET).compact()
     }
 
-    fun generateRefreshToken(userId: Int): String {
+    fun generateRefreshToken(userDetails: UserDetails): String {
         val claims: Map<String, Any> = HashMap()
-        return createRefreshToken(claims, userId.toString())
+        return createRefreshToken(claims, userDetails.username)
     }
 
     private fun createRefreshToken(claims: Map<String, Any>, subject: String): String {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(Date(System.currentTimeMillis()))
-                .setExpiration(Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact()
+                .setExpiration(Date(System.currentTimeMillis() + securityProperty.REFRESH_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, securityProperty.SECRET).compact()
     }
 
-    fun validateToken(token: String, userId: Int): Boolean {
+    fun validateToken(token: String, userDetails: UserDetails): Boolean {
         val username = extractUsername(token)
-        return (username.equals(userId) && !isTokenExpired(token))
+        return (username.equals(userDetails.username) && !isTokenExpired(token))
     }
 }
