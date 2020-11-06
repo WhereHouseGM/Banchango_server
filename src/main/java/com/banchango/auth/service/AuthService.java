@@ -14,7 +14,6 @@ public class AuthService {
     public org.json.simple.JSONObject refreshToken(String token) throws AuthenticateException {
         org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
         String userId = JwtTokenUtil.extractUserId(token);
-        System.out.println(userId);
         if(userId == null) throw new AuthenticateException();
         if(JwtTokenUtil.isTokenExpired(token)) throw new AuthenticateException();
         jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(Integer.parseInt(userId)));
