@@ -19,6 +19,6 @@ public class WarehouseTypes {
     @Enumerated(EnumType.STRING)
     private WarehouseTypeName name;
 
-    @Column(name = "warehouseId")
+    @Column
     private Integer warehouseId;
 }
