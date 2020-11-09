@@ -15,18 +15,18 @@ public class GeneralWarehouseDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "monthlyFee")
+    @Column
     private Integer monthlyFee;
 
-    @Column(name = "depositFee")
+    @Column
     private Integer depositFee;
 
-    @Column(name = "maintenanceFee")
+    @Column
     private Integer maintenanceFee;
 
-    @Column(name = "minUseTerm")
-    private Integer minUseTerm;
+    @Column
+    private Integer minimumTerm;
 
-    @Column(name = "warehouseId")
+    @Column
     private Integer warehouseId;
 }
