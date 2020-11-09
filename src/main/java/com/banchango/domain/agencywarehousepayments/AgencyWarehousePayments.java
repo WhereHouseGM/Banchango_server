@@ -28,6 +28,6 @@ public class AgencyWarehousePayments {
     @Enumerated(EnumType.STRING)
     private AgencyWarehousePaymentType type;
 
-    @Column(name = "agencyWarehouseDetailId")
+    @Column
     private Integer agencyWarehouseDetailId;
 }
