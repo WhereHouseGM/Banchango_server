@@ -5,6 +5,7 @@ import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehouses.dto.NewWarehouseFormDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.exception.WarehouseSearchException;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,13 @@ public class WarehousesApiController {
                                  @RequestParam(name = "limit") Integer limit,
                                  @RequestParam(name = "offset") Integer offset,
                                  HttpServletResponse response) {
-
+        try {
+            WriteToClient.send(response, warehousesService.search(address, limit, offset), HttpServletResponse.SC_OK);
+        } catch(WarehouseSearchException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
+        } catch(Exception exception) {
+            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     // TODO : JWT Token Test

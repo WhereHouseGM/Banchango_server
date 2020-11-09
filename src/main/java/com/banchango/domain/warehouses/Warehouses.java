@@ -54,7 +54,7 @@ public class Warehouses {
     @Column(length = 100)
     private String availableTimeDetail;
 
-    @Column(name = "cctvexist")
+    @Column
     private Integer cctvExist;
 
     @Column
@@ -63,7 +63,7 @@ public class Warehouses {
     @Column(length = 100)
     private String securityCompanyName;
 
-    @Column(name = "doorlockexist")
+    @Column
     private Integer doorLockExist;
 
     @Column(columnDefinition = "ENUM('HEATING', 'COOLING', 'NONE') DEFAULT 'NONE'")
