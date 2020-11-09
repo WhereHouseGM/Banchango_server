@@ -19,7 +19,7 @@ public class DeliveryTypes {
     @Column(length = 30)
     private String name;
 
-    @Column(name = "agencywarehousedetailid")
+    @Column
     private Integer agencyWarehouseDetailId;
 
     public HashMap<String, Object> convertMap() {
