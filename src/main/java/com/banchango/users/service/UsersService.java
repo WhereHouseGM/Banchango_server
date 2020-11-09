@@ -62,8 +62,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     public org.json.simple.JSONObject viewUserInfo(Integer userId, String token) throws Exception{
-        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
-        if((!userId.equals(Integer.parseInt(userIdOfToken))) || JwtTokenUtil.isTokenExpired(JwtTokenUtil.getToken(token))) {
+        if(JwtTokenUtil.validateToken(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();
         }
         Optional<Users> user = usersRepository.findById(userId);
@@ -78,19 +77,18 @@ public class UsersService {
     @Transactional
     @SuppressWarnings("unchecked")
     public org.json.simple.JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
-        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
-        if((!userId.equals(Integer.parseInt(userIdOfToken))) || JwtTokenUtil.isTokenExpired(JwtTokenUtil.getToken(token))) {
+        if(!JwtTokenUtil.validateToken(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();
         }
         Optional<Users> optionalUser = usersRepository.findById(userId);
-        if(optionalUser.isPresent()) {
-        if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-            throw new UserEmailInUseException();
-        }
-        Users user = optionalUser.get();
-        user.updateUserInfo(requestDto);
-        return ObjectMaker.getJSONObjectWithUserInfo(user);
-    } else {
+        if (optionalUser.isPresent()) {
+            if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+                throw new UserEmailInUseException();
+            }
+            Users user = optionalUser.get();
+            user.updateUserInfo(requestDto);
+            return ObjectMaker.getJSONObjectWithUserInfo(user);
+        } else {
             throw new UserIdNotFoundException();
         }
     }

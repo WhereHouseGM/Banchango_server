@@ -86,11 +86,11 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public static boolean validateToken(String token) throws AuthenticateException {
+    public static boolean validateToken(String token, Integer userId) throws AuthenticateException {
         try {
-            String userId = extractUserId(token);
+            String userIdOfToken = extractUserId(token);
             if(userId == null) throw new Exception();
-            return (userId != null && !isTokenExpired(token));
+            return (userId != null && !isTokenExpired(token) && userId.equals(Integer.parseInt(userIdOfToken)));
         } catch(Exception exception) {
             throw new AuthenticateException();
         }
