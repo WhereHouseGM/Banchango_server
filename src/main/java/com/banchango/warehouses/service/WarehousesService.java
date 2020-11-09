@@ -1,5 +1,7 @@
 package com.banchango.warehouses.service;
 
+import com.banchango.auth.exception.AuthenticateException;
+import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.warehouses.Warehouses;
@@ -48,7 +50,10 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public org.json.simple.JSONObject getDeliveryTypes(){
+    public org.json.simple.JSONObject getDeliveryTypes(String token) throws AuthenticateException{
+        if(!JwtTokenUtil.validateToken(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
         List<DeliveryTypes> list = deliveryTypesRepository.findAll();
         org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
         org.json.simple.JSONArray jsonArray = ObjectMaker.getSimpleJSONArray();

@@ -62,7 +62,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     public org.json.simple.JSONObject viewUserInfo(Integer userId, String token) throws Exception{
-        if(JwtTokenUtil.validateToken(JwtTokenUtil.getToken(token), userId)) {
+        if(JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();
         }
         Optional<Users> user = usersRepository.findById(userId);
@@ -77,7 +77,7 @@ public class UsersService {
     @Transactional
     @SuppressWarnings("unchecked")
     public org.json.simple.JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
-        if(!JwtTokenUtil.validateToken(JwtTokenUtil.getToken(token), userId)) {
+        if(!JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();
         }
         Optional<Users> optionalUser = usersRepository.findById(userId);

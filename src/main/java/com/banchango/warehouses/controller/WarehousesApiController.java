@@ -1,5 +1,6 @@
 package com.banchango.warehouses.controller;
 
+import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehouses.dto.NewWarehouseFormDto;
@@ -23,9 +24,17 @@ public class WarehousesApiController {
         // TODO : NewWarehouseFormDto oneOf 부분
     }
 
+    // TODO : JWT Token Test
     @GetMapping("/v1/delivery-types")
-    public void getDeliveryTypes(HttpServletResponse response) {
-        WriteToClient.send(response, warehousesService.getDeliveryTypes(), HttpServletResponse.SC_OK);
+    public void getDeliveryTypes(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
+        try {
+            if(bearerToken == null) throw new AuthenticateException();
+            WriteToClient.send(response, warehousesService.getDeliveryTypes(bearerToken), HttpServletResponse.SC_OK);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(Exception exception) {
+            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     // TODO : 창고 목록 조회 API

@@ -25,14 +25,11 @@ public class UsersApiController {
         try {
             if(bearerToken == null) throw new AuthenticateException();
             if(userId == null) throw new Exception();
-            org.json.simple.JSONObject jsonObject = usersService.viewUserInfo(userId, bearerToken);
-            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_OK);
+            WriteToClient.send(response, usersService.viewUserInfo(userId, bearerToken), HttpServletResponse.SC_OK);
         } catch(UserIdNotFoundException exception) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
-            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_NOT_FOUND);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
         } catch(AuthenticateException exception) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
-            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_UNAUTHORIZED);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -43,8 +40,7 @@ public class UsersApiController {
         try {
             WriteToClient.send(response, usersService.signUp(requestDto), HttpServletResponse.SC_CREATED);
         } catch(UserEmailInUseException exception) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
-            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_CONFLICT);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -53,11 +49,9 @@ public class UsersApiController {
     @PostMapping("/v1/auth/sign-in")
     public void signIn(@RequestBody UserSigninRequestDto requestDto, HttpServletResponse response) {
         try {
-            org.json.simple.JSONObject jsonObject = usersService.signIn(requestDto);
-            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_OK);
+            WriteToClient.send(response, usersService.signIn(requestDto), HttpServletResponse.SC_OK);
         } catch(UserNotFoundException exception) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
-            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_NOT_FOUND);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -69,19 +63,16 @@ public class UsersApiController {
         try {
             if(bearerToken == null) throw new AuthenticateException();
             if(userId == null) throw new Exception();
-            org.json.simple.JSONObject jsonObject = usersService.updateUserInfo(userId, requestDto, bearerToken);
-            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_OK);
+            WriteToClient.send(response, usersService.updateUserInfo(userId, requestDto, bearerToken), HttpServletResponse.SC_OK);
         } catch(UserIdNotFoundException | UserEmailInUseException exception) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
             if(exception instanceof UserIdNotFoundException) {
-                WriteToClient.send(response, jsonObject, HttpServletResponse.SC_NOT_FOUND);
+                WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
             }
             else if(exception instanceof UserEmailInUseException) {
-                WriteToClient.send(response, jsonObject, HttpServletResponse.SC_CONFLICT);
+                WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
             }
         } catch(AuthenticateException exception) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
-            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_UNAUTHORIZED);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
