@@ -31,7 +31,7 @@ public class WarehouseReviewsService {
         org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
         org.json.simple.JSONArray jsonArray = ObjectMaker.getSimpleJSONArray();
         for(WarehouseReviewResponseDto dto : list) {
-            Users user = usersRepository.findById(dto.getWriterId()).orElseThrow(Exception::new);
+            Users user = usersRepository.findById(dto.getUserId()).orElseThrow(Exception::new);
             org.json.simple.JSONObject objectOfUser = ObjectMaker.getJSONObjectWithUserInfo(user);
             org.json.simple.JSONObject jTemp = ObjectMaker.getSimpleJSONObject();
             jTemp.putAll(dto.convertMap());
@@ -44,17 +44,17 @@ public class WarehouseReviewsService {
 
     public org.json.simple.JSONObject register(Integer warehouseId, WarehouseReviewInsertRequestDto dto) throws Exception {
         // TODO : JWT에서 user id 값 가져오기, 코드 작동을 위해 1로 임시 지정함
-        int writerId = 1;
+        int userId = 1;
         WarehouseReviews review = WarehouseReviews.builder()
                 .rating(dto.getRating())
                 .content(dto.getContent())
-                .writerId(writerId)
+                .userId(userId)
                 .warehouseId(warehouseId).build();
         org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
-        jsonObject.put("id", writerId);
+        jsonObject.put("id", userId);
         jsonObject.put("rating", dto.getRating());
         jsonObject.put("content", dto.getContent());
-        jsonObject.put("writer", ObjectMaker.getJSONObjectWithUserInfo(usersRepository.findById(writerId).get()));
+        jsonObject.put("writer", ObjectMaker.getJSONObjectWithUserInfo(usersRepository.findById(userId).get()));
         return jsonObject;
     }
 

@@ -22,17 +22,17 @@ public class WarehouseReviews {
     @Column(nullable = false, length = 200)
     private String content;
 
-    @Column(name = "writerid")
-    private Integer writerId;
+    @Column
+    private Integer userId;
 
-    @Column(name = "warehouseid")
+    @Column
     private Integer warehouseId;
 
     @Builder
-    public WarehouseReviews(Integer rating, String content, Integer writerId, Integer warehouseId) {
+    public WarehouseReviews(Integer rating, String content, Integer userId, Integer warehouseId) {
         this.rating = rating;
         this.content = content;
-        this.writerId = writerId;
+        this.userId = userId;
         this.warehouseId = warehouseId;
     }
 }

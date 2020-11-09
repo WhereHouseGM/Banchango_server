@@ -13,7 +13,7 @@ public class AgencyWarehouseDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer agencyWarehouseDetailId;
 
     @Column
     String type;

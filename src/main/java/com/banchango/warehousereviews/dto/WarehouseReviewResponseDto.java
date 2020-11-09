@@ -15,13 +15,13 @@ public class WarehouseReviewResponseDto {
     private int id;
     private int rating;
     private String content;
-    private int writerId;
+    private int userId;
 
     public WarehouseReviewResponseDto(WarehouseReviews reviews) {
         this.id = reviews.getId();
         this.rating = reviews.getRating();
         this.content = reviews.getContent();
-        this.writerId = reviews.getWriterId();
+        this.userId = reviews.getUserId();
     }
 
     public HashMap<String, Object> convertMap() {
