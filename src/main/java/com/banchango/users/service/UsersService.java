@@ -1,5 +1,6 @@
 package com.banchango.users.service;
 
+import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
@@ -60,7 +61,11 @@ public class UsersService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public org.json.simple.JSONObject viewUserInfo(Integer userId) throws Exception{
+    public org.json.simple.JSONObject viewUserInfo(Integer userId, String token) throws Exception{
+        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
+        if((!userId.equals(Integer.parseInt(userIdOfToken))) || JwtTokenUtil.isTokenExpired(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
         Optional<Users> user = usersRepository.findById(userId);
         if(user.isPresent()) {
             return ObjectMaker.getJSONObjectWithUserInfo(user.get());
@@ -72,7 +77,11 @@ public class UsersService {
 
     @Transactional
     @SuppressWarnings("unchecked")
-    public org.json.simple.JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto) throws Exception {
+    public org.json.simple.JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
+        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
+        if((!userId.equals(Integer.parseInt(userIdOfToken))) || JwtTokenUtil.isTokenExpired(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
         Optional<Users> optionalUser = usersRepository.findById(userId);
         if(optionalUser.isPresent()) {
         if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {

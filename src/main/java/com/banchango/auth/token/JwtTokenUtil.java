@@ -18,16 +18,28 @@ public class JwtTokenUtil {
     private static final int ACCESS_TOKEN_EXPIRATION = 86400000;
 
     public static String extractUserId(String token) throws AuthenticateException {
-        return extractClaim(token, Claims::getSubject);
+        try {
+            return extractClaim(token, Claims::getSubject);
+        } catch(Exception exception) {
+            throw new AuthenticateException();
+        }
     }
 
     private static Date extractExpiration(String token) throws AuthenticateException {
-        return extractClaim(token, Claims::getExpiration);
+        try {
+            return extractClaim(token, Claims::getExpiration);
+        } catch(Exception exception) {
+            throw new AuthenticateException();
+        }
     }
 
     public static <T> T extractClaim(String token, Function<Claims, T> claimResolver) throws AuthenticateException {
-        Claims claims = extractAllClaims(token);
-        return claimResolver.apply(claims);
+        try {
+            Claims claims = extractAllClaims(token);
+            return claimResolver.apply(claims);
+        } catch(Exception exception) {
+            throw new AuthenticateException();
+        }
     }
 
     private static Claims extractAllClaims(String token) throws AuthenticateException{

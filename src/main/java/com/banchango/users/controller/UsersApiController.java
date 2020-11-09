@@ -1,5 +1,6 @@
 package com.banchango.users.controller;
 
+import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.users.dto.UserSigninRequestDto;
@@ -18,15 +19,20 @@ public class UsersApiController {
 
     private final UsersService usersService;
 
+    // TODO : JWT Token Test
     @GetMapping("/v1/users/{userId}")
-    public void getUserInfo(@PathVariable Integer userId, HttpServletResponse response) {
+    public void getUserInfo(@PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
+            if(bearerToken == null) throw new AuthenticateException();
             if(userId == null) throw new Exception();
-            org.json.simple.JSONObject jsonObject = usersService.viewUserInfo(userId);
+            org.json.simple.JSONObject jsonObject = usersService.viewUserInfo(userId, bearerToken);
             WriteToClient.send(response, jsonObject, HttpServletResponse.SC_OK);
         } catch(UserIdNotFoundException exception) {
             org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
             WriteToClient.send(response, jsonObject, HttpServletResponse.SC_NOT_FOUND);
+        } catch(AuthenticateException exception) {
+            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
+            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -57,10 +63,13 @@ public class UsersApiController {
         }
     }
 
+    // TODO : JWT Token Test
     @PatchMapping("/v1/users/{userId}")
-    public void updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId, HttpServletResponse response) {
+    public void updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
-            org.json.simple.JSONObject jsonObject = usersService.updateUserInfo(userId, requestDto);
+            if(bearerToken == null) throw new AuthenticateException();
+            if(userId == null) throw new Exception();
+            org.json.simple.JSONObject jsonObject = usersService.updateUserInfo(userId, requestDto, bearerToken);
             WriteToClient.send(response, jsonObject, HttpServletResponse.SC_OK);
         } catch(UserIdNotFoundException | UserEmailInUseException exception) {
             org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
@@ -70,6 +79,9 @@ public class UsersApiController {
             else if(exception instanceof UserEmailInUseException) {
                 WriteToClient.send(response, jsonObject, HttpServletResponse.SC_CONFLICT);
             }
+        } catch(AuthenticateException exception) {
+            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithException(exception);
+            WriteToClient.send(response, jsonObject, HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
