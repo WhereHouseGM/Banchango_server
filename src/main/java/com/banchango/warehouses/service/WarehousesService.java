@@ -68,7 +68,10 @@ public class WarehousesService {
 
     // TODO : 연관된 테이블들이 ON DELETE SET NULL 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
     @Transactional
-    public void delete(Integer warehouseId) throws Exception {
+    public void delete(Integer warehouseId, String token) throws Exception {
+        if(!JwtTokenUtil.validateToken(token)) {
+            throw new AuthenticateException();
+        }
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         warehousesRepository.delete(warehouse);
     }

@@ -46,14 +46,16 @@ public class WarehousesApiController {
 
     }
 
-    // TODO : warehouseId로 조회된 Entity가 없을 때 NOT FOUND ? 아니면 BAD REQUEST?
+    // TODO : JWT Token Test
     @DeleteMapping("/v1/warehouses/{warehouseId}")
-    public void delete(@PathVariable Integer warehouseId, HttpServletResponse response) {
+    public void delete(@PathVariable Integer warehouseId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
-            warehousesService.delete(warehouseId);
+            warehousesService.delete(warehouseId, bearerToken);
             WriteToClient.send(response, null, HttpServletResponse.SC_NO_CONTENT);
         } catch(WarehouseIdNotFoundException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
