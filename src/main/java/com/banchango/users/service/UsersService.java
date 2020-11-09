@@ -48,8 +48,8 @@ public class UsersService {
         Optional<Users> user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
         if(user.isPresent()) {
             org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithUserInfo(user.get());
-            jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(user.get().getId()));
-            jsonObject.put("refreshToken", JwtTokenUtil.generateRefreshToken(user.get().getId()));
+            jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(user.get().getUserId()));
+            jsonObject.put("refreshToken", JwtTokenUtil.generateRefreshToken(user.get().getUserId()));
             jsonObject.put("tokenType", "Bearer");
             return jsonObject;
         }

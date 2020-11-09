@@ -15,7 +15,7 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer userId;
 
     @Column(nullable = false, length = 64)
     private String password;
@@ -30,13 +30,13 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Column(name = "telephonenumber", length = 20)
+    @Column(length = 20)
     private String telephoneNumber;
 
-    @Column(name = "companyname", length = 20)
+    @Column(length = 20)
     private String companyName;
 
-    @Column(name = "phonenumber", length = 20)
+    @Column(length = 20)
     private String phoneNumber;
 
     @Column(columnDefinition = "enum('USER', 'ADMIN') DEFAULT 'USER'")
@@ -67,7 +67,7 @@ public class Users {
 
     public HashMap<String, Object> convertMap() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("id", id);
+        map.put("id", userId);
         map.put("name", name);
         map.put("email", email);
         map.put("type", type);
