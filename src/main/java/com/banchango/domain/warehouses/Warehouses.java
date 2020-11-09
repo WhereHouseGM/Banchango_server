@@ -13,77 +13,81 @@ public class Warehouses {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer warehouseId;
 
-    @Column(name = "canuse", columnDefinition = "tinyint(1) DEFAULT 1")
+    @Column(columnDefinition = "tinyint(1) DEFAULT 1")
     private Integer canUse;
 
-    @Column(name = "servicetype")
+    @Column(length = 20)
+    private String name;
+
+    @Column
     private ServiceType serviceType;
 
-    @Column(name = "landarea")
+    @Column
     private Integer landArea;
 
-    @Column(name = "totalarea")
+    @Column
     private Integer totalArea;
 
     @Column(length = 100)
     private String address;
 
-    @Column(name = "addressdetail", length = 100)
+    @Column(length = 100)
     private String addressDetail;
 
     @Column(length = 400)
     private String description;
 
-    @Column(name = "availableweekdays")
+    @Column
     private Integer availableWeekdays;
 
-    @Column(name = "openat")
+    // TODO : openAt, closeAt 타입 확인 필요
+    @Column
     @Temporal(TemporalType.TIME)
     private Date openAt;
 
-    @Column(name = "closeat")
+    @Column
     @Temporal(TemporalType.TIME)
     private Date closeAt;
 
-    @Column(name = "availabletimedetail", length = 100)
+    @Column(length = 100)
     private String availableTimeDetail;
 
     @Column(name = "cctvexist")
     private Integer cctvExist;
 
-    @Column(name = "securitycompanyexist")
+    @Column
     private Integer securityCompanyExist;
 
-    @Column(name = "securitycompanyname", length = 100)
+    @Column(length = 100)
     private String securityCompanyName;
 
     @Column(name = "doorlockexist")
     private Integer doorLockExist;
 
-    @Column(name = "airconditioningtype", columnDefinition = "ENUM('HEATING', 'COOLING', 'NONE') DEFAULT 'NONE'")
+    @Column(columnDefinition = "ENUM('HEATING', 'COOLING', 'NONE') DEFAULT 'NONE'")
     @Enumerated(EnumType.STRING)
     private AirConditioningType airConditioningType;
 
-    @Column(name = "workerexist")
+    @Column
     private Integer workerExist;
 
-    @Column(name = "insuranceexist")
+    @Column
     private Integer insuranceExist;
 
-    @Column(name = "insurancename", length = 100)
+    @Column(length = 100)
     private String insuranceName;
 
-    @Column(name = "canpickup")
+    @Column
     private Integer canPickup;
 
-    @Column(name = "canpark")
+    @Column
     private Integer canPark;
 
-    @Column(name = "parkingscale")
+    @Column
     private Integer parkingScale;
 
-    @Column(name = "ownerid")
-    private Integer ownerId;
+    @Column
+    private Integer userId;
 }
