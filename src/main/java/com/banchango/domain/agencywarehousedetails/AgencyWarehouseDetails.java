@@ -18,10 +18,10 @@ public class AgencyWarehouseDetails {
     @Column
     String type;
 
-    @Column(name = "storageType")
+    @Column
     @Enumerated(EnumType.STRING)
     private StorageType storageType;
 
-    @Column(name = "warehouseId")
+    @Column
     private Integer warehouseId;
 }
