@@ -18,6 +18,6 @@ public class WarehouseAttachments {
     @Column(nullable = false, length = 150)
     private String url;
 
-    @Column(name = "warehouseId")
+    @Column
     private Integer warehouseId;
 }
