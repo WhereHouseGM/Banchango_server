@@ -19,6 +19,6 @@ public class AgencyMainItemTypes {
     @Enumerated(EnumType.STRING)
     private ItemTypeName name;
 
-    @Column(name = "agencyWarehouseDetailId")
+    @Column
     private Integer agencyWarehouseDetailId;
 }

@@ -1,6 +1,5 @@
 package com.banchango.domain.users;
 
-import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
 import lombok.Builder;
 import lombok.Getter;
