@@ -21,6 +21,6 @@ public class WarehouseLocations {
     @Column(nullable = false)
     private Double longitude;
 
-    @Column(name = "warehouseId")
+    @Column
     private Integer warehouseId;
 }
