@@ -26,7 +26,7 @@ public class WarehouseSearchResponseDto {
         this.thumbnailUrl = null;
         this.landArea = warehouse.getLandArea();
         this.totalArea = warehouse.getTotalArea();
-        this.canUse = warehouse.getCanUse().equals(1) ? true : false;
+        this.canUse = warehouse.getCanUse().equals(1);
     }
 
     public HashMap<String, Object> convertMap() {

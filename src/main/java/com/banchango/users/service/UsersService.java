@@ -60,7 +60,6 @@ public class UsersService {
     }
 
     @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
     public org.json.simple.JSONObject viewUserInfo(Integer userId, String token) throws Exception{
         if(JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();
@@ -75,7 +74,6 @@ public class UsersService {
     }
 
     @Transactional
-    @SuppressWarnings("unchecked")
     public org.json.simple.JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
         if(!JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();

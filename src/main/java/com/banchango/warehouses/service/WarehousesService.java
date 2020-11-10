@@ -30,7 +30,6 @@ public class WarehousesService {
     private final WarehouseTypesRepository warehouseTypesRepository;
 
     @Transactional
-    @SuppressWarnings("unchecked")
     // TODO : Service code.
     public org.json.simple.JSONObject save(NewWarehouseFormDto newWarehouseFormDto) {
         NewWarehouseDetailDto dto = newWarehouseFormDto.getAdditionalInfo();
