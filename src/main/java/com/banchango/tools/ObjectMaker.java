@@ -27,4 +27,11 @@ public class ObjectMaker {
         jsonObject.put("User", user.toJSONObject());
         return jsonObject;
     }
+
+    @SuppressWarnings("unchecked")
+    public static JSONObject getJSONObjectOfBadRequest() {
+        JSONObject jsonObject = getJSONObject();
+        jsonObject.put("message", "요청 형식이 잘못되었습니다.");
+        return jsonObject;
+    }
 }

@@ -19,6 +19,7 @@ public class UsersApiController {
 
     private final UsersService usersService;
 
+    // DONE
     @GetMapping("/v2/users/{userId}")
     public void getUserInfo(@PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
@@ -30,9 +31,10 @@ public class UsersApiController {
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+
 
     @PostMapping("/v1/auth/sign-up")
     public void signUp(@RequestBody UserSignupRequestDto requestDto, HttpServletResponse response) {
@@ -41,22 +43,22 @@ public class UsersApiController {
         } catch(UserEmailInUseException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    @PostMapping("/v1/auth/sign-in")
+    // DONE
+    @PostMapping("/v2/users/sign-in")
     public void signIn(@RequestBody UserSigninRequestDto requestDto, HttpServletResponse response) {
         try {
             WriteToClient.send(response, usersService.signIn(requestDto), HttpServletResponse.SC_OK);
         } catch(UserNotFoundException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    // TODO : JWT Token Test
     @PatchMapping("/v1/users/{userId}")
     public void updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
@@ -73,7 +75,7 @@ public class UsersApiController {
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

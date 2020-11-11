@@ -11,9 +11,7 @@ public class WriteToClient {
             response.setStatus(statusCode);
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            if(jsonObject != null) {
-                response.getWriter().println(jsonObject.toString());
-            }
+            response.getWriter().println(jsonObject.toString());
         } catch(IOException e){
             e.printStackTrace();
         }
