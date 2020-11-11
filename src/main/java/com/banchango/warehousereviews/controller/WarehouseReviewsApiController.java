@@ -17,6 +17,7 @@ public class WarehouseReviewsApiController {
 
     private final WarehouseReviewsService reviewsService;
 
+    /*
     // TODO : Test 필요
     @GetMapping("/v1/warehouses/{warehouseId}/reviews")
     public void getReviewsOfWarehouse(@PathVariable Integer warehouseId, HttpServletResponse response,
@@ -29,6 +30,7 @@ public class WarehouseReviewsApiController {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+    */
 
     // TODO : JWT에서 userId값 받아와서 저장하기
     @PostMapping("/v1/warehouses/{warehouseId}/reviews")

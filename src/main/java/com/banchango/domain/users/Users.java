@@ -1,9 +1,11 @@
 package com.banchango.domain.users;
 
+import com.banchango.tools.ObjectMaker;
 import com.banchango.users.dto.UserSignupRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -65,15 +67,15 @@ public class Users {
         this.role = UserRole.USER;
     }
 
-    public HashMap<String, Object> convertMap() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("id", userId);
-        map.put("name", name);
-        map.put("email", email);
-        map.put("type", type);
-        map.put("telephoneNumber", telephoneNumber);
-        map.put("phoneNumber", phoneNumber);
-        map.put("companyName", companyName);
-        return map;
+    public JSONObject toJSONObject() {
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("id", userId);
+        jsonObject.put("name", name);
+        jsonObject.put("email", email);
+        jsonObject.put("type", type);
+        jsonObject.put("telephoneNumber", telephoneNumber);
+        jsonObject.put("phoneNumber", phoneNumber);
+        jsonObject.put("companyName", companyName);
+        return jsonObject;
     }
 }

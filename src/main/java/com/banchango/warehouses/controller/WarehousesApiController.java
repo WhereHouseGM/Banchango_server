@@ -24,6 +24,7 @@ public class WarehousesApiController {
         // TODO : NewWarehouseFormDto oneOf 부분
     }
 
+    /*
     // TODO : JWT Token Test
     @GetMapping("/v2/delivery-types")
     public void getDeliveryTypes(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
@@ -37,6 +38,9 @@ public class WarehousesApiController {
         }
     }
 
+     */
+
+    /*
     // TODO : 창고 목록 조회 API
     @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
@@ -51,6 +55,8 @@ public class WarehousesApiController {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+
+     */
 
     // TODO : JWT Token Test
     @DeleteMapping("/v2/warehouses/{warehouseId}")

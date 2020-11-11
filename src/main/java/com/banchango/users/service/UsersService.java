@@ -10,12 +10,15 @@ import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.UserEmailInUseException;
 import com.banchango.users.exception.UserIdNotFoundException;
+import com.banchango.users.exception.UserInvalidAccessException;
 import com.banchango.users.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import org.json.JSONObject;
 
 @RequiredArgsConstructor
 @Service
@@ -24,7 +27,7 @@ public class UsersService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public org.json.simple.JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
+    public JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
         if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new UserEmailInUseException();
         }
@@ -42,13 +45,13 @@ public class UsersService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public org.json.simple.JSONObject signIn(UserSigninRequestDto requestDto) throws Exception{
+    public JSONObject signIn(UserSigninRequestDto requestDto) throws Exception{
         if(requestDto.getEmail() == null || requestDto.getPassword() == null) {
             throw new Exception();
         }
         Optional<Users> user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
         if(user.isPresent()) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithUserInfo(user.get());
+            JSONObject jsonObject = ObjectMaker.getJSONObjectWithUserInfo(user.get());
             jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(user.get().getUserId()));
             jsonObject.put("refreshToken", JwtTokenUtil.generateRefreshToken(user.get().getUserId()));
             jsonObject.put("tokenType", "Bearer");
@@ -60,8 +63,8 @@ public class UsersService {
     }
 
     @Transactional(readOnly = true)
-    public org.json.simple.JSONObject viewUserInfo(Integer userId, String token) throws Exception{
-        if(JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
+    public JSONObject viewUserInfo(Integer userId, String token) throws Exception{
+        if(!JwtTokenUtil.isTokenValidatedWithUserId(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();
         }
         Optional<Users> user = usersRepository.findById(userId);
@@ -74,18 +77,29 @@ public class UsersService {
     }
 
     @Transactional
-    public org.json.simple.JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
-        if(!JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
+    public JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
+
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
+        if(!JwtTokenUtil.isTokenValidatedWithUserId(JwtTokenUtil.getToken(token), userId)) {
+            throw new UserInvalidAccessException();
+        }
+
         Optional<Users> optionalUser = usersRepository.findById(userId);
         if (optionalUser.isPresent()) {
-            if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-                throw new UserEmailInUseException();
+            if(!optionalUser.get().getEmail().equals(requestDto.getEmail())) {
+                if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+                    throw new UserEmailInUseException();
+                }
+                Users user = optionalUser.get();
+                user.updateUserInfo(requestDto);
+                return ObjectMaker.getJSONObjectWithUserInfo(user);
+            } else {
+                Users user = optionalUser.get();
+                user.updateUserInfo(requestDto);
+                return ObjectMaker.getJSONObjectWithUserInfo(user);
             }
-            Users user = optionalUser.get();
-            user.updateUserInfo(requestDto);
-            return ObjectMaker.getJSONObjectWithUserInfo(user);
         } else {
             throw new UserIdNotFoundException();
         }

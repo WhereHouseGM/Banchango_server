@@ -55,6 +55,9 @@ public class Warehouses {
     private String availableTimeDetail;
 
     @Column
+    private Integer insuranceId;
+
+    @Column
     private Integer cctvExist;
 
     @Column
@@ -72,12 +75,6 @@ public class Warehouses {
 
     @Column
     private Integer workerExist;
-
-    @Column
-    private Integer insuranceExist;
-
-    @Column(length = 100)
-    private String insuranceName;
 
     @Column
     private Integer canPickup;
