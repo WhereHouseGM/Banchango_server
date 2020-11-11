@@ -52,7 +52,6 @@ public class JwtTokenUtil {
 
     public static boolean isTokenNotExpired(String token) throws AuthenticateException{
         try {
-            System.out.println(extractExpiration(token).after(new Date()));
             return extractExpiration(token).after(new Date());
         } catch(Exception exception) {
             throw new AuthenticateException();
