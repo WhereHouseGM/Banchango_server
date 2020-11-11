@@ -14,10 +14,11 @@ public class AuthService {
     @SuppressWarnings("unchecked")
     public JSONObject refreshToken(String token) throws AuthenticateException {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
-        String userId = JwtTokenUtil.extractUserId(token);
-        if(userId == null) throw new AuthenticateException();
-        if(!JwtTokenUtil.isTokenNotExpired(token)) throw new AuthenticateException();
-        jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(Integer.parseInt(userId)));
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
+        jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(Integer.parseInt(userIdOfToken)));
         jsonObject.put("tokenType", "Bearer");
         return jsonObject;
     }
