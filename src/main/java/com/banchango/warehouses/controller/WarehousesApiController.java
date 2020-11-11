@@ -18,14 +18,14 @@ public class WarehousesApiController {
 
     private final WarehousesService warehousesService;
 
-    @PostMapping("/v1/warehouses")
+    @PostMapping("/v2/warehouses")
     public void register(@RequestBody NewWarehouseFormDto dto, HttpServletResponse response) {
 
         // TODO : NewWarehouseFormDto oneOf 부분
     }
 
     // TODO : JWT Token Test
-    @GetMapping("/v1/delivery-types")
+    @GetMapping("/v2/delivery-types")
     public void getDeliveryTypes(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
             if(bearerToken == null) throw new AuthenticateException();
@@ -38,7 +38,7 @@ public class WarehousesApiController {
     }
 
     // TODO : 창고 목록 조회 API
-    @GetMapping("/v1/warehouses")
+    @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
                                  @RequestParam(name = "limit") Integer limit,
                                  @RequestParam(name = "offset") Integer offset,
@@ -53,7 +53,7 @@ public class WarehousesApiController {
     }
 
     // TODO : JWT Token Test
-    @DeleteMapping("/v1/warehouses/{warehouseId}")
+    @DeleteMapping("/v2/warehouses/{warehouseId}")
     public void delete(@PathVariable Integer warehouseId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
             warehousesService.delete(warehouseId, bearerToken);
@@ -68,13 +68,13 @@ public class WarehousesApiController {
     }
 
     // TODO : 특정 창고 정보 조회 API
-    @GetMapping("/v1/warehouses/{warehouseId}")
+    @GetMapping("/v2/warehouses/{warehouseId}")
     public void getWarehouseById(@PathVariable Integer warehouseId, HttpServletResponse response) {
 
     }
 
     // TODO : 창고 정보 수정 API
-    @PatchMapping("/v1/warehouses/{warehouseId}")
+    @PatchMapping("/v2/warehouses/{warehouseId}")
     public void updateWarehouseInfo(@PathVariable Integer warehouseId, HttpServletResponse response) {
 
     }
