@@ -50,7 +50,7 @@ public class JwtTokenUtil {
         }
     }
 
-    public static boolean isTokenExpired(String token) throws AuthenticateException{
+    public static boolean isTokenNotExpired(String token) throws AuthenticateException{
         try {
             return extractExpiration(token).before(new Date());
         } catch(Exception exception) {
@@ -90,7 +90,7 @@ public class JwtTokenUtil {
             String userIdOfToken = extractUserId(token);
             System.out.println(userIdOfToken);
             if(userId == null) throw new Exception();
-            return (userId != null && isTokenExpired(token) && userId.equals(Integer.parseInt(userIdOfToken)));
+            return (userId != null && isTokenNotExpired(token) && userId.equals(Integer.parseInt(userIdOfToken)));
         } catch(Exception exception) {
             throw new AuthenticateException();
         }
@@ -100,7 +100,7 @@ public class JwtTokenUtil {
         try {
             String userIdOfToken = extractUserId(token);
             if(userIdOfToken == null) throw new Exception();
-            return (userIdOfToken != null && !isTokenExpired(token));
+            return (userIdOfToken != null && isTokenNotExpired(token));
         } catch(Exception exception) {
             throw new AuthenticateException();
         }
