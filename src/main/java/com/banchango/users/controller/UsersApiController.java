@@ -5,9 +5,7 @@ import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
-import com.banchango.users.exception.UserEmailInUseException;
-import com.banchango.users.exception.UserIdNotFoundException;
-import com.banchango.users.exception.UserNotFoundException;
+import com.banchango.users.exception.*;
 import com.banchango.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -59,19 +57,22 @@ public class UsersApiController {
         }
     }
 
-
-    @PatchMapping("/v1/users/{userId}")
+    // DONE
+    @PatchMapping("/v2/users/{userId}")
     public void updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
             if(bearerToken == null) throw new AuthenticateException();
             if(userId == null) throw new Exception();
             WriteToClient.send(response, usersService.updateUserInfo(userId, requestDto, bearerToken), HttpServletResponse.SC_OK);
-        } catch(UserIdNotFoundException | UserEmailInUseException exception) {
+        } catch(UserException exception) {
             if(exception instanceof UserIdNotFoundException) {
                 WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
-            }
-            else if(exception instanceof UserEmailInUseException) {
+            } else if(exception instanceof UserEmailInUseException) {
                 WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
+            } else if(exception instanceof UserNotFoundException) {
+                WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
+            } else if(exception instanceof UserInvalidAccessException) {
+                WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
             }
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);

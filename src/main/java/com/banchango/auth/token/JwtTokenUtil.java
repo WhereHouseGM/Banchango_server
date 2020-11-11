@@ -88,9 +88,8 @@ public class JwtTokenUtil {
     public static boolean validateTokenWithUserId(String token, Integer userId) throws AuthenticateException {
         try {
             String userIdOfToken = extractUserId(token);
-            System.out.println(userIdOfToken);
             if(userId == null) throw new Exception();
-            return (userId != null && isTokenNotExpired(token) && userId.equals(Integer.parseInt(userIdOfToken)));
+            return (!isTokenNotExpired(token) && userId.equals(Integer.parseInt(userIdOfToken)));
         } catch(Exception exception) {
             throw new AuthenticateException();
         }
@@ -100,7 +99,8 @@ public class JwtTokenUtil {
         try {
             String userIdOfToken = extractUserId(token);
             if(userIdOfToken == null) throw new Exception();
-            return (userIdOfToken != null && isTokenNotExpired(token));
+            System.out.println(isTokenNotExpired(token));
+            return (!isTokenNotExpired(token));
         } catch(Exception exception) {
             throw new AuthenticateException();
         }

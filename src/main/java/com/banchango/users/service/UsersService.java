@@ -10,6 +10,7 @@ import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.UserEmailInUseException;
 import com.banchango.users.exception.UserIdNotFoundException;
+import com.banchango.users.exception.UserInvalidAccessException;
 import com.banchango.users.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -77,17 +78,28 @@ public class UsersService {
 
     @Transactional
     public JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
-        if(!JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
+
+        if(!JwtTokenUtil.validateToken(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
+        if(!JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
+            throw new UserInvalidAccessException();
+        }
+
         Optional<Users> optionalUser = usersRepository.findById(userId);
         if (optionalUser.isPresent()) {
-            if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-                throw new UserEmailInUseException();
+            if(!optionalUser.get().getEmail().equals(requestDto.getEmail())) {
+                if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+                    throw new UserEmailInUseException();
+                }
+                Users user = optionalUser.get();
+                user.updateUserInfo(requestDto);
+                return ObjectMaker.getJSONObjectWithUserInfo(user);
+            } else {
+                Users user = optionalUser.get();
+                user.updateUserInfo(requestDto);
+                return ObjectMaker.getJSONObjectWithUserInfo(user);
             }
-            Users user = optionalUser.get();
-            user.updateUserInfo(requestDto);
-            return ObjectMaker.getJSONObjectWithUserInfo(user);
         } else {
             throw new UserIdNotFoundException();
         }

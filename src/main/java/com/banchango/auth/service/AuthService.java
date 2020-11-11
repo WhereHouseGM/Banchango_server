@@ -16,7 +16,7 @@ public class AuthService {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         String userId = JwtTokenUtil.extractUserId(token);
         if(userId == null) throw new AuthenticateException();
-        if(JwtTokenUtil.isTokenExpired(token)) throw new AuthenticateException();
+        if(!JwtTokenUtil.isTokenNotExpired(token)) throw new AuthenticateException();
         jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(Integer.parseInt(userId)));
         jsonObject.put("tokenType", "Bearer");
         return jsonObject;
