@@ -35,8 +35,8 @@ public class UsersApiController {
         }
     }
 
-
-    @PostMapping("/v1/auth/sign-up")
+    // DONE
+    @PostMapping("/v2/users/sign-up")
     public void signUp(@RequestBody UserSignupRequestDto requestDto, HttpServletResponse response) {
         try {
             WriteToClient.send(response, usersService.signUp(requestDto), HttpServletResponse.SC_CREATED);
@@ -58,6 +58,7 @@ public class UsersApiController {
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+
 
     @PatchMapping("/v1/users/{userId}")
     public void updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
