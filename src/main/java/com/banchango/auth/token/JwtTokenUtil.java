@@ -99,7 +99,6 @@ public class JwtTokenUtil {
         try {
             String userIdOfToken = extractUserId(token);
             if(userIdOfToken == null) throw new Exception();
-            System.out.println(isTokenNotExpired(token));
             return (!isTokenNotExpired(token));
         } catch(Exception exception) {
             throw new AuthenticateException();
