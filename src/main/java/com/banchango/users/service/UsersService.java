@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import org.json.JSONObject;
+
 @RequiredArgsConstructor
 @Service
 public class UsersService {
@@ -24,7 +26,7 @@ public class UsersService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public org.json.simple.JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
+    public JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
         if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new UserEmailInUseException();
         }
@@ -42,13 +44,13 @@ public class UsersService {
 
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public org.json.simple.JSONObject signIn(UserSigninRequestDto requestDto) throws Exception{
+    public JSONObject signIn(UserSigninRequestDto requestDto) throws Exception{
         if(requestDto.getEmail() == null || requestDto.getPassword() == null) {
             throw new Exception();
         }
         Optional<Users> user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
         if(user.isPresent()) {
-            org.json.simple.JSONObject jsonObject = ObjectMaker.getJSONObjectWithUserInfo(user.get());
+            JSONObject jsonObject = ObjectMaker.getJSONObjectWithUserInfo(user.get());
             jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(user.get().getUserId()));
             jsonObject.put("refreshToken", JwtTokenUtil.generateRefreshToken(user.get().getUserId()));
             jsonObject.put("tokenType", "Bearer");
@@ -60,7 +62,7 @@ public class UsersService {
     }
 
     @Transactional(readOnly = true)
-    public org.json.simple.JSONObject viewUserInfo(Integer userId, String token) throws Exception{
+    public JSONObject viewUserInfo(Integer userId, String token) throws Exception{
         if(JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();
         }
@@ -74,7 +76,7 @@ public class UsersService {
     }
 
     @Transactional
-    public org.json.simple.JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
+    public JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
         if(!JwtTokenUtil.validateTokenWithUserId(JwtTokenUtil.getToken(token), userId)) {
             throw new AuthenticateException();
         }

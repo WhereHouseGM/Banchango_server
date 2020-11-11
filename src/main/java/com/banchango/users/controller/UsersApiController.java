@@ -19,8 +19,7 @@ public class UsersApiController {
 
     private final UsersService usersService;
 
-    // TODO : JWT Token Test
-    @GetMapping("/v1/users/{userId}")
+    @GetMapping("/v2/users/{userId}")
     public void getUserInfo(@PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
             if(bearerToken == null) throw new AuthenticateException();

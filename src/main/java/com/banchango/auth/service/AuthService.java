@@ -4,6 +4,7 @@ import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.tools.ObjectMaker;
 import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 @NoArgsConstructor
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     @SuppressWarnings("unchecked")
-    public org.json.simple.JSONObject refreshToken(String token) throws AuthenticateException {
-        org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
+    public JSONObject refreshToken(String token) throws AuthenticateException {
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
         String userId = JwtTokenUtil.extractUserId(token);
         if(userId == null) throw new AuthenticateException();
         if(JwtTokenUtil.isTokenExpired(token)) throw new AuthenticateException();
