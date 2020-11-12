@@ -61,9 +61,9 @@ public class WarehousesApiController {
     public void delete(@PathVariable Integer warehouseId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
             warehousesService.delete(warehouseId, bearerToken);
-            WriteToClient.send(response, warehousesService.delete(warehouseId, bearerToken), HttpServletResponse.SC_NO_CONTENT);
+            WriteToClient.send(response, warehousesService.delete(warehouseId, bearerToken), HttpServletResponse.SC_OK);
         } catch(WarehouseIdNotFoundException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(WarehouseInvalidAccessException exception) {
