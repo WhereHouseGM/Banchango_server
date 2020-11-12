@@ -41,7 +41,6 @@ public class WarehousesApiController {
      */
 
 
-    // TODO : Issue등록한거 확인하고 수정 필요함.
     @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
                                  @RequestParam(name = "limit") Integer limit,
