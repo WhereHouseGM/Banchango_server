@@ -1,8 +1,10 @@
 package com.banchango.warehousereviews.controller;
 
+import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehousereviews.dto.WarehouseReviewInsertRequestDto;
+import com.banchango.warehousereviews.exception.WarehouseReviewNotFoundException;
 import com.banchango.warehousereviews.service.WarehouseReviewsService;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,20 +19,24 @@ public class WarehouseReviewsApiController {
 
     private final WarehouseReviewsService reviewsService;
 
-    /*
-    // TODO : Test 필요
-    @GetMapping("/v1/warehouses/{warehouseId}/reviews")
-    public void getReviewsOfWarehouse(@PathVariable Integer warehouseId, HttpServletResponse response,
+
+    // DONE
+    @GetMapping("/v2/warehouses/{warehouseId}/reviews")
+    public void getReviewsOfWarehouse(@PathVariable Integer warehouseId, HttpServletResponse response, @RequestHeader(name = "Authorization") String bearerToken,
                                       @RequestParam(name = "limit") Integer limit, @RequestParam(name = "offset") Integer offset) {
         try {
-            WriteToClient.send(response, reviewsService.getWarehouseReviewsById(warehouseId, limit, offset), HttpServletResponse.SC_OK);
+            WriteToClient.send(response, reviewsService.getWarehouseReviewsById(warehouseId, limit, offset, bearerToken), HttpServletResponse.SC_OK);
         } catch(WarehouseIdNotFoundException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(WarehouseReviewNotFoundException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
-    */
+
 
     // TODO : JWT에서 userId값 받아와서 저장하기
     @PostMapping("/v1/warehouses/{warehouseId}/reviews")

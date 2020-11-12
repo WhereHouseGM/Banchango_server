@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 
 import javax.persistence.*;
-import java.util.HashMap;
 
 @NoArgsConstructor
 @Getter
@@ -69,7 +68,7 @@ public class Users {
 
     public JSONObject toJSONObject() {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
-        jsonObject.put("id", userId);
+        jsonObject.put("userId", userId);
         jsonObject.put("name", name);
         jsonObject.put("email", email);
         jsonObject.put("type", type);

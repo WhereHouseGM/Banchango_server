@@ -4,11 +4,9 @@ import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
-import com.banchango.domain.warehouselocations.WarehouseLocations;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.domain.warehousetypes.WarehouseTypes;
 import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.warehouses.dto.WarehouseAttachmentDto;
@@ -16,6 +14,7 @@ import com.banchango.warehouses.dto.WarehouseLocationDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import com.banchango.warehouses.dto.WarehouseTypesDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -90,16 +88,14 @@ public class WarehousesService {
         List<WarehouseSearchResponseDto> warehouses = warehousesRepository.findByAddressContaining(address, request).stream().map(WarehouseSearchResponseDto::new).collect(Collectors.toList());
         if(warehouses.size() == 0) throw new WarehouseSearchException();
         for(WarehouseSearchResponseDto searchResponseDto : warehouses) {
-            JSONObject searchObject = ObjectMaker.getJSONObject();
             WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
             WarehouseTypesDto typesDto = new WarehouseTypesDto(warehouseTypesRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
             List<WarehouseAttachmentDto> attachmentsList = warehouseAttachmentsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
             if(attachmentsList.size() != 0) {
-                searchObject = searchResponseDto.toJSONObjectWithLocationAndAttachmentAndType(locationDto, attachmentsList.get(0), typesDto);
+                jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndAttachmentAndType(locationDto, attachmentsList.get(0), typesDto));
             } else {
-                searchObject = searchResponseDto.toJSONObjectWithLocationAndType(locationDto, typesDto);
+                jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndType(locationDto, typesDto));
             }
-            jsonArray.put(searchObject);
         }
         jsonObject.put("warehouses", jsonArray);
         return jsonObject;
@@ -107,11 +103,18 @@ public class WarehousesService {
 
     // TODO : 연관된 테이블들이 ON DELETE SET NULL 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
     @Transactional
-    public void delete(Integer warehouseId, String token) throws Exception {
-        if(!JwtTokenUtil.isTokenValidated(token)) {
+    public JSONObject delete(Integer warehouseId, String token) throws Exception {
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
+        if(!warehouseId.equals(Integer.parseInt(userIdOfToken))) {
+            throw new WarehouseInvalidAccessException();
+        }
         warehousesRepository.delete(warehouse);
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
+        return jsonObject;
     }
 }

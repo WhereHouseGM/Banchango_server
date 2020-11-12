@@ -8,8 +8,4 @@ public class AuthenticateException extends Exception{
     public AuthenticateException() {
         super(MESSAGE);
     }
-
-    public AuthenticateException(String message) {
-        this.MESSAGE = message;
-    }
 }
