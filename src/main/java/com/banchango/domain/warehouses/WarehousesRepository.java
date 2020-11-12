@@ -9,6 +9,5 @@ import java.util.Optional;
 public interface WarehousesRepository extends JpaRepository<Warehouses, Integer> {
 
     Optional<Warehouses> findById(Integer warehouseId);
-
     List<Warehouses> findByAddressContaining(String address, Pageable pageable);
 }
