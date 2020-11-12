@@ -3,14 +3,30 @@ package com.banchango.warehouses.service;
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
+import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
+import com.banchango.domain.warehouselocations.WarehouseLocations;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehousetypes.WarehouseTypes;
 import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
+import com.banchango.tools.ObjectMaker;
+import com.banchango.warehouses.dto.WarehouseAttachmentDto;
+import com.banchango.warehouses.dto.WarehouseLocationDto;
+import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
+import com.banchango.warehouses.dto.WarehouseTypesDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +36,7 @@ public class WarehousesService {
     private final DeliveryTypesRepository deliveryTypesRepository;
     private final WarehouseLocationsRepository warehouseLocationsRepository;
     private final WarehouseTypesRepository warehouseTypesRepository;
+    private final WarehouseAttachmentsRepository warehouseAttachmentsRepository;
 
     /*
     @Transactional
@@ -65,30 +82,28 @@ public class WarehousesService {
     }
      */
 
-    /*
     @Transactional(readOnly = true)
-    public org.json.simple.JSONObject search(String address, Integer limit, Integer offset) throws WarehouseSearchException{
-        org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
-        org.json.simple.JSONArray jsonArray = ObjectMaker.getSimpleJSONArray();
+    public JSONObject search(String address, Integer limit, Integer offset) throws WarehouseSearchException{
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
         PageRequest request = PageRequest.of(limit, offset);
         List<WarehouseSearchResponseDto> warehouses = warehousesRepository.findByAddressContaining(address, request).stream().map(WarehouseSearchResponseDto::new).collect(Collectors.toList());
         if(warehouses.size() == 0) throw new WarehouseSearchException();
         for(WarehouseSearchResponseDto searchResponseDto : warehouses) {
-            org.json.simple.JSONObject jTemp = ObjectMaker.getSimpleJSONObject();
-            jTemp.putAll(searchResponseDto.convertMap());
-            WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
-            org.json.simple.JSONObject locationObject = ObjectMaker.getSimpleJSONObject();
-            locationObject.put("latitude", locationDto.getLatitude());
-            locationObject.put("longitude", locationDto.getLongitude());
-            jTemp.put("location", locationObject);
-            WarehouseTypesDto typesDto = new WarehouseTypesDto(warehouseTypesRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
-            jTemp.put("types", typesDto.getTypes());
-            jsonArray.add(jTemp);
+            JSONObject searchObject = ObjectMaker.getJSONObject();
+            WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(searchResponseDto.getWarehouseId());
+            List<WarehouseTypes> types = warehouseTypesRepository.findByWarehouseId(searchResponseDto.getWarehouseId());
+            WarehouseTypesDto typesDto = new WarehouseTypesDto(types);
+            List<WarehouseAttachmentDto> attachmentsList = warehouseAttachmentsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
+            if(attachmentsList.size() != 0)) {
+                searchObject = searchResponseDto.toJSONObject(locationDto, attachmentsList.get(0), typesDto);
+            }
+            // attachment가 없을 때 처리 (Optional 인자로 넘기는거 가능한지 확인)
+            JSONObject searchObject = searchResponseDto.toJSONObject(locationDto, typesDto)
         }
         jsonObject.put("warehouses", jsonArray);
         return jsonObject;
     }
-     */
 
     // TODO : 연관된 테이블들이 ON DELETE SET NULL 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
     @Transactional

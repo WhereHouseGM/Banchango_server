@@ -40,7 +40,7 @@ public class WarehousesApiController {
 
      */
 
-    /*
+
     // TODO : 창고 목록 조회 API
     @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
@@ -55,8 +55,6 @@ public class WarehousesApiController {
             WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
         }
     }
-
-     */
 
     // TODO : JWT Token Test
     @DeleteMapping("/v2/warehouses/{warehouseId}")
