@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 @NoArgsConstructor
 @Getter
 @Setter

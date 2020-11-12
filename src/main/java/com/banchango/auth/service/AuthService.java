@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    @SuppressWarnings("unchecked")
     public JSONObject refreshToken(String token) throws AuthenticateException {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {

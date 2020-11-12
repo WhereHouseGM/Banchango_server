@@ -14,21 +14,18 @@ public class ObjectMaker {
         return new JSONArray();
     }
 
-    @SuppressWarnings("unchecked")
     public static JSONObject getJSONObjectWithException(Exception exception) {
         JSONObject jsonObject = getJSONObject();
         jsonObject.put("message", exception.getMessage());
         return jsonObject;
     }
 
-    @SuppressWarnings("unchecked")
     public static JSONObject getJSONObjectWithUserInfo(Users user) {
         JSONObject jsonObject = getJSONObject();
         jsonObject.put("User", user.toJSONObject());
         return jsonObject;
     }
 
-    @SuppressWarnings("unchecked")
     public static JSONObject getJSONObjectOfBadRequest() {
         JSONObject jsonObject = getJSONObject();
         jsonObject.put("message", "요청 형식이 잘못되었습니다.");
