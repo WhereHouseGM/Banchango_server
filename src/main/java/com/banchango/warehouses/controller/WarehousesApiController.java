@@ -52,7 +52,8 @@ public class WarehousesApiController {
         } catch(WarehouseSearchException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            exception.printStackTrace();
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 

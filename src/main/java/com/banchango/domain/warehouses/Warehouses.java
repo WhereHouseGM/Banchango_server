@@ -22,6 +22,7 @@ public class Warehouses {
     private String name;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
 
     @Column
