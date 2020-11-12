@@ -69,7 +69,7 @@ public class Users {
 
     public JSONObject toJSONObject() {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
-        jsonObject.put("id", userId);
+        jsonObject.put("userId", userId);
         jsonObject.put("name", name);
         jsonObject.put("email", email);
         jsonObject.put("type", type);

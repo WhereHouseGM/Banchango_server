@@ -30,7 +30,7 @@ public class WarehouseSearchResponseDto {
 
     private JSONObject makeBasicSearchResultObject() {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
-        jsonObject.put("id", warehouseId);
+        jsonObject.put("warehouseId", warehouseId);
         jsonObject.put("name", name);
         jsonObject.put("landArea", landArea);
         jsonObject.put("totalArea", totalArea);

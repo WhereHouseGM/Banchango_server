@@ -91,16 +91,14 @@ public class WarehousesService {
         List<WarehouseSearchResponseDto> warehouses = warehousesRepository.findByAddressContaining(address, request).stream().map(WarehouseSearchResponseDto::new).collect(Collectors.toList());
         if(warehouses.size() == 0) throw new WarehouseSearchException();
         for(WarehouseSearchResponseDto searchResponseDto : warehouses) {
-            JSONObject searchObject = ObjectMaker.getJSONObject();
             WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
             WarehouseTypesDto typesDto = new WarehouseTypesDto(warehouseTypesRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
             List<WarehouseAttachmentDto> attachmentsList = warehouseAttachmentsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
             if(attachmentsList.size() != 0) {
-                searchObject = searchResponseDto.toJSONObjectWithLocationAndAttachmentAndType(locationDto, attachmentsList.get(0), typesDto);
+                jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndAttachmentAndType(locationDto, attachmentsList.get(0), typesDto));
             } else {
-                searchObject = searchResponseDto.toJSONObjectWithLocationAndType(locationDto, typesDto);
+                jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndType(locationDto, typesDto));
             }
-            jsonArray.put(searchObject);
         }
         jsonObject.put("warehouses", jsonArray);
         return jsonObject;

@@ -1,5 +1,7 @@
 package com.banchango.warehousereviews.service;
 
+import com.banchango.auth.exception.AuthenticateException;
+import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehousereviews.WarehouseReviews;
@@ -8,6 +10,7 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.warehousereviews.dto.WarehouseReviewInsertRequestDto;
 import com.banchango.warehousereviews.dto.WarehouseReviewResponseDto;
+import com.banchango.warehousereviews.exception.WarehouseReviewNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
@@ -27,25 +30,25 @@ public class WarehouseReviewsService {
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
 
-    /*
-    public JSONObject getWarehouseReviewsById(Integer warehouseId, Integer limit, Integer offset) throws Exception {
+    public JSONObject getWarehouseReviewsById(Integer warehouseId, Integer limit, Integer offset, String token) throws Exception {
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
         if(!warehousesRepository.findById(warehouseId).isPresent()) throw new WarehouseIdNotFoundException();
-        PageRequest request = PageRequest.of(offset, limit);
+        PageRequest request = PageRequest.of(limit, offset);
         List<WarehouseReviewResponseDto> list = reviewsRepository.findByWarehouseId(warehouseId, request).stream().map(WarehouseReviewResponseDto::new).collect(Collectors.toList());
+        if(list.size() == 0) throw new WarehouseReviewNotFoundException();
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         JSONArray jsonArray = ObjectMaker.getJSONArray();
         for(WarehouseReviewResponseDto dto : list) {
+            JSONObject reviewObject = dto.toJSONObject();
             Users user = usersRepository.findById(dto.getUserId()).orElseThrow(Exception::new);
-            JSONObject objectOfUser = ObjectMaker.getJSONObjectWithUserInfo(user);
-            JSONObject jTemp = ObjectMaker.getJSONObject();
-            jTemp.putAll(dto.convertMap());
-            jTemp.put("writer", objectOfUser);
-            jsonArray.add(jTemp);
+            reviewObject.put("writer", user.toJSONObject());
+            jsonArray.put(reviewObject);
         }
         jsonObject.put("reviews", jsonArray);
         return jsonObject;
     }
-    */
 
     public JSONObject register(Integer warehouseId, WarehouseReviewInsertRequestDto dto) throws Exception {
         // TODO : JWT에서 user id 값 가져오기, 코드 작동을 위해 1로 임시 지정함
