@@ -41,8 +41,7 @@ public class WarehousesApiController {
      */
 
 
-    // TODO : 창고 목록 조회 API, Issue등록한거 확인하고 수정 필요함.
-    // NOT FOUND 시 메시지 전송이 안됨 ㅠ
+    // TODO : Issue등록한거 확인하고 수정 필요함.
     @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
                                  @RequestParam(name = "limit") Integer limit,
