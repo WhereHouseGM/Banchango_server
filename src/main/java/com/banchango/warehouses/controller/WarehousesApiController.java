@@ -5,6 +5,7 @@ import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehouses.dto.NewWarehouseFormDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.exception.WarehouseSearchException;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class WarehousesApiController {
 
      */
 
-
+    // DONE
     @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
                                  @RequestParam(name = "limit") Integer limit,
@@ -55,18 +56,20 @@ public class WarehousesApiController {
         }
     }
 
-    // TODO : JWT Token Test
+    // TODO : ON DELETE SET NULL 이지만 그래도 더미데이터 넣어서 테스트 필요
     @DeleteMapping("/v2/warehouses/{warehouseId}")
     public void delete(@PathVariable Integer warehouseId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
             warehousesService.delete(warehouseId, bearerToken);
-            WriteToClient.send(response, null, HttpServletResponse.SC_NO_CONTENT);
+            WriteToClient.send(response, warehousesService.delete(warehouseId, bearerToken), HttpServletResponse.SC_NO_CONTENT);
         } catch(WarehouseIdNotFoundException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(WarehouseInvalidAccessException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 

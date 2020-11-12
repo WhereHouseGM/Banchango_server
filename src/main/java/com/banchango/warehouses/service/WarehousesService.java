@@ -16,6 +16,7 @@ import com.banchango.warehouses.dto.WarehouseLocationDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import com.banchango.warehouses.dto.WarehouseTypesDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
@@ -107,11 +108,18 @@ public class WarehousesService {
 
     // TODO : 연관된 테이블들이 ON DELETE SET NULL 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
     @Transactional
-    public void delete(Integer warehouseId, String token) throws Exception {
-        if(!JwtTokenUtil.isTokenValidated(token)) {
+    public JSONObject delete(Integer warehouseId, String token) throws Exception {
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
+        if(!warehouseId.equals(Integer.parseInt(userIdOfToken))) {
+            throw new WarehouseInvalidAccessException();
+        }
         warehousesRepository.delete(warehouse);
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
+        return jsonObject;
     }
 }
