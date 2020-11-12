@@ -19,9 +19,5 @@ public class AgencyWarehouseDetails {
     String type;
 
     @Column
-    @Enumerated(EnumType.STRING)
-    private StorageType storageType;
-
-    @Column
     private Integer warehouseId;
 }

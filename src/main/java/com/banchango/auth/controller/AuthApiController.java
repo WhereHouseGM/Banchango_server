@@ -17,6 +17,7 @@ public class AuthApiController {
 
     private final AuthService authService;
 
+    // DONE
     @PostMapping("/v2/auth/refresh-token")
     public void refreshToken(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
