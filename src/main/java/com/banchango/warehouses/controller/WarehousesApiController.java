@@ -42,6 +42,7 @@ public class WarehousesApiController {
 
 
     // TODO : 창고 목록 조회 API, Issue등록한거 확인하고 수정 필요함.
+    // NOT FOUND 시 메시지 전송이 안됨 ㅠ
     @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
                                  @RequestParam(name = "limit") Integer limit,
@@ -52,7 +53,6 @@ public class WarehousesApiController {
         } catch(WarehouseSearchException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
         } catch(Exception exception) {
-            exception.printStackTrace();
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }

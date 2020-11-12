@@ -16,7 +16,7 @@ public class ObjectMaker {
 
     @SuppressWarnings("unchecked")
     public static JSONObject getJSONObjectWithException(Exception exception) {
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject = getJSONObject();
         jsonObject.put("message", exception.getMessage());
         return jsonObject;
     }

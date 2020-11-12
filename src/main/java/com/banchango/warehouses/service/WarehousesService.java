@@ -88,7 +88,6 @@ public class WarehousesService {
         JSONArray jsonArray = ObjectMaker.getJSONArray();
         PageRequest request = PageRequest.of(limit, offset);
         List<WarehouseSearchResponseDto> warehouses = warehousesRepository.findByAddressContaining(address, request).stream().map(WarehouseSearchResponseDto::new).collect(Collectors.toList());
-        System.out.println(warehouses.size());
         if(warehouses.size() == 0) throw new WarehouseSearchException();
         for(WarehouseSearchResponseDto searchResponseDto : warehouses) {
             JSONObject searchObject = ObjectMaker.getJSONObject();
