@@ -15,7 +15,7 @@ public class AgencyWarehousePayments {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 10)
+    @Column(length = 40)
     private String unit;
 
     @Column

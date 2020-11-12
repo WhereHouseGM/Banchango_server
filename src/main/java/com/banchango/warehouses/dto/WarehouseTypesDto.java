@@ -1,21 +1,21 @@
 package com.banchango.warehouses.dto;
 
+import com.banchango.domain.warehousetypes.WarehouseTypeName;
 import com.banchango.domain.warehousetypes.WarehouseTypes;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
+@NoArgsConstructor
 @Getter
 @Setter
 public class WarehouseTypesDto {
 
-    private String[] types;
+    private WarehouseTypeName name;
 
-    public WarehouseTypesDto(List<WarehouseTypes> warehouseTypes) {
-        types = new String[10];
-        for(int i = 0; i < warehouseTypes.size(); i++) {
-            types[i] = warehouseTypes.get(i).toString();
-        }
+    public WarehouseTypesDto(WarehouseTypes warehouseTypes) {
+        this.name =  warehouseTypes.getName();
     }
 }
