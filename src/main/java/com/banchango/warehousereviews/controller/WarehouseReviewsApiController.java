@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-// TODO : JWT 검사 과정
 @RequiredArgsConstructor
 @RestController
 public class WarehouseReviewsApiController {
