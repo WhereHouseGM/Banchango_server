@@ -12,13 +12,13 @@ import org.json.JSONObject;
 @Setter
 public class WarehouseReviewResponseDto {
 
-    private int id;
+    private int reviewId;
     private int rating;
     private String content;
     private int userId;
 
     public WarehouseReviewResponseDto(WarehouseReviews reviews) {
-        this.id = reviews.getId();
+        this.reviewId = reviews.getReviewId();
         this.rating = reviews.getRating();
         this.content = reviews.getContent();
         this.userId = reviews.getUserId();
@@ -26,7 +26,7 @@ public class WarehouseReviewResponseDto {
 
     public JSONObject toJSONObject() {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
-        jsonObject.put("warehouseId", id);
+        jsonObject.put("reviewId", reviewId);
         jsonObject.put("rating", rating);
         jsonObject.put("content", content);
         return jsonObject;
