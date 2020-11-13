@@ -101,7 +101,7 @@ public class WarehousesService {
         return jsonObject;
     }
 
-    // TODO : 연관된 테이블들이 ON DELETE SET NULL 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
+    // TODO : 연관된 테이블들이 ON DELETE CASCADE, ON UPDATE CASCADE 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
     @Transactional
     public JSONObject delete(Integer warehouseId, String token) throws Exception {
         if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
