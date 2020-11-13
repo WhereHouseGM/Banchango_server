@@ -50,23 +50,27 @@ public class WarehouseReviewsService {
         return jsonObject;
     }
 
-    public JSONObject register(Integer warehouseId, WarehouseReviewInsertRequestDto dto) throws Exception {
-        // TODO : JWT에서 user id 값 가져오기, 코드 작동을 위해 1로 임시 지정함
-        int userId = 1;
+    public JSONObject register(Integer warehouseId, WarehouseReviewInsertRequestDto dto, String token) throws Exception {
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        if(!warehousesRepository.findById(warehouseId).isPresent()) {
+            throw new WarehouseIdNotFoundException();
+        }
+        int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
         WarehouseReviews review = WarehouseReviews.builder()
                 .rating(dto.getRating())
                 .content(dto.getContent())
                 .userId(userId)
                 .warehouseId(warehouseId).build();
+        WarehouseReviews savedReview = reviewsRepository.save(review);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
-        jsonObject.put("id", userId);
-        jsonObject.put("rating", dto.getRating());
-        jsonObject.put("content", dto.getContent());
+        jsonObject.put("review", savedReview.toJSONObject());
         jsonObject.put("writer", ObjectMaker.getJSONObjectWithUserInfo(usersRepository.findById(userId).get()));
         return jsonObject;
     }
 
     public void delete(int reviewId, int warehouseId) throws Exception {
-        reviewsRepository.deleteByIdAndWarehouseId(reviewId, warehouseId);
+        reviewsRepository.deleteByReviewIdAndWarehouseId(reviewId, warehouseId);
     }
 }

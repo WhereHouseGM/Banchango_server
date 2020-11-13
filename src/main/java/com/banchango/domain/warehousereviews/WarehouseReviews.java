@@ -1,8 +1,10 @@
 package com.banchango.domain.warehousereviews;
 
+import com.banchango.tools.ObjectMaker;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 
@@ -14,7 +16,7 @@ public class WarehouseReviews {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer reviewId;
 
     @Column(nullable = false)
     private Integer rating;
@@ -34,5 +36,13 @@ public class WarehouseReviews {
         this.content = content;
         this.userId = userId;
         this.warehouseId = warehouseId;
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("reviewId", reviewId);
+        jsonObject.put("rating", rating);
+        jsonObject.put("content", content);
+        return jsonObject;
     }
 }

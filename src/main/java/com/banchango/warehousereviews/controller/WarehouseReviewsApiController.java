@@ -37,14 +37,18 @@ public class WarehouseReviewsApiController {
         }
     }
 
-
-    // TODO : JWT에서 userId값 받아와서 저장하기
-    @PostMapping("/v1/warehouses/{warehouseId}/reviews")
-    public void register(@PathVariable Integer warehouseId, @RequestBody WarehouseReviewInsertRequestDto requestDto, HttpServletResponse response) {
+    // DONE
+    @PostMapping("/v2/warehouses/{warehouseId}/reviews")
+    public void register(@PathVariable Integer warehouseId, @RequestHeader(name = "Authorization") String bearerToken,
+                         @RequestBody WarehouseReviewInsertRequestDto requestDto, HttpServletResponse response) {
         try {
-            WriteToClient.send(response, reviewsService.register(warehouseId, requestDto), HttpServletResponse.SC_OK);
+            WriteToClient.send(response, reviewsService.register(warehouseId, requestDto, bearerToken), HttpServletResponse.SC_OK);
+        } catch(WarehouseIdNotFoundException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
