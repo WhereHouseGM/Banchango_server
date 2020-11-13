@@ -10,6 +10,7 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.warehousereviews.dto.WarehouseReviewInsertRequestDto;
 import com.banchango.warehousereviews.dto.WarehouseReviewResponseDto;
+import com.banchango.warehousereviews.exception.WarehouseReviewInvalidAccessException;
 import com.banchango.warehousereviews.exception.WarehouseReviewNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.json.JSONObject;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -70,7 +73,22 @@ public class WarehouseReviewsService {
         return jsonObject;
     }
 
-    public void delete(int reviewId, int warehouseId) throws Exception {
+    @Transactional
+    public JSONObject delete(Integer reviewId, Integer warehouseId, String token) throws Exception {
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        if(!warehousesRepository.findById(warehouseId).isPresent()) {
+            throw new WarehouseIdNotFoundException();
+        }
+        WarehouseReviews review = reviewsRepository.findByReviewIdAndWarehouseId(reviewId, warehouseId).orElseThrow(WarehouseReviewNotFoundException::new);
+        int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
+        if(!review.getUserId().equals(userId)) {
+            throw new WarehouseReviewInvalidAccessException();
+        }
         reviewsRepository.deleteByReviewIdAndWarehouseId(reviewId, warehouseId);
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("message", "리뷰가 성공적으로 삭제되었습니다.");
+        return jsonObject;
     }
 }

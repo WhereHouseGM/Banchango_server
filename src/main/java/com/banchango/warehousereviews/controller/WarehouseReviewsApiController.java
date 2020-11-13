@@ -4,6 +4,7 @@ import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehousereviews.dto.WarehouseReviewInsertRequestDto;
+import com.banchango.warehousereviews.exception.WarehouseReviewInvalidAccessException;
 import com.banchango.warehousereviews.exception.WarehouseReviewNotFoundException;
 import com.banchango.warehousereviews.service.WarehouseReviewsService;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
@@ -52,14 +53,21 @@ public class WarehouseReviewsApiController {
         }
     }
 
-    @DeleteMapping("/v1/warehouses/{warehouseId}/reviews/{reviewId}")
-    public void delete(@PathVariable Integer warehouseId, @PathVariable Integer reviewId, HttpServletResponse response) {
+    // DONE
+    @DeleteMapping("/v2/warehouses/{warehouseId}/reviews/{reviewId}")
+    public void delete(@PathVariable Integer warehouseId, @PathVariable Integer reviewId,
+                       @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
-            if(reviewId == null || warehouseId == null) throw new Exception();
-            reviewsService.delete(reviewId, warehouseId);
-            WriteToClient.send(response, null, HttpServletResponse.SC_NO_CONTENT);
+            WriteToClient.send(response, reviewsService.delete(reviewId, warehouseId, bearerToken), HttpServletResponse.SC_OK);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(WarehouseReviewInvalidAccessException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
+        } catch(WarehouseIdNotFoundException | WarehouseReviewNotFoundException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            exception.printStackTrace();
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
