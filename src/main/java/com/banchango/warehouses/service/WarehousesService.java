@@ -6,11 +6,13 @@ import com.banchango.domain.agencymainitemtypes.AgencyMainItemTypesRepository;
 import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetails;
 import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetailsRepository;
 import com.banchango.domain.agencywarehousepayments.AgencyWarehousePaymentsRepository;
+import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
+import com.banchango.domain.warehousereviews.WarehouseReviewsRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehousetypes.WarehouseTypes;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -44,6 +47,7 @@ public class WarehousesService {
     private final AgencyWarehouseDetailsRepository agencyWarehouseDetailsRepository;
     private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
     private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
+    private final WarehouseReviewsRepository warehouseReviewsRepository;
 
     // DONE
     @Transactional
@@ -110,11 +114,18 @@ public class WarehousesService {
         int agencyWarehouseDetailId = getSavedAgencyWarehouseDetailId(requestDto.toAgencyWarehouseDetailEntity(warehouseId));
         agencyMainItemTypesRepository.save(requestDto.toAgencyMainItemsEntity(agencyWarehouseDetailId));
         saveWarehousePayments(requestDto.getPayments(), agencyWarehouseDetailId);
+        saveDeliveryTypes(requestDto.getDeliveryTypes(), agencyWarehouseDetailId);
     }
 
-    public void saveWarehousePayments(AgencyWarehousePaymentInsertRequestDto[] payments, Integer agencyWarehouseDetailId) {
+    private void saveWarehousePayments(AgencyWarehousePaymentInsertRequestDto[] payments, Integer agencyWarehouseDetailId) {
         for(AgencyWarehousePaymentInsertRequestDto dto : payments) {
             agencyWarehousePaymentsRepository.save(dto.toEntity(agencyWarehouseDetailId));
+        }
+    }
+
+    private void saveDeliveryTypes(String[] names, Integer agencyWarehouseDetailId) {
+        for(String name : names) {
+            deliveryTypesRepository.save(DeliveryTypes.builder().name(name).agencyWarehouseDetailId(agencyWarehouseDetailId).build());
         }
     }
 
@@ -174,14 +185,27 @@ public class WarehousesService {
             throw new AuthenticateException();
         }
         Warehouses warehouse = warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        if(warehouse.getInsuranceId() != null) {
-            insurancesRepository.deleteByInsuranceId(warehouse.getInsuranceId());
-        }
-        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
-        if(!warehouse.getUserId().equals(Integer.parseInt(userIdOfToken))) {
-            throw new WarehouseInvalidAccessException();
-        }
-        warehousesRepository.deleteByWarehouseId(warehouseId);
+        warehousesRepository.delete_(warehouseId);
+//        if(warehouse.getInsuranceId() != null) {
+//            insurancesRepository.deleteByInsuranceId(warehouse.getInsuranceId());
+//        }
+//        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
+//        if(!warehouse.getUserId().equals(Integer.parseInt(userIdOfToken))) {
+//            throw new WarehouseInvalidAccessException();
+//        }
+//        Optional<AgencyWarehouseDetails> detailsOptional = agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId);
+//        if(detailsOptional.isPresent()) {
+//            Integer agencyWarehouseDetailId = detailsOptional.get().getAgencyWarehouseDetailId();
+//            agencyMainItemTypesRepository.deleteByAgencyWarehouseDetailId(agencyWarehouseDetailId);
+//            agencyWarehousePaymentsRepository.deleteAllByAgencyWarehouseDetailId(agencyWarehouseDetailId);
+//            deliveryTypesRepository.deleteAllByAgencyWarehouseDetailId(agencyWarehouseDetailId);
+//            agencyWarehouseDetailsRepository.deleteByWarehouseId(warehouseId);
+//        }
+//        warehouseLocationsRepository.deleteByWarehouseId(warehouseId);
+//        warehouseAttachmentsRepository.deleteAllByWarehouseId(warehouseId);
+//        warehouseTypesRepository.deleteByWarehouseId(warehouseId);
+//        warehouseReviewsRepository.deleteAllByWarehouseId(warehouseId);
+//        warehousesRepository.deleteByWarehouseId(warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
         return jsonObject;

@@ -1,5 +1,6 @@
 package com.banchango.domain.deliverytypes;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,10 +23,9 @@ public class DeliveryTypes {
     @Column
     private Integer agencyWarehouseDetailId;
 
-    public HashMap<String, Object> convertMap() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("name", name);
-        return map;
+    @Builder
+    public DeliveryTypes(String name, Integer agencyWarehouseDetailId) {
+        this.name = name;
+        this.agencyWarehouseDetailId = agencyWarehouseDetailId;
     }
 }

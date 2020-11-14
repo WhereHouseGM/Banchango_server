@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface WarehouseLocationsRepository extends JpaRepository<WarehouseLocations, Integer> {
 
     WarehouseLocations findByWarehouseId(Integer warehouseId);
-
+    void deleteByWarehouseId(Integer warehouseId);
 }
+

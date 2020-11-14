@@ -20,6 +20,7 @@ public class WarehousesApiController {
 
     private final WarehousesService warehousesService;
 
+    // DONE
     @PostMapping("/v2/warehouses/agency")
     public void register(@RequestBody AgencyWarehouseInsertRequestDto dto,
                          @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {

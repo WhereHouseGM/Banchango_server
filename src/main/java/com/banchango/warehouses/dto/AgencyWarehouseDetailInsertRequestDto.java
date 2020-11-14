@@ -13,6 +13,7 @@ public class AgencyWarehouseDetailInsertRequestDto {
 
     private String warehouseType;
     private String typeName;
+    private String[] deliveryTypes;
     private AgencyWarehousePaymentInsertRequestDto[] payments;
 
     public AgencyWarehouseDetails toAgencyWarehouseDetailEntity(Integer warehouseId) {
