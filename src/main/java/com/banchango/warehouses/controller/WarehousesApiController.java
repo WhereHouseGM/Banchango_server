@@ -66,6 +66,7 @@ public class WarehousesApiController {
         }
     }
 
+    // DONE
     @DeleteMapping("/v2/warehouses/{warehouseId}")
     public void delete(@PathVariable Integer warehouseId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {

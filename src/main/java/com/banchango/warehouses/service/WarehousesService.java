@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -178,34 +177,16 @@ public class WarehousesService {
         return jsonObject;
     }
 
-    // TODO : 연관된 테이블들이 ON DELETE CASCADE, ON UPDATE CASCADE 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
     @Transactional
     public JSONObject delete(Integer warehouseId, String token) throws Exception {
         if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
         Warehouses warehouse = warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(!warehouse.getUserId().equals(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))))) {
+            throw new WarehouseInvalidAccessException();
+        }
         warehousesRepository.delete_(warehouseId);
-//        if(warehouse.getInsuranceId() != null) {
-//            insurancesRepository.deleteByInsuranceId(warehouse.getInsuranceId());
-//        }
-//        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
-//        if(!warehouse.getUserId().equals(Integer.parseInt(userIdOfToken))) {
-//            throw new WarehouseInvalidAccessException();
-//        }
-//        Optional<AgencyWarehouseDetails> detailsOptional = agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId);
-//        if(detailsOptional.isPresent()) {
-//            Integer agencyWarehouseDetailId = detailsOptional.get().getAgencyWarehouseDetailId();
-//            agencyMainItemTypesRepository.deleteByAgencyWarehouseDetailId(agencyWarehouseDetailId);
-//            agencyWarehousePaymentsRepository.deleteAllByAgencyWarehouseDetailId(agencyWarehouseDetailId);
-//            deliveryTypesRepository.deleteAllByAgencyWarehouseDetailId(agencyWarehouseDetailId);
-//            agencyWarehouseDetailsRepository.deleteByWarehouseId(warehouseId);
-//        }
-//        warehouseLocationsRepository.deleteByWarehouseId(warehouseId);
-//        warehouseAttachmentsRepository.deleteAllByWarehouseId(warehouseId);
-//        warehouseTypesRepository.deleteByWarehouseId(warehouseId);
-//        warehouseReviewsRepository.deleteAllByWarehouseId(warehouseId);
-//        warehousesRepository.deleteByWarehouseId(warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
         return jsonObject;
