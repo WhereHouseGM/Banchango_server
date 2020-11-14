@@ -4,6 +4,7 @@ import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehouses.dto.AgencyWarehouseInsertRequestDto;
+import com.banchango.warehouses.dto.GeneralWarehouseInsertRequestDto;
 import com.banchango.warehouses.exception.WarehouseAlreadyRegisteredException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
@@ -35,27 +36,20 @@ public class WarehousesApiController {
         }
     }
 
+    // DONE
     @PostMapping("/v2/warehouses/general")
-    public void registerGeneral() {
-
-    }
-
-
-    /*
-    // TODO : JWT Token Test
-    @GetMapping("/v2/delivery-types")
-    public void getDeliveryTypes(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
+    public void registerGeneral(@RequestBody GeneralWarehouseInsertRequestDto dto,
+                                @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
-            if(bearerToken == null) throw new AuthenticateException();
-            WriteToClient.send(response, warehousesService.getDeliveryTypes(bearerToken), HttpServletResponse.SC_OK);
+            WriteToClient.send(response, warehousesService.saveGeneralWarehouse(dto, bearerToken), HttpServletResponse.SC_OK);
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(WarehouseAlreadyRegisteredException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
         } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
-
-     */
 
     // DONE
     @GetMapping("/v2/warehouses")

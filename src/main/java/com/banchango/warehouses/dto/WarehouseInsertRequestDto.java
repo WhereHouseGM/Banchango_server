@@ -1,14 +1,11 @@
 package com.banchango.warehouses.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class AgencyWarehouseInsertRequestDto extends WarehouseInsertRequestDto {
-
+public abstract class WarehouseInsertRequestDto {
     private Integer canUse;
     private String name;
     private String serviceType;
@@ -33,5 +30,4 @@ public class AgencyWarehouseInsertRequestDto extends WarehouseInsertRequestDto {
     private InsuranceInsertRequestDto insurance;
     private String warehouseType;
     private WarehouseLocationDto location;
-    private AgencyWarehouseDetailInsertRequestDto agencyDetail;
 }

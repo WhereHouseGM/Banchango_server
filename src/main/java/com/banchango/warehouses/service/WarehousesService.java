@@ -8,6 +8,7 @@ import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetailsReposit
 import com.banchango.domain.agencywarehousepayments.AgencyWarehousePaymentsRepository;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
+import com.banchango.domain.generalwarehousedetails.GeneralWarehouseDetailsRepository;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
@@ -45,51 +46,26 @@ public class WarehousesService {
     private final AgencyWarehouseDetailsRepository agencyWarehouseDetailsRepository;
     private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
     private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
+    private final GeneralWarehouseDetailsRepository generalWarehouseDetailsRepository;
 
-    // DONE
     @Transactional
     public JSONObject saveAgencyWarehouse(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
            throw new AuthenticateException();
        }
-       if(warehousesRepository.findByUserId(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)))).isPresent()) {
+       int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
+       if(warehousesRepository.findByUserId(userId).isPresent()) {
            throw new WarehouseAlreadyRegisteredException();
        }
-       int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
        if(wrapperDto.getInsurance() != null) {
            int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
-           Warehouses warehouse = Warehouses.builder()
-                   .canUse(wrapperDto.getCanUse()).name(wrapperDto.getName())
-                   .insuranceId(insuranceId).serviceType(wrapperDto.getServiceType())
-                   .landArea(wrapperDto.getLandArea()).totalArea(wrapperDto.getTotalArea())
-                   .address(wrapperDto.getAddress()).addressDetail(wrapperDto.getAddressDetail())
-                   .description(wrapperDto.getDescription()).availableWeekdays(wrapperDto.getAvailableWeekdays())
-                   .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
-                   .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
-                   .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
-                   .doorLockExist(wrapperDto.getDoorLockExist()).airConditioningType(wrapperDto.getAirConditioningType())
-                   .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
-                   .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
-                   .userId(userId).build();
-
+           Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
            saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetail(), warehouseId);
        } else {
-           Warehouses warehouse = Warehouses.builder()
-                   .canUse(wrapperDto.getCanUse()).name(wrapperDto.getName())
-                   .serviceType(wrapperDto.getServiceType())
-                   .landArea(wrapperDto.getLandArea()).totalArea(wrapperDto.getTotalArea())
-                   .address(wrapperDto.getAddress()).addressDetail(wrapperDto.getAddressDetail())
-                   .description(wrapperDto.getDescription()).availableWeekdays(wrapperDto.getAvailableWeekdays())
-                   .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
-                   .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
-                   .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
-                   .doorLockExist(wrapperDto.getDoorLockExist()).airConditioningType(wrapperDto.getAirConditioningType())
-                   .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
-                   .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
-                   .userId(userId).build();
+           Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
@@ -100,11 +76,75 @@ public class WarehousesService {
        return jsonObject;
     }
 
+    @Transactional
+    public JSONObject saveGeneralWarehouse(GeneralWarehouseInsertRequestDto wrapperDto, String token) throws Exception {
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
+        if(warehousesRepository.findByUserId(userId).isPresent()) {
+            throw new WarehouseAlreadyRegisteredException();
+        }
+        if(wrapperDto.getInsurance() != null) {
+            int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
+            Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
+            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+            saveGeneralWarehouseDetailInformations(wrapperDto.getGeneralDetail(), warehouseId);
+            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
+        } else {
+            Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
+            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+            saveGeneralWarehouseDetailInformations(wrapperDto.getGeneralDetail(), warehouseId);
+            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
+        }
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("message", "창고가 정상적으로 등록되었습니다.");
+        return jsonObject;
+    }
+
+    private Warehouses toWarehouseEntityWithInsurance(WarehouseInsertRequestDto wrapperDto, Integer insuranceId, Integer userId) {
+        return Warehouses.builder()
+                .canUse(wrapperDto.getCanUse()).name(wrapperDto.getName())
+                .insuranceId(insuranceId).serviceType(wrapperDto.getServiceType())
+                .landArea(wrapperDto.getLandArea()).totalArea(wrapperDto.getTotalArea())
+                .address(wrapperDto.getAddress()).addressDetail(wrapperDto.getAddressDetail())
+                .description(wrapperDto.getDescription()).availableWeekdays(wrapperDto.getAvailableWeekdays())
+                .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
+                .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
+                .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
+                .doorLockExist(wrapperDto.getDoorLockExist()).airConditioningType(wrapperDto.getAirConditioningType())
+                .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
+                .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
+                .userId(userId).build();
+    }
+
+    private Warehouses toWarehouseEntityWithoutInsurance(WarehouseInsertRequestDto wrapperDto, Integer userId) {
+        return Warehouses.builder()
+                .canUse(wrapperDto.getCanUse()).name(wrapperDto.getName())
+                .serviceType(wrapperDto.getServiceType())
+                .landArea(wrapperDto.getLandArea()).totalArea(wrapperDto.getTotalArea())
+                .address(wrapperDto.getAddress()).addressDetail(wrapperDto.getAddressDetail())
+                .description(wrapperDto.getDescription()).availableWeekdays(wrapperDto.getAvailableWeekdays())
+                .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
+                .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
+                .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
+                .doorLockExist(wrapperDto.getDoorLockExist()).airConditioningType(wrapperDto.getAirConditioningType())
+                .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
+                .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
+                .userId(userId).build();
+    }
+
     private void saveWarehouseType(String warehouseType, Integer warehouseId) {
         warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseType).warehouseId(warehouseId).build());
     }
     private void saveWarehouseLocation(WarehouseLocationDto locationDto, Integer warehouseId) {
         warehouseLocationsRepository.save(locationDto.toEntity(warehouseId));
+    }
+
+    private void saveGeneralWarehouseDetailInformations(GeneralWarehouseDetailInsertRequestDto requestDto, Integer warehouseId) {
+        generalWarehouseDetailsRepository.save(requestDto.toEntity(warehouseId));
     }
 
     private void saveAgencyWarehouseDetailInformations(AgencyWarehouseDetailInsertRequestDto requestDto, Integer warehouseId) {
