@@ -90,10 +90,14 @@ public class WarehousesService {
             Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
             int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
             saveGeneralWarehouseDetailInformations(wrapperDto.getGeneralDetail(), warehouseId);
+            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
         } else {
             Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
             int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
             saveGeneralWarehouseDetailInformations(wrapperDto.getGeneralDetail(), warehouseId);
+            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
         }
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "창고가 정상적으로 등록되었습니다.");
