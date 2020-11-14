@@ -1,5 +1,6 @@
 package com.banchango.domain.agencywarehousepayments;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,4 +31,13 @@ public class AgencyWarehousePayments {
 
     @Column
     private Integer agencyWarehouseDetailId;
+
+    @Builder
+    public AgencyWarehousePayments(String unit, Integer cost, String description, String type, Integer agencyWarehouseDetailId) {
+        this.unit = unit;
+        this.cost = cost;
+        this.description = description;
+        this.type = AgencyWarehousePaymentType.valueOf(type);
+        this.agencyWarehouseDetailId = agencyWarehouseDetailId;
+    }
 }

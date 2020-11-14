@@ -1,5 +1,6 @@
 package com.banchango.domain.agencymainitemtypes;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,4 +22,10 @@ public class AgencyMainItemTypes {
 
     @Column
     private Integer agencyWarehouseDetailId;
+
+    @Builder
+    public AgencyMainItemTypes(String name, Integer agencyWarehouseDetailId) {
+        this.name = ItemTypeName.valueOf(name);
+        this.agencyWarehouseDetailId = agencyWarehouseDetailId;
+    }
 }

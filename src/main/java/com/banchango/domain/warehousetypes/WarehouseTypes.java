@@ -1,5 +1,6 @@
 package com.banchango.domain.warehousetypes;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,4 +22,10 @@ public class WarehouseTypes {
 
     @Column
     private Integer warehouseId;
+
+    @Builder
+    public WarehouseTypes(String name, Integer warehouseId) {
+        this.name = WarehouseTypeName.valueOf(name);
+        this.warehouseId = warehouseId;
+    }
 }

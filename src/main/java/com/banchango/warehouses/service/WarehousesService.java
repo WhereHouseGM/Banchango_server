@@ -2,17 +2,23 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.agencymainitemtypes.AgencyMainItemTypesRepository;
+import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetails;
+import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetailsRepository;
+import com.banchango.domain.agencywarehousepayments.AgencyWarehousePaymentsRepository;
+import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
+import com.banchango.domain.insurances.Insurances;
+import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehousetypes.WarehouseTypes;
 import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
 import com.banchango.tools.ObjectMaker;
-import com.banchango.warehouses.dto.WarehouseAttachmentDto;
-import com.banchango.warehouses.dto.WarehouseLocationDto;
-import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
-import com.banchango.warehouses.dto.WarehouseTypesDto;
+import com.banchango.warehouses.dto.*;
+import com.banchango.warehouses.exception.WarehouseAlreadyRegisteredException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.exception.WarehouseSearchException;
@@ -35,30 +41,98 @@ public class WarehousesService {
     private final WarehouseLocationsRepository warehouseLocationsRepository;
     private final WarehouseTypesRepository warehouseTypesRepository;
     private final WarehouseAttachmentsRepository warehouseAttachmentsRepository;
+    private final InsurancesRepository insurancesRepository;
+    private final AgencyWarehouseDetailsRepository agencyWarehouseDetailsRepository;
+    private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
+    private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
 
-    /*
+    // DONE
     @Transactional
-    // TODO : Service code.
-    public org.json.simple.JSONObject save(NewWarehouseFormDto newWarehouseFormDto) {
-        NewWarehouseDetailDto dto = newWarehouseFormDto.getAdditionalInfo();
-        org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
-        try {
-            if (dto instanceof NewAgencyWarehouseDetailDto) {
-                NewAgencyWarehouseDetailDto detailDto = (NewAgencyWarehouseDetailDto) dto;
+    public JSONObject saveAgencyWarehouse(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
+       if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+           throw new AuthenticateException();
+       }
+       if(warehousesRepository.findByUserId(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)))).isPresent()) {
+           throw new WarehouseAlreadyRegisteredException();
+       }
+       int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
+       if(wrapperDto.getInsurance() != null) {
+           int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
+           Warehouses warehouse = Warehouses.builder()
+                   .canUse(wrapperDto.getCanUse()).name(wrapperDto.getName())
+                   .insuranceId(insuranceId).serviceType(wrapperDto.getServiceType())
+                   .landArea(wrapperDto.getLandArea()).totalArea(wrapperDto.getTotalArea())
+                   .address(wrapperDto.getAddress()).addressDetail(wrapperDto.getAddressDetail())
+                   .description(wrapperDto.getDescription()).availableWeekdays(wrapperDto.getAvailableWeekdays())
+                   .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
+                   .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
+                   .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
+                   .doorLockExist(wrapperDto.getDoorLockExist()).airConditioningType(wrapperDto.getAirConditioningType())
+                   .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
+                   .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
+                   .userId(userId).build();
 
-
-            } else if (dto instanceof NewGeneralWarehouseDetailFormDto) {
-                NewGeneralWarehouseDetailFormDto formDto = (NewGeneralWarehouseDetailFormDto) dto;
-            } else {
-                throw new IllegalArgumentException();
-            }
-        } catch(IllegalArgumentException exception) {
-            jsonObject = ObjectMaker.getJSONObjectWithException(exception);
-        }
-        return jsonObject;
+           int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+           saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+           saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
+           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetail(), warehouseId);
+       } else {
+           Warehouses warehouse = Warehouses.builder()
+                   .canUse(wrapperDto.getCanUse()).name(wrapperDto.getName())
+                   .serviceType(wrapperDto.getServiceType())
+                   .landArea(wrapperDto.getLandArea()).totalArea(wrapperDto.getTotalArea())
+                   .address(wrapperDto.getAddress()).addressDetail(wrapperDto.getAddressDetail())
+                   .description(wrapperDto.getDescription()).availableWeekdays(wrapperDto.getAvailableWeekdays())
+                   .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
+                   .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
+                   .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
+                   .doorLockExist(wrapperDto.getDoorLockExist()).airConditioningType(wrapperDto.getAirConditioningType())
+                   .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
+                   .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
+                   .userId(userId).build();
+           int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+           saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+           saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
+           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetail(), warehouseId);
+       }
+       JSONObject jsonObject = ObjectMaker.getJSONObject();
+       jsonObject.put("message", "창고가 정상적으로 등록 되었습니다.");
+       return jsonObject;
     }
 
-     */
+    private void saveWarehouseType(String warehouseType, Integer warehouseId) {
+        warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseType).warehouseId(warehouseId).build());
+    }
+    private void saveWarehouseLocation(WarehouseLocationDto locationDto, Integer warehouseId) {
+        warehouseLocationsRepository.save(locationDto.toEntity(warehouseId));
+    }
+
+    private void saveAgencyWarehouseDetailInformations(AgencyWarehouseDetailInsertRequestDto requestDto, Integer warehouseId) {
+        int agencyWarehouseDetailId = getSavedAgencyWarehouseDetailId(requestDto.toAgencyWarehouseDetailEntity(warehouseId));
+        agencyMainItemTypesRepository.save(requestDto.toAgencyMainItemsEntity(agencyWarehouseDetailId));
+        saveWarehousePayments(requestDto.getPayments(), agencyWarehouseDetailId);
+        saveDeliveryTypes(requestDto.getDeliveryTypes(), agencyWarehouseDetailId);
+    }
+
+    private void saveWarehousePayments(AgencyWarehousePaymentInsertRequestDto[] payments, Integer agencyWarehouseDetailId) {
+        for(AgencyWarehousePaymentInsertRequestDto dto : payments) {
+            agencyWarehousePaymentsRepository.save(dto.toEntity(agencyWarehouseDetailId));
+        }
+    }
+
+    private void saveDeliveryTypes(String[] names, Integer agencyWarehouseDetailId) {
+        for(String name : names) {
+            deliveryTypesRepository.save(DeliveryTypes.builder().name(name).agencyWarehouseDetailId(agencyWarehouseDetailId).build());
+        }
+    }
+
+    private Integer getSavedAgencyWarehouseDetailId(AgencyWarehouseDetails detail) {
+        return agencyWarehouseDetailsRepository.save(detail).getAgencyWarehouseDetailId();
+    }
+
+    private Integer getSavedInsuranceId(Insurances insurance) {
+        return insurancesRepository.save(insurance).getInsuranceId();
+    }
 
     /*
     @Transactional(readOnly = true)
@@ -101,18 +175,16 @@ public class WarehousesService {
         return jsonObject;
     }
 
-    // TODO : 연관된 테이블들이 ON DELETE SET NULL 인데, 그래도 테스트 해보고 싶지만 더미데이터가 없어서 못함 ㅠ
     @Transactional
     public JSONObject delete(Integer warehouseId, String token) throws Exception {
         if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
-        if(!warehouseId.equals(Integer.parseInt(userIdOfToken))) {
+        Warehouses warehouse = warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(!warehouse.getUserId().equals(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))))) {
             throw new WarehouseInvalidAccessException();
         }
-        warehousesRepository.delete(warehouse);
+        warehousesRepository.delete_(warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
         return jsonObject;
