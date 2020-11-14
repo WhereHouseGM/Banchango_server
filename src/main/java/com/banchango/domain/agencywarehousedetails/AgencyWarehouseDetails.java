@@ -1,5 +1,6 @@
 package com.banchango.domain.agencywarehousedetails;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,8 +17,15 @@ public class AgencyWarehouseDetails {
     private Integer agencyWarehouseDetailId;
 
     @Column
-    String type;
+    @Enumerated(EnumType.STRING)
+    private AgencyWarehouseType type;
 
     @Column
     private Integer warehouseId;
+
+    @Builder
+    public AgencyWarehouseDetails(String type, Integer warehouseId) {
+        this.type = AgencyWarehouseType.valueOf(type);
+        this.warehouseId = warehouseId;
+    }
 }

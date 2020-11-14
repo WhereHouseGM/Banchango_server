@@ -1,10 +1,10 @@
 package com.banchango.domain.warehouses;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @NoArgsConstructor
 @Getter
@@ -45,12 +45,10 @@ public class Warehouses {
 
     // TODO : openAt, closeAt 타입 확인 필요
     @Column
-    @Temporal(TemporalType.TIME)
-    private Date openAt;
+    private String openAt;
 
     @Column
-    @Temporal(TemporalType.TIME)
-    private Date closeAt;
+    private String closeAt;
 
     @Column(length = 100)
     private String availableTimeDetail;
@@ -88,4 +86,31 @@ public class Warehouses {
 
     @Column
     private Integer userId;
+
+    @Builder
+    public Warehouses(Integer canUse, String name, Integer insuranceId, String serviceType, Integer landArea, Integer totalArea, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
+        this.canUse = canUse;
+        this.name = name;
+        this.insuranceId = insuranceId;
+        this.serviceType = ServiceType.valueOf(serviceType);
+        this.landArea = landArea;
+        this.totalArea = totalArea;
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.description = description;
+        this.availableWeekdays = availableWeekdays;
+        this.openAt = openAt;
+        this.closeAt = closeAt;
+        this.availableTimeDetail = availableTimeDetail;
+        this.cctvExist = cctvExist;
+        this.securityCompanyExist = securityCompanyExist;
+        this.securityCompanyName = securityCompanyName;
+        this.doorLockExist = doorLockExist;
+        this.airConditioningType = AirConditioningType.valueOf(airConditioningType);
+        this.workerExist = workerExist;
+        this.canPickup = canPickup;
+        this.canPark = canPark;
+        this.parkingScale = parkingScale;
+        this.userId = userId;
+    }
 }

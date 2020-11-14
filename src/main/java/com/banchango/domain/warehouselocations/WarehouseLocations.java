@@ -1,5 +1,6 @@
 package com.banchango.domain.warehouselocations;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,11 @@ public class WarehouseLocations {
 
     @Column
     private Integer warehouseId;
+
+    @Builder
+    public WarehouseLocations(Double latitude, Double longitude, Integer warehouseId) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.warehouseId = warehouseId;
+    }
 }

@@ -17,4 +17,10 @@ public class WarehouseLocationDto {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }
+
+    public WarehouseLocations toEntity(Integer warehouseId) {
+        return WarehouseLocations.builder()
+                .latitude(latitude).longitude(longitude)
+                .warehouseId(warehouseId).build();
+    }
 }

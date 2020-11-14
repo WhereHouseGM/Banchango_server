@@ -3,6 +3,7 @@ package com.banchango.warehouses.controller;
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
+import com.banchango.warehouses.dto.AgencyWarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.NewWarehouseFormDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
@@ -19,10 +20,14 @@ public class WarehousesApiController {
 
     private final WarehousesService warehousesService;
 
-    @PostMapping("/v2/warehouses")
-    public void register(@RequestBody NewWarehouseFormDto dto, HttpServletResponse response) {
+    @PostMapping("/v2/warehouses/agency")
+    public void register(@RequestBody AgencyWarehouseInsertRequestDto dto,
+                         @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
 
-        // TODO : NewWarehouseFormDto oneOf 부분
+//        try {
+//            WriteToClient.send(response, warehousesService.save(dto, bearerToken), HttpServletResponse.SC_OK);
+//        }
+
     }
 
     /*

@@ -2,17 +2,21 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.agencymainitemtypes.AgencyMainItemTypesRepository;
+import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetails;
+import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetailsRepository;
+import com.banchango.domain.agencywarehousepayments.AgencyWarehousePaymentsRepository;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
+import com.banchango.domain.insurances.Insurances;
+import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
+import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
 import com.banchango.tools.ObjectMaker;
-import com.banchango.warehouses.dto.WarehouseAttachmentDto;
-import com.banchango.warehouses.dto.WarehouseLocationDto;
-import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
-import com.banchango.warehouses.dto.WarehouseTypesDto;
+import com.banchango.warehouses.dto.*;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.exception.WarehouseSearchException;
@@ -35,30 +39,80 @@ public class WarehousesService {
     private final WarehouseLocationsRepository warehouseLocationsRepository;
     private final WarehouseTypesRepository warehouseTypesRepository;
     private final WarehouseAttachmentsRepository warehouseAttachmentsRepository;
+    private final InsurancesRepository insurancesRepository;
+    private final AgencyWarehouseDetailsRepository agencyWarehouseDetailsRepository;
+    private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
+    private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
 
-    /*
     @Transactional
-    // TODO : Service code.
-    public org.json.simple.JSONObject save(NewWarehouseFormDto newWarehouseFormDto) {
-        NewWarehouseDetailDto dto = newWarehouseFormDto.getAdditionalInfo();
-        org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
-        try {
-            if (dto instanceof NewAgencyWarehouseDetailDto) {
-                NewAgencyWarehouseDetailDto detailDto = (NewAgencyWarehouseDetailDto) dto;
+    // TODO : Test
+    public JSONObject save(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
+       if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+           throw new AuthenticateException();
+       }
+       int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
+       if(wrapperDto.getInsurance() != null) {
+           int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
+           Warehouses warehouse = Warehouses.builder()
+                   .canUse(wrapperDto.getCanUse()).name(wrapperDto.getName())
+                   .insuranceId(insuranceId).serviceType(wrapperDto.getServiceType())
+                   .landArea(wrapperDto.getLandArea()).totalArea(wrapperDto.getTotalArea())
+                   .address(wrapperDto.getAddress()).addressDetail(wrapperDto.getAddressDetail())
+                   .description(wrapperDto.getDescription()).availableWeekdays(wrapperDto.getAvailableWeekdays())
+                   .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
+                   .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
+                   .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
+                   .doorLockExist(wrapperDto.getDoorLookExist()).airConditioningType(wrapperDto.getAirConditioningType())
+                   .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
+                   .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
+                   .userId(userId).build();
 
-
-            } else if (dto instanceof NewGeneralWarehouseDetailFormDto) {
-                NewGeneralWarehouseDetailFormDto formDto = (NewGeneralWarehouseDetailFormDto) dto;
-            } else {
-                throw new IllegalArgumentException();
-            }
-        } catch(IllegalArgumentException exception) {
-            jsonObject = ObjectMaker.getJSONObjectWithException(exception);
-        }
-        return jsonObject;
+           int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+           saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
+           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetail(), warehouseId);
+       } else {
+           Warehouses warehouse = Warehouses.builder()
+                   .canUse(wrapperDto.getCanUse()).name(wrapperDto.getName())
+                   .serviceType(wrapperDto.getServiceType())
+                   .landArea(wrapperDto.getLandArea()).totalArea(wrapperDto.getTotalArea())
+                   .address(wrapperDto.getAddress()).addressDetail(wrapperDto.getAddressDetail())
+                   .description(wrapperDto.getDescription()).availableWeekdays(wrapperDto.getAvailableWeekdays())
+                   .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
+                   .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
+                   .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
+                   .doorLockExist(wrapperDto.getDoorLookExist()).airConditioningType(wrapperDto.getAirConditioningType())
+                   .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
+                   .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
+                   .userId(userId).build();
+       }
+       JSONObject jsonObject = ObjectMaker.getJSONObject();
+       jsonObject.put("message", "창고가 정상적으로 등록 되었습니다.");
+       return jsonObject;
     }
 
-     */
+    private void saveWarehouseLocation(WarehouseLocationDto locationDto, Integer warehouseId) {
+        warehouseLocationsRepository.save(locationDto.toEntity(warehouseId));
+    }
+
+    private void saveAgencyWarehouseDetailInformations(AgencyWarehouseDetailInsertRequestDto requestDto, Integer warehouseId) {
+        int agencyWarehouseDetailId = getSavedAgencyWarehouseDetailId(requestDto.toAgencyWarehouseDetailEntity(warehouseId));
+        agencyMainItemTypesRepository.save(requestDto.toAgencyMainItemsEntity(agencyWarehouseDetailId));
+        saveWarehousePayments(requestDto.getPayments(), agencyWarehouseDetailId);
+    }
+
+    public void saveWarehousePayments(AgencyWarehousePaymentInsertRequestDto[] payments, Integer agencyWarehouseDetailId) {
+        for(AgencyWarehousePaymentInsertRequestDto dto : payments) {
+            agencyWarehousePaymentsRepository.save(dto.toEntity(agencyWarehouseDetailId));
+        }
+    }
+
+    private Integer getSavedAgencyWarehouseDetailId(AgencyWarehouseDetails detail) {
+        return agencyWarehouseDetailsRepository.save(detail).getAgencyWarehouseDetailId();
+    }
+
+    private Integer getSavedInsuranceId(Insurances insurance) {
+        return insurancesRepository.save(insurance).getInsuranceId();
+    }
 
     /*
     @Transactional(readOnly = true)
