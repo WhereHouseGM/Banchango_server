@@ -43,7 +43,6 @@ public class Warehouses {
     @Column
     private Integer availableWeekdays;
 
-    // TODO : openAt, closeAt 타입 확인 필요
     @Column
     private String openAt;
 

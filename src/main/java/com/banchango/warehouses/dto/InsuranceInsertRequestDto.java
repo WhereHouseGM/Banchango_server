@@ -15,7 +15,6 @@ public class InsuranceInsertRequestDto {
 
     public Insurances toEntity() {
         return Insurances.builder()
-                .insuranceId(insuranceId)
                 .name(name)
                 .build();
     }

@@ -24,13 +24,14 @@ public class AgencyWarehouseInsertRequestDto {
     private Integer cctvExist;
     private Integer securityCompanyExist;
     private String securityCompanyName;
-    private Integer doorLookExist;
+    private Integer doorLockExist;
     private String airConditioningType;
     private Integer workerExist;
     private Integer canPickup;
     private Integer canPark;
     private Integer parkingScale;
     private InsuranceInsertRequestDto insurance;
+    private String warehouseType;
     private WarehouseLocationDto location;
     private AgencyWarehouseDetailInsertRequestDto agencyDetail;
 }

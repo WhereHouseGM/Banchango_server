@@ -11,12 +11,13 @@ import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
-import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehousetypes.WarehouseTypes;
 import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.warehouses.dto.*;
+import com.banchango.warehouses.exception.WarehouseAlreadyRegisteredException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.exception.WarehouseSearchException;
@@ -44,11 +45,14 @@ public class WarehousesService {
     private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
     private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
 
+    // DONE
     @Transactional
-    // TODO : Test
     public JSONObject save(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
            throw new AuthenticateException();
+       }
+       if(warehousesRepository.findByUserId(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)))).isPresent()) {
+           throw new WarehouseAlreadyRegisteredException();
        }
        int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
        if(wrapperDto.getInsurance() != null) {
@@ -62,12 +66,13 @@ public class WarehousesService {
                    .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
                    .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
                    .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
-                   .doorLockExist(wrapperDto.getDoorLookExist()).airConditioningType(wrapperDto.getAirConditioningType())
+                   .doorLockExist(wrapperDto.getDoorLockExist()).airConditioningType(wrapperDto.getAirConditioningType())
                    .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
                    .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
                    .userId(userId).build();
 
            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+           saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
            saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetail(), warehouseId);
        } else {
@@ -80,16 +85,23 @@ public class WarehousesService {
                    .openAt(wrapperDto.getOpenAt()).closeAt(wrapperDto.getCloseAt())
                    .availableTimeDetail(wrapperDto.getAvailableTimeDetail()).cctvExist(wrapperDto.getCctvExist())
                    .securityCompanyExist(wrapperDto.getSecurityCompanyExist()).securityCompanyName(wrapperDto.getSecurityCompanyName())
-                   .doorLockExist(wrapperDto.getDoorLookExist()).airConditioningType(wrapperDto.getAirConditioningType())
+                   .doorLockExist(wrapperDto.getDoorLockExist()).airConditioningType(wrapperDto.getAirConditioningType())
                    .workerExist(wrapperDto.getWorkerExist()).canPickup(wrapperDto.getCanPickup())
                    .canPark(wrapperDto.getCanPark()).parkingScale(wrapperDto.getParkingScale())
                    .userId(userId).build();
+           int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+           saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+           saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
+           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetail(), warehouseId);
        }
        JSONObject jsonObject = ObjectMaker.getJSONObject();
        jsonObject.put("message", "창고가 정상적으로 등록 되었습니다.");
        return jsonObject;
     }
 
+    private void saveWarehouseType(String warehouseType, Integer warehouseId) {
+        warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseType).warehouseId(warehouseId).build());
+    }
     private void saveWarehouseLocation(WarehouseLocationDto locationDto, Integer warehouseId) {
         warehouseLocationsRepository.save(locationDto.toEntity(warehouseId));
     }
@@ -161,12 +173,15 @@ public class WarehousesService {
         if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(warehouse.getInsuranceId() != null) {
+            insurancesRepository.deleteByInsuranceId(warehouse.getInsuranceId());
+        }
         String userIdOfToken = JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token));
-        if(!warehouseId.equals(Integer.parseInt(userIdOfToken))) {
+        if(!warehouse.getUserId().equals(Integer.parseInt(userIdOfToken))) {
             throw new WarehouseInvalidAccessException();
         }
-        warehousesRepository.delete(warehouse);
+        warehousesRepository.deleteByWarehouseId(warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
         return jsonObject;
