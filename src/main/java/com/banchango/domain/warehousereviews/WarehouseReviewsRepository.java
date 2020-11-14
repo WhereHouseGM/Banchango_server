@@ -11,5 +11,4 @@ public interface WarehouseReviewsRepository extends JpaRepository<WarehouseRevie
     List<WarehouseReviews> findByWarehouseId(Integer warehouseId, Pageable pageable);
     Optional<WarehouseReviews> findByReviewIdAndWarehouseId(Integer reviewId, Integer warehouseId);
     void deleteByReviewIdAndWarehouseId(Integer reviewId, Integer warehouseId);
-    void deleteAllByWarehouseId(Integer warehouseId);
 }

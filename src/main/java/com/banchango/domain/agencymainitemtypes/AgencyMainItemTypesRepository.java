@@ -3,5 +3,4 @@ package com.banchango.domain.agencymainitemtypes;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AgencyMainItemTypesRepository extends JpaRepository<AgencyMainItemTypes, Integer> {
-    void deleteByAgencyWarehouseDetailId(Integer agencyWarehouseDetailId);
 }

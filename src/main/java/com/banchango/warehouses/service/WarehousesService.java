@@ -12,7 +12,6 @@ import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
-import com.banchango.domain.warehousereviews.WarehouseReviewsRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehousetypes.WarehouseTypes;
@@ -46,11 +45,10 @@ public class WarehousesService {
     private final AgencyWarehouseDetailsRepository agencyWarehouseDetailsRepository;
     private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
     private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
-    private final WarehouseReviewsRepository warehouseReviewsRepository;
 
     // DONE
     @Transactional
-    public JSONObject save(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
+    public JSONObject saveAgencyWarehouse(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
            throw new AuthenticateException();
        }

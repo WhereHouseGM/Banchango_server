@@ -22,10 +22,10 @@ public class WarehousesApiController {
 
     // DONE
     @PostMapping("/v2/warehouses/agency")
-    public void register(@RequestBody AgencyWarehouseInsertRequestDto dto,
+    public void registerAgency(@RequestBody AgencyWarehouseInsertRequestDto dto,
                          @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
-            WriteToClient.send(response, warehousesService.save(dto, bearerToken), HttpServletResponse.SC_OK);
+            WriteToClient.send(response, warehousesService.saveAgencyWarehouse(dto, bearerToken), HttpServletResponse.SC_OK);
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(WarehouseAlreadyRegisteredException exception) {
@@ -34,6 +34,12 @@ public class WarehousesApiController {
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+
+    @PostMapping("/v2/warehouses/general")
+    public void registerGeneral() {
+
+    }
+
 
     /*
     // TODO : JWT Token Test

@@ -4,5 +4,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AgencyWarehousePaymentsRepository extends JpaRepository<AgencyWarehousePayments, Integer> {
 
-    void deleteAllByAgencyWarehouseDetailId(Integer agencyWarehouseDetailId);
 }
