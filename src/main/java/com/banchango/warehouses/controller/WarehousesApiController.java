@@ -51,23 +51,6 @@ public class WarehousesApiController {
         }
     }
 
-
-    /*
-    // TODO : JWT Token Test
-    @GetMapping("/v2/delivery-types")
-    public void getDeliveryTypes(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
-        try {
-            if(bearerToken == null) throw new AuthenticateException();
-            WriteToClient.send(response, warehousesService.getDeliveryTypes(bearerToken), HttpServletResponse.SC_OK);
-        } catch(AuthenticateException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-        } catch(Exception exception) {
-            WriteToClient.send(response, null, HttpServletResponse.SC_BAD_REQUEST);
-        }
-    }
-
-     */
-
     // DONE
     @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
