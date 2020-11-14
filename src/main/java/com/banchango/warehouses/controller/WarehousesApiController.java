@@ -4,6 +4,7 @@ import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehouses.dto.AgencyWarehouseInsertRequestDto;
+import com.banchango.warehouses.dto.GeneralWarehouseInsertRequestDto;
 import com.banchango.warehouses.exception.WarehouseAlreadyRegisteredException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
@@ -35,9 +36,19 @@ public class WarehousesApiController {
         }
     }
 
+    // DONE
     @PostMapping("/v2/warehouses/general")
-    public void registerGeneral() {
-
+    public void registerGeneral(@RequestBody GeneralWarehouseInsertRequestDto dto,
+                                @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
+        try {
+            WriteToClient.send(response, warehousesService.saveGeneralWarehouse(dto, bearerToken), HttpServletResponse.SC_OK);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(WarehouseAlreadyRegisteredException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
+        } catch(Exception exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
 

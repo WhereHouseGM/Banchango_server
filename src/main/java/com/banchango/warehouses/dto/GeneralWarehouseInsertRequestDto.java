@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AgencyWarehouseInsertRequestDto extends WarehouseInsertRequestDto {
+public class GeneralWarehouseInsertRequestDto extends WarehouseInsertRequestDto{
 
     private Integer canUse;
     private String name;
@@ -33,5 +33,5 @@ public class AgencyWarehouseInsertRequestDto extends WarehouseInsertRequestDto {
     private InsuranceInsertRequestDto insurance;
     private String warehouseType;
     private WarehouseLocationDto location;
-    private AgencyWarehouseDetailInsertRequestDto agencyDetail;
+    private GeneralWarehouseDetailInsertRequestDto generalDetail;
 }
