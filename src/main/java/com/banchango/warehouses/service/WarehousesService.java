@@ -224,6 +224,9 @@ public class WarehousesService {
         if(!warehouse.getUserId().equals(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))))) {
             throw new WarehouseInvalidAccessException();
         }
+        if(warehouse.getInsuranceId() != null) {
+            insurancesRepository.deleteByInsuranceId(warehouse.getInsuranceId());
+        }
         warehousesRepository.delete_(warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
