@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -175,26 +176,6 @@ public class WarehousesService {
         return insurancesRepository.save(insurance).getInsuranceId();
     }
 
-    /*
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
-    public org.json.simple.JSONObject getDeliveryTypes(String token) throws AuthenticateException{
-        if(!JwtTokenUtil.validateToken(JwtTokenUtil.getToken(token))) {
-            throw new AuthenticateException();
-        }
-        List<DeliveryTypes> list = deliveryTypesRepository.findAll();
-        org.json.simple.JSONObject jsonObject = ObjectMaker.getSimpleJSONObject();
-        org.json.simple.JSONArray jsonArray = ObjectMaker.getSimpleJSONArray();
-        for(DeliveryTypes deliveryType : list) {
-            org.json.simple.JSONObject jTemp = ObjectMaker.getSimpleJSONObject();
-            jTemp.putAll(deliveryType.convertMap());
-            jsonArray.add(jTemp);
-        }
-        jsonObject.put("types", jsonArray);
-        return jsonObject;
-    }
-     */
-
     @Transactional(readOnly = true)
     public JSONObject search(String address, Integer limit, Integer offset) throws WarehouseSearchException{
         JSONObject jsonObject = ObjectMaker.getJSONObject();
@@ -246,6 +227,60 @@ public class WarehousesService {
         warehousesRepository.delete_(warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
+        return jsonObject;
+    }
+
+    @Transactional(readOnly = true)
+    public JSONObject getSpecificWarehouseInfo(Integer warehouseId, String token) throws Exception {
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        return createJSONObjectOfSpecificWarehouseInfo(warehouseId);
+    }
+
+    private JSONObject createJSONObjectOfSpecificWarehouseInfo(Integer warehouseId) throws WarehouseIdNotFoundException {
+        WarehouseResponseDto warehouseResponseDto = new WarehouseResponseDto(warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new));
+        JSONObject jsonObject = warehouseResponseDto.toJSONObject();
+        WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(warehouseId));
+        jsonObject.put("location", locationDto.toJSONObject());
+        jsonObject.put("warehouseCondition", warehouseTypesRepository.findByWarehouseId(warehouseId).getName());
+        Integer agencyWarehouseDetailId = getAgencyWarehouseDetailId(warehouseId);
+        if(warehouseResponseDto.getInsuranceId() != null) {
+            jsonObject.put("insuranceName", insurancesRepository.findByInsuranceId(warehouseResponseDto.getInsuranceId()).getName());
+        }
+        jsonObject.put("agencyDetails", createJSONObjectOfAgencyDetails(warehouseId, agencyWarehouseDetailId));
+        return jsonObject;
+    }
+
+    private Integer getAgencyWarehouseDetailId(Integer warehouseId) throws WarehouseIdNotFoundException{
+        return agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new).getAgencyWarehouseDetailId();
+    }
+
+    private JSONArray createJSONArrayOfDeliveryTypes(Integer agencyWarehouseDetailId) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        List<DeliveryTypes> deliveryTypes = deliveryTypesRepository.findByAgencyWarehouseDetailId(agencyWarehouseDetailId);
+        for(DeliveryTypes type : deliveryTypes) {
+            jsonArray.put(type.getName());
+        }
+        return jsonArray;
+    }
+
+    private JSONArray createJSONArrayOfPayments(Integer agencyWarehouseDetailId) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        List<AgencyWarehousePaymentResponseDto> paymentList = agencyWarehousePaymentsRepository.findByAgencyWarehouseDetailId(agencyWarehouseDetailId).stream().map(AgencyWarehousePaymentResponseDto::new).collect(Collectors.toList());
+        for(AgencyWarehousePaymentResponseDto dto : paymentList) {
+            jsonArray.put(dto.toJSONObject());
+        }
+        return jsonArray;
+    }
+
+    private JSONObject createJSONObjectOfAgencyDetails(Integer warehouseId, Integer agencyWarehouseDetailId) throws WarehouseIdNotFoundException{
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("agencyWarehouseDetailId", agencyWarehouseDetailId);
+        jsonObject.put("warehouseType", agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new).getType());
+        jsonObject.put("mainItemType", agencyMainItemTypesRepository.findByAgencyWarehouseDetailId(agencyWarehouseDetailId).getName());
+        jsonObject.put("deliveryTypes", createJSONArrayOfDeliveryTypes(agencyWarehouseDetailId));
+        jsonObject.put("payments", createJSONArrayOfPayments(agencyWarehouseDetailId));
         return jsonObject;
     }
 }

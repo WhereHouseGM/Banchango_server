@@ -98,8 +98,17 @@ public class WarehousesApiController {
 
     // TODO : 특정 창고 정보 조회 API
     @GetMapping("/v2/warehouses/{warehouseId}")
-    public void getWarehouseById(@PathVariable Integer warehouseId, HttpServletResponse response) {
-
+    public void getWarehouseById(@RequestHeader(name = "Authorization") String bearerToken,
+            @PathVariable Integer warehouseId, HttpServletResponse response) {
+        try {
+            WriteToClient.send(response, warehousesService.getSpecificWarehouseInfo(warehouseId, bearerToken), HttpServletResponse.SC_OK);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(WarehouseIdNotFoundException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
+        } catch(Exception exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     // TODO : 창고 정보 수정 API
