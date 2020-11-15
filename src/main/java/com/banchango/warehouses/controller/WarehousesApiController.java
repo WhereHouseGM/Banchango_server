@@ -96,7 +96,7 @@ public class WarehousesApiController {
         }
     }
 
-    // TODO : 특정 창고 정보 조회 API
+    // TODO : 사진 url 추가
     @GetMapping("/v2/warehouses/{warehouseId}")
     public void getWarehouseById(@RequestHeader(name = "Authorization") String bearerToken,
             @PathVariable Integer warehouseId, HttpServletResponse response) {
