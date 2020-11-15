@@ -83,6 +83,19 @@ public class WarehousesApiController {
         }
     }
 
+    // TODO : 사진 url 추가
+    @GetMapping("/v2/warehouses/agency")
+    public void getAgencyWarehouseList(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
+        try {
+            WriteToClient.send(response, warehousesService.getAgencyWarehouseList(bearerToken), HttpServletResponse.SC_OK);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(Exception exception) {
+            exception.printStackTrace();
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
     // TODO : 특정 창고 정보 조회 API
     @GetMapping("/v2/warehouses/{warehouseId}")
     public void getWarehouseById(@PathVariable Integer warehouseId, HttpServletResponse response) {

@@ -13,6 +13,7 @@ import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
+import com.banchango.domain.warehouses.ServiceType;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehousetypes.WarehouseTypes;
@@ -210,6 +211,24 @@ public class WarehousesService {
             } else {
                 jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndType(locationDto, typesDto));
             }
+        }
+        jsonObject.put("warehouses", jsonArray);
+        return jsonObject;
+    }
+
+    @Transactional(readOnly = true)
+    public JSONObject getAgencyWarehouseList(String token) throws Exception{
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        List<AgencyWarehouseListResponseDto> warehousesList = warehousesRepository.findByServiceType(ServiceType.AGENCY).stream().map(AgencyWarehouseListResponseDto::new).collect(Collectors.toList());
+        for(AgencyWarehouseListResponseDto dto : warehousesList) {
+            dto.setWarehouseType(agencyWarehouseDetailsRepository.findByWarehouseId(dto.getWarehouseId()).orElseThrow(WarehouseIdNotFoundException::new).getType());
+            dto.setWarehouseCondition(warehouseTypesRepository.findByWarehouseId(dto.getWarehouseId()).getName());
+            JSONObject listObject = dto.toJSONObject();
+            jsonArray.put(listObject);
         }
         jsonObject.put("warehouses", jsonArray);
         return jsonObject;
