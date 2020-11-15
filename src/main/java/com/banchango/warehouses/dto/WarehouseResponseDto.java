@@ -60,7 +60,7 @@ public class WarehouseResponseDto {
         this.canPark = warehouse.getCanPark();
         this.parkingScale = warehouse.getParkingScale();
         this.userId = warehouse.getUserId();
-        this.insuranceId = warehouse.getInsuranceId() == null ? null : warehouse.getInsuranceId();
+        this.insuranceId = warehouse.getInsuranceId();
     }
 
     public JSONObject toJSONObject() {
