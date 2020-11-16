@@ -100,7 +100,7 @@ public class WarehousesApiController {
     public void getWarehouseById(@RequestHeader(name = "Authorization") String bearerToken,
             @PathVariable Integer warehouseId, HttpServletResponse response) {
         try {
-            WriteToClient.send(response, warehousesService.getSpecificWarehouseInfo(warehouseId, bearerToken), HttpServletResponse.SC_OK);
+             WriteToClient.send(response, warehousesService.getSpecificWarehouseInfo(warehouseId, bearerToken), HttpServletResponse.SC_OK);
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(WarehouseIdNotFoundException exception) {
