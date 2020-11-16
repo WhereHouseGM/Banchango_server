@@ -207,6 +207,10 @@ public class WarehousesService {
         for(AgencyWarehouseListResponseDto dto : warehousesList) {
             dto.setWarehouseType(agencyWarehouseDetailsRepository.findByWarehouseId(dto.getWarehouseId()).orElseThrow(WarehouseIdNotFoundException::new).getType());
             dto.setWarehouseCondition(warehouseTypesRepository.findByWarehouseId(dto.getWarehouseId()).getName());
+            List<WarehouseAttachmentDto> attachmentDtos = warehouseAttachmentsRepository.findByWarehouseId(dto.getWarehouseId()).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
+            if(attachmentDtos.size() != 0) {
+                dto.setImageUrl(attachmentDtos.get(0).getUrl());
+            }
             JSONObject listObject = dto.toJSONObject();
             jsonArray.put(listObject);
         }

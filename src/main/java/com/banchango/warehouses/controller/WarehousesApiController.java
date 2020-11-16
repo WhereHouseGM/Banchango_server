@@ -83,7 +83,7 @@ public class WarehousesApiController {
         }
     }
 
-    // TODO : 사진 url 추가
+    // DONE
     @GetMapping("/v2/warehouses/agency")
     public void getAgencyWarehouseList(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
