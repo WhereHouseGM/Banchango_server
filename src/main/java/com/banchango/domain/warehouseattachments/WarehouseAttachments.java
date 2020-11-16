@@ -1,5 +1,6 @@
 package com.banchango.domain.warehouseattachments;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,10 @@ public class WarehouseAttachments {
 
     @Column
     private Integer warehouseId;
+
+    @Builder
+    public WarehouseAttachments(String url, Integer warehouseId) {
+        this.url = url;
+        this.warehouseId = warehouseId;
+    }
 }
