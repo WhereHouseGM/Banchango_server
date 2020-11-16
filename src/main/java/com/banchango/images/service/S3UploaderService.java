@@ -13,6 +13,7 @@ import com.banchango.domain.warehouseattachments.WarehouseAttachments;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.images.exception.FileRemoveException;
 import com.banchango.tools.ObjectMaker;
+import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,6 +70,9 @@ public class S3UploaderService {
     public JSONObject upload(MultipartFile multipartFile, String token, Integer warehouseId) throws Exception {
         if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
+        }
+        if(!warehouseId.equals(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))))) {
+            throw new WarehouseInvalidAccessException();
         }
         String uploadedImageUrl = uploadFile(multipartFile);
         WarehouseAttachments attachment = WarehouseAttachments.builder()

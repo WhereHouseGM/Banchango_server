@@ -251,6 +251,10 @@ public class WarehousesService {
         jsonObject.put("location", locationDto.toJSONObject());
         jsonObject.put("warehouseCondition", warehouseTypesRepository.findByWarehouseId(warehouseId).getName());
         Integer agencyWarehouseDetailId = getAgencyWarehouseDetailId(warehouseId);
+        List<WarehouseAttachmentDto> attachmentDtos = warehouseAttachmentsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
+        if(attachmentDtos.size() != 0) {
+            jsonObject.put("imageUrl", attachmentDtos.get(0).getUrl());
+        }
         if(warehouseResponseDto.getInsuranceId() != null) {
             jsonObject.put("insuranceName", insurancesRepository.findByInsuranceId(warehouseResponseDto.getInsuranceId()).getName());
         }
