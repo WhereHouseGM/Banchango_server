@@ -5,14 +5,13 @@ import com.banchango.images.service.S3UploaderService;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ImageController {
 
     private final S3UploaderService s3UploaderService;
