@@ -28,7 +28,6 @@ public class ImageController {
         } catch(WarehouseInvalidAccessException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
         } catch(Exception exception) {
-            exception.printStackTrace();
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }

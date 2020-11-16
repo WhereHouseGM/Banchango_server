@@ -31,7 +31,7 @@ public class AgencyWarehouseInsertRequestDto extends WarehouseInsertRequestDto {
     private Integer canPark;
     private Integer parkingScale;
     private InsuranceInsertRequestDto insurance;
-    private String warehouseType;
+    private String warehouseCondition;
     private WarehouseLocationDto location;
-    private AgencyWarehouseDetailInsertRequestDto agencyDetail;
+    private AgencyWarehouseDetailInsertRequestDto agencyDetails;
 }

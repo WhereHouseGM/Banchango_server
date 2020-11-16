@@ -27,6 +27,7 @@ import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,9 @@ public class WarehousesService {
     private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
     private final GeneralWarehouseDetailsRepository generalWarehouseDetailsRepository;
 
+    @Value("${banchango.no_image.url}")
+    private String noImageUrl;
+
     @Transactional
     public JSONObject saveAgencyWarehouse(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
@@ -62,15 +66,15 @@ public class WarehousesService {
            int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
            Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
-           saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+           saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
-           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetail(), warehouseId);
+           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
        } else {
            Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
-           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetail(), warehouseId);
+           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
        }
        JSONObject jsonObject = ObjectMaker.getJSONObject();
        jsonObject.put("message", "창고가 정상적으로 등록 되었습니다.");
@@ -137,8 +141,9 @@ public class WarehousesService {
                 .userId(userId).build();
     }
 
-    private void saveWarehouseType(String warehouseType, Integer warehouseId) {
-        warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseType).warehouseId(warehouseId).build());
+
+    private void saveWarehouseType(String warehouseCondition, Integer warehouseId) {
+        warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseCondition).warehouseId(warehouseId).build());
     }
     private void saveWarehouseLocation(WarehouseLocationDto locationDto, Integer warehouseId) {
         warehouseLocationsRepository.save(locationDto.toEntity(warehouseId));
@@ -189,7 +194,7 @@ public class WarehousesService {
             if(attachmentsList.size() != 0) {
                 jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndAttachmentAndType(locationDto, attachmentsList.get(0), typesDto));
             } else {
-                jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndType(locationDto, typesDto));
+                jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndType(locationDto, typesDto, noImageUrl));
             }
         }
         jsonObject.put("warehouses", jsonArray);
@@ -210,6 +215,8 @@ public class WarehousesService {
             List<WarehouseAttachmentDto> attachmentDtos = warehouseAttachmentsRepository.findByWarehouseId(dto.getWarehouseId()).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
             if(attachmentDtos.size() != 0) {
                 dto.setImageUrl(attachmentDtos.get(0).getUrl());
+            } else {
+                dto.setImageUrl(noImageUrl);
             }
             JSONObject listObject = dto.toJSONObject();
             jsonArray.put(listObject);
@@ -254,6 +261,8 @@ public class WarehousesService {
         List<WarehouseAttachmentDto> attachmentDtos = warehouseAttachmentsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
         if(attachmentDtos.size() != 0) {
             jsonObject.put("imageUrl", attachmentDtos.get(0).getUrl());
+        } else {
+            jsonObject.put("imageUrl", noImageUrl);
         }
         if(warehouseResponseDto.getInsuranceId() != null) {
             jsonObject.put("insuranceName", insurancesRepository.findByInsuranceId(warehouseResponseDto.getInsuranceId()).getName());
