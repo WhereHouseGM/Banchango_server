@@ -12,7 +12,7 @@ import lombok.Setter;
 public class AgencyWarehouseDetailInsertRequestDto {
 
     private String warehouseType;
-    private String typeName;
+    private String mainItemType;
     private String[] deliveryTypes;
     private AgencyWarehousePaymentInsertRequestDto[] payments;
 
@@ -25,6 +25,6 @@ public class AgencyWarehouseDetailInsertRequestDto {
     public AgencyMainItemTypes toAgencyMainItemsEntity(Integer agencyWarehouseDetailId) {
         return AgencyMainItemTypes.builder()
                 .agencyWarehouseDetailId(agencyWarehouseDetailId)
-                .name(typeName).build();
+                .name(mainItemType).build();
     }
 }

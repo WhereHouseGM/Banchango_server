@@ -22,6 +22,7 @@ public class AgencyWarehouseListResponseDto {
     private String closeAt;
     private WarehouseTypeName warehouseCondition;
     private AgencyWarehouseType warehouseType;
+    private String imageUrl;
 
     public AgencyWarehouseListResponseDto(Warehouses warehouse) {
         this.name = warehouse.getName();
@@ -40,6 +41,7 @@ public class AgencyWarehouseListResponseDto {
         jsonObject.put("closeAt", closeAt);
         jsonObject.put("warehouseCondition", warehouseCondition);
         jsonObject.put("warehouseType", warehouseType);
+        jsonObject.put("imageUrl", imageUrl);
         return jsonObject;
     }
 

@@ -37,7 +37,7 @@ public class WarehouseSearchResponseDto {
     }
     public JSONObject toJSONObjectWithLocationAndAttachmentAndType(WarehouseLocationDto locationDto, WarehouseAttachmentDto attachmentDto, WarehouseTypesDto typesDto) {
         JSONObject jsonObject = makeBasicSearchResultObject();
-        jsonObject.put("thumbnailUrl", attachmentDto.getUrl());
+        jsonObject.put("imageUrl", attachmentDto.getUrl());
         JSONObject locationObject = ObjectMaker.getJSONObject();
         locationObject.put("latitude", locationDto.getLatitude());
         locationObject.put("longitude", locationDto.getLongitude());
@@ -46,14 +46,14 @@ public class WarehouseSearchResponseDto {
         return jsonObject;
     }
 
-    public JSONObject toJSONObjectWithLocationAndType(WarehouseLocationDto locationDto, WarehouseTypesDto typesDto) {
+    public JSONObject toJSONObjectWithLocationAndType(WarehouseLocationDto locationDto, WarehouseTypesDto typesDto, String noImageUrl) {
         JSONObject jsonObject = makeBasicSearchResultObject();
         JSONObject locationObject = ObjectMaker.getJSONObject();
         locationObject.put("latitude", locationDto.getLatitude());
         locationObject.put("longitude", locationDto.getLongitude());
         jsonObject.put("location", locationObject);
         jsonObject.put("type", typesDto.getName());
-        jsonObject.put("thumbnailUrl", "null");
+        jsonObject.put("imageUrl", noImageUrl);
         return jsonObject;
     }
 }

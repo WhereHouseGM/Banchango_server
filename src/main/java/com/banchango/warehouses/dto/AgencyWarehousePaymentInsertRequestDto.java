@@ -13,12 +13,12 @@ public class AgencyWarehousePaymentInsertRequestDto {
     private String unit;
     private Integer cost;
     private String description;
-    private String type;
+    private String paymentType;
 
     public AgencyWarehousePayments toEntity(Integer agencyWarehouseDetailId) {
          return AgencyWarehousePayments.builder()
                  .unit(unit).cost(cost)
-                 .description(description).type(type)
+                 .description(description).type(paymentType)
                  .agencyWarehouseDetailId(agencyWarehouseDetailId)
                  .build();
     }

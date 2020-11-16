@@ -32,6 +32,7 @@ public class WarehousesApiController {
         } catch(WarehouseAlreadyRegisteredException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
         } catch(Exception exception) {
+            exception.printStackTrace();
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
@@ -78,12 +79,11 @@ public class WarehousesApiController {
         } catch(WarehouseInvalidAccessException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
         } catch(Exception exception) {
-            exception.printStackTrace();
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    // TODO : 사진 url 추가
+    // DONE
     @GetMapping("/v2/warehouses/agency")
     public void getAgencyWarehouseList(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
         try {
@@ -91,17 +91,16 @@ public class WarehousesApiController {
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
-            exception.printStackTrace();
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    // TODO : 사진 url 추가
+    // DONE
     @GetMapping("/v2/warehouses/{warehouseId}")
     public void getWarehouseById(@RequestHeader(name = "Authorization") String bearerToken,
             @PathVariable Integer warehouseId, HttpServletResponse response) {
         try {
-            WriteToClient.send(response, warehousesService.getSpecificWarehouseInfo(warehouseId, bearerToken), HttpServletResponse.SC_OK);
+             WriteToClient.send(response, warehousesService.getSpecificWarehouseInfo(warehouseId, bearerToken), HttpServletResponse.SC_OK);
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(WarehouseIdNotFoundException exception) {
