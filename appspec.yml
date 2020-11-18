@@ -3,6 +3,11 @@ os: linux
 files:
         - source: /
           destination: /home/ubuntu/banchago
+permissions:
+        - object: /home/ubuntu/banchango/*
+          owner: ubuntu
+        - object: /home/ubuntu/banchango
+          owner: ubuntu
 hooks:
         BeforeInstall:
                 - location: scripts/delete-before-artifacts.sh
