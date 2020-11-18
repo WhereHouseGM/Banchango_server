@@ -40,7 +40,7 @@ jobs:
         run: zip -r wherehouse-backend.zip build/libs appspec.yml scripts
       
       - name: upload to s3
-        run: aws s3 cp wherehouse-backend.zip s3://${{ secrets.AWS_DEPLOY_BUCKET }}
+        run: aws s3 cp wherehouse-backend.zip s3://${{ secrets.AWS_S3_BUCKET }}
 
   deploy:
     needs: build
