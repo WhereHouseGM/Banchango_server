@@ -43,6 +43,7 @@ jobs:
         run: aws s3 cp wherehouse-backend.zip s3://${{ secrets.AWS_DEPLOY_BUCKET }}
 
   deploy:
+    needs: build
     name: deploy to ec2
     runs-on: ubuntu-latest
 
