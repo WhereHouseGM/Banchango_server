@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
         - source: /
-          destination: /home/ubuntu/banchago
+          destination: /home/ubuntu/banchango
 hooks:
         BeforeInstall:
                 - location: scripts/delete-before-artifacts.sh
