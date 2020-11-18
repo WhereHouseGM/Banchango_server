@@ -30,4 +30,4 @@ jobs:
       - name: check env
         run: env | grep aws-s3-bucket
         env:
-          aws-s3-bucket: ${{ secret.AWS_S3_BUCKET }} 
+          aws-s3-bucket: ${{ secrets.AWS_S3_BUCKET }} 
