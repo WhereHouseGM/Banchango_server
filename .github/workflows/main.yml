@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew build
     
       - name: compress files for deploy
-        run: zip -r wherehouse-backend.zip build/libs appspec.yml script
+        run: zip -r wherehouse-backend.zip build/libs appspec.yml scripts
       
       - name: upload to s3
         run: aws s3 cp wherehouse-backend.zip s3://${{ secrets.AWS_DEPLOY_BUCKET }}
