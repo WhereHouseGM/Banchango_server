@@ -1,0 +1,11 @@
+version: 0.0
+os: linux
+files:
+        - source: /
+          destination: /home/ubuntu/banchago
+hooks:
+        BeforeInstall:
+                - location: scripts/delete-before-artifacts.sh
+        ApplicationStart:
+                - location: scripts/run-application.sh
+                  runas: ubuntu
