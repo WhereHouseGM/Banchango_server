@@ -22,10 +22,7 @@ import com.banchango.domain.warehousetypes.WarehouseTypes;
 import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.warehouses.dto.*;
-import com.banchango.warehouses.exception.WarehouseAlreadyRegisteredException;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
-import com.banchango.warehouses.exception.WarehouseSearchException;
+import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -206,22 +203,25 @@ public class WarehousesService {
     }
 
     @Transactional(readOnly = true)
-    public JSONObject getAgencyWarehouseList() throws Exception{
+    public JSONObject getAgencyWarehouseList(String mainItemType) throws Exception{
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         JSONArray jsonArray = ObjectMaker.getJSONArray();
-        List<AgencyWarehouseListResponseDto> warehousesList = warehousesRepository.findByServiceType(ServiceType.AGENCY).stream().map(AgencyWarehouseListResponseDto::new).collect(Collectors.toList());
-        for(AgencyWarehouseListResponseDto dto : warehousesList) {
-            AgencyWarehouseDetails detail = agencyWarehouseDetailsRepository.findByWarehouseId(dto.getWarehouseId()).orElseThrow(WarehouseIdNotFoundException::new);
+        List<Integer> warehouseIdList = agencyMainItemTypesRepository.getWarehouseIdsByWarehouseType(mainItemType);
+        if(warehouseIdList.size() == 0) throw new WarehouseNotFoundException();
+        for(Integer warehouseId : warehouseIdList) {
+            AgencyWarehouseListResponseDto dto = warehousesRepository.findByWarehouseId(warehouseId).map(AgencyWarehouseListResponseDto::new).orElseThrow(WarehouseIdNotFoundException::new);
+            AgencyWarehouseDetails detail = agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
             dto.setWarehouseType(detail.getType());
             dto.setMinReleasePerMonth(detail.getMinReleasePerMonth());
-            dto.setWarehouseCondition(warehouseTypesRepository.findByWarehouseId(dto.getWarehouseId()).getName());
-            Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(dto.getWarehouseId());
-            if(imagesOptional.isPresent()) {
+            dto.setWarehouseCondition(warehouseTypesRepository.findByWarehouseId(warehouseId).getName());
+            Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(warehouseId);
+            if (imagesOptional.isPresent()) {
                 dto.setMainImageUrl(imagesOptional.get().getMainImageUrl());
             } else {
                 dto.setMainImageUrl(noImageUrl);
             }
             JSONObject listObject = dto.toJSONObject();
+            System.out.println("Putting Object : " + listObject);
             jsonArray.put(listObject);
         }
         jsonObject.put("warehouses", jsonArray);

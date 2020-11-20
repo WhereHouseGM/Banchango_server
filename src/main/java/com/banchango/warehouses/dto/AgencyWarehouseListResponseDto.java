@@ -14,7 +14,6 @@ import org.json.JSONObject;
 @Setter
 public class AgencyWarehouseListResponseDto {
 
-    // TODO : 사진 url 링크 추가
     private String name;
     private Integer warehouseId;
     private String address;

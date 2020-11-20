@@ -5,10 +5,7 @@ import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehouses.dto.AgencyWarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.GeneralWarehouseInsertRequestDto;
-import com.banchango.warehouses.exception.WarehouseAlreadyRegisteredException;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
-import com.banchango.warehouses.exception.WarehouseSearchException;
+import com.banchango.warehouses.exception.*;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -84,10 +81,12 @@ public class WarehousesApiController {
     }
 
     // DONE
-    @GetMapping("/v2/warehouses/agency")
-    public void getAgencyWarehouseList(HttpServletResponse response) {
+    @GetMapping("/v2/warehouses/agency/{mainItemType}")
+    public void getAgencyWarehouseList(HttpServletResponse response, @PathVariable String mainItemType) {
         try {
-            WriteToClient.send(response, warehousesService.getAgencyWarehouseList(), HttpServletResponse.SC_OK);
+            WriteToClient.send(response, warehousesService.getAgencyWarehouseList(mainItemType), HttpServletResponse.SC_OK);
+        } catch(WarehouseNotFoundException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
         } catch(Exception exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
