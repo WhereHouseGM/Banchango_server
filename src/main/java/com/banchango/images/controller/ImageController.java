@@ -31,4 +31,18 @@ public class ImageController {
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+
+    // TODO : warehouse_attachments에 있는 이미지 삭제
+    @DeleteMapping("/images/delete/{warehouseId}/{imageName}")
+    public void deleteImage(@RequestHeader(name = "Authorization") String bearerToken, @PathVariable Integer warehouseId,
+                             @PathVariable String imageName, HttpServletResponse response) {
+
+    }
+
+    // TODO : warehouse_main_images 에 있는 이미지 삭제
+    @DeleteMapping("/images/delete/main/{warehouseId}")
+    public void deleteMainImage(@RequestHeader(name = "Authorization") String bearerToken,
+                                @PathVariable Integer warehouseId, HttpServletResponse response) {
+
+    }
 }

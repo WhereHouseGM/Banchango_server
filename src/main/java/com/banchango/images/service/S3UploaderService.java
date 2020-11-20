@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
@@ -22,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -54,9 +54,25 @@ public class S3UploaderService {
                 .build();
     }
 
+    private void deleteFileOnS3(final String fileName) throws FileRemoveException {
+        final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
+        try {
+            s3Client.deleteObject(deleteObjectRequest);
+        } catch(Exception exception) {
+            throw new FileRemoveException();
+        }
+    }
 
-    public void removeNewFile(File targetFile) throws FileRemoveException {
-        if(!targetFile.delete()) throw new FileRemoveException();
+    // TODO : warehouse_attachments에 있는 이미지 삭제
+    @Transactional
+    public JSONObject deleteImage(String token, String imageName, Integer warehouseId) throws Exception {
+        return null;
+    }
+
+    // TODO : warehouse_main_images에 있는 이미지 삭제
+    @Transactional
+    public JSONObject deleteMainImage(String token, Integer warehouseId) {
+        return null;
     }
 
     private String uploadFile(MultipartFile file) throws IOException{
