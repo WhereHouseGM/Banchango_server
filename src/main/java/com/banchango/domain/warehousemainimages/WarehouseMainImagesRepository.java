@@ -2,6 +2,8 @@ package com.banchango.domain.warehousemainimages;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface WarehouseMainImagesRepository extends JpaRepository<WarehouseMainImages, Integer> {
-    WarehouseMainImages findByWarehouseId(Integer warehouseId);
+    Optional<WarehouseMainImages> findByWarehouseId(Integer warehouseId);
 }

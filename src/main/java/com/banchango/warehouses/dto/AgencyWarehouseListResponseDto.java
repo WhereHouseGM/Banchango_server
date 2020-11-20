@@ -20,9 +20,10 @@ public class AgencyWarehouseListResponseDto {
     private String address;
     private String openAt;
     private String closeAt;
+    private Integer minReleasePerMonth;
     private WarehouseTypeName warehouseCondition;
     private AgencyWarehouseType warehouseType;
-    private String imageUrl;
+    private String mainImageUrl;
 
     public AgencyWarehouseListResponseDto(Warehouses warehouse) {
         this.name = warehouse.getName();
@@ -41,7 +42,8 @@ public class AgencyWarehouseListResponseDto {
         jsonObject.put("closeAt", closeAt);
         jsonObject.put("warehouseCondition", warehouseCondition);
         jsonObject.put("warehouseType", warehouseType);
-        jsonObject.put("imageUrl", imageUrl);
+        jsonObject.put("mainImageUrl", mainImageUrl);
+        jsonObject.put("minReleasePerMonth", minReleasePerMonth);
         return jsonObject;
     }
 

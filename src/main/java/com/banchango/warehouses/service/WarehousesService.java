@@ -13,6 +13,8 @@ import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
+import com.banchango.domain.warehousemainimages.WarehouseMainImages;
+import com.banchango.domain.warehousemainimages.WarehouseMainImagesRepository;
 import com.banchango.domain.warehouses.ServiceType;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
@@ -33,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -49,6 +52,7 @@ public class WarehousesService {
     private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
     private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
     private final GeneralWarehouseDetailsRepository generalWarehouseDetailsRepository;
+    private final WarehouseMainImagesRepository warehouseMainImagesRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -207,13 +211,15 @@ public class WarehousesService {
         JSONArray jsonArray = ObjectMaker.getJSONArray();
         List<AgencyWarehouseListResponseDto> warehousesList = warehousesRepository.findByServiceType(ServiceType.AGENCY).stream().map(AgencyWarehouseListResponseDto::new).collect(Collectors.toList());
         for(AgencyWarehouseListResponseDto dto : warehousesList) {
-            dto.setWarehouseType(agencyWarehouseDetailsRepository.findByWarehouseId(dto.getWarehouseId()).orElseThrow(WarehouseIdNotFoundException::new).getType());
+            AgencyWarehouseDetails detail = agencyWarehouseDetailsRepository.findByWarehouseId(dto.getWarehouseId()).orElseThrow(WarehouseIdNotFoundException::new);
+            dto.setWarehouseType(detail.getType());
+            dto.setMinReleasePerMonth(detail.getMinReleasePerMonth());
             dto.setWarehouseCondition(warehouseTypesRepository.findByWarehouseId(dto.getWarehouseId()).getName());
-            List<WarehouseAttachmentDto> attachmentDtos = warehouseAttachmentsRepository.findByWarehouseId(dto.getWarehouseId()).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
-            if(attachmentDtos.size() != 0) {
-                dto.setImageUrl(attachmentDtos.get(0).getUrl());
+            Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(dto.getWarehouseId());
+            if(imagesOptional.isPresent()) {
+                dto.setMainImageUrl(imagesOptional.get().getMainImageUrl());
             } else {
-                dto.setImageUrl(noImageUrl);
+                dto.setMainImageUrl(noImageUrl);
             }
             JSONObject listObject = dto.toJSONObject();
             jsonArray.put(listObject);
