@@ -202,10 +202,7 @@ public class WarehousesService {
     }
 
     @Transactional(readOnly = true)
-    public JSONObject getAgencyWarehouseList(String token) throws Exception{
-        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-            throw new AuthenticateException();
-        }
+    public JSONObject getAgencyWarehouseList() throws Exception{
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         JSONArray jsonArray = ObjectMaker.getJSONArray();
         List<AgencyWarehouseListResponseDto> warehousesList = warehousesRepository.findByServiceType(ServiceType.AGENCY).stream().map(AgencyWarehouseListResponseDto::new).collect(Collectors.toList());

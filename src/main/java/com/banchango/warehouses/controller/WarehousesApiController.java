@@ -85,11 +85,9 @@ public class WarehousesApiController {
 
     // DONE
     @GetMapping("/v2/warehouses/agency")
-    public void getAgencyWarehouseList(@RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
+    public void getAgencyWarehouseList(HttpServletResponse response) {
         try {
-            WriteToClient.send(response, warehousesService.getAgencyWarehouseList(bearerToken), HttpServletResponse.SC_OK);
-        } catch(AuthenticateException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+            WriteToClient.send(response, warehousesService.getAgencyWarehouseList(), HttpServletResponse.SC_OK);
         } catch(Exception exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
