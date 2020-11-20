@@ -1,4 +1,4 @@
 # Project exclude paths
 /.gradle/
 /.idea/
-/src/main/resources/application.propertiess
+/src/main/resources/application.properties
