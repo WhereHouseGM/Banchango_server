@@ -15,7 +15,6 @@ import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
 import com.banchango.domain.warehousemainimages.WarehouseMainImages;
 import com.banchango.domain.warehousemainimages.WarehouseMainImagesRepository;
-import com.banchango.domain.warehouses.ServiceType;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehousetypes.WarehouseTypes;
@@ -221,7 +220,6 @@ public class WarehousesService {
                 dto.setMainImageUrl(noImageUrl);
             }
             JSONObject listObject = dto.toJSONObject();
-            System.out.println("Putting Object : " + listObject);
             jsonArray.put(listObject);
         }
         jsonObject.put("warehouses", jsonArray);
