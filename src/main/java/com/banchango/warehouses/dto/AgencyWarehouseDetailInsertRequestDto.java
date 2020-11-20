@@ -12,13 +12,14 @@ import lombok.Setter;
 public class AgencyWarehouseDetailInsertRequestDto {
 
     private String warehouseType;
+    private Integer minReleasePerMonth;
     private String mainItemType;
     private String[] deliveryTypes;
     private AgencyWarehousePaymentInsertRequestDto[] payments;
 
     public AgencyWarehouseDetails toAgencyWarehouseDetailEntity(Integer warehouseId) {
         return AgencyWarehouseDetails.builder()
-                .type(warehouseType).warehouseId(warehouseId)
+                .type(warehouseType).warehouseId(warehouseId).minReleasePerMonth(minReleasePerMonth)
                 .build();
     }
 
