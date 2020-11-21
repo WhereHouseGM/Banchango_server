@@ -12,9 +12,16 @@ import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.warehouseattachments.WarehouseAttachments;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
+import com.banchango.domain.warehousemainimages.WarehouseMainImages;
+import com.banchango.domain.warehousemainimages.WarehouseMainImagesRepository;
+import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.images.exception.FileRemoveException;
 import com.banchango.tools.ObjectMaker;
+import com.banchango.warehouses.exception.WarehouseAttachmentNotFoundException;
+import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
+import com.banchango.warehouses.exception.WarehouseMainImageNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +38,8 @@ public class S3UploaderService {
 
     private AmazonS3 s3Client;
     private final WarehouseAttachmentsRepository warehouseAttachmentsRepository;
+    private final WarehousesRepository warehousesRepository;
+    private final WarehouseMainImagesRepository warehouseMainImagesRepository;
 
     @Value("${aws.s3.bucket}")
     private String bucket;
@@ -63,16 +72,44 @@ public class S3UploaderService {
         }
     }
 
-    // TODO : warehouse_attachments에 있는 이미지 삭제
-    @Transactional
-    public JSONObject deleteImage(String token, String imageName, Integer warehouseId) throws Exception {
-        return null;
+    private void checkTokenAndWarehouseId(String token, Integer warehouseId) throws Exception {
+        Warehouses warehouse = warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        Integer userIdInToken = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
+        if(!userIdInToken.equals(warehouse.getUserId())) {
+            throw new WarehouseInvalidAccessException();
+        }
     }
 
-    // TODO : warehouse_main_images에 있는 이미지 삭제
+    // TODO : TEST
     @Transactional
-    public JSONObject deleteMainImage(String token, Integer warehouseId) {
-        return null;
+    public JSONObject deleteImage(String token, String imageName, Integer warehouseId) throws Exception {
+        checkTokenAndWarehouseId(token, warehouseId);
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        if(warehouseAttachmentsRepository.findByUrlContaining(imageName).isPresent()) {
+            warehouseAttachmentsRepository.deleteByUrlContaining(imageName);
+            deleteFileOnS3(imageName);
+            jsonObject.put("message", "삭제에 성공했습니다.");
+            return jsonObject;
+        } else {
+            throw new WarehouseAttachmentNotFoundException();
+        }
+    }
+
+    // TODO : TEST
+    @Transactional
+    public JSONObject deleteMainImage(String token, Integer warehouseId) throws Exception {
+        checkTokenAndWarehouseId(token, warehouseId);
+        WarehouseMainImages image = warehouseMainImagesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseMainImageNotFoundException::new);
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        String[] splitTemp = image.getMainImageUrl().split("/");
+        String fileName = splitTemp[splitTemp.length - 1];
+        deleteFileOnS3(fileName);
+        warehouseMainImagesRepository.deleteByWarehouseId(warehouseId);
+        jsonObject.put("message", "창고의 메인 이미지가 정상적으로 삭제되었습니다.");
+        return jsonObject;
     }
 
     private String uploadFile(MultipartFile file) throws IOException{
