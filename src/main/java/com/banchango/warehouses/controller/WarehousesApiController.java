@@ -35,21 +35,6 @@ public class WarehousesApiController {
     }
 
     // DONE
-    @PostMapping("/v2/warehouses/general")
-    public void registerGeneral(@RequestBody GeneralWarehouseInsertRequestDto dto,
-                                @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
-        try {
-            WriteToClient.send(response, warehousesService.saveGeneralWarehouse(dto, bearerToken), HttpServletResponse.SC_OK);
-        } catch(AuthenticateException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-        } catch(WarehouseAlreadyRegisteredException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
-        } catch(Exception exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-        }
-    }
-
-    // DONE
     @GetMapping("/v2/warehouses")
     public void getAllWarehouses(@RequestParam(name = "address") String address,
                                  @RequestParam(name = "limit") Integer limit,
