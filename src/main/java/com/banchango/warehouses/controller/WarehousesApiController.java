@@ -4,7 +4,6 @@ import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.warehouses.dto.AgencyWarehouseInsertRequestDto;
-import com.banchango.warehouses.dto.GeneralWarehouseInsertRequestDto;
 import com.banchango.warehouses.exception.*;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
