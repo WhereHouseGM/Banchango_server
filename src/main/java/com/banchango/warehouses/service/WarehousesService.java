@@ -259,17 +259,27 @@ public class WarehousesService {
         jsonObject.put("location", locationDto.toJSONObject());
         jsonObject.put("warehouseCondition", warehouseTypesRepository.findByWarehouseId(warehouseId).getName());
         Integer agencyWarehouseDetailId = getAgencyWarehouseDetailId(warehouseId);
-        List<WarehouseAttachmentDto> attachmentDtos = warehouseAttachmentsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
-        if(attachmentDtos.size() != 0) {
-            jsonObject.put("imageUrl", attachmentDtos.get(0).getUrl());
+        Optional<WarehouseMainImages> imageOptional = warehouseMainImagesRepository.findByWarehouseId(warehouseId);
+        if(imageOptional.isPresent()) {
+            jsonObject.put("mainImageUrl", imageOptional.get().getMainImageUrl());
         } else {
-            jsonObject.put("imageUrl", noImageUrl);
+            jsonObject.put("mainImageUrl", noImageUrl);
         }
+        jsonObject.put("images", createJSONArrayOfAttachments(warehouseId));
         if(warehouseResponseDto.getInsuranceId() != null) {
             jsonObject.put("insuranceName", insurancesRepository.findByInsuranceId(warehouseResponseDto.getInsuranceId()).getName());
         }
         jsonObject.put("agencyDetails", createJSONObjectOfAgencyDetails(warehouseId, agencyWarehouseDetailId));
         return jsonObject;
+    }
+
+    private JSONArray createJSONArrayOfAttachments(Integer warehouseId) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        List<WarehouseAttachmentDto> attachmentDtos = warehouseAttachmentsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
+        for(WarehouseAttachmentDto dto : attachmentDtos) {
+            jsonArray.put(dto.getUrl());
+        }
+        return jsonArray;
     }
 
     private Integer getAgencyWarehouseDetailId(Integer warehouseId) throws WarehouseIdNotFoundException{
