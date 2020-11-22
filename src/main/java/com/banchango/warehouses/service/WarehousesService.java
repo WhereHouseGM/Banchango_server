@@ -72,41 +72,13 @@ public class WarehousesService {
        } else {
            Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
-           saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
+           saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
            saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
        }
        JSONObject jsonObject = ObjectMaker.getJSONObject();
        jsonObject.put("message", "창고가 정상적으로 등록 되었습니다.");
        return jsonObject;
-    }
-
-    @Transactional
-    public JSONObject saveGeneralWarehouse(GeneralWarehouseInsertRequestDto wrapperDto, String token) throws Exception {
-        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-            throw new AuthenticateException();
-        }
-        int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
-        if(warehousesRepository.findByUserId(userId).isPresent()) {
-            throw new WarehouseAlreadyRegisteredException();
-        }
-        if(wrapperDto.getInsurance() != null) {
-            int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
-            Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
-            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
-            saveGeneralWarehouseDetailInformations(wrapperDto.getGeneralDetail(), warehouseId);
-            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
-            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
-        } else {
-            Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
-            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
-            saveGeneralWarehouseDetailInformations(wrapperDto.getGeneralDetail(), warehouseId);
-            saveWarehouseType(wrapperDto.getWarehouseType(), warehouseId);
-            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
-        }
-        JSONObject jsonObject = ObjectMaker.getJSONObject();
-        jsonObject.put("message", "창고가 정상적으로 등록되었습니다.");
-        return jsonObject;
     }
 
     private Warehouses toWarehouseEntityWithInsurance(WarehouseInsertRequestDto wrapperDto, Integer insuranceId, Integer userId) {
@@ -142,15 +114,13 @@ public class WarehousesService {
     }
 
 
-    private void saveWarehouseType(String warehouseCondition, Integer warehouseId) {
-        warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseCondition).warehouseId(warehouseId).build());
+    private void saveWarehouseType(String[] warehouseConditions, Integer warehouseId) {
+        for(String warehouseCondition : warehouseConditions) {
+            warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseCondition).warehouseId(warehouseId).build());
+        }
     }
     private void saveWarehouseLocation(WarehouseLocationDto locationDto, Integer warehouseId) {
         warehouseLocationsRepository.save(locationDto.toEntity(warehouseId));
-    }
-
-    private void saveGeneralWarehouseDetailInformations(GeneralWarehouseDetailInsertRequestDto requestDto, Integer warehouseId) {
-        generalWarehouseDetailsRepository.save(requestDto.toEntity(warehouseId));
     }
 
     private void saveAgencyWarehouseDetailInformations(AgencyWarehouseDetailInsertRequestDto requestDto, Integer warehouseId) {
