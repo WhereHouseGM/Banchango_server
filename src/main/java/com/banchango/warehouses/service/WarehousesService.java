@@ -190,7 +190,6 @@ public class WarehousesService {
         for(WarehouseSearchResponseDto searchResponseDto : warehouses) {
             WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
             List<WarehouseTypesDto> typesDtos = warehouseTypesRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseTypesDto::new).collect(Collectors.toList());
-            List<WarehouseAttachmentDto> attachmentsList = warehouseAttachmentsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
             Optional<WarehouseMainImages> imageOptional = warehouseMainImagesRepository.findByWarehouseId(searchResponseDto.getWarehouseId());
             if(imageOptional.isPresent()) {
                 jsonArray.put(searchResponseDto.toJSONObject(locationDto, imageOptional.get().getMainImageUrl(), typesDtos));
