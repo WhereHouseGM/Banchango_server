@@ -189,12 +189,13 @@ public class WarehousesService {
         if(warehouses.size() == 0) throw new WarehouseSearchException();
         for(WarehouseSearchResponseDto searchResponseDto : warehouses) {
             WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
-            WarehouseTypesDto typesDto = new WarehouseTypesDto(warehouseTypesRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
+            List<WarehouseTypesDto> typesDtos = warehouseTypesRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseTypesDto::new).collect(Collectors.toList());
             List<WarehouseAttachmentDto> attachmentsList = warehouseAttachmentsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseAttachmentDto::new).collect(Collectors.toList());
-            if(attachmentsList.size() != 0) {
-                jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndAttachmentAndType(locationDto, attachmentsList.get(0), typesDto));
+            Optional<WarehouseMainImages> imageOptional = warehouseMainImagesRepository.findByWarehouseId(searchResponseDto.getWarehouseId());
+            if(imageOptional.isPresent()) {
+                jsonArray.put(searchResponseDto.toJSONObject(locationDto, imageOptional.get().getMainImageUrl(), typesDtos));
             } else {
-                jsonArray.put(searchResponseDto.toJSONObjectWithLocationAndType(locationDto, typesDto, noImageUrl));
+                jsonArray.put(searchResponseDto.toJSONObject(locationDto, noImageUrl, typesDtos));
             }
         }
         jsonObject.put("warehouses", jsonArray);
@@ -212,7 +213,7 @@ public class WarehousesService {
             AgencyWarehouseDetails detail = agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
             dto.setWarehouseType(detail.getType());
             dto.setMinReleasePerMonth(detail.getMinReleasePerMonth());
-            dto.setWarehouseCondition(warehouseTypesRepository.findByWarehouseId(warehouseId).getName());
+            dto.setWarehouseConditions(warehouseTypesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseTypesDto::new).collect(Collectors.toList()));
             Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(warehouseId);
             if (imagesOptional.isPresent()) {
                 dto.setMainImageUrl(imagesOptional.get().getMainImageUrl());
@@ -252,12 +253,21 @@ public class WarehousesService {
         return createJSONObjectOfSpecificWarehouseInfo(warehouseId);
     }
 
+    private JSONArray createJSONArrayOfWarehouseConditions(Integer warehouseId) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        List<WarehouseTypesDto> typesDtos = warehouseTypesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseTypesDto::new).collect(Collectors.toList());
+        for(WarehouseTypesDto dto : typesDtos) {
+            jsonArray.put(dto.getName());
+        }
+        return jsonArray;
+    }
+
     private JSONObject createJSONObjectOfSpecificWarehouseInfo(Integer warehouseId) throws WarehouseIdNotFoundException {
         WarehouseResponseDto warehouseResponseDto = new WarehouseResponseDto(warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new));
         JSONObject jsonObject = warehouseResponseDto.toJSONObject();
         WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(warehouseId));
         jsonObject.put("location", locationDto.toJSONObject());
-        jsonObject.put("warehouseCondition", warehouseTypesRepository.findByWarehouseId(warehouseId).getName());
+        jsonObject.put("warehouseCondition", createJSONArrayOfWarehouseConditions(warehouseId));
         Integer agencyWarehouseDetailId = getAgencyWarehouseDetailId(warehouseId);
         Optional<WarehouseMainImages> imageOptional = warehouseMainImagesRepository.findByWarehouseId(warehouseId);
         if(imageOptional.isPresent()) {

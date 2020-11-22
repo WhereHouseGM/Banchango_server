@@ -7,7 +7,10 @@ import com.banchango.tools.ObjectMaker;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -20,7 +23,7 @@ public class AgencyWarehouseListResponseDto {
     private String openAt;
     private String closeAt;
     private Integer minReleasePerMonth;
-    private WarehouseTypeName warehouseCondition;
+    private List<WarehouseTypesDto> warehouseConditions;
     private AgencyWarehouseType warehouseType;
     private String mainImageUrl;
 
@@ -32,6 +35,14 @@ public class AgencyWarehouseListResponseDto {
         this.closeAt = warehouse.getCloseAt();
     }
 
+    private JSONArray toJSONArrayOfWarehouseConditions(List<WarehouseTypesDto> typesDtos) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        for(WarehouseTypesDto dto : typesDtos) {
+            jsonArray.put(dto.getName());
+        }
+        return jsonArray;
+    }
+
     public JSONObject toJSONObject() {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("name", name);
@@ -39,7 +50,7 @@ public class AgencyWarehouseListResponseDto {
         jsonObject.put("address", address);
         jsonObject.put("openAt", openAt);
         jsonObject.put("closeAt", closeAt);
-        jsonObject.put("warehouseCondition", warehouseCondition);
+        jsonObject.put("warehouseCondition", toJSONArrayOfWarehouseConditions(warehouseConditions));
         jsonObject.put("warehouseType", warehouseType);
         jsonObject.put("mainImageUrl", mainImageUrl);
         jsonObject.put("minReleasePerMonth", minReleasePerMonth);
