@@ -12,6 +12,8 @@ import com.banchango.domain.generalwarehousedetails.GeneralWarehouseDetailsRepos
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
 import com.banchango.domain.warehousemainimages.WarehouseMainImages;
 import com.banchango.domain.warehousemainimages.WarehouseMainImagesRepository;
@@ -19,6 +21,8 @@ import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehousetypes.WarehouseTypes;
 import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.warehouses.dto.*;
 import com.banchango.warehouses.exception.*;
@@ -49,6 +53,8 @@ public class WarehousesService {
     private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
     private final GeneralWarehouseDetailsRepository generalWarehouseDetailsRepository;
     private final WarehouseMainImagesRepository warehouseMainImagesRepository;
+    private final WarehouseUsageCautionsRepository warehouseUsageCautionsRepository;
+    private final WarehouseFacilityUsagesRepository warehouseFacilityUsagesRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -67,6 +73,8 @@ public class WarehousesService {
            Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
            saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
+           saveWarehouseFacilityUsages(wrapperDto.getWarehouseFacilityUsages(), warehouseId);
+           saveWarehouseUsageCautions(wrapperDto.getWarehouseUsageCautions(), warehouseId);
            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
            saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
        } else {
@@ -119,6 +127,19 @@ public class WarehousesService {
             warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseCondition).warehouseId(warehouseId).build());
         }
     }
+
+    private void saveWarehouseFacilityUsages(String[] contents, Integer warehouseId) {
+        for(String content : contents) {
+            warehouseFacilityUsagesRepository.save(WarehouseFacilityUsages.builder().content(content).warehouseId(warehouseId).build());
+        }
+    }
+
+    private void saveWarehouseUsageCautions(String[] contents, Integer warehouseId) {
+        for(String content : contents) {
+            warehouseUsageCautionsRepository.save(WarehouseUsageCautions.builder().content(content).warehouseId(warehouseId).build());
+        }
+    }
+
     private void saveWarehouseLocation(WarehouseLocationDto locationDto, Integer warehouseId) {
         warehouseLocationsRepository.save(locationDto.toEntity(warehouseId));
     }
@@ -231,12 +252,32 @@ public class WarehousesService {
         return jsonArray;
     }
 
+    private JSONArray createJSONArrayOfWarehouseFacilityUsages(Integer warehouseId) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        List<WarehouseFacilityUsagesResponseDto> responseDtos = warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsagesResponseDto::new).collect(Collectors.toList());
+        for(WarehouseFacilityUsagesResponseDto dto : responseDtos) {
+            jsonArray.put(dto.getContent());
+        }
+        return jsonArray;
+    }
+
+    private JSONArray createJSONArrayOfWarehouseUsageCautions(Integer warehouseId) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        List<WarehouseUsageCautionsResponseDto> responseDtos = warehouseUsageCautionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseUsageCautionsResponseDto::new).collect(Collectors.toList());
+        for(WarehouseUsageCautionsResponseDto dto : responseDtos) {
+            jsonArray.put(dto.getContent());
+        }
+        return jsonArray;
+    }
+
     private JSONObject createJSONObjectOfSpecificWarehouseInfo(Integer warehouseId) throws WarehouseIdNotFoundException {
         WarehouseResponseDto warehouseResponseDto = new WarehouseResponseDto(warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new));
         JSONObject jsonObject = warehouseResponseDto.toJSONObject();
         WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(warehouseId));
         jsonObject.put("location", locationDto.toJSONObject());
         jsonObject.put("warehouseCondition", createJSONArrayOfWarehouseConditions(warehouseId));
+        jsonObject.put("warehouseUsageCautions", createJSONArrayOfWarehouseUsageCautions(warehouseId));
+        jsonObject.put("warehouseFacilityUsages", createJSONArrayOfWarehouseFacilityUsages(warehouseId));
         Integer agencyWarehouseDetailId = getAgencyWarehouseDetailId(warehouseId);
         Optional<WarehouseMainImages> imageOptional = warehouseMainImagesRepository.findByWarehouseId(warehouseId);
         if(imageOptional.isPresent()) {
