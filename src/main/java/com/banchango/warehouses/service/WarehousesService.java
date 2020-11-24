@@ -12,6 +12,7 @@ import com.banchango.domain.generalwarehousedetails.GeneralWarehouseDetailsRepos
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouselocations.WarehouseLocationsRepository;
 import com.banchango.domain.warehousemainimages.WarehouseMainImages;
@@ -20,6 +21,7 @@ import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehousetypes.WarehouseTypes;
 import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.warehouses.dto.*;
@@ -71,6 +73,8 @@ public class WarehousesService {
            Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
            saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
+           saveWarehouseFacilityUsages(wrapperDto.getWarehouseFacilityUsages(), warehouseId);
+           saveWarehouseUsageCautions(wrapperDto.getWarehouseUsageCautions(), warehouseId);
            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
            saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
        } else {
@@ -123,6 +127,19 @@ public class WarehousesService {
             warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseCondition).warehouseId(warehouseId).build());
         }
     }
+
+    private void saveWarehouseFacilityUsages(String[] contents, Integer warehouseId) {
+        for(String content : contents) {
+            warehouseFacilityUsagesRepository.save(WarehouseFacilityUsages.builder().content(content).warehouseId(warehouseId).build());
+        }
+    }
+
+    private void saveWarehouseUsageCautions(String[] contents, Integer warehouseId) {
+        for(String content : contents) {
+            warehouseUsageCautionsRepository.save(WarehouseUsageCautions.builder().content(content).warehouseId(warehouseId).build());
+        }
+    }
+
     private void saveWarehouseLocation(WarehouseLocationDto locationDto, Integer warehouseId) {
         warehouseLocationsRepository.save(locationDto.toEntity(warehouseId));
     }
