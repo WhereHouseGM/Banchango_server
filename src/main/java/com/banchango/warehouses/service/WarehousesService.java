@@ -65,9 +65,6 @@ public class WarehousesService {
            throw new AuthenticateException();
        }
        int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
-       if(warehousesRepository.findByUserId(userId).isPresent()) {
-           throw new WarehouseAlreadyRegisteredException();
-       }
        if(wrapperDto.getInsurance() != null) {
            int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
            Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);

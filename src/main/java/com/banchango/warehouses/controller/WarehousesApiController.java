@@ -25,8 +25,6 @@ public class WarehousesApiController {
             WriteToClient.send(response, warehousesService.saveAgencyWarehouse(dto, bearerToken), HttpServletResponse.SC_OK);
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-        } catch(WarehouseAlreadyRegisteredException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
         } catch(Exception exception) {
             exception.printStackTrace();
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
