@@ -16,8 +16,6 @@ public class DeliveryTypeResponseDto {
 
     public DeliveryTypeResponseDto(List<DeliveryTypes> types) {
         this.deliveryType = new String[types.size()];
-        System.out.println("Type Size : " + types.size());
-        System.out.println("Array Size : " + deliveryType.length);
         for(int i = 0; i < types.size(); i++) {
             deliveryType[i] = types.get(i).getName();
         }

@@ -8,7 +8,6 @@ import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetailsReposit
 import com.banchango.domain.agencywarehousepayments.AgencyWarehousePaymentsRepository;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
-import com.banchango.domain.generalwarehousedetails.GeneralWarehouseDetailsRepository;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
@@ -36,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -52,7 +50,6 @@ public class WarehousesService {
     private final AgencyWarehouseDetailsRepository agencyWarehouseDetailsRepository;
     private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
     private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
-    private final GeneralWarehouseDetailsRepository generalWarehouseDetailsRepository;
     private final WarehouseMainImagesRepository warehouseMainImagesRepository;
     private final WarehouseUsageCautionsRepository warehouseUsageCautionsRepository;
     private final WarehouseFacilityUsagesRepository warehouseFacilityUsagesRepository;
