@@ -25,6 +25,8 @@ public class AgencyWarehouseListResponseDto {
     private List<WarehouseTypesDto> warehouseConditions;
     private AgencyWarehouseType warehouseType;
     private String mainImageUrl;
+    private String[] deliveryTypes;
+    private Integer totalArea;
 
     public AgencyWarehouseListResponseDto(Warehouses warehouse) {
         this.name = warehouse.getName();
@@ -32,12 +34,21 @@ public class AgencyWarehouseListResponseDto {
         this.address = warehouse.getAddress();
         this.openAt = warehouse.getOpenAt();
         this.closeAt = warehouse.getCloseAt();
+        this.totalArea = warehouse.getTotalArea();
     }
 
     private JSONArray toJSONArrayOfWarehouseConditions(List<WarehouseTypesDto> typesDtos) {
         JSONArray jsonArray = ObjectMaker.getJSONArray();
         for(WarehouseTypesDto dto : typesDtos) {
             jsonArray.put(dto.getName());
+        }
+        return jsonArray;
+    }
+
+    private JSONArray toJSONArrayOfDeliveryTypes(String[] deliveryTypes) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        for(String delivery : deliveryTypes) {
+            jsonArray.put(delivery);
         }
         return jsonArray;
     }
@@ -51,8 +62,10 @@ public class AgencyWarehouseListResponseDto {
         jsonObject.put("closeAt", closeAt);
         jsonObject.put("warehouseCondition", toJSONArrayOfWarehouseConditions(warehouseConditions));
         jsonObject.put("warehouseType", warehouseType);
+        jsonObject.put("deliveryTypes", toJSONArrayOfDeliveryTypes(deliveryTypes));
         jsonObject.put("mainImageUrl", mainImageUrl);
         jsonObject.put("minReleasePerMonth", minReleasePerMonth);
+        jsonObject.put("totalArea", totalArea);
         return jsonObject;
     }
 

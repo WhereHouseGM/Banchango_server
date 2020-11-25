@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -200,6 +201,7 @@ public class WarehousesService {
             AgencyWarehouseDetails detail = agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
             dto.setWarehouseType(detail.getType());
             dto.setMinReleasePerMonth(detail.getMinReleasePerMonth());
+            dto.setDeliveryTypes(new DeliveryTypeResponseDto(deliveryTypesRepository.findByAgencyWarehouseDetailId(detail.getAgencyWarehouseDetailId())).getDeliveryType());
             dto.setWarehouseConditions(warehouseTypesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseTypesDto::new).collect(Collectors.toList()));
             Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(warehouseId);
             if (imagesOptional.isPresent()) {

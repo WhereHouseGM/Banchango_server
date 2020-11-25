@@ -70,6 +70,7 @@ public class WarehousesApiController {
         } catch(WarehouseNotFoundException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
         } catch(Exception exception) {
+            exception.printStackTrace();
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
