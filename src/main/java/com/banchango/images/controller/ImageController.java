@@ -35,6 +35,22 @@ public class ImageController {
         }
     }
 
+    @PostMapping("/images/upload/main/{warehouseId}")
+    @ResponseBody
+    public void uploadMain(@RequestPart(name = "file") MultipartFile multipartFile, HttpServletResponse response,
+                           @RequestHeader(name = "Authorization") String bearerToken, @PathVariable Integer warehouseId) {
+        try {
+            WriteToClient.send(response, s3UploaderService.uploadMainImage(multipartFile, bearerToken, warehouseId), HttpServletResponse.SC_OK);
+        } catch(AuthenticateException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+        } catch(WarehouseInvalidAccessException exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
+        } catch(Exception exception) {
+            exception.printStackTrace();
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
     // TODO : Test
     @DeleteMapping("/images/delete/{warehouseId}/{imageName}")
     public void deleteImage(@RequestHeader(name = "Authorization") String bearerToken, @PathVariable Integer warehouseId,
@@ -53,7 +69,7 @@ public class ImageController {
         }
     }
 
-    // TODO : TEST
+    // DONE
     @DeleteMapping("/images/delete/main/{warehouseId}")
     public void deleteMainImage(@RequestHeader(name = "Authorization") String bearerToken,
                                 @PathVariable Integer warehouseId, HttpServletResponse response) {

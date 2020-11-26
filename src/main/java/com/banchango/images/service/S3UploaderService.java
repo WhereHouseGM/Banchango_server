@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -124,16 +125,49 @@ public class S3UploaderService {
         if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
-        if(!warehouseId.equals(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))))) {
+        if(!isUserAuthenticatedToAccessWarehouseInfo(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))), warehouseId))  {
             throw new WarehouseInvalidAccessException();
         }
         String uploadedImageUrl = uploadFile(multipartFile);
-        WarehouseAttachments attachment = WarehouseAttachments.builder()
-                .url(uploadedImageUrl).warehouseId(warehouseId).build();
-        warehouseAttachmentsRepository.save(attachment);
+        saveAttachment(uploadedImageUrl, warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "파일 업로드에 성공했습니다.");
         jsonObject.put("url", uploadedImageUrl);
         return jsonObject;
+    }
+
+    @Transactional
+    public JSONObject uploadMainImage(MultipartFile multipartFile, String token, Integer warehouseId) throws Exception {
+        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        if(!isUserAuthenticatedToAccessWarehouseInfo(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))), warehouseId))  {
+            throw new WarehouseInvalidAccessException();
+        }
+        String uploadedImageUrl = uploadFile(multipartFile);
+        saveMainImage(uploadedImageUrl, warehouseId);
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("message", "메인 이미지 업로드에 성공했습니다.");
+        jsonObject.put("url", uploadedImageUrl);
+        return jsonObject;
+    }
+
+    private void saveAttachment(String url, Integer warehouseId) {
+        WarehouseAttachments attachment = WarehouseAttachments.builder()
+                .url(url).warehouseId(warehouseId).build();
+        warehouseAttachmentsRepository.save(attachment);
+    }
+
+    private void saveMainImage(String url, Integer warehouseId) {
+        WarehouseMainImages image = WarehouseMainImages.builder()
+                .mainImageUrl(url).warehouseId(warehouseId).build();
+        warehouseMainImagesRepository.save(image);
+    }
+
+    private boolean isUserAuthenticatedToAccessWarehouseInfo(Integer userId, Integer warehouseId) throws WarehouseIdNotFoundException {
+        Optional<Warehouses> warehousesOptional = warehousesRepository.findByWarehouseId(warehouseId);
+        if(warehousesOptional.isPresent()) {
+            return warehousesOptional.get().getUserId().equals(userId);
+        } else throw new WarehouseIdNotFoundException();
     }
 }
