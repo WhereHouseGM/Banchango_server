@@ -87,7 +87,6 @@ public class S3UploaderService {
         }
     }
 
-    // TODO : TEST
     @Transactional
     public JSONObject deleteImage(String token, String imageName, Integer warehouseId) throws Exception {
         checkTokenAndWarehouseId(token, warehouseId);
@@ -102,7 +101,6 @@ public class S3UploaderService {
         }
     }
 
-    // TODO : TEST
     @Transactional
     public JSONObject deleteMainImage(String token, Integer warehouseId) throws Exception {
         checkTokenAndWarehouseId(token, warehouseId);

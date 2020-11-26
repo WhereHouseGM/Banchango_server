@@ -20,6 +20,7 @@ public class ImageController {
 
     private final S3UploaderService s3UploaderService;
 
+    // DONE
     @PostMapping("/images/upload/{warehouseId}")
     @ResponseBody
     public void upload(@RequestPart(name = "file") MultipartFile multipartFile, HttpServletResponse response,
@@ -35,6 +36,7 @@ public class ImageController {
         }
     }
 
+    // DONE
     @PostMapping("/images/upload/main/{warehouseId}")
     @ResponseBody
     public void uploadMain(@RequestPart(name = "file") MultipartFile multipartFile, HttpServletResponse response,
@@ -47,14 +49,14 @@ public class ImageController {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
         } catch(Exception exception) {
             exception.printStackTrace();
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    // TODO : Test
-    @DeleteMapping("/images/delete/{warehouseId}/{imageName}")
-    public void deleteImage(@RequestHeader(name = "Authorization") String bearerToken, @PathVariable Integer warehouseId,
-                             @PathVariable String imageName, HttpServletResponse response) {
+    // DONE
+    @DeleteMapping("/images/delete")
+    public void deleteImage(@RequestHeader(name = "Authorization") String bearerToken, @RequestParam(name = "warehouseId") Integer warehouseId,
+                             @RequestParam(name = "file") String imageName, HttpServletResponse response) {
         try {
             WriteToClient.send(response, s3UploaderService.deleteImage(bearerToken, imageName, warehouseId), HttpServletResponse.SC_OK);
         } catch(AuthenticateException exception) {
@@ -65,7 +67,7 @@ public class ImageController {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
         } catch(Exception exception) {
             exception.printStackTrace();
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
@@ -83,7 +85,7 @@ public class ImageController {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
         } catch(Exception exception) {
             exception.printStackTrace();
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_BAD_REQUEST);
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
