@@ -7,7 +7,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.IOUtils;
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.warehouseattachments.WarehouseAttachments;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -114,9 +117,14 @@ public class S3UploaderService {
     }
 
     private String uploadFile(MultipartFile file) throws IOException{
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
+        objectMetadata.setContentLength(bytes.length);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
         String fileName = file.getOriginalFilename();
-        s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, byteArrayInputStream, objectMetadata);
+        s3Client.putObject(putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, fileName).toString();
     }
 
