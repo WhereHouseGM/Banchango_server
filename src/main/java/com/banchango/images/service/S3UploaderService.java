@@ -20,10 +20,7 @@ import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.images.exception.FileRemoveException;
 import com.banchango.tools.ObjectMaker;
-import com.banchango.warehouses.exception.WarehouseAttachmentNotFoundException;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
-import com.banchango.warehouses.exception.WarehouseMainImageNotFoundException;
+import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -134,6 +131,7 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToAccessWarehouseInfo(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))), warehouseId))  {
             throw new WarehouseInvalidAccessException();
         }
+        checkAttachmentsLimitSize(warehouseId);
         String uploadedImageUrl = uploadFile(multipartFile);
         saveAttachment(uploadedImageUrl, warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
@@ -150,6 +148,7 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToAccessWarehouseInfo(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))), warehouseId))  {
             throw new WarehouseInvalidAccessException();
         }
+        checkMainImageExistance(warehouseId);
         String uploadedImageUrl = uploadFile(multipartFile);
         saveMainImage(uploadedImageUrl, warehouseId);
         JSONObject jsonObject = ObjectMaker.getJSONObject();
@@ -175,5 +174,13 @@ public class S3UploaderService {
         if(warehousesOptional.isPresent()) {
             return warehousesOptional.get().getUserId().equals(userId);
         } else throw new WarehouseIdNotFoundException();
+    }
+
+    private void checkMainImageExistance(Integer warehouseId) throws WarehouseMainImageLimitException {
+        if(warehouseMainImagesRepository.findByWarehouseId(warehouseId).isPresent()) throw new WarehouseMainImageLimitException();
+    }
+
+    private void checkAttachmentsLimitSize(Integer warehouseId) throws WarehouseAttachmentLimitException {
+        if(warehouseAttachmentsRepository.findByWarehouseId(warehouseId).size() >= 5) throw new WarehouseAttachmentLimitException();
     }
 }
