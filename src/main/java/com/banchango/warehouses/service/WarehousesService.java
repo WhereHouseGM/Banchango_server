@@ -232,10 +232,7 @@ public class WarehousesService {
     }
 
     @Transactional(readOnly = true)
-    public JSONObject getSpecificWarehouseInfo(Integer warehouseId, String token) throws Exception {
-        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-            throw new AuthenticateException();
-        }
+    public JSONObject getSpecificWarehouseInfo(Integer warehouseId) throws Exception {
         return createJSONObjectOfSpecificWarehouseInfo(warehouseId);
     }
 
