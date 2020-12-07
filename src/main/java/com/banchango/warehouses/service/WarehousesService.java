@@ -5,7 +5,6 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.agencymainitemtypes.AgencyMainItemTypesRepository;
 import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetails;
 import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetailsRepository;
-import com.banchango.domain.agencywarehousepayments.AgencyWarehousePaymentsRepository;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.insurances.Insurances;
@@ -49,7 +48,6 @@ public class WarehousesService {
     private final InsurancesRepository insurancesRepository;
     private final AgencyWarehouseDetailsRepository agencyWarehouseDetailsRepository;
     private final AgencyMainItemTypesRepository agencyMainItemTypesRepository;
-    private final AgencyWarehousePaymentsRepository agencyWarehousePaymentsRepository;
     private final WarehouseMainImagesRepository warehouseMainImagesRepository;
     private final WarehouseUsageCautionsRepository warehouseUsageCautionsRepository;
     private final WarehouseFacilityUsagesRepository warehouseFacilityUsagesRepository;
@@ -142,14 +140,7 @@ public class WarehousesService {
     private void saveAgencyWarehouseDetailInformations(AgencyWarehouseDetailInsertRequestDto requestDto, Integer warehouseId) {
         int agencyWarehouseDetailId = getSavedAgencyWarehouseDetailId(requestDto.toAgencyWarehouseDetailEntity(warehouseId));
         agencyMainItemTypesRepository.save(requestDto.toAgencyMainItemsEntity(agencyWarehouseDetailId));
-        saveWarehousePayments(requestDto.getPayments(), agencyWarehouseDetailId);
         saveDeliveryTypes(requestDto.getDeliveryTypes(), agencyWarehouseDetailId);
-    }
-
-    private void saveWarehousePayments(AgencyWarehousePaymentInsertRequestDto[] payments, Integer agencyWarehouseDetailId) {
-        for(AgencyWarehousePaymentInsertRequestDto dto : payments) {
-            agencyWarehousePaymentsRepository.save(dto.toEntity(agencyWarehouseDetailId));
-        }
     }
 
     private void saveDeliveryTypes(String[] names, Integer agencyWarehouseDetailId) {
@@ -308,22 +299,12 @@ public class WarehousesService {
         return jsonArray;
     }
 
-    private JSONArray createJSONArrayOfPayments(Integer agencyWarehouseDetailId) {
-        JSONArray jsonArray = ObjectMaker.getJSONArray();
-        List<AgencyWarehousePaymentResponseDto> paymentList = agencyWarehousePaymentsRepository.findByAgencyWarehouseDetailId(agencyWarehouseDetailId).stream().map(AgencyWarehousePaymentResponseDto::new).collect(Collectors.toList());
-        for(AgencyWarehousePaymentResponseDto dto : paymentList) {
-            jsonArray.put(dto.toJSONObject());
-        }
-        return jsonArray;
-    }
-
     private JSONObject createJSONObjectOfAgencyDetails(Integer warehouseId, Integer agencyWarehouseDetailId) throws WarehouseIdNotFoundException{
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("agencyWarehouseDetailId", agencyWarehouseDetailId);
         jsonObject.put("warehouseType", agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new).getType());
         jsonObject.put("mainItemType", agencyMainItemTypesRepository.findByAgencyWarehouseDetailId(agencyWarehouseDetailId).getName());
         jsonObject.put("deliveryTypes", createJSONArrayOfDeliveryTypes(agencyWarehouseDetailId));
-        jsonObject.put("payments", createJSONArrayOfPayments(agencyWarehouseDetailId));
         return jsonObject;
     }
 }

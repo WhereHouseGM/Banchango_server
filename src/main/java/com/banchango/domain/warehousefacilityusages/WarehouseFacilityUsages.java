@@ -16,7 +16,7 @@ public class WarehouseFacilityUsages {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 150)
+    @Column(nullable = false, length = 200)
     private String content;
 
     @Column(nullable = false)

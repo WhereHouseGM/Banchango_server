@@ -15,7 +15,6 @@ public class AgencyWarehouseDetailInsertRequestDto {
     private Integer minReleasePerMonth;
     private String mainItemType;
     private String[] deliveryTypes;
-    private AgencyWarehousePaymentInsertRequestDto[] payments;
 
     public AgencyWarehouseDetails toAgencyWarehouseDetailEntity(Integer warehouseId) {
         return AgencyWarehouseDetails.builder()
