@@ -54,6 +54,9 @@ public class UsersService {
             jsonObject.put("accessToken", JwtTokenUtil.generateAccessToken(user.get().getUserId()));
             jsonObject.put("refreshToken", JwtTokenUtil.generateRefreshToken(user.get().getUserId()));
             jsonObject.put("tokenType", "Bearer");
+            if(user.get().getEmail().equals("wherehousegm@gmail.com")) {
+                jsonObject.put("isAdmin", true);
+            }
             return jsonObject;
         }
         else {
