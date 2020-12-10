@@ -61,7 +61,7 @@ public class WarehousesService {
         if(!JwtTokenUtil.isTokenAdmin(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
-        if(!JwtTokenUtil.isTokenValidated(wrapperDto.getAccessToken())) {
+        if((wrapperDto.getAccessToken() == null) || (!JwtTokenUtil.isTokenValidated(wrapperDto.getAccessToken()))) {
             throw new AuthenticateException();
         }
         int userId = Integer.parseInt(JwtTokenUtil.extractUserId(wrapperDto.getAccessToken()));
