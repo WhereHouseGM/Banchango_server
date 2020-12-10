@@ -24,6 +24,7 @@ import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsReposit
 import com.banchango.tools.ObjectMaker;
 import com.banchango.warehouses.dto.*;
 import com.banchango.warehouses.exception.*;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,29 +58,32 @@ public class WarehousesService {
 
     @Transactional
     public JSONObject saveAgencyWarehouse(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
-       if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-           throw new AuthenticateException();
-       }
-       int userId = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
-       if(wrapperDto.getInsurance() != null) {
-           int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
-           Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
-           int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
-           saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
-           saveWarehouseFacilityUsages(wrapperDto.getWarehouseFacilityUsages(), warehouseId);
-           saveWarehouseUsageCautions(wrapperDto.getWarehouseUsageCautions(), warehouseId);
-           saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
-           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
-       } else {
-           Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
-           int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
-           saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
-           saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
-           saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
-       }
-       JSONObject jsonObject = ObjectMaker.getJSONObject();
-       jsonObject.put("message", "창고가 정상적으로 등록 되었습니다.");
-       return jsonObject;
+        if(!JwtTokenUtil.isTokenAdmin(JwtTokenUtil.getToken(token))) {
+            throw new AuthenticateException();
+        }
+        if(!JwtTokenUtil.isTokenValidated(wrapperDto.getAccessToken())) {
+            throw new AuthenticateException();
+        }
+        int userId = Integer.parseInt(JwtTokenUtil.extractUserId(wrapperDto.getAccessToken()));
+        if(wrapperDto.getInsurance() != null) {
+            int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
+            Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
+            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+            saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
+            saveWarehouseFacilityUsages(wrapperDto.getWarehouseFacilityUsages(), warehouseId);
+            saveWarehouseUsageCautions(wrapperDto.getWarehouseUsageCautions(), warehouseId);
+            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
+            saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
+        } else {
+            Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
+            int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+            saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
+            saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
+            saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
+        }
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        jsonObject.put("message", "창고가 정상적으로 등록 되었습니다.");
+        return jsonObject;
     }
 
     private Warehouses toWarehouseEntityWithInsurance(WarehouseInsertRequestDto wrapperDto, Integer insuranceId, Integer userId) {

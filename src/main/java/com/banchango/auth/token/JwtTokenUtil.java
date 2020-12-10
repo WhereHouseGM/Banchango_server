@@ -105,6 +105,16 @@ public class JwtTokenUtil {
         }
     }
 
+    public static boolean isTokenAdmin(String token) throws AuthenticateException {
+        try {
+            String userIdOfToken = extractUserId(token);
+            if((userIdOfToken == null) || (Integer.parseInt(userIdOfToken) != 1)) throw new Exception();
+            return isTokenNotExpired(token);
+        } catch(Exception exception) {
+            throw new AuthenticateException();
+        }
+    }
+
     public static String getToken(String bearerToken) throws AuthenticateException{
         String[] splitAuthorization = bearerToken.split(" ");
         String schema = splitAuthorization[0];
