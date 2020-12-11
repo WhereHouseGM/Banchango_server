@@ -2,27 +2,31 @@ package com.banchango.warehouses.dto;
 
 import com.banchango.domain.agencywarehousedetails.AgencyWarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehousetypes.WarehouseTypeName;
 import com.banchango.tools.ObjectMaker;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class AgencyWarehouseListResponseDto {
 
-    // TODO : 사진 url 링크 추가
     private String name;
     private Integer warehouseId;
     private String address;
     private String openAt;
     private String closeAt;
-    private WarehouseTypeName warehouseCondition;
+    private Integer minReleasePerMonth;
+    private List<WarehouseTypesDto> warehouseConditions;
     private AgencyWarehouseType warehouseType;
-    private String imageUrl;
+    private String mainImageUrl;
+    private String[] deliveryTypes;
+    private Integer totalArea;
 
     public AgencyWarehouseListResponseDto(Warehouses warehouse) {
         this.name = warehouse.getName();
@@ -30,6 +34,23 @@ public class AgencyWarehouseListResponseDto {
         this.address = warehouse.getAddress();
         this.openAt = warehouse.getOpenAt();
         this.closeAt = warehouse.getCloseAt();
+        this.totalArea = warehouse.getTotalArea();
+    }
+
+    private JSONArray toJSONArrayOfWarehouseConditions(List<WarehouseTypesDto> typesDtos) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        for(WarehouseTypesDto dto : typesDtos) {
+            jsonArray.put(dto.getName());
+        }
+        return jsonArray;
+    }
+
+    private JSONArray toJSONArrayOfDeliveryTypes(String[] deliveryTypes) {
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        for(String delivery : deliveryTypes) {
+            jsonArray.put(delivery);
+        }
+        return jsonArray;
     }
 
     public JSONObject toJSONObject() {
@@ -39,9 +60,12 @@ public class AgencyWarehouseListResponseDto {
         jsonObject.put("address", address);
         jsonObject.put("openAt", openAt);
         jsonObject.put("closeAt", closeAt);
-        jsonObject.put("warehouseCondition", warehouseCondition);
+        jsonObject.put("warehouseCondition", toJSONArrayOfWarehouseConditions(warehouseConditions));
         jsonObject.put("warehouseType", warehouseType);
-        jsonObject.put("imageUrl", imageUrl);
+        jsonObject.put("deliveryTypes", toJSONArrayOfDeliveryTypes(deliveryTypes));
+        jsonObject.put("mainImageUrl", mainImageUrl);
+        jsonObject.put("minReleasePerMonth", minReleasePerMonth);
+        jsonObject.put("totalArea", totalArea);
         return jsonObject;
     }
 

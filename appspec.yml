@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+        - source: /
+          destination: /home/ubuntu/banchango
+permissions:
+        - object: /home/ubuntu/banchango
+          owner: ubuntu
+        - object: /home/ubuntu/banchango/*/**
+          owner: ubuntu
+hooks:
+        BeforeInstall:
+                - location: scripts/delete-before-artifacts.sh
+        AfterInstall:
+                - location: scripts/change-script-permissions.sh
+        ApplicationStart:
+                - location: scripts/run-application.sh
+                  runas: ubuntu

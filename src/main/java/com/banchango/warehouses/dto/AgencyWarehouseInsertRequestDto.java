@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AgencyWarehouseInsertRequestDto extends WarehouseInsertRequestDto {
 
+    private String accessToken;
     private Integer canUse;
     private String name;
     private String serviceType;
@@ -31,7 +32,9 @@ public class AgencyWarehouseInsertRequestDto extends WarehouseInsertRequestDto {
     private Integer canPark;
     private Integer parkingScale;
     private InsuranceInsertRequestDto insurance;
-    private String warehouseCondition;
+    private String[] warehouseCondition;
+    private String[] warehouseFacilityUsages;
+    private String[] warehouseUsageCautions;
     private WarehouseLocationDto location;
     private AgencyWarehouseDetailInsertRequestDto agencyDetails;
 }
