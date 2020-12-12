@@ -15,38 +15,38 @@ public class Warehouses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer warehouseId;
 
-    @Column(columnDefinition = "tinyint(1) DEFAULT 1")
+    @Column(nullable = false)
     private Integer canUse;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
 
-    @Column
+    @Column(nullable = false)
     private Integer landArea;
 
-    @Column
+    @Column(nullable = false)
     private Integer totalArea;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String address;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String addressDetail;
 
-    @Column(length = 400)
+    @Column(length = 400, nullable = false)
     private String description;
 
-    @Column
+    @Column(nullable = false)
     private Integer availableWeekdays;
 
-    @Column
+    @Column(nullable = false)
     private String openAt;
 
-    @Column
+    @Column(nullable = false)
     private String closeAt;
 
     @Column(length = 100)
@@ -55,32 +55,32 @@ public class Warehouses {
     @Column
     private Integer insuranceId;
 
-    @Column
+    @Column(nullable = false)
     private Integer cctvExist;
 
-    @Column
+    @Column(nullable = false)
     private Integer securityCompanyExist;
 
     @Column(length = 100)
     private String securityCompanyName;
 
-    @Column
+    @Column(nullable = false)
     private Integer doorLockExist;
 
-    @Column(columnDefinition = "ENUM('HEATING', 'COOLING', 'NONE') DEFAULT 'NONE'")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AirConditioningType airConditioningType;
 
-    @Column
+    @Column(nullable = false)
     private Integer workerExist;
 
-    @Column
+    @Column(nullable = false)
     private Integer canPickup;
 
-    @Column
+    @Column(nullable = false)
     private Integer canPark;
 
-    @Column
+    @Column(nullable = false)
     private Integer parkingScale;
 
     @Column
