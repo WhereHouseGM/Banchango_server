@@ -16,14 +16,14 @@ public class AgencyWarehouseDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer agencyWarehouseDetailId;
 
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AgencyWarehouseType type;
 
     @Column
     private Integer warehouseId;
 
-    @Column
+    @Column(nullable = false)
     private Integer minReleasePerMonth;
 
     @Builder

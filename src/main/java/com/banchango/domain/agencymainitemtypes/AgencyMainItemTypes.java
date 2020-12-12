@@ -16,7 +16,7 @@ public class AgencyMainItemTypes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ItemTypeName name;
 
