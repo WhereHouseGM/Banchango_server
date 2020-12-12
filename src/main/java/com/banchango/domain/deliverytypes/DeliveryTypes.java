@@ -16,7 +16,7 @@ public class DeliveryTypes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 30)
+    @Column(length = 30, nullable = false)
     private String name;
 
     @Column
