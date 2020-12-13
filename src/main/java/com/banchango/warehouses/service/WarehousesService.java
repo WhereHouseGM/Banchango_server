@@ -58,6 +58,7 @@ public class WarehousesService {
 
     @Transactional
     public JSONObject saveAgencyWarehouse(AgencyWarehouseInsertRequestDto wrapperDto, String token) throws Exception{
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
         if(!JwtTokenUtil.isTokenAdmin(JwtTokenUtil.getToken(token))) {
             throw new AuthenticateException();
         }
@@ -69,6 +70,7 @@ public class WarehousesService {
             int insuranceId = getSavedInsuranceId(wrapperDto.getInsurance().toEntity());
             Warehouses warehouse = toWarehouseEntityWithInsurance(wrapperDto, insuranceId, userId);
             int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+            jsonObject.put("warehouseId", warehouseId);
             saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
             saveWarehouseFacilityUsages(wrapperDto.getWarehouseFacilityUsages(), warehouseId);
             saveWarehouseUsageCautions(wrapperDto.getWarehouseUsageCautions(), warehouseId);
@@ -77,11 +79,11 @@ public class WarehousesService {
         } else {
             Warehouses warehouse = toWarehouseEntityWithoutInsurance(wrapperDto, userId);
             int warehouseId = warehousesRepository.save(warehouse).getWarehouseId();
+            jsonObject.put("warehouseId", warehouseId);
             saveWarehouseType(wrapperDto.getWarehouseCondition(), warehouseId);
             saveWarehouseLocation(wrapperDto.getLocation(), warehouseId);
             saveAgencyWarehouseDetailInformations(wrapperDto.getAgencyDetails(), warehouseId);
         }
-        JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("message", "창고가 정상적으로 등록 되었습니다.");
         return jsonObject;
     }
