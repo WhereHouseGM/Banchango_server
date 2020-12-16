@@ -1,6 +1,5 @@
 package com.banchango.images.controller;
 
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.images.service.S3UploaderService;
 import com.banchango.tools.ObjectMaker;
