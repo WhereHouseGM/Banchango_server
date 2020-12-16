@@ -308,7 +308,13 @@ public class WarehousesService {
     private JSONObject createJSONObjectOfAgencyDetails(Integer warehouseId, Integer agencyWarehouseDetailId) throws WarehouseIdNotFoundException{
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("agencyWarehouseDetailId", agencyWarehouseDetailId);
-        jsonObject.put("warehouseType", agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new).getType());
+        Optional<AgencyWarehouseDetails> optionalDetail = agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId);
+        if(!optionalDetail.isPresent()) {
+            throw new WarehouseIdNotFoundException();
+        }
+        AgencyWarehouseDetailResponseDto responseDto = new AgencyWarehouseDetailResponseDto(optionalDetail.get());
+        jsonObject.put("wareohuseType", responseDto.getType());
+        jsonObject.put("minReleasePerMonth", responseDto.getMinReleasePerMonth());
         jsonObject.put("mainItemType", agencyMainItemTypesRepository.findByAgencyWarehouseDetailId(agencyWarehouseDetailId).getName());
         jsonObject.put("deliveryTypes", createJSONArrayOfDeliveryTypes(agencyWarehouseDetailId));
         return jsonObject;
