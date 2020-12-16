@@ -27,6 +27,7 @@ public class AgencyWarehouseListResponseDto {
     private String mainImageUrl;
     private String[] deliveryTypes;
     private Integer totalArea;
+    private String mainItemType;
 
     public AgencyWarehouseListResponseDto(Warehouses warehouse) {
         this.name = warehouse.getName();
@@ -53,7 +54,7 @@ public class AgencyWarehouseListResponseDto {
         return jsonArray;
     }
 
-    public JSONObject toJSONObject() {
+    public JSONObject toJSONObject(String mainItemType) {
         JSONObject jsonObject = ObjectMaker.getJSONObject();
         jsonObject.put("name", name);
         jsonObject.put("warehouseId", warehouseId);
@@ -66,6 +67,7 @@ public class AgencyWarehouseListResponseDto {
         jsonObject.put("mainImageUrl", mainImageUrl);
         jsonObject.put("minReleasePerMonth", minReleasePerMonth);
         jsonObject.put("totalArea", totalArea);
+        jsonObject.put("mainItemType",mainItemType);
         return jsonObject;
     }
 

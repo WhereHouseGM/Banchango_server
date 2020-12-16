@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,7 +204,33 @@ public class WarehousesService {
             } else {
                 dto.setMainImageUrl(noImageUrl);
             }
-            JSONObject listObject = dto.toJSONObject();
+            JSONObject listObject = dto.toJSONObject(mainItemType);
+            jsonArray.put(listObject);
+        }
+        jsonObject.put("warehouses", jsonArray);
+        return jsonObject;
+    }
+
+    @Transactional(readOnly = true)
+    public JSONObject getAgencyWarehouseList(Integer page, Integer size) throws Exception {
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        JSONArray jsonArray = ObjectMaker.getJSONArray();
+        PageRequest pageRequest = PageRequest.of(page, size);
+        List<AgencyWarehouseListResponseDto> responseDtos = warehousesRepository.findAll(pageRequest).getContent().stream().map(AgencyWarehouseListResponseDto::new).collect(Collectors.toList());
+        if(responseDtos.size() == 0) throw new WarehouseNotFoundException();
+        for(AgencyWarehouseListResponseDto dto : responseDtos) {
+            AgencyWarehouseDetails detail = agencyWarehouseDetailsRepository.findByWarehouseId(dto.getWarehouseId()).orElseThrow(WarehouseIdNotFoundException::new);
+            dto.setWarehouseType(detail.getType());
+            dto.setMinReleasePerMonth(detail.getMinReleasePerMonth());
+            dto.setDeliveryTypes(new DeliveryTypeResponseDto(deliveryTypesRepository.findByAgencyWarehouseDetailId(detail.getAgencyWarehouseDetailId())).getDeliveryType());
+            dto.setWarehouseConditions(warehouseTypesRepository.findByWarehouseId(dto.getWarehouseId()).stream().map(WarehouseTypesDto::new).collect(Collectors.toList()));
+            Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(dto.getWarehouseId());
+            if (imagesOptional.isPresent()) {
+                dto.setMainImageUrl(imagesOptional.get().getMainImageUrl());
+            } else {
+                dto.setMainImageUrl(noImageUrl);
+            }
+            JSONObject listObject = dto.toJSONObject(agencyMainItemTypesRepository.findByAgencyWarehouseDetailId(detail.getAgencyWarehouseDetailId()).getName().name());
             jsonArray.put(listObject);
         }
         jsonObject.put("warehouses", jsonArray);
