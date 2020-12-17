@@ -35,6 +35,8 @@ dependencies {
     compile('org.jetbrains:annotations:16.0.2')
     compile('org.apache.tomcat.embed:tomcat-embed-jasper')
     compile('io.jsonwebtoken:jjwt:0.9.1')
+    compile('javax.activation:activation:1.1')
+    compile('javax.mail:mail:1.4.7')
     compile('com.amazonaws:aws-java-sdk-s3:1.11.901')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

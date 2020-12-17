@@ -5,14 +5,15 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.tools.Email;
+import com.banchango.tools.EmailContent;
 import com.banchango.tools.ObjectMaker;
+import com.banchango.tools.PasswordGenerator;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
-import com.banchango.users.exception.UserEmailInUseException;
-import com.banchango.users.exception.UserIdNotFoundException;
-import com.banchango.users.exception.UserInvalidAccessException;
-import com.banchango.users.exception.UserNotFoundException;
+import com.banchango.users.exception.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,12 @@ import org.json.JSONObject;
 public class UsersService {
 
     private final UsersRepository usersRepository;
+
+    @Value("${BANCHANGO_EMAIL_ID}")
+    private String senderEmail;
+
+    @Value("${BANCHANGO_EMAIL_PASSWORD}")
+    private String senderEmailPassword;
 
     @Transactional
     public JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
@@ -105,5 +112,18 @@ public class UsersService {
         } else {
             throw new UserIdNotFoundException();
         }
+    }
+
+    @Transactional
+    public JSONObject sendTemporaryPasswordEmail(String recipient) throws UserEmailNotFoundException, Exception {
+        JSONObject jsonObject = ObjectMaker.getJSONObject();
+        String temporaryPassword = PasswordGenerator.generate();
+        if(usersRepository.findByEmail(recipient).isPresent()) {
+            usersRepository.updatePassword(temporaryPassword, recipient);
+            EmailContent emailContent = new EmailContent("[반창고] 임시 비밀번호 발급", "안녕하세요, 반창고 입니다!", "발급해드린 임시 비밀번호는 <span style='font-size: 20px'>" + temporaryPassword + "</span> 입니다.", "이 임시 비밀번호로 로그인 해주세요.", "로그인 하기", "dev.banchango.shop/login");
+            Email.sendEmail(emailContent, recipient, senderEmail, senderEmailPassword, false);
+            jsonObject.put("message", "임시 비밀번호 이메일이 정상적으로 전송되었습니다.");
+            return jsonObject;
+        } else throw new UserEmailNotFoundException();
     }
 }

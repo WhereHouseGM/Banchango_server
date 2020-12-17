@@ -3,11 +3,13 @@ package com.banchango.users.controller;
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
+import com.banchango.users.dto.UserEmailSendRequestDto;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.*;
 import com.banchango.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
@@ -77,6 +79,18 @@ public class UsersApiController {
         } catch(AuthenticateException exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
         } catch(Exception exception) {
+            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/v2/users/password-lost")
+    public void sendTemporaryPasswordToEmail(@RequestBody UserEmailSendRequestDto requestDto, HttpServletResponse response) {
+        try {
+            WriteToClient.send(response, usersService.sendTemporaryPasswordEmail(requestDto.getEmail()), HttpServletResponse.SC_OK);
+        } catch(UserEmailNotFoundException exception){
+            exception.printStackTrace();
+            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
+        }catch (Exception exception) {
             WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
