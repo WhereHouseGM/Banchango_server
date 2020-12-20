@@ -1,6 +1,6 @@
 package com.banchango.users.exception;
 
-public abstract class UserException extends Exception{
+public abstract class UserException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;
 

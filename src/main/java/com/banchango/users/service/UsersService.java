@@ -86,32 +86,33 @@ public class UsersService {
     }
 
     @Transactional
-    public JSONObject updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String token) throws Exception {
+    public Users updateUserInfo(Integer userId, UserSignupRequestDto requestDto, String accessToken) {
 
-        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-            throw new AuthenticateException();
+        if(!JwtTokenUtil.isTokenValidated(accessToken)) {
+            throw new AuthenticateException("Token is Out of Date");
         }
-        if(!JwtTokenUtil.isTokenValidatedWithUserId(JwtTokenUtil.getToken(token), userId)) {
+        if(!JwtTokenUtil.isTokenValidatedWithUserId(accessToken, userId)) {
             throw new UserInvalidAccessException();
         }
 
         Optional<Users> optionalUser = usersRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            if(!optionalUser.get().getEmail().equals(requestDto.getEmail())) {
-                if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-                    throw new UserEmailInUseException();
-                }
-                Users user = optionalUser.get();
-                user.updateUserInfo(requestDto);
-                return ObjectMaker.getJSONObjectWithUserInfo(user);
-            } else {
-                Users user = optionalUser.get();
-                user.updateUserInfo(requestDto);
-                return ObjectMaker.getJSONObjectWithUserInfo(user);
+
+        if(!optionalUser.isPresent()) throw new UserIdNotFoundException();
+
+        Users user = optionalUser.get();
+        String oldEmail = user.getEmail();
+        String newEmail = requestDto.getEmail();
+
+        if(!oldEmail.equals(newEmail)) {
+            if (usersRepository.findByEmail(newEmail).isPresent()) {
+                throw new UserEmailInUseException();
             }
-        } else {
-            throw new UserIdNotFoundException();
         }
+
+        user.updateUserInfo(requestDto);
+        user = usersRepository.save(user);
+
+        return user;
     }
 
     @Transactional

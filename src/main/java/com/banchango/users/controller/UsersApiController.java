@@ -1,6 +1,8 @@
 package com.banchango.users.controller;
 
 import com.banchango.auth.exception.AuthenticateException;
+import com.banchango.common.LoginRequired;
+import com.banchango.domain.users.Users;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.users.dto.UserEmailSendRequestDto;
@@ -10,6 +12,7 @@ import com.banchango.users.exception.*;
 import com.banchango.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,27 +63,16 @@ public class UsersApiController {
     }
 
     // DONE
+    @LoginRequired
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/v2/users/{userId}")
-    public void updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
-        try {
-            if(bearerToken == null) throw new AuthenticateException();
-            if(userId == null) throw new Exception();
-            WriteToClient.send(response, usersService.updateUserInfo(userId, requestDto, bearerToken), HttpServletResponse.SC_OK);
-        } catch(UserException exception) {
-            if(exception instanceof UserIdNotFoundException) {
-                WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
-            } else if(exception instanceof UserEmailInUseException) {
-                WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
-            } else if(exception instanceof UserNotFoundException) {
-                WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
-            } else if(exception instanceof UserInvalidAccessException) {
-                WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
-            }
-        } catch(AuthenticateException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-        } catch(Exception exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-        }
+    public Users updateUserInfo(
+            @PathVariable Integer userId,
+            @RequestBody UserSignupRequestDto requestDto,
+            @RequestAttribute("accessToken") String accessToken
+    ) {
+        Users updatedUser = usersService.updateUserInfo(userId, requestDto, accessToken);
+        return updatedUser;
     }
 
     @PostMapping("/v2/users/password-lost")
