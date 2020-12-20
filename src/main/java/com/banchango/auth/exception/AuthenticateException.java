@@ -1,11 +1,15 @@
 package com.banchango.auth.exception;
 
-public class AuthenticateException extends Exception{
+public class AuthenticateException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;
     public static final String MESSAGE = "인증에 실패했습니다.";
 
-    public AuthenticateException() {
+    public AuthenticateException(String message) {
         super(MESSAGE);
+    }
+
+    public AuthenticateException() {
+        this(MESSAGE);
     }
 }
