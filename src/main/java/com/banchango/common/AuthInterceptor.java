@@ -14,19 +14,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("prehandle");
         if (isHandlerMethod(handler)) {
             HandlerMethod method = (HandlerMethod) handler;
             boolean loginRequired = method.getMethod().isAnnotationPresent(LoginRequired.class);
-
-            System.out.println("loginRequired");
-            System.out.println(loginRequired);
 
             if (loginRequired) {
                 String authorizationHeader = extractAuthorizationHeader(request);
                 String accessToken = extractAccessToken(authorizationHeader);
 
-                System.out.println("set attribute");
                 request.setAttribute(ACCESS_TOKEN, accessToken);
             }
         }
