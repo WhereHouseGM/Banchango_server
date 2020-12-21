@@ -126,9 +126,4 @@ public class UsersService {
             return jsonObject;
         } else throw new UserEmailNotFoundException();
     }
-
-    @Transactional
-    public void a() {
-        if(this.usersRepository == null) throw new AuthenticateException();
-    }
 }
