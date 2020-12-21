@@ -1,6 +1,7 @@
 package com.banchango.users.controller;
 
 import com.banchango.auth.exception.AuthenticateException;
+import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.users.dto.UserEmailSendRequestDto;
@@ -9,7 +10,6 @@ import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.*;
 import com.banchango.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,19 +20,21 @@ public class UsersApiController {
     private final UsersService usersService;
 
     // DONE
+    @ValidateRequired
     @GetMapping("/v2/users/{userId}")
-    public void getUserInfo(@PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
-        try {
-            if(bearerToken == null) throw new AuthenticateException();
-            if(userId == null) throw new Exception();
-            WriteToClient.send(response, usersService.viewUserInfo(userId, bearerToken), HttpServletResponse.SC_OK);
-        } catch(UserIdNotFoundException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
-        } catch(AuthenticateException exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-        } catch(Exception exception) {
-            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-        }
+    public void getUserInfo(@PathVariable Integer userId, @RequestAttribute(name = "accessToken") String token) {
+
+//        try {
+//            if(bearerToken == null) throw new AuthenticateException();
+//            if(userId == null) throw new Exception();
+//            WriteToClient.send(response, usersService.viewUserInfo(userId, bearerToken), HttpServletResponse.SC_OK);
+//        } catch(UserIdNotFoundException exception) {
+//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
+//        } catch(AuthenticateException exception) {
+//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
+//        } catch(Exception exception) {
+//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
+//        }
     }
 
     // DONE
