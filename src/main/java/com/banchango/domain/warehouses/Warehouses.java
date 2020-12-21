@@ -15,9 +15,6 @@ public class Warehouses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer warehouseId;
 
-    @Column(nullable = false)
-    private Integer canUse;
-
     @Column(length = 20, nullable = false)
     private String name;
 
@@ -87,8 +84,7 @@ public class Warehouses {
     private Integer userId;
 
     @Builder
-    public Warehouses(Integer canUse, String name, String insurance, String serviceType, Integer landArea, Integer totalArea, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
-        this.canUse = canUse;
+    public Warehouses(String name, String insurance, String serviceType, Integer landArea, Integer totalArea, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
         this.name = name;
         this.insurance = insurance;
         this.serviceType = ServiceType.valueOf(serviceType);
