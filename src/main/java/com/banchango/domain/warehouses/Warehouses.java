@@ -48,9 +48,6 @@ public class Warehouses {
     @Column(nullable = false)
     private Integer cctvExist;
 
-    @Column(nullable = false)
-    private Integer securityCompanyExist;
-
     @Column(length = 100)
     private String securityCompanyName;
 
@@ -77,7 +74,7 @@ public class Warehouses {
     private Integer userId;
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -89,7 +86,6 @@ public class Warehouses {
         this.closeAt = closeAt;
         this.availableTimeDetail = availableTimeDetail;
         this.cctvExist = cctvExist;
-        this.securityCompanyExist = securityCompanyExist;
         this.securityCompanyName = securityCompanyName;
         this.doorLockExist = doorLockExist;
         this.airConditioningType = AirConditioningType.valueOf(airConditioningType);
