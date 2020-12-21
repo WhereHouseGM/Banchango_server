@@ -1,5 +1,6 @@
 package com.banchango.domain.warehousereviews;
 
+import com.banchango.domain.BaseTimeEntity;
 import com.banchango.tools.ObjectMaker;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "warehouse_reviews")
-public class WarehouseReviews {
+public class WarehouseReviews extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
