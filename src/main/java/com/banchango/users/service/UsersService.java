@@ -33,6 +33,8 @@ public class UsersService {
     @Value("${BANCHANGO_EMAIL_PASSWORD}")
     private String senderEmailPassword;
 
+    public
+
     @Transactional
     public JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
         if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {

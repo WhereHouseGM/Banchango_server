@@ -1,6 +1,7 @@
 package com.banchango.users.controller;
 
 import com.banchango.auth.exception.AuthenticateException;
+import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.tools.WriteToClient;
 import com.banchango.users.dto.UserEmailSendRequestDto;
@@ -19,9 +20,10 @@ public class UsersApiController {
 
     private final UsersService usersService;
 
-    // DONE
+    @ValidateRequired
     @GetMapping("/v2/users/{userId}")
-    public void getUserInfo(@PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
+    public void getUserInfo(@PathVariable Integer userId, @RequestAttribute(name = "accessToken") String token) {
+
         try {
             if(bearerToken == null) throw new AuthenticateException();
             if(userId == null) throw new Exception();
