@@ -20,11 +20,11 @@ public class DeliveryTypes {
     private String name;
 
     @Column
-    private Integer agencyWarehouseDetailId;
+    private Integer warehouseId;
 
     @Builder
-    public DeliveryTypes(String name, Integer agencyWarehouseDetailId) {
+    public DeliveryTypes(String name, Integer warehouseId) {
         this.name = name;
-        this.agencyWarehouseDetailId = agencyWarehouseDetailId;
+        this.warehouseId = warehouseId;
     }
 }
