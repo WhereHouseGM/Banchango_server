@@ -1,7 +1,7 @@
 package com.banchango.warehouses.dto;
 
 import com.banchango.domain.agencywarehousedetails.AgencyWarehouseDetails;
-import com.banchango.domain.agencywarehousedetails.AgencyWarehouseType;
+import com.banchango.domain.warehouses.AgencyWarehouseType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
