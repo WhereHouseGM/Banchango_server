@@ -95,15 +95,19 @@ public class Warehouses {
     private Integer userId;
 
     @OneToMany
+    @JoinColumn(name = "warehouse_id")
     private List<DeliveryTypes> deliveryTypes = new ArrayList<>();
 
     @OneToMany
+    @JoinColumn(name = "warehouse_id")
     private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
 
     @OneToMany
+    @JoinColumn(name = "warehouse_id")
     private List<WarehouseFacilityUsages> warehouseFacilityUsages = new ArrayList<>();
 
     @OneToMany
+    @JoinColumn(name = "warehouse_id")
     private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
 
     @Builder
