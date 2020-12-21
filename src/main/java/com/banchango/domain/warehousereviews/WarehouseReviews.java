@@ -1,11 +1,9 @@
 package com.banchango.domain.warehousereviews;
 
 import com.banchango.domain.BaseTimeEntity;
-import com.banchango.tools.ObjectMaker;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.json.JSONObject;
 
 import javax.persistence.*;
 
@@ -37,13 +35,5 @@ public class WarehouseReviews extends BaseTimeEntity {
         this.content = content;
         this.userId = userId;
         this.warehouseId = warehouseId;
-    }
-
-    public JSONObject toJSONObject() {
-        JSONObject jsonObject = ObjectMaker.getJSONObject();
-        jsonObject.put("reviewId", reviewId);
-        jsonObject.put("rating", rating);
-        jsonObject.put("content", content);
-        return jsonObject;
     }
 }

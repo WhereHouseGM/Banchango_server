@@ -1,12 +1,10 @@
 package com.banchango.domain.users;
 
 import com.banchango.domain.BaseTimeEntity;
-import com.banchango.tools.ObjectMaker;
 import com.banchango.users.dto.UserSignupRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.json.JSONObject;
 
 import javax.persistence.*;
 
@@ -65,17 +63,5 @@ public class Users extends BaseTimeEntity {
         this.companyName = companyName;
         this.phoneNumber = phoneNumber;
         this.role = UserRole.USER;
-    }
-
-    public JSONObject toJSONObject() {
-        JSONObject jsonObject = ObjectMaker.getJSONObject();
-        jsonObject.put("userId", userId);
-        jsonObject.put("name", name);
-        jsonObject.put("email", email);
-        jsonObject.put("type", type);
-        jsonObject.put("telephoneNumber", telephoneNumber);
-        jsonObject.put("phoneNumber", phoneNumber);
-        jsonObject.put("companyName", companyName);
-        return jsonObject;
     }
 }

@@ -1,26 +1,15 @@
 package com.banchango.users.service;
 
-import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
-import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.tools.Email;
-import com.banchango.tools.EmailContent;
-import com.banchango.tools.ObjectMaker;
-import com.banchango.tools.PasswordGenerator;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSigninRequestDto;
-import com.banchango.users.dto.UserSignupRequestDto;
+import com.banchango.users.dto.UserSigninResponseDto;
 import com.banchango.users.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-
-import org.json.JSONObject;
 
 @RequiredArgsConstructor
 @Service
@@ -39,7 +28,16 @@ public class UsersService {
         if(!userId.equals(JwtTokenUtil.extractUserId(token))) {
             throw new UserInvalidAccessException();
         }
-        return new UserInfoResponseDto(usersRepository.findById(userId).orElseThrow(UserNotFoundException::new));
+        return new UserInfoResponseDto(usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new));
+    }
+
+    @Transactional(readOnly = true)
+    public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
+        UserSigninResponseDto responseDto = new UserSigninResponseDto();
+        UserInfoResponseDto userInfoDto = new UserInfoResponseDto(usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new));
+        responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId()));
+        responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId()));
+        return responseDto;
     }
 //    @Transactional
 //    public JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {

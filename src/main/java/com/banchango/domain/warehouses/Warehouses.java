@@ -4,7 +4,6 @@ import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouseimages.WarehouseImages;
-import com.banchango.domain.warehousereviews.WarehouseReviews;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import lombok.Builder;
 import lombok.Getter;
