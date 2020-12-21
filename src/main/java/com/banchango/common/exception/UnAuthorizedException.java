@@ -10,6 +10,6 @@ public class UnAuthorizedException extends ApiException {
     }
 
     public UnAuthorizedException() {
-        this("Unauthorized Exception");
+        this("Unauthorized Exception.");
     }
 }
