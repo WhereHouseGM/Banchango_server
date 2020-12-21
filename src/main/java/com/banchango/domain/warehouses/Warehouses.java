@@ -3,12 +3,14 @@ package com.banchango.domain.warehouses;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
+import com.banchango.domain.warehousereviews.WarehouseReviews;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -87,16 +89,16 @@ public class Warehouses {
     private Integer userId;
 
     @OneToMany
-    private List<DeliveryTypes> deliveryTypes;
+    private List<DeliveryTypes> deliveryTypes = new ArrayList<>();
 
     @OneToMany
-    private List<WarehouseConditions> warehouseConditions;
+    private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
 
     @OneToMany
-    private List<WarehouseFacilityUsages> warehouseFacilityUsages;
+    private List<WarehouseFacilityUsages> warehouseFacilityUsages = new ArrayList<>();
 
     @OneToMany
-    private List<WarehouseUsageCautions> warehouseUsageCautions;
+    private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
 
     @Builder
     public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId) {
