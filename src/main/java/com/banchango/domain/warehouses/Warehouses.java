@@ -2,6 +2,7 @@ package com.banchango.domain.warehouses;
 
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -82,6 +83,9 @@ public class Warehouses {
 
     @OneToMany
     private List<WarehouseConditions> warehouseConditions;
+
+    @OneToMany
+    private List<WarehouseFacilityUsages> warehouseFacilityUsages;
 
     @Builder
     public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId) {
