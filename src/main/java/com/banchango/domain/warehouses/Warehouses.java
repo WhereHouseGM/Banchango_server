@@ -82,6 +82,12 @@ public class Warehouses {
     @Column(nullable = false)
     private Integer minReleasePerMonth;
 
+    @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
     @Column
     private Integer userId;
 
@@ -95,7 +101,7 @@ public class Warehouses {
     private List<WarehouseFacilityUsages> warehouseFacilityUsages;
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -115,5 +121,7 @@ public class Warehouses {
         this.canPark = canPark;
         this.mainItemType = mainItemType;
         this.userId = userId;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }
