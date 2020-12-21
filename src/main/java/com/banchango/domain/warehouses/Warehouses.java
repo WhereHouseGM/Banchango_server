@@ -1,10 +1,12 @@
 package com.banchango.domain.warehouses;
 
+import com.banchango.domain.deliverytypes.DeliveryTypes;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -73,6 +75,9 @@ public class Warehouses {
 
     @Column
     private Integer userId;
+
+    @OneToMany
+    private List<DeliveryTypes> deliveryTypes;
 
     @Builder
     public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId) {
