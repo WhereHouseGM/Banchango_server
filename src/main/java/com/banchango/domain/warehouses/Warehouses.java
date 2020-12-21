@@ -53,7 +53,7 @@ public class Warehouses {
     private String availableTimeDetail;
 
     @Column
-    private Integer insuranceId;
+    private String insurance;
 
     @Column(nullable = false)
     private Integer cctvExist;
@@ -87,10 +87,10 @@ public class Warehouses {
     private Integer userId;
 
     @Builder
-    public Warehouses(Integer canUse, String name, Integer insuranceId, String serviceType, Integer landArea, Integer totalArea, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
+    public Warehouses(Integer canUse, String name, String insurance, String serviceType, Integer landArea, Integer totalArea, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
         this.canUse = canUse;
         this.name = name;
-        this.insuranceId = insuranceId;
+        this.insurance = insurance;
         this.serviceType = ServiceType.valueOf(serviceType);
         this.landArea = landArea;
         this.totalArea = totalArea;
