@@ -1,5 +1,6 @@
 package com.banchango.domain.users;
 
+import com.banchango.domain.BaseTimeEntity;
 import com.banchango.tools.ObjectMaker;
 import com.banchango.users.dto.UserSignupRequestDto;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Users {
+public class Users extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
