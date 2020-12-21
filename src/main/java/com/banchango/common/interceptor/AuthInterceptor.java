@@ -1,6 +1,7 @@
 package com.banchango.common.interceptor;
 
 import com.banchango.auth.exception.AuthenticateException;
+import com.banchango.auth.token.JwtTokenUtil;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -22,7 +23,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             if (loginRequired) {
                 String authorizationHeader = extractAuthorizationHeader(request);
                 String accessToken = extractAccessToken(authorizationHeader);
-
+                if(JwtTokenUtil.isTokenExpired(accessToken)) throw new AuthenticateException("JWT Token is expired.");
                 request.setAttribute(ACCESS_TOKEN, accessToken);
             }
         }
