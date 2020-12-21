@@ -67,14 +67,11 @@ public class Warehouses {
     @Column(nullable = false)
     private Integer canPark;
 
-    @Column(nullable = false)
-    private Integer parkingScale;
-
     @Column
     private Integer userId;
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer userId) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -92,7 +89,6 @@ public class Warehouses {
         this.workerExist = workerExist;
         this.canPickup = canPickup;
         this.canPark = canPark;
-        this.parkingScale = parkingScale;
         this.userId = userId;
     }
 }
