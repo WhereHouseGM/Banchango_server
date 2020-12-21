@@ -3,6 +3,7 @@ package com.banchango.domain.warehouses;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
+import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehousereviews.WarehouseReviews;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import lombok.Builder;
@@ -20,7 +21,8 @@ public class Warehouses {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer warehouseId;
+    @Column(name = "warehouse_id")
+    private Integer id;
 
     @Column(length = 20, nullable = false)
     private String name;
@@ -61,7 +63,7 @@ public class Warehouses {
     @Column(nullable = false)
     private Integer doorLockExist;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "ENUM('HEATING', 'COOLING', 'BOTH', 'NONE')")
     @Enumerated(EnumType.STRING)
     private AirConditioningType airConditioningType;
 
@@ -109,6 +111,9 @@ public class Warehouses {
     @OneToMany
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "warehouse")
+    private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
     public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude) {

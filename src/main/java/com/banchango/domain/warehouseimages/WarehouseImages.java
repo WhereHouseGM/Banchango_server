@@ -1,5 +1,6 @@
 package com.banchango.domain.warehouseimages;
 
+import com.banchango.domain.warehouses.Warehouses;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,8 @@ public class WarehouseImages {
 
     @Column(nullable = false)
     private Integer isMain;
+
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouses warehouse;
 }

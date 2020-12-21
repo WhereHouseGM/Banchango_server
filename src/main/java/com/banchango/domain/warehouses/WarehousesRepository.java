@@ -17,6 +17,6 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
     void delete_(Integer warehouseId);
 
     List<Warehouses> findByAddressContaining(String address, Pageable pageable);
-    Optional<Warehouses> findByWarehouseId(Integer warehouseId);
+    Optional<Warehouses> findById(Integer warehouseId);
     List<Warehouses> findByUserId(Integer userId);
 }
