@@ -1,4 +1,4 @@
-package com.banchango.domain.agencywarehousedetails;
+package com.banchango.domain.warehouses;
 
 public enum AgencyWarehouseType {
     THREEPL, FULFILLMENT

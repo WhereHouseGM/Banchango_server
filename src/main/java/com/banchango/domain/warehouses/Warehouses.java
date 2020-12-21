@@ -71,6 +71,13 @@ public class Warehouses {
     @Enumerated(EnumType.STRING)
     private ItemTypeName mainItemType;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AgencyWarehouseType warehouseType;
+
+    @Column(nullable = false)
+    private Integer minReleasePerMonth;
+
     @Column
     private Integer userId;
 
