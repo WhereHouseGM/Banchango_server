@@ -19,7 +19,6 @@ public class UsersApiController {
 
     private final UsersService usersService;
 
-    // DONE
     @ValidateRequired
     @GetMapping("/v2/users/{userId}")
     public void getUserInfo(@PathVariable Integer userId, @RequestAttribute(name = "accessToken") String token) {
@@ -35,6 +34,7 @@ public class UsersApiController {
 //        } catch(Exception exception) {
 //            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
 //        }
+
     }
 
     // DONE
