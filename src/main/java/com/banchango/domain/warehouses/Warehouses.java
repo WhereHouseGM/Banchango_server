@@ -67,11 +67,15 @@ public class Warehouses {
     @Column(nullable = false)
     private Integer canPark;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ItemTypeName mainItemType;
+
     @Column
     private Integer userId;
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer userId) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -89,6 +93,7 @@ public class Warehouses {
         this.workerExist = workerExist;
         this.canPickup = canPickup;
         this.canPark = canPark;
+        this.mainItemType = mainItemType;
         this.userId = userId;
     }
 }
