@@ -1,4 +1,4 @@
-package com.banchango.domain.warehousetypes;
+package com.banchango.domain.warehouseconditions;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "warehouse_types")
-public class WarehouseTypes {
+@Table(name = "warehouse_conditions")
+public class WarehouseConditions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,14 +18,14 @@ public class WarehouseTypes {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private WarehouseTypeName name;
+    private WarehouseCondition condition;
 
     @Column
     private Integer warehouseId;
 
     @Builder
-    public WarehouseTypes(String name, Integer warehouseId) {
-        this.name = WarehouseTypeName.valueOf(name);
+    public WarehouseConditions(String condition, Integer warehouseId) {
+        this.condition = WarehouseCondition.valueOf(condition);
         this.warehouseId = warehouseId;
     }
 }

@@ -1,7 +1,7 @@
 package com.banchango.warehouses.dto;
 
-import com.banchango.domain.warehousetypes.WarehouseTypeName;
-import com.banchango.domain.warehousetypes.WarehouseTypes;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,9 +11,9 @@ import lombok.Setter;
 @Setter
 public class WarehouseTypesDto {
 
-    private WarehouseTypeName name;
+    private WarehouseCondition name;
 
-    public WarehouseTypesDto(WarehouseTypes warehouseTypes) {
-        this.name =  warehouseTypes.getName();
+    public WarehouseTypesDto(WarehouseConditions warehouseConditions) {
+        this.name =  warehouseConditions.getName();
     }
 }

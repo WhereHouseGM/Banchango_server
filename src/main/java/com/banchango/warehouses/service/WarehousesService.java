@@ -17,8 +17,8 @@ import com.banchango.domain.warehousemainimages.WarehouseMainImages;
 import com.banchango.domain.warehousemainimages.WarehouseMainImagesRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.domain.warehousetypes.WarehouseTypes;
-import com.banchango.domain.warehousetypes.WarehouseTypesRepository;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
+import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.tools.ObjectMaker;
@@ -43,7 +43,7 @@ public class WarehousesService {
     private final WarehousesRepository warehousesRepository;
     private final DeliveryTypesRepository deliveryTypesRepository;
     private final WarehouseLocationsRepository warehouseLocationsRepository;
-    private final WarehouseTypesRepository warehouseTypesRepository;
+    private final WarehouseConditionsRepository warehouseConditionsRepository;
     private final WarehouseAttachmentsRepository warehouseAttachmentsRepository;
     private final InsurancesRepository insurancesRepository;
     private final AgencyWarehouseDetailsRepository agencyWarehouseDetailsRepository;
@@ -122,7 +122,7 @@ public class WarehousesService {
 
     private void saveWarehouseType(String[] warehouseConditions, Integer warehouseId) {
         for(String warehouseCondition : warehouseConditions) {
-            warehouseTypesRepository.save(WarehouseTypes.builder().name(warehouseCondition).warehouseId(warehouseId).build());
+            warehouseConditionsRepository.save(WarehouseConditions.builder().name(warehouseCondition).warehouseId(warehouseId).build());
         }
     }
 
@@ -171,7 +171,7 @@ public class WarehousesService {
         if(warehouses.size() == 0) throw new WarehouseSearchException();
         for(WarehouseSearchResponseDto searchResponseDto : warehouses) {
             WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
-            List<WarehouseTypesDto> typesDtos = warehouseTypesRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseTypesDto::new).collect(Collectors.toList());
+            List<WarehouseTypesDto> typesDtos = warehouseConditionsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseTypesDto::new).collect(Collectors.toList());
             Optional<WarehouseMainImages> imageOptional = warehouseMainImagesRepository.findByWarehouseId(searchResponseDto.getWarehouseId());
             if(imageOptional.isPresent()) {
                 jsonArray.put(searchResponseDto.toJSONObject(locationDto, imageOptional.get().getMainImageUrl(), typesDtos));
@@ -195,7 +195,7 @@ public class WarehousesService {
             dto.setWarehouseType(detail.getType());
             dto.setMinReleasePerMonth(detail.getMinReleasePerMonth());
             dto.setDeliveryTypes(new DeliveryTypeResponseDto(deliveryTypesRepository.findByAgencyWarehouseDetailId(detail.getAgencyWarehouseDetailId())).getDeliveryType());
-            dto.setWarehouseConditions(warehouseTypesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseTypesDto::new).collect(Collectors.toList()));
+            dto.setWarehouseConditions(warehouseConditionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseTypesDto::new).collect(Collectors.toList()));
             Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(warehouseId);
             if (imagesOptional.isPresent()) {
                 dto.setMainImageUrl(imagesOptional.get().getMainImageUrl());
@@ -221,7 +221,7 @@ public class WarehousesService {
             dto.setWarehouseType(detail.getType());
             dto.setMinReleasePerMonth(detail.getMinReleasePerMonth());
             dto.setDeliveryTypes(new DeliveryTypeResponseDto(deliveryTypesRepository.findByAgencyWarehouseDetailId(detail.getAgencyWarehouseDetailId())).getDeliveryType());
-            dto.setWarehouseConditions(warehouseTypesRepository.findByWarehouseId(dto.getWarehouseId()).stream().map(WarehouseTypesDto::new).collect(Collectors.toList()));
+            dto.setWarehouseConditions(warehouseConditionsRepository.findByWarehouseId(dto.getWarehouseId()).stream().map(WarehouseTypesDto::new).collect(Collectors.toList()));
             Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(dto.getWarehouseId());
             if (imagesOptional.isPresent()) {
                 dto.setMainImageUrl(imagesOptional.get().getMainImageUrl());
@@ -260,7 +260,7 @@ public class WarehousesService {
 
     private JSONArray createJSONArrayOfWarehouseConditions(Integer warehouseId) {
         JSONArray jsonArray = ObjectMaker.getJSONArray();
-        List<WarehouseTypesDto> typesDtos = warehouseTypesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseTypesDto::new).collect(Collectors.toList());
+        List<WarehouseTypesDto> typesDtos = warehouseConditionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseTypesDto::new).collect(Collectors.toList());
         for(WarehouseTypesDto dto : typesDtos) {
             jsonArray.put(dto.getName());
         }
