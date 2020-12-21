@@ -20,12 +20,8 @@ public class WarehouseConditions {
     @Enumerated(EnumType.STRING)
     private WarehouseCondition condition;
 
-    @Column
-    private Integer warehouseId;
-
     @Builder
-    public WarehouseConditions(String condition, Integer warehouseId) {
+    public WarehouseConditions(String condition) {
         this.condition = WarehouseCondition.valueOf(condition);
-        this.warehouseId = warehouseId;
     }
 }
