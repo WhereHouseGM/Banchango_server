@@ -19,10 +19,7 @@ public class Warehouses {
     private String name;
 
     @Column(nullable = false)
-    private Integer landArea;
-
-    @Column(nullable = false)
-    private Integer totalArea;
+    private Integer space;
 
     @Column(length = 100, nullable = false)
     private String address;
@@ -80,11 +77,10 @@ public class Warehouses {
     private Integer userId;
 
     @Builder
-    public Warehouses(String name, String insurance, Integer landArea, Integer totalArea, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
         this.name = name;
         this.insurance = insurance;
-        this.landArea = landArea;
-        this.totalArea = totalArea;
+        this.space = space;
         this.address = address;
         this.addressDetail = addressDetail;
         this.description = description;
