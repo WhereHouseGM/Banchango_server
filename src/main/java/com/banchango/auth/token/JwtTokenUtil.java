@@ -2,6 +2,7 @@ package com.banchango.auth.token;
 
 
 import com.banchango.auth.exception.AuthenticateException;
+import com.banchango.domain.users.UserRole;
 import io.jsonwebtoken.*;
 
 import java.util.Date;
@@ -14,6 +15,16 @@ public class JwtTokenUtil {
     private static final String SECRET_KEY = "secret_key";
     private static final int REFRESH_TOKEN_EXPIRATION = 86400000 * 7;
     private static final int ACCESS_TOKEN_EXPIRATION = 86400000;
+
+    public static UserRole extractUserRole(String token) {
+        return extractClaim(token, JwtTokenUtil::getUserRole);
+    }
+
+    private static UserRole getUserRole(Claims claim) {
+        String roleString = claim.get("role", String.class);
+        if(roleString == null) throw new AuthenticateException("Jwt Claim에 role이 없습니다.");
+        return UserRole.valueOf(roleString);
+    }
 
     public static int extractUserId(String token) {
         return extractClaim(token, JwtTokenUtil::getUserId);
@@ -54,15 +65,17 @@ public class JwtTokenUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public static String generateAccessToken(Integer userId) {
+    public static String generateAccessToken(Integer userId, UserRole role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
+        claims.put("role", role);
         return createToken(claims, ACCESS_TOKEN_EXPIRATION);
     }
 
-    public static String generateRefreshToken(Integer userId) {
+    public static String generateRefreshToken(Integer userId, UserRole role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
+        claims.put("role", role);
         return createToken(claims, REFRESH_TOKEN_EXPIRATION);
     }
 

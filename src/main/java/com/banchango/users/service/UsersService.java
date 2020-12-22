@@ -46,8 +46,8 @@ public class UsersService {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         if(requestDto.getEmail() == null || requestDto.getPassword() == null) throw new BadRequestException();
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new));
-        responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId()));
-        responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId()));
+        responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole()));
+        responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId(), userInfoDto.getRole()));
         return responseDto;
     }
 

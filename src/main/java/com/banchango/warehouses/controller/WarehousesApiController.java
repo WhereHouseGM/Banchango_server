@@ -1,35 +1,29 @@
-//package com.banchango.warehouses.controller;
-//
-//import com.banchango.auth.exception.AuthenticateException;
-//import com.banchango.tools.ObjectMaker;
-//import com.banchango.tools.WriteToClient;
-//import com.banchango.warehouses.dto.AgencyWarehouseInsertRequestDto;
-//import com.banchango.warehouses.exception.*;
-//import com.banchango.warehouses.service.WarehousesService;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.web.bind.annotation.*;
-//
-//import javax.servlet.http.HttpServletResponse;
-//
-//@RequiredArgsConstructor
-//@RestController
-//public class WarehousesApiController {
-//
-//    private final WarehousesService warehousesService;
-//
-//    // DONE
-//    @PostMapping("/v2/warehouses/agency")
-//    public void registerAgency(@RequestBody AgencyWarehouseInsertRequestDto dto,
-//                         @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
-//        try {
-//            WriteToClient.send(response, warehousesService.saveAgencyWarehouse(dto, bearerToken), HttpServletResponse.SC_OK);
-//        } catch(AuthenticateException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-//        } catch(Exception exception) {
-//            exception.printStackTrace();
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
+package com.banchango.warehouses.controller;
+
+import com.banchango.common.interceptor.ValidateRequired;
+import com.banchango.warehouses.dto.MessageResponseDto;
+import com.banchango.warehouses.dto.NewWarehouseRequestDto;
+import com.banchango.warehouses.service.WarehousesService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
+
+@RequiredArgsConstructor
+@RestController
+public class WarehousesApiController {
+
+    private final WarehousesService warehousesService;
+
+    @ValidateRequired
+    @PostMapping("/v2/warehouses")
+    public MessageResponseDto registerAgency(
+            @RequestBody NewWarehouseRequestDto newWarehouseRequestDto,
+            @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        warehousesService.saveAgencyWarehouse(newWarehouseRequestDto, accessToken);
+
+        return new MessageResponseDto("창고가 정상적으로 등록 되었습니다");
+    }
 //
 //    // DONE
 //    @GetMapping("/v2/warehouses")
@@ -104,4 +98,4 @@
 //    public void updateWarehouseInfo(@PathVariable Integer warehouseId, HttpServletResponse response) {
 //
 //    }
-//}
+}
