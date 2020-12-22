@@ -28,10 +28,12 @@ import static org.junit.Assert.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserApiTest {
 
+    private static final String TEST_EMAIL = "robby0909@naver.com";
+
     @Before
     public void saveUser() {
         Users user = Users.builder().name("TEST_NAME")
-                .email("TEST_EMAIL")
+                .email(TEST_EMAIL)
                 .password("123")
                 .type(UserType.OWNER)
                 .telephoneNumber("02123123")
@@ -43,7 +45,7 @@ public class UserApiTest {
 
     @After
     public void removeUser() {
-        Users user = usersRepository.findByEmail("TEST_EMAIL").orElseThrow(UserEmailNotFoundException::new);
+        Users user = usersRepository.findByEmail(TEST_EMAIL).orElseThrow(UserEmailNotFoundException::new);
         usersRepository.delete(user);
     }
 
@@ -55,7 +57,7 @@ public class UserApiTest {
 
     @Test
     public void userInfo_responseIsOk_IfAllConditionsAreRight() {
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        Integer userId = getUserIdByEmail(TEST_EMAIL);
         String accessToken = JwtTokenUtil.generateAccessToken(userId);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken).build();
@@ -63,7 +65,7 @@ public class UserApiTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         JSONObject responseBody = new JSONObject(response.getBody());
-        assertEquals("TEST_EMAIL", responseBody.get("email"));
+        assertEquals(TEST_EMAIL, responseBody.get("email"));
         assertEquals(userId, responseBody.get("userId"));
         assertEquals("TEST_NAME", responseBody.get("name"));
         assertEquals("OWNER", responseBody.get("type"));
@@ -75,7 +77,7 @@ public class UserApiTest {
 
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsAbsent() {
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        Integer userId = getUserIdByEmail(TEST_EMAIL);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId)).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
@@ -84,7 +86,7 @@ public class UserApiTest {
 
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        Integer userId = getUserIdByEmail(TEST_EMAIL);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId)).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
@@ -104,7 +106,7 @@ public class UserApiTest {
     public void login_responseIsOK_IfUserExists() {
 
         JSONObject requestBody = new JSONObject();
-        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "123");
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-in");
@@ -128,7 +130,7 @@ public class UserApiTest {
     @Test
     public void login_responseIsNoContent_IfUserPasswordIsWrong() {
         JSONObject requestBody = new JSONObject();
-        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "1234");
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-in");
@@ -140,7 +142,7 @@ public class UserApiTest {
     @Test
     public void login_responseIsBadRequest_IfRequestBodyIsWrong() {
         JSONObject requestBody = new JSONObject();
-        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("email", TEST_EMAIL);
         requestBody.put("pass", "123");
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-in");
@@ -186,7 +188,7 @@ public class UserApiTest {
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME");
-        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "1234");
         requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("telephoneNumber", "02234234");
@@ -219,14 +221,14 @@ public class UserApiTest {
     public void updateInfo_responseIsOk() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME_");
-        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("telephoneNumber", "021212");
         requestBody.put("companyName", "TEST_COMP_");
         requestBody.put("phoneNumber", "0101212");
 
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        Integer userId = getUserIdByEmail(TEST_EMAIL);
         String accessToken = JwtTokenUtil.generateAccessToken(userId);
 
         RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/" + userId))
@@ -234,7 +236,6 @@ public class UserApiTest {
                 .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
 
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        System.err.println(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         JSONObject responseBody = new JSONObject(response.getBody());
         assertEquals("TEST_NAME_", responseBody.get("name"));
@@ -248,14 +249,14 @@ public class UserApiTest {
     public void updateInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME_");
-        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("telephoneNumber", "021212");
         requestBody.put("companyName", "TEST_COMP_");
         requestBody.put("phoneNumber", "0101212");
 
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        Integer userId = getUserIdByEmail(TEST_EMAIL);
 
         RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/" + userId))
                 .header("Authorization", "Bearer " + "THIS IS WRONG TOKEN!")
@@ -269,14 +270,14 @@ public class UserApiTest {
     public void updateInfo_responseIsUnAuthorized_IfUserIdAndTokenIsWrong() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME_");
-        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("telephoneNumber", "021212");
         requestBody.put("companyName", "TEST_COMP_");
         requestBody.put("phoneNumber", "0101212");
 
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        Integer userId = getUserIdByEmail(TEST_EMAIL);
         String accessToken = JwtTokenUtil.generateAccessToken(userId);
 
         RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/0"))
@@ -291,7 +292,7 @@ public class UserApiTest {
     public void updateInfo_responseIsNoContent_IfUserIdIsWrong() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME_");
-        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("telephoneNumber", "021212");
