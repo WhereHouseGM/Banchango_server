@@ -45,7 +45,6 @@ public class Users extends BaseTimeEntity {
 
     public void updateUserInfo(UserSignupRequestDto requestDto) {
         this.name = requestDto.getName();
-        this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
         this.type = UserType.valueOf(requestDto.getType());
         this.companyName = requestDto.getCompanyName();

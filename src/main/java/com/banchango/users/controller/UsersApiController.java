@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 public class UsersApiController {
@@ -28,23 +30,17 @@ public class UsersApiController {
 
     @PostMapping("/v2/users/sign-up")
     @ResponseStatus(HttpStatus.OK)
-    public UserInfoResponseDto signUp(@RequestBody UserSignupRequestDto requestDto) {
+    public UserInfoResponseDto signUp(@Valid @RequestBody UserSignupRequestDto requestDto) {
         return usersService.signUp(requestDto);
     }
-//
-//    // DONE
-//    @PostMapping("/v2/users/sign-in")
-//    public void signIn(@RequestBody UserSigninRequestDto requestDto, HttpServletResponse response) {
-//        try {
-//            WriteToClient.send(response, usersService.signIn(requestDto), HttpServletResponse.SC_OK);
-//        } catch(UserNotFoundException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
-//
-//    // DONE
+
+    @ValidateRequired
+    @PatchMapping("/v2/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoResponseDto updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId,
+                               @RequestAttribute(name = "Authorization") String token) {
+        return usersService.updateUserInfo(requestDto, userId, token);
+    }
 //    @PatchMapping("/v2/users/{userId}")
 //    public void updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
 //        try {

@@ -49,6 +49,16 @@ public class UsersService {
         if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) throw new UserEmailInUseException();
         return new UserInfoResponseDto(usersRepository.save(requestDto.toEntity()));
     }
+
+    @Transactional
+    public UserInfoResponseDto updateUserInfo(UserSignupRequestDto requestDto, Integer userId, String token) {
+        if(!userId.equals(JwtTokenUtil.extractUserId(token))) {
+            throw new UserInvalidAccessException();
+        }
+        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        user.updateUserInfo(requestDto);
+        return new UserInfoResponseDto(user);
+    }
 //    @Transactional
 //    public JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
 //        if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) {

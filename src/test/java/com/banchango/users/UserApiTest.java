@@ -215,6 +215,11 @@ public class UserApiTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
+    @Test
+    public void updateInfo_responseIsOk() {
+
+    }
+
     private ResponseEntity<String> getResponse(String requestBody, String url) {
         RequestEntity<String> request = RequestEntity.post(URI.create(url))
                 .contentType(MediaType.APPLICATION_JSON)
