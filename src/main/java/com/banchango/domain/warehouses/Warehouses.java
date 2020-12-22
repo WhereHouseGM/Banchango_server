@@ -8,6 +8,7 @@ import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ public class Warehouses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "warehouse_id")
     private Integer id;
+
+    @Column
+    private Integer userId;
 
     @Column(length = 20, nullable = false)
     private String name;
@@ -92,30 +96,32 @@ public class Warehouses {
     @Column(nullable = false)
     private Double longitude;
 
-    @Column
-    private Integer userId;
-
+    @Setter
     @OneToMany
     @JoinColumn(name = "warehouse_id")
     private List<DeliveryTypes> deliveryTypes = new ArrayList<>();
 
+    @Setter
     @OneToMany
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
 
+    @Setter
     @OneToMany
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseFacilityUsages> warehouseFacilityUsages = new ArrayList<>();
 
+    @Setter
     @OneToMany
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
 
+    @Setter
     @OneToMany(mappedBy = "warehouse")
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude, AgencyWarehouseType warehouseType, Integer minReleasePerMonth) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, AirConditioningType airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude, AgencyWarehouseType warehouseType, Integer minReleasePerMonth) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -129,7 +135,7 @@ public class Warehouses {
         this.cctvExist = cctvExist;
         this.securityCompanyName = securityCompanyName;
         this.doorLockExist = doorLockExist;
-        this.airConditioningType = AirConditioningType.valueOf(airConditioningType);
+        this.airConditioningType = airConditioningType;
         this.workerExist = workerExist;
         this.canPickup = canPickup;
         this.canPark = canPark;

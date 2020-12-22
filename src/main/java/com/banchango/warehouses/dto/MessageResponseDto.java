@@ -1,5 +1,10 @@
 package com.banchango.warehouses.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public class MessageResponseDto {
-    String message;
+    private String message;
 }

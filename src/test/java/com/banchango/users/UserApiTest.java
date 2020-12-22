@@ -1,6 +1,8 @@
 package com.banchango.users;
 
+import com.banchango.ApiTestContext;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -8,25 +10,19 @@ import com.banchango.users.exception.UserEmailNotFoundException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserApiTest {
+public class UserApiTest extends ApiTestContext {
 
     @Before
     public void saveUser() {
@@ -50,13 +46,13 @@ public class UserApiTest {
     @Autowired
     private UsersRepository usersRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
-
     @Test
     public void userInfo_responseIsOk_IfAllConditionsAreRight() {
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
-        String accessToken = JwtTokenUtil.generateAccessToken(userId);
+        Users user = getUserByEmail("TEST_EMAIL");
+        Integer userId = user.getUserId();
+        UserRole role = user.getRole();
+
+        String accessToken = JwtTokenUtil.generateAccessToken(userId, role);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
@@ -75,7 +71,9 @@ public class UserApiTest {
 
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsAbsent() {
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        Users user = getUserByEmail("TEST_EMAIL");
+        Integer userId = user.getUserId();
+        UserRole role = user.getRole();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId)).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
@@ -84,7 +82,8 @@ public class UserApiTest {
 
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        Users user = getUserByEmail("TEST_EMAIL");
+        Integer userId = user.getUserId();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId)).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
@@ -93,7 +92,7 @@ public class UserApiTest {
 
     @Test
     public void userInfo_responseIsNoContentIfUserIdIsWrong() {
-        String accessToken = JwtTokenUtil.generateAccessToken(0);
+        String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/0"))
                 .header("Authorization", "Bearer " + accessToken).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
@@ -220,16 +219,8 @@ public class UserApiTest {
 
     }
 
-    private ResponseEntity<String> getResponse(String requestBody, String url) {
-        RequestEntity<String> request = RequestEntity.post(URI.create(url))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(requestBody);
-
-        return restTemplate.exchange(request, String.class);
-    }
-
-    private Integer getUserIdByEmail(String email) {
-        return usersRepository.findByEmail(email).orElseThrow(UserEmailNotFoundException::new).getUserId();
+    private Users getUserByEmail(String email) {
+        return usersRepository.findByEmail(email).orElseThrow(UserEmailNotFoundException::new);
     }
 
     private void removeUserByUserId(Integer userId) {

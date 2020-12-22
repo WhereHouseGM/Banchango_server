@@ -4,11 +4,15 @@ import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.warehouses.AgencyWarehouseType;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.ItemTypeName;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
 public class NewWarehouseRequestDto {
     @Size(min = 1, message = "name의 최소 길이는 1입니다.")
     @NotNull(message = "name이 없습니다.")
@@ -29,6 +33,9 @@ public class NewWarehouseRequestDto {
     @NotNull(message = "description이 없습니다.")
     String description;
 
+    @NotNull(message = "availableWeekdays가 없습니다.")
+    Integer availableWeekdays;
+
     @Size(min = 1, message = "openAt의 최소 길이는 1입니다.")
     @NotNull(message = "openAt이 없습니다.")
     String openAt;
@@ -41,41 +48,36 @@ public class NewWarehouseRequestDto {
     @NotNull(message = "availableTimeDetail이 없습니다.")
     String availableTimeDetail;
 
-
     @Size(min = 1, message = "insurance의 최소 길이는 1입니다.")
     @NotNull(message = "insurance이 없습니다.")
     String insurance;
 
-
     @NotNull(message = "cctvExist이 없습니다.")
-    Boolean cctvExist;
+    Integer cctvExist;
 
     String securityCompanyName;
 
     @NotNull(message = "doorLockExist이 없습니다.")
-    Boolean doorLockExist;
+    Integer doorLockExist;
 
     @ValueOfEnum(enumClass = AgencyWarehouseType.class)
-    @Size(min = 1, message = "airConditioningType의 최소 길이는 1입니다.")
     @NotNull(message = "airConditioningType이 없습니다.")
     AirConditioningType airConditioningType;
 
     @NotNull(message = "workerExist이 없습니다.")
-    Boolean workerExist;
+    Integer workerExist;
 
     @NotNull(message = "canPickup이 없습니다.")
-    Boolean canPickup;
+    Integer canPickup;
 
     @NotNull(message = "canPark이 없습니다.")
-    Boolean canPark;
+    Integer canPark;
 
     @ValueOfEnum(enumClass = ItemTypeName.class)
-    @Size(min = 1, message = "mainItemType의 최소 길이는 1입니다.")
     @NotNull(message = "mainItemType이 없습니다.")
     ItemTypeName mainItemType;
 
     @ValueOfEnum(enumClass = AgencyWarehouseType.class)
-    @Size(min = 1, message = "warehouseType의 최소 길이는 1입니다.")
     @NotNull(message = "warehouseType이 없습니다.")
     AgencyWarehouseType warehouseType;
 
