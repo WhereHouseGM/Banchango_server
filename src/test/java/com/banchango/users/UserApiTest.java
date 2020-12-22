@@ -1,6 +1,7 @@
 package com.banchango.users;
 
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -58,7 +59,7 @@ public class UserApiTest {
     @Test
     public void userInfo_responseIsOk_IfAllConditionsAreRight() {
         Integer userId = getUserIdByEmail(TEST_EMAIL);
-        String accessToken = JwtTokenUtil.generateAccessToken(userId);
+        String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
@@ -95,7 +96,7 @@ public class UserApiTest {
 
     @Test
     public void userInfo_responseIsNoContent_IfUserIdIsWrong() {
-        String accessToken = JwtTokenUtil.generateAccessToken(0);
+        String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/0"))
                 .header("Authorization", "Bearer " + accessToken).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
@@ -229,7 +230,7 @@ public class UserApiTest {
         requestBody.put("phoneNumber", "0101212");
 
         Integer userId = getUserIdByEmail(TEST_EMAIL);
-        String accessToken = JwtTokenUtil.generateAccessToken(userId);
+        String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
         RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken)
@@ -278,7 +279,7 @@ public class UserApiTest {
         requestBody.put("phoneNumber", "0101212");
 
         Integer userId = getUserIdByEmail(TEST_EMAIL);
-        String accessToken = JwtTokenUtil.generateAccessToken(userId);
+        String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
         RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
@@ -299,7 +300,7 @@ public class UserApiTest {
         requestBody.put("companyName", "TEST_COMP_");
         requestBody.put("phoneNumber", "0101212");
 
-        String accessToken = JwtTokenUtil.generateAccessToken(0);
+        String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
         RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
