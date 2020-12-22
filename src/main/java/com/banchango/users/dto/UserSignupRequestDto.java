@@ -1,5 +1,6 @@
 package com.banchango.users.dto;
 
+import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class UserSignupRequestDto {
     private String password;
 
     @NotBlank(message = "Type is required.(SHIPPER or OWNER)")
+    @ValueOfEnum(enumClass = UserType.class)
     private String type;
 
     @NotBlank(message = "Telephone Number is required.")
