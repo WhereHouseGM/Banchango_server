@@ -198,6 +198,23 @@ public class UserApiTest {
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
 
+    @Test
+    public void signUp_responseIsBadRequest_ifRequestBodyIsWrong() {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("name", "TEST_NAME");
+        requestBody.put("email", "TEST_EMAIL_");
+//        requestBody.put("password", "1234");
+        requestBody.put("type", "ASDF");
+//        requestBody.put("type", UserType.SHIPPER.name());
+        requestBody.put("telephoneNumber", "02234234");
+        requestBody.put("phoneNumber", "010234234");
+        requestBody.put("companyName", "TEST_COMP_2");
+
+        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-up");
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
     private ResponseEntity<String> getResponse(String requestBody, String url) {
         RequestEntity<String> request = RequestEntity.post(URI.create(url))
                 .contentType(MediaType.APPLICATION_JSON)

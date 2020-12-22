@@ -46,11 +46,8 @@ public class UsersService {
 
     @Transactional
     public UserInfoResponseDto signUp(UserSignupRequestDto requestDto) {
-        if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) throw new UserEmailInUseException();
-        Users user = usersRepository.save(requestDto.toEntity());
-        return new UserInfoResponseDto(user);
-        //return new UserInfoResponseDto(usersRepository.save(requestDto.toEntity()));
-
+        if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) throw new UserEmailInUseException();
+        return new UserInfoResponseDto(usersRepository.save(requestDto.toEntity()));
     }
 //    @Transactional
 //    public JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
