@@ -85,7 +85,7 @@ public class Warehouses {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AgencyWarehouseType warehouseType;
+    private WarehouseType warehouseType;
 
     @Column(nullable = false)
     private Integer minReleasePerMonth;
@@ -121,7 +121,7 @@ public class Warehouses {
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, AirConditioningType airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude, AgencyWarehouseType warehouseType, Integer minReleasePerMonth) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, AirConditioningType airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;

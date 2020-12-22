@@ -1,5 +1,5 @@
 package com.banchango.domain.warehouses;
 
-public enum AgencyWarehouseType {
+public enum WarehouseType {
     THREEPL, FULFILLMENT
 }

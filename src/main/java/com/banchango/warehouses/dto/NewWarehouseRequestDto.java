@@ -1,7 +1,7 @@
 package com.banchango.warehouses.dto;
 
 import com.banchango.common.validator.ValueOfEnum;
-import com.banchango.domain.warehouses.AgencyWarehouseType;
+import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.ItemTypeName;
 import lombok.Getter;
@@ -60,7 +60,7 @@ public class NewWarehouseRequestDto {
     @NotNull(message = "doorLockExist이 없습니다.")
     Integer doorLockExist;
 
-    @ValueOfEnum(enumClass = AgencyWarehouseType.class)
+    @ValueOfEnum(enumClass = WarehouseType.class)
     @NotNull(message = "airConditioningType이 없습니다.")
     AirConditioningType airConditioningType;
 
@@ -77,9 +77,9 @@ public class NewWarehouseRequestDto {
     @NotNull(message = "mainItemType이 없습니다.")
     ItemTypeName mainItemType;
 
-    @ValueOfEnum(enumClass = AgencyWarehouseType.class)
+    @ValueOfEnum(enumClass = WarehouseType.class)
     @NotNull(message = "warehouseType이 없습니다.")
-    AgencyWarehouseType warehouseType;
+    WarehouseType warehouseType;
 
     @NotNull(message = "minReleasePerMonth이 없습니다.")
     Integer minReleasePerMonth;
