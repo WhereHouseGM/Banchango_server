@@ -37,8 +37,8 @@ public class UsersApiController {
     @ValidateRequired
     @PatchMapping("/v2/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserInfoResponseDto updateUserInfo(@RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId,
-                               @RequestAttribute(name = "Authorization") String token) {
+    public UserInfoResponseDto updateUserInfo(@Valid @RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId,
+                               @RequestAttribute(name = "accessToken") String token) {
         return usersService.updateUserInfo(requestDto, userId, token);
     }
 //    @PatchMapping("/v2/users/{userId}")

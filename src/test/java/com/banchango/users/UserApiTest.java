@@ -92,7 +92,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void userInfo_responseIsNoContentIfUserIdIsWrong() {
+    public void userInfo_responseIsNoContent_IfUserIdIsWrong() {
         String accessToken = JwtTokenUtil.generateAccessToken(0);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/0"))
                 .header("Authorization", "Bearer " + accessToken).build();
@@ -161,6 +161,7 @@ public class UserApiTest {
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-up");
 
+
         Users savedUser = usersRepository.findByEmail("TEST_EMAIL_2").orElseThrow(UserEmailNotFoundException::new);
         Integer userId = savedUser.getUserId();
 
@@ -178,11 +179,10 @@ public class UserApiTest {
         assertTrue(savedUser.getLastModifiedAt().isBefore(LocalDateTime.now()));
 
         removeUserByUserId(userId);
-
     }
 
     @Test
-    public void signUp_responseIsConflict_ifEmailExists() {
+    public void signUp_responseIsConflict_IfEmailExists() {
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME");
@@ -199,7 +199,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void signUp_responseIsBadRequest_ifRequestBodyIsWrong() {
+    public void signUp_responseIsBadRequest_IfRequestBodyIsWrong() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME");
         requestBody.put("email", "TEST_EMAIL_");
@@ -217,7 +217,95 @@ public class UserApiTest {
 
     @Test
     public void updateInfo_responseIsOk() {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("name", "TEST_NAME_");
+        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("password", "0000");
+        requestBody.put("type", UserType.SHIPPER.name());
+        requestBody.put("telephoneNumber", "021212");
+        requestBody.put("companyName", "TEST_COMP_");
+        requestBody.put("phoneNumber", "0101212");
 
+        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        String accessToken = JwtTokenUtil.generateAccessToken(userId);
+
+        RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/" + userId))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
+
+        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        System.err.println(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        JSONObject responseBody = new JSONObject(response.getBody());
+        assertEquals("TEST_NAME_", responseBody.get("name"));
+        assertEquals(UserType.SHIPPER.name(), responseBody.get("type"));
+        assertEquals("021212", responseBody.get("telephoneNumber"));
+        assertEquals("0101212", responseBody.get("phoneNumber"));
+        assertEquals("TEST_COMP_", responseBody.get("companyName"));
+    }
+
+    @Test
+    public void updateInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("name", "TEST_NAME_");
+        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("password", "0000");
+        requestBody.put("type", UserType.SHIPPER.name());
+        requestBody.put("telephoneNumber", "021212");
+        requestBody.put("companyName", "TEST_COMP_");
+        requestBody.put("phoneNumber", "0101212");
+
+        Integer userId = getUserIdByEmail("TEST_EMAIL");
+
+        RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/" + userId))
+                .header("Authorization", "Bearer " + "THIS IS WRONG TOKEN!")
+                .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
+        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void updateInfo_responseIsUnAuthorized_IfUserIdAndTokenIsWrong() {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("name", "TEST_NAME_");
+        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("password", "0000");
+        requestBody.put("type", UserType.SHIPPER.name());
+        requestBody.put("telephoneNumber", "021212");
+        requestBody.put("companyName", "TEST_COMP_");
+        requestBody.put("phoneNumber", "0101212");
+
+        Integer userId = getUserIdByEmail("TEST_EMAIL");
+        String accessToken = JwtTokenUtil.generateAccessToken(userId);
+
+        RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/0"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
+        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void updateInfo_responseIsNoContent_IfUserIdIsWrong() {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("name", "TEST_NAME_");
+        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("password", "0000");
+        requestBody.put("type", UserType.SHIPPER.name());
+        requestBody.put("telephoneNumber", "021212");
+        requestBody.put("companyName", "TEST_COMP_");
+        requestBody.put("phoneNumber", "0101212");
+
+        String accessToken = JwtTokenUtil.generateAccessToken(0);
+
+        RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/0"))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
+        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     private ResponseEntity<String> getResponse(String requestBody, String url) {
