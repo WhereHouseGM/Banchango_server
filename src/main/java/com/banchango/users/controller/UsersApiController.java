@@ -26,17 +26,11 @@ public class UsersApiController {
         return usersService.signIn(requestDto);
     }
 
-    // DONE
-//    @PostMapping("/v2/users/sign-up")
-//    public void signUp(@RequestBody UserSignupRequestDto requestDto, HttpServletResponse response) {
-//        try {
-//            WriteToClient.send(response, usersService.signUp(requestDto), HttpServletResponse.SC_CREATED);
-//        } catch(UserEmailInUseException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_CONFLICT);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
+    @PostMapping("/v2/users/sign-up")
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoResponseDto signUp(@RequestBody UserSignupRequestDto requestDto) {
+        return usersService.signUp(requestDto);
+    }
 //
 //    // DONE
 //    @PostMapping("/v2/users/sign-in")

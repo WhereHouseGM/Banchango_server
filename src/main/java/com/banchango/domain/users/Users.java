@@ -17,29 +17,29 @@ public class Users extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Column(nullable = false, length = 30, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Column(length = 20)
+    @Column(length = 40)
     private String telephoneNumber;
 
-    @Column(length = 20)
+    @Column(length = 40)
     private String companyName;
 
-    @Column(length = 20)
+    @Column(length = 40)
     private String phoneNumber;
 
-    @Column(columnDefinition = "enum('USER', 'ADMIN') DEFAULT 'USER'")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -54,11 +54,11 @@ public class Users extends BaseTimeEntity {
     }
 
     @Builder
-    public Users(String name, String email, String password, UserType userType, String telephoneNumber, String companyName, String phoneNumber) {
+    public Users(String name, String email, String password, UserType type, String telephoneNumber, String companyName, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.type = userType;
+        this.type = type;
         this.telephoneNumber = telephoneNumber;
         this.companyName = companyName;
         this.phoneNumber = phoneNumber;

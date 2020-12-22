@@ -2,10 +2,12 @@ package com.banchango.users.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.exception.BadRequestException;
+import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
+import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +42,15 @@ public class UsersService {
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId()));
         responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId()));
         return responseDto;
+    }
+
+    @Transactional
+    public UserInfoResponseDto signUp(UserSignupRequestDto requestDto) {
+        if(usersRepository.findByEmail(requestDto.getEmail()).isPresent()) throw new UserEmailInUseException();
+        Users user = usersRepository.save(requestDto.toEntity());
+        return new UserInfoResponseDto(user);
+        //return new UserInfoResponseDto(usersRepository.save(requestDto.toEntity()));
+
     }
 //    @Transactional
 //    public JSONObject signUp(UserSignupRequestDto requestDto) throws Exception {
