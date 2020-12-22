@@ -203,7 +203,7 @@ public class UserApiTest {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME");
         requestBody.put("email", "TEST_EMAIL_");
-//        requestBody.put("password", "1234");
+        requestBody.put("password", "1234");
         requestBody.put("type", "ASDF");
 //        requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("telephoneNumber", "02234234");
@@ -212,7 +212,7 @@ public class UserApiTest {
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-up");
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
