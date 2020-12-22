@@ -4,6 +4,7 @@ import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.users.exception.UserEmailNotFoundException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,16 +54,56 @@ public class UserApiTest {
     @Test
     public void loginTestIfUserExists() {
 
-        String requestBody = "{\"email\": \"TEST_EMAIL\", \"password\":\"123\"}";
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("password", "123");
 
-        RequestEntity<String> request = RequestEntity.post(URI.create("/v2/users/sign-in"))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(requestBody);
-
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<String> response = getResponse(requestBody.toString());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().contains("accessToken"));
         assertTrue(response.getBody().contains("refreshToken"));
+    }
+
+    @Test
+    public void loginTestIfUserEmailIsWrong(){
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("email", "WRONG_EMAIL");
+        requestBody.put("password", "123");
+
+        ResponseEntity<String> response = getResponse(requestBody.toString());
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void loginTestIfUserPasswordIsWrong() {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("password", "1234");
+
+        ResponseEntity<String> response = getResponse(requestBody.toString());
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+    }
+
+    @Test
+    public void loginTestIfRequestBodyIsWrong() {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("email", "TEST_EMAIL");
+        requestBody.put("pass", "123");
+
+        ResponseEntity<String> response = getResponse(requestBody.toString());
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    private ResponseEntity<String> getResponse(String requestBody) {
+        RequestEntity<String> request = RequestEntity.post(URI.create("/v2/users/sign-in"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(requestBody.toString());
+
+        return restTemplate.exchange(request, String.class);
     }
 }

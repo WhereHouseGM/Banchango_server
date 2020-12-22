@@ -36,5 +36,6 @@ dependencies {
     compile('javax.activation:activation:1.1')
     compile('javax.mail:mail:1.4.7')
     compile('com.amazonaws:aws-java-sdk-s3:1.11.901')
+    compile('org.json:json:20200518')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

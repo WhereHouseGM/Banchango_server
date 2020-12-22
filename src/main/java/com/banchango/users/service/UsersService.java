@@ -1,6 +1,7 @@
 package com.banchango.users.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.exception.BadRequestException;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSigninRequestDto;
@@ -34,6 +35,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
+        if(requestDto.getEmail() == null || requestDto.getPassword() == null) throw new BadRequestException();
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new));
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId()));
         responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId()));
