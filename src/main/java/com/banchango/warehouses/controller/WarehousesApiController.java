@@ -1,7 +1,7 @@
 package com.banchango.warehouses.controller;
 
+import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
-import com.banchango.warehouses.dto.MessageResponseDto;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +16,13 @@ public class WarehousesApiController {
 
     @ValidateRequired
     @PostMapping("/v2/warehouses")
-    public MessageResponseDto registerAgency(
-            @RequestBody NewWarehouseRequestDto newWarehouseRequestDto,
+    public BasicMessageResponseDto registerAgency(
+            @Valid @RequestBody NewWarehouseRequestDto newWarehouseRequestDto,
             @RequestAttribute(name = "accessToken") String accessToken
     ) {
         warehousesService.saveAgencyWarehouse(newWarehouseRequestDto, accessToken);
 
-        return new MessageResponseDto("창고가 정상적으로 등록 되었습니다");
+        return new BasicMessageResponseDto("창고가 정상적으로 등록 되었습니다");
     }
 //
 //    // DONE
