@@ -1,5 +1,6 @@
 package com.banchango.warehouses.dto;
 
+import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.warehouses.AgencyWarehouseType;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.ItemTypeName;
@@ -54,6 +55,7 @@ public class NewWarehouseRequestDto {
     @NotNull(message = "doorLockExist이 없습니다.")
     Boolean doorLockExist;
 
+    @ValueOfEnum(enumClass = AgencyWarehouseType.class)
     @Size(min = 1, message = "airConditioningType의 최소 길이는 1입니다.")
     @NotNull(message = "airConditioningType이 없습니다.")
     AirConditioningType airConditioningType;
@@ -67,10 +69,12 @@ public class NewWarehouseRequestDto {
     @NotNull(message = "canPark이 없습니다.")
     Boolean canPark;
 
+    @ValueOfEnum(enumClass = ItemTypeName.class)
     @Size(min = 1, message = "mainItemType의 최소 길이는 1입니다.")
     @NotNull(message = "mainItemType이 없습니다.")
     ItemTypeName mainItemType;
 
+    @ValueOfEnum(enumClass = AgencyWarehouseType.class)
     @Size(min = 1, message = "warehouseType의 최소 길이는 1입니다.")
     @NotNull(message = "warehouseType이 없습니다.")
     AgencyWarehouseType warehouseType;
