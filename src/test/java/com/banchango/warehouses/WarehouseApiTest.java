@@ -6,8 +6,11 @@ import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.AirConditioningType;
+import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.users.exception.UserEmailNotFoundException;
+import com.banchango.warehouses.dto.SearchWarehouseDto;
+import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
 import org.json.JSONObject;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,33 +33,35 @@ public class WarehouseApiTest extends ApiTestContext {
     private WarehousesRepository warehouseRepository;
 
     String accessToken = null;
-    List<Integer> warehouseIds = new ArrayList<>();
+    Users user = null;
 
     @Before
     public void beforeTest() {
-        Users user = Users.builder().name("TEST_NAME")
-                .email("TEST_EMAIL1")
-                .password("123")
-                .type(UserType.OWNER)
-                .telephoneNumber("02123123")
-                .phoneNumber("010123123")
-                .companyName("TEST_COMP")
-                .build();
-        usersRepository.save(user);
+        if(user == null) {
+            user = Users.builder().name("TEST_NAME")
+                    .email("TEST_EMAIL1")
+                    .password("123")
+                    .type(UserType.OWNER)
+                    .telephoneNumber("02123123")
+                    .phoneNumber("010123123")
+                    .companyName("TEST_COMP")
+                    .build();
+            usersRepository.save(user);
 
-        accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), user.getRole());
+            accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), user.getRole());
+        }
     }
 
     @After
     public void afterTest() {
-        Users user = usersRepository.findByEmail("TEST_EMAIL1").orElseThrow(UserEmailNotFoundException::new);
-        usersRepository.delete(user);
-
-        for(Integer warehouseId : warehouseIds) warehouseRepository.delete_(warehouseId);
+        if(user != null) {
+            user = usersRepository.findByEmail("TEST_EMAIL1").orElseThrow(UserEmailNotFoundException::new);
+            usersRepository.delete(user);
+        }
     }
 
     @Test
-    public void warehouse_responseIsOk_IfAllConditionsAreRight() {
+    public void post_warehouse_responseIsOk_IfAllConditionsAreRight() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("name", "TEST_NAME");
         requestBody.put("space", 123);
@@ -95,5 +100,27 @@ public class WarehouseApiTest extends ApiTestContext {
         System.out.println(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().contains("message"));
+    }
+
+    @Test
+    public void search_warehouse_responseIsOk_IfAllConditionsAreRight() {
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/warehouses?address=address&limit=4&offset=0"))
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
+
+        ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
+
+        List<SearchWarehouseDto> warehouses = response.getBody().getWarehouses();
+        assertTrue(warehouses.size() > 0);
+
+        SearchWarehouseDto warehouse = warehouses.get(0);
+
+        assertNotNull(warehouse.getWarehouseId());
+        assertNotNull(warehouse.getName());
+        assertNotNull(warehouse.getSpace());
+        assertNotNull(warehouse.getMainImageUrl());
+        assertNotNull(warehouse.getLatitude());
+        assertNotNull(warehouse.getLongitude());
+        assertNotNull(warehouse.getWarehouseCondition());
     }
 }
