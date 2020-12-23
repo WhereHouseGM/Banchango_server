@@ -40,8 +40,7 @@ public class WarehousesService {
         UserRole role = JwtTokenUtil.extractUserRole(accessToken);
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
-        Warehouses warehouse = new Warehouses();
-        warehouse.builder()
+        Warehouses warehouse = Warehouses.builder()
                 .userId(userId)
                 .name(newWarehouseRequestDto.getName())
                 .space(newWarehouseRequestDto.getSpace())
@@ -64,7 +63,8 @@ public class WarehousesService {
                 .warehouseType(newWarehouseRequestDto.getWarehouseType())
                 .minReleasePerMonth(newWarehouseRequestDto.getMinReleasePerMonth())
                 .latitude(newWarehouseRequestDto.getLatitude())
-                .longitude(newWarehouseRequestDto.getLongitude());
+                .longitude(newWarehouseRequestDto.getLongitude())
+                .build();
 
         List<DeliveryTypes> deliveryTypes = newWarehouseRequestDto.getDeliveryTypes().stream()
                 .map(name -> new DeliveryTypes(name)).collect(Collectors.toList());
