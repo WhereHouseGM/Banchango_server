@@ -1,6 +1,7 @@
 package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.users.UserRole;
@@ -14,6 +15,8 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
+import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -231,23 +234,15 @@ public class WarehousesService {
 //        return jsonObject;
 //    }
 //
-//    @Transactional
-//    public JSONObject delete(Integer warehouseId, String token) throws Exception {
-//        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-//            throw new AuthenticateException();
-//        }
-//        Warehouses warehouse = warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-//        if(!warehouse.getUserId().equals(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))))) {
-//            throw new WarehouseInvalidAccessException();
-//        }
-//        if(warehouse.getInsuranceId() != null) {
-//            insurancesRepository.deleteByInsuranceId(warehouse.getInsuranceId());
-//        }
-//        warehousesRepository.delete_(warehouseId);
-//        JSONObject jsonObject = ObjectMaker.getJSONObject();
-//        jsonObject.put("message", "창고가 정상적으로 삭제되었습니다.");
-//        return jsonObject;
-//    }
+    @Transactional
+    public void delete(Integer warehouseId, String accessToken) {
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+
+        int accessTokenUserId = JwtTokenUtil.extractUserId(accessToken);
+        if(warehouse.getUserId() != accessTokenUserId) throw new WarehouseInvalidAccessException();
+
+        warehousesRepository.delete_(warehouseId);
+    }
 //
 //    @Transactional(readOnly = true)
 //    public JSONObject getSpecificWarehouseInfo(Integer warehouseId) throws Exception {
