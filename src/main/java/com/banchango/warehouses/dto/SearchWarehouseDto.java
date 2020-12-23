@@ -30,7 +30,7 @@ public class SearchWarehouseDto {
         this.warehouseId = warehouse.getId();
         this.name = warehouse.getName();
         this.space = warehouse.getSpace();
-        this.mainImageUrl = mainImage == null ? mainImage.getUrl() : defaultImageUrl;
+        this.mainImageUrl = mainImage != null ? mainImage.getUrl() : defaultImageUrl;
         this.latitude = warehouse.getLatitude();
         this.longitude = warehouse.getLongitude();
         this.warehouseCondition = warehouseConditionNames;

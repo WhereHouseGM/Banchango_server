@@ -6,6 +6,7 @@ import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.AirConditioningType;
+import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.SearchWarehouseDto;
@@ -111,5 +112,15 @@ public class WarehouseApiTest extends ApiTestContext {
 
         List<SearchWarehouseDto> warehouses = response.getBody().getWarehouses();
         assertTrue(warehouses.size() > 0);
+
+        SearchWarehouseDto warehouse = warehouses.get(0);
+
+        assertNotNull(warehouse.getWarehouseId());
+        assertNotNull(warehouse.getName());
+        assertNotNull(warehouse.getSpace());
+        assertNotNull(warehouse.getMainImageUrl());
+        assertNotNull(warehouse.getLatitude());
+        assertNotNull(warehouse.getLongitude());
+        assertNotNull(warehouse.getWarehouseCondition());
     }
 }
