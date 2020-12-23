@@ -36,7 +36,7 @@ public class WarehousesService {
     private String noImageUrl;
 
     @Transactional
-    public void saveWarehouse(NewWarehouseRequestDto newWarehouseRequestDto, String accessToken) {
+    public void saveAgencyWarehouse(NewWarehouseRequestDto newWarehouseRequestDto, String accessToken) {
         UserRole role = JwtTokenUtil.extractUserRole(accessToken);
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
