@@ -27,13 +27,10 @@ public class SearchWarehouseDto {
                 .collect(Collectors.toList());
         WarehouseImages mainImage = warehouse.getMainImage();
 
-        String mainImageUrl = defaultImageUrl;
-        if(mainImage != null) mainImageUrl = mainImage.getUrl();
-
         this.warehouseId = warehouse.getId();
         this.name = warehouse.getName();
         this.space = warehouse.getSpace();
-        this.mainImageUrl = mainImageUrl;
+        this.mainImageUrl = mainImage == null ? mainImage.getUrl() : defaultImageUrl;
         this.latitude = warehouse.getLatitude();
         this.longitude = warehouse.getLongitude();
         this.warehouseCondition = warehouseConditionNames;
