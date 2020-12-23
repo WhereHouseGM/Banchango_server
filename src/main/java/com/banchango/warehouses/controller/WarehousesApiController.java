@@ -3,10 +3,13 @@ package com.banchango.warehouses.controller;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
+import com.banchango.warehouses.dto.SearchWarehouseDto;
+import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,21 +27,17 @@ public class WarehousesApiController {
 
         return new BasicMessageResponseDto("창고가 정상적으로 등록 되었습니다");
     }
-//
-//    // DONE
-//    @GetMapping("/v2/warehouses")
-//    public void getAllWarehouses(@RequestParam(name = "address") String address,
-//                                 @RequestParam(name = "limit") Integer limit,
-//                                 @RequestParam(name = "offset") Integer offset,
-//                                 HttpServletResponse response) {
-//        try {
-//            WriteToClient.send(response, warehousesService.search(address, limit, offset), HttpServletResponse.SC_OK);
-//        } catch(WarehouseSearchException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
+
+    @GetMapping("/v2/warehouses")
+    public SearchWarehouseResponseDto getAllWarehouses(
+            @RequestParam(name = "address") String address,
+            @RequestParam(name = "limit") Integer limit,
+            @RequestParam(name = "offset") Integer offset
+    ) {
+            List<SearchWarehouseDto> warehouses = warehousesService.search(address, limit, offset);
+
+            return new SearchWarehouseResponseDto(warehouses);
+    }
 //
 //    // DONE
 //    @DeleteMapping("/v2/warehouses/{warehouseId}")

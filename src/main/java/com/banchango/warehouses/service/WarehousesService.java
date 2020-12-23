@@ -4,7 +4,6 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.users.UserRole;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
@@ -14,8 +13,11 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
+import com.banchango.warehouses.dto.SearchWarehouseDto;
+import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +42,7 @@ public class WarehousesService {
         UserRole role = JwtTokenUtil.extractUserRole(accessToken);
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
-        Warehouses warehouse = new Warehouses();
-        warehouse.builder()
+        Warehouses warehouse = Warehouses.builder()
                 .userId(userId)
                 .name(newWarehouseRequestDto.getName())
                 .space(newWarehouseRequestDto.getSpace())
@@ -64,7 +65,8 @@ public class WarehousesService {
                 .warehouseType(newWarehouseRequestDto.getWarehouseType())
                 .minReleasePerMonth(newWarehouseRequestDto.getMinReleasePerMonth())
                 .latitude(newWarehouseRequestDto.getLatitude())
-                .longitude(newWarehouseRequestDto.getLongitude());
+                .longitude(newWarehouseRequestDto.getLongitude())
+                .build();
 
         List<DeliveryTypes> deliveryTypes = newWarehouseRequestDto.getDeliveryTypes().stream()
                 .map(name -> new DeliveryTypes(name)).collect(Collectors.toList());
@@ -81,6 +83,8 @@ public class WarehousesService {
         List<WarehouseUsageCautions> warehouseUsageCautions = newWarehouseRequestDto.getWarehouseUsageCautions().stream()
                 .map(content -> new WarehouseUsageCautions(content)).collect(Collectors.toList());
         warehouse.setWarehouseUsageCautions(warehouseUsageCautions);
+
+        warehousesRepository.save(warehouse);
     }
 
 //    private Warehouses toWarehouseEntityWithInsurance(WarehouseInsertRequestDto wrapperDto, Integer insuranceId, Integer userId) {
@@ -158,27 +162,19 @@ public class WarehousesService {
 //        return insurancesRepository.save(insurance).getInsuranceId();
 //    }
 //
-//    @Transactional(readOnly = true)
-//    public JSONObject search(String address, Integer limit, Integer offset) throws WarehouseSearchException{
-//        JSONObject jsonObject = ObjectMaker.getJSONObject();
-//        JSONArray jsonArray = ObjectMaker.getJSONArray();
-//        PageRequest request = PageRequest.of(limit, offset);
-//        List<WarehouseSearchResponseDto> warehouses = warehousesRepository.findByAddressContaining(address, request).stream().map(WarehouseSearchResponseDto::new).collect(Collectors.toList());
-//        if(warehouses.size() == 0) throw new WarehouseSearchException();
-//        for(WarehouseSearchResponseDto searchResponseDto : warehouses) {
-//            WarehouseLocationDto locationDto = new WarehouseLocationDto(warehouseLocationsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()));
-//            List<WarehouseTypesDto> typesDtos = warehouseConditionsRepository.findByWarehouseId(searchResponseDto.getWarehouseId()).stream().map(WarehouseTypesDto::new).collect(Collectors.toList());
-//            Optional<WarehouseMainImages> imageOptional = warehouseMainImagesRepository.findByWarehouseId(searchResponseDto.getWarehouseId());
-//            if(imageOptional.isPresent()) {
-//                jsonArray.put(searchResponseDto.toJSONObject(locationDto, imageOptional.get().getMainImageUrl(), typesDtos));
-//            } else {
-//                jsonArray.put(searchResponseDto.toJSONObject(locationDto, noImageUrl, typesDtos));
-//            }
-//        }
-//        jsonObject.put("warehouses", jsonArray);
-//        return jsonObject;
-//    }
-//
+    @Transactional(readOnly = true)
+    public List<SearchWarehouseDto> search(String address, Integer limit, Integer offset) {
+        PageRequest request = PageRequest.of(offset, limit);
+        List<SearchWarehouseDto> warehouses = warehousesRepository.findByAddressContaining(address, request)
+                .stream()
+                .map(SearchWarehouseDto::new)
+                .collect(Collectors.toList());
+
+        if(warehouses.size() == 0) throw new WarehouseSearchException();
+
+        return warehouses;
+    }
+
 //    @Transactional(readOnly = true)
 //    public JSONObject getAgencyWarehouseList(String mainItemType) throws Exception{
 //        JSONObject jsonObject = ObjectMaker.getJSONObject();

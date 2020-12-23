@@ -146,4 +146,11 @@ public class Warehouses {
         this.warehouseType = warehouseType;
         this.minReleasePerMonth = minReleasePerMonth;
     }
+
+    public WarehouseImages getMainImage() {
+        for(WarehouseImages image : warehouseImages) {
+            if(image.getIsMain() == 1) return image;
+        }
+        return null;
+    }
 }
