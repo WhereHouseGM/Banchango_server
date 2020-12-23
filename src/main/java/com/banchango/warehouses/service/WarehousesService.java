@@ -167,7 +167,7 @@ public class WarehousesService {
         PageRequest request = PageRequest.of(offset, limit);
         List<SearchWarehouseDto> warehouses = warehousesRepository.findByAddressContaining(address, request)
                 .stream()
-                .map(SearchWarehouseDto::new)
+                .map(warehouse -> new SearchWarehouseDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
 
         if(warehouses.size() == 0) throw new WarehouseSearchException();

@@ -20,14 +20,14 @@ public class SearchWarehouseDto {
     private Double longitude;
     private List<WarehouseCondition> warehouseCondition;
 
-    public SearchWarehouseDto(Warehouses warehouse) {
+    public SearchWarehouseDto(Warehouses warehouse, String defaultImageUrl) {
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
                 .stream()
                 .map(condition -> condition.getCondition())
                 .collect(Collectors.toList());
         WarehouseImages mainImage = warehouse.getMainImage();
 
-        String mainImageUrl = null;
+        String mainImageUrl = defaultImageUrl;
         if(mainImage != null) mainImageUrl = mainImage.getUrl();
 
         this.warehouseId = warehouse.getId();
