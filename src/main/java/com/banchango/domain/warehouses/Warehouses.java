@@ -97,27 +97,27 @@ public class Warehouses {
     private Double longitude;
 
     @Setter
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<DeliveryTypes> deliveryTypes = new ArrayList<>();
 
     @Setter
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
 
     @Setter
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseFacilityUsages> warehouseFacilityUsages = new ArrayList<>();
 
     @Setter
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
 
     @Setter
-    @OneToMany(mappedBy = "warehouse")
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
