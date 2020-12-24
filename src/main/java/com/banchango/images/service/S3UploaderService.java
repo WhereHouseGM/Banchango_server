@@ -6,20 +6,19 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.InternalServerErrorException;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouseimages.WarehouseImagesRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.images.dto.ImageInfoResponseDto;
-import com.banchango.warehouses.exception.WarehouseExtraImageLimitException;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
-import com.banchango.warehouses.exception.WarehouseMainImageAlreadyRegisteredException;
+import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -77,6 +76,15 @@ public class S3UploaderService {
         }
     }
 
+    private void deleteFile(final String fileName) {
+        final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
+        try {
+            s3Client.deleteObject(deleteObjectRequest);
+        } catch(Exception exception) {
+            throw new InternalServerErrorException();
+        }
+    }
+
     private boolean isUserAuthenticatedToModifyWarehouseInfo(Integer userId, Integer warehouseId) {
         List<Warehouses> warehouses = warehousesRepository.findByUserId(userId);
         for(Warehouses warehouse : warehouses) {
@@ -119,14 +127,19 @@ public class S3UploaderService {
         return new ImageInfoResponseDto(savedImage);
     }
 
-//    private void deleteFileOnS3(final String fileName) throws FileRemoveException {
-//        final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
-//        try {
-//            s3Client.deleteObject(deleteObjectRequest);
-//        } catch(Exception exception) {
-//            throw new FileRemoveException();
-//        }
-//    }
+    @Transactional
+    public BasicMessageResponseDto deleteMainImage(String fileName, String token, Integer warehouseId) {
+        if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
+            throw new WarehouseInvalidAccessException();
+        }
+        if(warehouseImagesRepository.findByUrlContaining(fileName).isPresent()) {
+            warehouseImagesRepository.deleteByUrlContaining(fileName);
+            deleteFile(fileName);
+            return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        } else {
+            throw new WarehouseMainImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
+        }
+    }
 //
 //    private void checkTokenAndWarehouseId(String token, Integer warehouseId) throws Exception {
 //        Warehouses warehouse = warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);

@@ -1,5 +1,6 @@
 package com.banchango.images.controller;
 
+import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
@@ -32,6 +33,15 @@ public class ImageController {
                                                 @RequestAttribute(name = "accessToken") String accessToken,
                                                 @PathVariable Integer warehouseId) {
         return s3UploaderService.uploadMainImage(multipartFile, accessToken, warehouseId);
+    }
+
+    @ValidateRequired
+    @DeleteMapping("/v3/images/delete/{warehouseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public BasicMessageResponseDto deleteMainImage(@RequestParam(name = "file") String fileName,
+                                                   @RequestAttribute(name = "accessToken") String accessToken,
+                                                   @PathVariable Integer warehouseId) {
+        return s3UploaderService.deleteMainImage(fileName, accessToken, warehouseId);
     }
 
 //    // DONE
