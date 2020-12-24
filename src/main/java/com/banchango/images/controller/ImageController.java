@@ -1,12 +1,8 @@
 package com.banchango.images.controller;
-//import com.banchango.auth.exception.AuthenticateException;
-import com.banchango.auth.token.JwtTokenUtil;
+
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
-//import com.banchango.tools.ObjectMaker;
-//import com.banchango.tools.WriteToClient;
-//import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -38,24 +34,6 @@ public class ImageController {
         return s3UploaderService.uploadMainImage(multipartFile, accessToken, warehouseId);
     }
 
-//    // DONE
-//    @PostMapping("/v2/images/upload/{warehouseId}")
-//    @ResponseBody
-//    public void upload(@RequestPart(name = "file") MultipartFile multipartFile, HttpServletResponse response,
-//                       @RequestHeader(name = "Authorization") String bearerToken, @PathVariable Integer warehouseId) {
-//        try {
-//            WriteToClient.send(response, s3UploaderService.upload(multipartFile, bearerToken, warehouseId), HttpServletResponse.SC_OK);
-//        } catch(AuthenticateException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-//        } catch(WarehouseInvalidAccessException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
-//        } catch(WarehouseAttachmentLimitException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_ACCEPTABLE);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
-//
 //    // DONE
 //    @DeleteMapping("/v2/images/delete")
 //    public void deleteImage(@RequestHeader(name = "Authorization") String bearerToken, @RequestParam(name = "warehouseId") Integer warehouseId,

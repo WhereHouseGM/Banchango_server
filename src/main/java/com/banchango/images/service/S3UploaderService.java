@@ -9,17 +9,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
-//import com.banchango.auth.exception.AuthenticateException;
-//import com.banchango.auth.token.JwtTokenUtil;
-//import com.banchango.domain.warehouseattachments.WarehouseAttachments;
-//import com.banchango.domain.warehouseattachments.WarehouseAttachmentsRepository;
-//import com.banchango.domain.warehousemainimages.WarehouseMainImages;
-//import com.banchango.domain.warehousemainimages.WarehouseMainImagesRepository;
-//import com.banchango.domain.warehouses.Warehouses;
-//import com.banchango.domain.warehouses.WarehousesRepository;
-//import com.banchango.images.exception.FileRemoveException;
-//import com.banchango.tools.ObjectMaker;
-//import com.banchango.warehouses.exception.*;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.exception.InternalServerErrorException;
 import com.banchango.domain.warehouseimages.WarehouseImages;
@@ -130,22 +119,6 @@ public class S3UploaderService {
         return new ImageInfoResponseDto(savedImage);
     }
 
-//    @Transactional
-//    public JSONObject upload(MultipartFile multipartFile, String token, Integer warehouseId) throws Exception {
-//        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-//            throw new AuthenticateException();
-//        }
-//        if(!isUserAuthenticatedToAccessWarehouseInfo(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))), warehouseId))  {
-//            throw new WarehouseInvalidAccessException();
-//        }
-//        checkAttachmentsLimitSize(warehouseId);
-//        String uploadedImageUrl = uploadFile(multipartFile);
-//        saveAttachment(uploadedImageUrl, warehouseId);
-//        JSONObject jsonObject = ObjectMaker.getJSONObject();
-//        jsonObject.put("message", "파일 업로드에 성공했습니다.");
-//        jsonObject.put("url", uploadedImageUrl);
-//        return jsonObject;
-//    }
 //    private void deleteFileOnS3(final String fileName) throws FileRemoveException {
 //        final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
 //        try {
@@ -191,15 +164,5 @@ public class S3UploaderService {
 //        warehouseMainImagesRepository.deleteByWarehouseId(warehouseId);
 //        jsonObject.put("message", "창고의 메인 이미지가 정상적으로 삭제되었습니다.");
 //        return jsonObject;
-//    }
-//
-//
-//
-//
-//
-//
-//
-//    private void checkAttachmentsLimitSize(Integer warehouseId) throws WarehouseAttachmentLimitException {
-//        if(warehouseAttachmentsRepository.findByWarehouseId(warehouseId).size() >= 5) throw new WarehouseAttachmentLimitException();
 //    }
 }
