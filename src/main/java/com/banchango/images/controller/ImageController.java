@@ -41,25 +41,15 @@ public class ImageController {
     public BasicMessageResponseDto deleteMainImage(@RequestParam(name = "file") String fileName,
                                                    @RequestAttribute(name = "accessToken") String accessToken,
                                                    @PathVariable Integer warehouseId) {
-        return s3UploaderService.deleteMainImage(fileName, accessToken, warehouseId);
+        return s3UploaderService.deleteExtraImage(fileName, accessToken, warehouseId);
     }
 
-//    // DONE
-//    @DeleteMapping("/v2/images/delete")
-//    public void deleteImage(@RequestHeader(name = "Authorization") String bearerToken, @RequestParam(name = "warehouseId") Integer warehouseId,
-//                             @RequestParam(name = "file") String imageName, HttpServletResponse response) {
-//        try {
-//            WriteToClient.send(response, s3UploaderService.deleteImage(bearerToken, imageName, warehouseId), HttpServletResponse.SC_OK);
-//        } catch(AuthenticateException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-//        } catch(WarehouseInvalidAccessException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
-//        } catch(WarehouseAttachmentNotFoundException | WarehouseIdNotFoundException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
+    @ValidateRequired
+    @DeleteMapping("/v3/images/delete/main/{warehouseId")
+    public BasicMessageResponseDto deleteMainImage(@RequestAttribute(name = "accessToken") String accessToken,
+                                                   @PathVariable Integer warehouseId) {
+        return s3UploaderService.deleteMainImage(accessToken, warehouseId);
+    }
 //
 //    // DONE
 //    @DeleteMapping("/v2/images/delete/main/{warehouseId}")

@@ -128,7 +128,7 @@ public class S3UploaderService {
     }
 
     @Transactional
-    public BasicMessageResponseDto deleteMainImage(String fileName, String token, Integer warehouseId) {
+    public BasicMessageResponseDto deleteExtraImage(String fileName, String token, Integer warehouseId) {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
@@ -137,34 +137,25 @@ public class S3UploaderService {
             deleteFile(fileName);
             return new BasicMessageResponseDto("삭제에 성공했습니다.");
         } else {
-            throw new WarehouseMainImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
+            throw new WarehouseExtraImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
         }
     }
-//
-//    private void checkTokenAndWarehouseId(String token, Integer warehouseId) throws Exception {
-//        Warehouses warehouse = warehousesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-//        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-//            throw new AuthenticateException();
-//        }
-//        Integer userIdInToken = Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token)));
-//        if(!userIdInToken.equals(warehouse.getUserId())) {
-//            throw new WarehouseInvalidAccessException();
-//        }
-//    }
-//
-//    @Transactional
-//    public JSONObject deleteImage(String token, String imageName, Integer warehouseId) throws Exception {
-//        checkTokenAndWarehouseId(token, warehouseId);
-//        JSONObject jsonObject = ObjectMaker.getJSONObject();
-//        if(warehouseAttachmentsRepository.findByUrlContaining(imageName).isPresent()) {
-//            warehouseAttachmentsRepository.deleteByUrlContaining(imageName);
-//            deleteFileOnS3(imageName);
-//            jsonObject.put("message", "삭제에 성공했습니다.");
-//            return jsonObject;
-//        } else {
-//            throw new WarehouseAttachmentNotFoundException();
-//        }
-//    }
+
+    @Transactional
+    public BasicMessageResponseDto deleteMainImage(String token, Integer warehouseId) {
+        if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
+            throw new WarehouseInvalidAccessException();
+        }
+        if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, 1).size() >= 1) {
+            WarehouseImages image = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, 1).get(0);
+            String[] splitTemp = image.getUrl().split("/");
+            String fileName = splitTemp[splitTemp.length - 1];
+            deleteFile(fileName);
+            return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        } else {
+            throw new WarehouseMainImageNotFoundException();
+        }
+    }
 //
 //    @Transactional
 //    public JSONObject deleteMainImage(String token, Integer warehouseId) throws Exception {
