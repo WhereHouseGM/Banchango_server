@@ -237,7 +237,7 @@ public class WarehousesService {
         int accessTokenUserId = JwtTokenUtil.extractUserId(accessToken);
         if(warehouse.getUserId() != accessTokenUserId) throw new WarehouseInvalidAccessException();
 
-        warehousesRepository.delete_(warehouseId);
+        warehousesRepository.deleteById(warehouseId);
     }
 //
 //    @Transactional(readOnly = true)
