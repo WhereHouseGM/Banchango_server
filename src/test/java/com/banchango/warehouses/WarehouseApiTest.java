@@ -10,6 +10,7 @@ import com.banchango.domain.warehouses.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
+import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import org.json.JSONObject;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,7 @@ public class WarehouseApiTest extends ApiTestContext {
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .build();
 
-        ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
 
         List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
         assertTrue(warehouses.size() > 0);
@@ -169,8 +170,8 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getMainItemType());
 
         for(WarehouseSearchDto _warehouse : warehouses) {
-            String address = _warehouse.getAddress();
-            assertTrue(address.contains(addressQuery));
+            String address = _warehouse.getAddress().toLowerCase();
+            assertTrue(address.contains(addressQuery.toLowerCase()));
         }
 
         warehouseRepository.delete(tempWarehouse);
@@ -182,7 +183,7 @@ public class WarehouseApiTest extends ApiTestContext {
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/warehouses?page=0&size=4"))
                 .build();
 
-        ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
 
         List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
         assertTrue(warehouses.size() > 0);
@@ -240,7 +241,6 @@ public class WarehouseApiTest extends ApiTestContext {
         return warehouseRepository.save(warehouse);
     }
     
-    public void search_warehouse_responseIsOk_IfAllConditionsAreRight() 
     @Test
     public void get_warehouseDetail_responseIsOk_IfAllConditionsAreRight() {
         Warehouses _warehouse = saveWarehouse();
