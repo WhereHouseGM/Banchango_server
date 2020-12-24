@@ -2,6 +2,7 @@ package com.banchango.warehouses.controller;
 
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
+import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
 import com.banchango.warehouses.dto.SimpleWarehouseDto;
 import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
@@ -68,19 +69,13 @@ public class WarehousesApiController {
 //        }
 //    }
 //
-//    // DONE
-//    @GetMapping("/v2/warehouses/{warehouseId}")
-//    public void getWarehouseById(@PathVariable Integer warehouseId, HttpServletResponse response) {
-//        try {
-//             WriteToClient.send(response, warehousesService.getSpecificWarehouseInfo(warehouseId), HttpServletResponse.SC_OK);
-//        } catch(AuthenticateException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-//        } catch(WarehouseIdNotFoundException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
+    @GetMapping("/v2/warehouses/{warehouseId}")
+    public WarehouseDetailResponseDto getWarehouseById(
+        @PathVariable Integer warehouseId
+    ) {
+        return warehousesService.getSpecificWarehouseInfo(warehouseId);
+    }
+
 //
 //    @GetMapping("/v2/warehouses/agency")
 //    public void getList(@RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size, HttpServletResponse response) {

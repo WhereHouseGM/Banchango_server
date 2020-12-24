@@ -13,6 +13,7 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
+import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.dto.SimpleWarehouseDto;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -224,11 +226,13 @@ public class WarehousesService {
 
         warehousesRepository.deleteById(warehouseId);
     }
-//
-//    @Transactional(readOnly = true)
-//    public JSONObject getSpecificWarehouseInfo(Integer warehouseId) throws Exception {
-//        return createJSONObjectOfSpecificWarehouseInfo(warehouseId);
-//    }
+
+    @Transactional(readOnly = true)
+    public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+
+        return new WarehouseDetailResponseDto(warehouse, noImageUrl);
+    }
 //
 //    private JSONArray createJSONArrayOfWarehouseConditions(Integer warehouseId) {
 //        JSONArray jsonArray = ObjectMaker.getJSONArray();
@@ -238,7 +242,7 @@ public class WarehousesService {
 //        }
 //        return jsonArray;
 //    }
-//
+
 //    private JSONArray createJSONArrayOfWarehouseFacilityUsages(Integer warehouseId) {
 //        JSONArray jsonArray = ObjectMaker.getJSONArray();
 //        List<WarehouseFacilityUsagesResponseDto> responseDtos = warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsagesResponseDto::new).collect(Collectors.toList());
