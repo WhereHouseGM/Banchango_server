@@ -183,6 +183,19 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
+    public void get_warehouseByAddress_responseIsNoContent_IfWarehouseNotExist() {
+        warehouseRepository.deleteAll();
+        String addressQuery = "addr";
+        String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .build();
+
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
         Warehouses tempWarehouse = saveWarehouse();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
@@ -213,39 +226,17 @@ public class WarehouseApiTest extends ApiTestContext {
         warehouseRepository.delete(tempWarehouse);
     }
 
-
-    private Warehouses saveWarehouse() {
-        int userId = JwtTokenUtil.extractUserId(accessToken);
-
-        Warehouses warehouse = Warehouses.builder()
-                .userId(userId)
-                .name("NAME")
-                .space(123)
-                .address("address")
-                .addressDetail("addressDetail")
-                .description("description")
-                .availableWeekdays(1)
-                .openAt("06:00")
-                .closeAt("18:00")
-                .availableTimeDetail("availableTimeDetail")
-                .insurance("insurance")
-                .cctvExist(1)
-                .securityCompanyName("name")
-                .doorLockExist(1)
-                .airConditioningType(AirConditioningType.HEATING)
-                .workerExist(1)
-                .canPickup(1)
-                .canPark(1)
-                .mainItemType(ItemTypeName.CLOTH)
-                .warehouseType(WarehouseType.THREEPL)
-                .minReleasePerMonth(2)
-                .latitude(22.2)
-                .longitude(22.2)
+    @Test
+    public void get_warehouseForMain_responseIsNoContent_IfWarehouseNotExist() {
+        warehouseRepository.deleteAll();
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
-        return warehouseRepository.save(warehouse);
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
-    
+
     @Test
     public void get_warehouseDetail_responseIsOk_IfAllConditionsAreRight() {
         Warehouses _warehouse = saveWarehouse();
@@ -306,5 +297,37 @@ public class WarehouseApiTest extends ApiTestContext {
         WarehouseDetailResponseDto warehouse = response.getBody();
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    private Warehouses saveWarehouse() {
+        int userId = JwtTokenUtil.extractUserId(accessToken);
+
+        Warehouses warehouse = Warehouses.builder()
+                .userId(userId)
+                .name("NAME")
+                .space(123)
+                .address("address")
+                .addressDetail("addressDetail")
+                .description("description")
+                .availableWeekdays(1)
+                .openAt("06:00")
+                .closeAt("18:00")
+                .availableTimeDetail("availableTimeDetail")
+                .insurance("insurance")
+                .cctvExist(1)
+                .securityCompanyName("name")
+                .doorLockExist(1)
+                .airConditioningType(AirConditioningType.HEATING)
+                .workerExist(1)
+                .canPickup(1)
+                .canPark(1)
+                .mainItemType(ItemTypeName.CLOTH)
+                .warehouseType(WarehouseType.THREEPL)
+                .minReleasePerMonth(2)
+                .latitude(22.2)
+                .longitude(22.2)
+                .build();
+
+        return warehouseRepository.save(warehouse);
     }
 }
