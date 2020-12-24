@@ -8,6 +8,7 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
+import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.SearchWarehouseDto;
 import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
 import org.json.JSONObject;
@@ -19,7 +20,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -33,7 +33,6 @@ public class WarehouseApiTest extends ApiTestContext {
 
     String accessToken = null;
     Users user = null;
-
     @Before
     public void beforeTest() {
         if(user == null) {
@@ -103,7 +102,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void delete_warehouse_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses warehouse = saveWarehouseBeforeDelete();
+        Warehouses warehouse = saveWarehouse();
         String url = "/v2/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
@@ -138,7 +137,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    private Warehouses saveWarehouseBeforeDelete() {
+    private Warehouses saveWarehouse() {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
         Warehouses warehouse = Warehouses.builder()
@@ -189,5 +188,67 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getLatitude());
         assertNotNull(warehouse.getLongitude());
         assertNotNull(warehouse.getWarehouseCondition());
+    }
+
+    @Test
+    public void get_warehouseDetail_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses _warehouse = saveWarehouse();
+        String url = String.format("/v2/warehouses/%d", _warehouse.getId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+
+        WarehouseDetailResponseDto warehouse = response.getBody();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertNotNull(warehouse.getWarehouseId());
+        assertNotNull(warehouse.getOwnerId());
+        assertNotNull(warehouse.getName());
+        assertNotNull(warehouse.getSpace());
+        assertNotNull(warehouse.getAddress());
+        assertNotNull(warehouse.getAddressDetail());
+        assertNotNull(warehouse.getDescription());
+        assertNotNull(warehouse.getAvailableWeekdays());
+        assertNotNull(warehouse.getOpenAt());
+        assertNotNull(warehouse.getCloseAt());
+        assertNotNull(warehouse.getAvailableTimeDetail());
+        assertNotNull(warehouse.getInsurance());
+        assertNotNull(warehouse.getCctvExist());
+        assertNotNull(warehouse.getSecurityCompanyName());
+        assertNotNull(warehouse.getDoorLockExist());
+        assertNotNull(warehouse.getAirConditioningType());
+        assertNotNull(warehouse.getWorkerExist());
+        assertNotNull(warehouse.getCanPickup());
+        assertNotNull(warehouse.getCanPark());
+        assertNotNull(warehouse.getMainItemType());
+        assertNotNull(warehouse.getWarehouseType());
+        assertNotNull(warehouse.getMinReleasePerMonth());
+        assertNotNull(warehouse.getLatitude());
+        assertNotNull(warehouse.getLongitude());
+        assertNotNull(warehouse.getMainImageUrl());
+        assertNotNull(warehouse.getDeliveryTypes());
+        assertNotNull(warehouse.getWarehouseCondition());
+        assertNotNull(warehouse.getWarehouseFacilityUsages());
+        assertNotNull(warehouse.getWarehouseUsageCautions());
+        assertNotNull(warehouse.getImages());
+    }
+
+    @Test
+    public void get_warehouseDetail_responseIsNoContent_IfWarehouseNotExist() {
+        String url = String.format("/v2/warehouses/%d", 99999);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+
+        WarehouseDetailResponseDto warehouse = response.getBody();
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 }
