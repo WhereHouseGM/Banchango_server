@@ -93,7 +93,7 @@ public class WarehouseApiTest extends ApiTestContext {
         requestBody.put("warehouseFacilityUsages", new String[]{"one", "thow", "three"});
         requestBody.put("warehouseUsageCautions", new String[]{"one", "thow", "three"});
 
-        RequestEntity<String> request = RequestEntity.post(URI.create("/v2/warehouses"))
+        RequestEntity<String> request = RequestEntity.post(URI.create("/v3/warehouses"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer "+accessToken)
                 .body(requestBody.toString());
@@ -107,7 +107,7 @@ public class WarehouseApiTest extends ApiTestContext {
     @Test
     public void delete_warehouse_responseIsOk_IfAllConditionsAreRight() {
         Warehouses warehouse = saveWarehouse();
-        String url = "/v2/warehouses/"+warehouse.getId();
+        String url = "/v3/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
                 .header("Authorization", "Bearer "+accessToken)
@@ -123,7 +123,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void delete_warehouse_responseIsUnAuthorized_IfAuthorizationIsEmpty() {
-        RequestEntity<Void> request = RequestEntity.delete(URI.create("/v2/warehouses/99999"))
+        RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/99999"))
                 .build();
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
@@ -134,7 +134,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void delete_warehouse_responseIsNoContent_IfWarehouseNotExist() {
-        RequestEntity<Void> request = RequestEntity.delete(URI.create("/v2/warehouses/0"))
+        RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/0"))
                 .header("Authorization", "Bearer "+accessToken)
                 .build();
 
@@ -148,7 +148,7 @@ public class WarehouseApiTest extends ApiTestContext {
         Warehouses tempWarehouse = saveWarehouse();
 
         String addressQuery = "addr";
-        String url = String.format("/v2/warehouses?address=%s&page=0&size=4", addressQuery);
+        String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .build();
 
@@ -183,9 +183,22 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
+    public void get_warehouseByAddress_responseIsNoContent_IfWarehouseNotExist() {
+        warehouseRepository.deleteAll();
+        String addressQuery = "addr";
+        String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .build();
+
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
         Warehouses tempWarehouse = saveWarehouse();
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/warehouses?page=0&size=4"))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
         ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
@@ -213,43 +226,21 @@ public class WarehouseApiTest extends ApiTestContext {
         warehouseRepository.delete(tempWarehouse);
     }
 
-
-    private Warehouses saveWarehouse() {
-        int userId = JwtTokenUtil.extractUserId(accessToken);
-
-        Warehouses warehouse = Warehouses.builder()
-                .userId(userId)
-                .name("NAME")
-                .space(123)
-                .address("address")
-                .addressDetail("addressDetail")
-                .description("description")
-                .availableWeekdays(1)
-                .openAt("06:00")
-                .closeAt("18:00")
-                .availableTimeDetail("availableTimeDetail")
-                .insurance("insurance")
-                .cctvExist(1)
-                .securityCompanyName("name")
-                .doorLockExist(1)
-                .airConditioningType(AirConditioningType.HEATING)
-                .workerExist(1)
-                .canPickup(1)
-                .canPark(1)
-                .mainItemType(ItemTypeName.CLOTH)
-                .warehouseType(WarehouseType.THREEPL)
-                .minReleasePerMonth(2)
-                .latitude(22.2)
-                .longitude(22.2)
+    @Test
+    public void get_warehouseForMain_responseIsNoContent_IfWarehouseNotExist() {
+        warehouseRepository.deleteAll();
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
-        return warehouseRepository.save(warehouse);
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
-    
+
     @Test
     public void get_warehouseDetail_responseIsOk_IfAllConditionsAreRight() {
         Warehouses _warehouse = saveWarehouse();
-        String url = String.format("/v2/warehouses/%d", _warehouse.getId());
+        String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .header("Authorization", "Bearer " + accessToken)
@@ -295,7 +286,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseDetail_responseIsNoContent_IfWarehouseNotExist() {
-        String url = String.format("/v2/warehouses/%d", 99999);
+        String url = String.format("/v3/warehouses/%d", 0);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .header("Authorization", "Bearer " + accessToken)
@@ -306,5 +297,37 @@ public class WarehouseApiTest extends ApiTestContext {
         WarehouseDetailResponseDto warehouse = response.getBody();
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    private Warehouses saveWarehouse() {
+        int userId = JwtTokenUtil.extractUserId(accessToken);
+
+        Warehouses warehouse = Warehouses.builder()
+                .userId(userId)
+                .name("NAME")
+                .space(123)
+                .address("address")
+                .addressDetail("addressDetail")
+                .description("description")
+                .availableWeekdays(1)
+                .openAt("06:00")
+                .closeAt("18:00")
+                .availableTimeDetail("availableTimeDetail")
+                .insurance("insurance")
+                .cctvExist(1)
+                .securityCompanyName("name")
+                .doorLockExist(1)
+                .airConditioningType(AirConditioningType.HEATING)
+                .workerExist(1)
+                .canPickup(1)
+                .canPark(1)
+                .mainItemType(ItemTypeName.CLOTH)
+                .warehouseType(WarehouseType.THREEPL)
+                .minReleasePerMonth(2)
+                .latitude(22.2)
+                .longitude(22.2)
+                .build();
+
+        return warehouseRepository.save(warehouse);
     }
 }
