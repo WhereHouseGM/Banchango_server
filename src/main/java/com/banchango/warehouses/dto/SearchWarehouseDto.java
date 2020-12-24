@@ -19,12 +19,19 @@ public class SearchWarehouseDto {
     private Double latitude;
     private Double longitude;
     private List<WarehouseCondition> warehouseCondition;
+    private List<String> deliveryTypes;
 
     public SearchWarehouseDto(Warehouses warehouse, String defaultImageUrl) {
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
                 .stream()
                 .map(condition -> condition.getCondition())
                 .collect(Collectors.toList());
+
+        List<String> deliveryTypes = warehouse.getDeliveryTypes()
+                .stream()
+                .map(deliveryType -> deliveryType.getName())
+                .collect(Collectors.toList());
+
         WarehouseImages mainImage = warehouse.getMainImage();
 
         this.warehouseId = warehouse.getId();
@@ -34,5 +41,6 @@ public class SearchWarehouseDto {
         this.latitude = warehouse.getLatitude();
         this.longitude = warehouse.getLongitude();
         this.warehouseCondition = warehouseConditionNames;
+        this.deliveryTypes = deliveryTypes;
     }
 }
