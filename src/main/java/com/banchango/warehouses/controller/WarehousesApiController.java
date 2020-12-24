@@ -35,16 +35,16 @@ public class WarehousesApiController {
     @GetMapping("/v3/warehouses")
     public WarehouseSearchResponseDto getAllWarehouses(
             @RequestParam(required = false) String address,
-            @RequestParam(required = false, name = "mainitem") ItemTypeName mainItemType,
+            @RequestParam(required = false) ItemTypeName category,
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {
         List<WarehouseSearchDto> warehouses;
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        if(address != null && mainItemType == null) warehouses = warehousesService.getWarehousesByAddress(address, pageRequest);
-        else if(address == null && mainItemType != null) warehouses = warehousesService.getWarehousesByMainItemType(mainItemType, pageRequest);
-        else if(address == null && mainItemType == null) warehouses = warehousesService.getWarehouses(pageRequest);
+        if(address != null && category == null) warehouses = warehousesService.getWarehousesByAddress(address, pageRequest);
+        else if(address == null && category != null) warehouses = warehousesService.getWarehousesByMainItemType(category, pageRequest);
+        else if(address == null && category == null) warehouses = warehousesService.getWarehouses(pageRequest);
         else throw new BadRequestException("mainitem 또는 address 하나만 있어야합니다.");
 
         return new WarehouseSearchResponseDto(warehouses);
