@@ -38,8 +38,8 @@ public class WarehousesApiController {
         List<SearchWarehouseDto> warehouses = null;
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        if(address != null) warehousesService.searchWarehouses(address, pageRequest);
-        else warehousesService.getWarehouses(pageRequest);
+        if(address != null) warehouses = warehousesService.searchWarehouses(address, pageRequest);
+        else warehouses = warehousesService.getWarehouses(pageRequest);
 
         return new SearchWarehouseResponseDto(warehouses);
     }
