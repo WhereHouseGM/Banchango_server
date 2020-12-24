@@ -16,7 +16,7 @@ import com.banchango.warehouses.dto.NewWarehouseRequestDto;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
-import com.banchango.warehouses.dto.SearchWarehouseDto;
+import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -167,11 +166,11 @@ public class WarehousesService {
 //    }
 //
     @Transactional(readOnly = true)
-    public List<SearchWarehouseDto> search(String address, Integer limit, Integer offset) {
+    public List<WarehouseSearchDto> search(String address, Integer limit, Integer offset) {
         PageRequest request = PageRequest.of(offset, limit);
-        List<SearchWarehouseDto> warehouses = warehousesRepository.findByAddressContaining(address, request)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContaining(address, request)
                 .stream()
-                .map(warehouse -> new SearchWarehouseDto(warehouse, noImageUrl))
+                .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
 
         if(warehouses.size() == 0) throw new WarehouseSearchException();

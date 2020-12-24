@@ -9,7 +9,7 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.dto.SearchWarehouseDto;
+import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
 import org.json.JSONObject;
 import org.junit.*;
@@ -176,10 +176,10 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
 
-        List<SearchWarehouseDto> warehouses = response.getBody().getWarehouses();
+        List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
         assertTrue(warehouses.size() > 0);
 
-        SearchWarehouseDto warehouse = warehouses.get(0);
+        WarehouseSearchDto warehouse = warehouses.get(0);
 
         assertNotNull(warehouse.getWarehouseId());
         assertNotNull(warehouse.getName());

@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class SearchWarehouseResponseDto {
-    private List<SearchWarehouseDto> warehouses = new ArrayList<>();
+    private List<WarehouseSearchDto> warehouses = new ArrayList<>();
 }
