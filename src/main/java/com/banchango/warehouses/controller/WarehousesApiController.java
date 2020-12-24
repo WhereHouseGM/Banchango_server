@@ -4,10 +4,11 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
-import com.banchango.warehouses.dto.SearchWarehouseDto;
+import com.banchango.warehouses.dto.SimpleWarehouseDto;
 import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -31,13 +32,17 @@ public class WarehousesApiController {
 
     @GetMapping("/v2/warehouses")
     public SearchWarehouseResponseDto getAllWarehouses(
-            @RequestParam(name = "address") String address,
-            @RequestParam(name = "limit") Integer limit,
-            @RequestParam(name = "offset") Integer offset
+            @RequestParam(required = false) String address,
+            @RequestParam Integer page,
+            @RequestParam Integer size
     ) {
-            List<SearchWarehouseDto> warehouses = warehousesService.search(address, limit, offset);
+        List<SimpleWarehouseDto> warehouses = null;
+        PageRequest pageRequest = PageRequest.of(page, size);
 
-            return new SearchWarehouseResponseDto(warehouses);
+        if(address != null) warehouses = warehousesService.searchWarehouses(address, pageRequest);
+        else warehouses = warehousesService.getWarehouses(pageRequest);
+
+        return new SearchWarehouseResponseDto(warehouses);
     }
 //
     @ValidateRequired
