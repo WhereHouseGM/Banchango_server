@@ -2,12 +2,11 @@ package com.banchango.warehouses;
 
 import com.banchango.ApiTestContext;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.SearchWarehouseDto;
 import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
@@ -103,6 +102,74 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
+    public void delete_warehouse_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses warehouse = saveWarehouseBeforeDelete();
+        String url = "/v2/warehouses/"+warehouse.getId();
+
+        RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
+                .header("Authorization", "Bearer "+accessToken)
+                .build();
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getMessage());
+    }
+
+    @Test
+    public void delete_warehouse_responseIsUnAuthorized_IfAuthorizationIsEmpty() {
+        RequestEntity<Void> request = RequestEntity.delete(URI.create("/v2/warehouses/99999"))
+                .build();
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertNotNull(response.getBody().getMessage());
+    }
+
+    @Test
+    public void delete_warehouse_responseIsNoContent_IfWarehouseNotExist() {
+        RequestEntity<Void> request = RequestEntity.delete(URI.create("/v2/warehouses/99999"))
+                .header("Authorization", "Bearer "+accessToken)
+                .build();
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    private Warehouses saveWarehouseBeforeDelete() {
+        int userId = JwtTokenUtil.extractUserId(accessToken);
+
+        Warehouses warehouse = Warehouses.builder()
+                .userId(userId)
+                .name("NAME")
+                .space(123)
+                .address("address")
+                .addressDetail("addressDetail")
+                .description("description")
+                .availableWeekdays(1)
+                .openAt("06:00")
+                .closeAt("18:00")
+                .availableTimeDetail("availableTimeDetail")
+                .insurance("insurance")
+                .cctvExist(1)
+                .securityCompanyName("name")
+                .doorLockExist(1)
+                .airConditioningType(AirConditioningType.HEATING)
+                .workerExist(1)
+                .canPickup(1)
+                .canPark(1)
+                .mainItemType(ItemTypeName.CLOTH)
+                .warehouseType(WarehouseType.THREEPL)
+                .minReleasePerMonth(2)
+                .latitude(22.2)
+                .longitude(22.2)
+                .build();
+
+        return warehouseRepository.save(warehouse);
+    }
+
     public void search_warehouse_responseIsOk_IfAllConditionsAreRight() {
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/warehouses?address=address&limit=4&offset=0"))
                 .header("Authorization", "Bearer " + accessToken)

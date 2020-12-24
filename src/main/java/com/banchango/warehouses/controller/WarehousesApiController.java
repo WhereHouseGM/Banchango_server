@@ -39,21 +39,16 @@ public class WarehousesApiController {
             return new SearchWarehouseResponseDto(warehouses);
     }
 //
-//    // DONE
-//    @DeleteMapping("/v2/warehouses/{warehouseId}")
-//    public void delete(@PathVariable Integer warehouseId, @RequestHeader(name = "Authorization") String bearerToken, HttpServletResponse response) {
-//        try {
-//            WriteToClient.send(response, warehousesService.delete(warehouseId, bearerToken), HttpServletResponse.SC_OK);
-//        } catch(WarehouseIdNotFoundException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
-//        } catch(AuthenticateException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-//        } catch(WarehouseInvalidAccessException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
+    @ValidateRequired
+    @DeleteMapping("/v2/warehouses/{warehouseId}")
+    public BasicMessageResponseDto delete(
+            @PathVariable Integer warehouseId,
+            @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        warehousesService.delete(warehouseId, accessToken);
+
+        return new BasicMessageResponseDto("창고가 정상적으로 삭제되었습니다.");
+    }
 //
 //    // DONE
 //    @GetMapping("/v2/warehouses/agency/{mainItemType}")
