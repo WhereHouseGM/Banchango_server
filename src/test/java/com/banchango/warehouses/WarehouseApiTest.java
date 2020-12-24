@@ -8,10 +8,8 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
-import com.banchango.warehouses.dto.SimpleWarehouseDto;
-import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
+import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import org.json.JSONObject;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,10 +148,10 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
 
-        List<SimpleWarehouseDto> warehouses = response.getBody().getWarehouses();
+        List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
         assertTrue(warehouses.size() > 0);
 
-        SimpleWarehouseDto warehouse = warehouses.get(0);
+        WarehouseSearchDto warehouse = warehouses.get(0);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -170,7 +168,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getDeliveryTypes());
         assertNotNull(warehouse.getMainItemType());
 
-        for(SimpleWarehouseDto _warehouse : warehouses) {
+        for(WarehouseSearchDto _warehouse : warehouses) {
             String address = _warehouse.getAddress();
             assertTrue(address.contains(addressQuery));
         }
@@ -186,10 +184,10 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
 
-        List<SimpleWarehouseDto> warehouses = response.getBody().getWarehouses();
+        List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
         assertTrue(warehouses.size() > 0);
 
-        SimpleWarehouseDto warehouse = warehouses.get(0);
+        WarehouseSearchDto warehouse = warehouses.get(0);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
 

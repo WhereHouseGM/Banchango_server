@@ -4,7 +4,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
-import com.banchango.warehouses.dto.SimpleWarehouseDto;
+import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class WarehousesApiController {
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {
-        List<SimpleWarehouseDto> warehouses = null;
+        List<WarehouseSearchDto> warehouses = null;
         PageRequest pageRequest = PageRequest.of(page, size);
 
         if(address != null) warehouses = warehousesService.searchWarehouses(address, pageRequest);

@@ -16,7 +16,7 @@ import com.banchango.warehouses.dto.NewWarehouseRequestDto;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
-import com.banchango.warehouses.dto.SimpleWarehouseDto;
+import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.exception.WarehouseNotFoundException;
 import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -168,10 +167,10 @@ public class WarehousesService {
 //    }
 //
     @Transactional(readOnly = true)
-    public List<SimpleWarehouseDto> searchWarehouses(String address, PageRequest pageRequest) {
-        List<SimpleWarehouseDto> warehouses = warehousesRepository.findByAddressContaining(address, pageRequest)
+    public List<WarehouseSearchDto> searchWarehouses(String address, PageRequest pageRequest) {
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContaining(address, pageRequest)
                 .stream()
-                .map(warehouse -> new SimpleWarehouseDto(warehouse, noImageUrl))
+                .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
 
         if(warehouses.size() == 0) throw new WarehouseSearchException();
@@ -206,10 +205,10 @@ public class WarehousesService {
 //    }
 //
     @Transactional(readOnly = true)
-    public List<SimpleWarehouseDto> getWarehouses(PageRequest pageRequest) {
-        List<SimpleWarehouseDto> warehouses = warehousesRepository.findAll(pageRequest).getContent()
+    public List<WarehouseSearchDto> getWarehouses(PageRequest pageRequest) {
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findAll(pageRequest).getContent()
                 .stream()
-                .map(warehouse -> new SimpleWarehouseDto(warehouse, noImageUrl))
+                .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
 
         if(warehouses.size() == 0) throw new WarehouseNotFoundException();
