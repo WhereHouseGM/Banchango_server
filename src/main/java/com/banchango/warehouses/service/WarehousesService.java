@@ -8,6 +8,7 @@ import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
+import com.banchango.domain.warehouses.ItemTypeName;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
@@ -167,7 +168,7 @@ public class WarehousesService {
 //    }
 //
     @Transactional(readOnly = true)
-    public List<WarehouseSearchDto> searchWarehouses(String address, PageRequest pageRequest) {
+    public List<WarehouseSearchDto> getWarehousesByAddress(String address, PageRequest pageRequest) {
         List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContaining(address, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
@@ -178,32 +179,18 @@ public class WarehousesService {
         return warehouses;
     }
 
-//    @Transactional(readOnly = true)
-//    public JSONObject getAgencyWarehouseList(String mainItemType) throws Exception{
-//        JSONObject jsonObject = ObjectMaker.getJSONObject();
-//        JSONArray jsonArray = ObjectMaker.getJSONArray();
-//        List<Integer> warehouseIdList = agencyMainItemTypesRepository.getWarehouseIdsByWarehouseType(mainItemType);
-//        if(warehouseIdList.size() == 0) throw new WarehouseNotFoundException();
-//        for(Integer warehouseId : warehouseIdList) {
-//            AgencyWarehouseListResponseDto dto = warehousesRepository.findByWarehouseId(warehouseId).map(AgencyWarehouseListResponseDto::new).orElseThrow(WarehouseIdNotFoundException::new);
-//            AgencyWarehouseDetails detail = agencyWarehouseDetailsRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-//            dto.setWarehouseType(detail.getType());
-//            dto.setMinReleasePerMonth(detail.getMinReleasePerMonth());
-//            dto.setDeliveryTypes(new DeliveryTypeResponseDto(deliveryTypesRepository.findByAgencyWarehouseDetailId(detail.getAgencyWarehouseDetailId())).getDeliveryType());
-//            dto.setWarehouseConditions(warehouseConditionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseTypesDto::new).collect(Collectors.toList()));
-//            Optional<WarehouseMainImages> imagesOptional = warehouseMainImagesRepository.findByWarehouseId(warehouseId);
-//            if (imagesOptional.isPresent()) {
-//                dto.setMainImageUrl(imagesOptional.get().getMainImageUrl());
-//            } else {
-//                dto.setMainImageUrl(noImageUrl);
-//            }
-//            JSONObject listObject = dto.toJSONObject(mainItemType);
-//            jsonArray.put(listObject);
-//        }
-//        jsonObject.put("warehouses", jsonArray);
-//        return jsonObject;
-//    }
-//
+    @Transactional(readOnly = true)
+    public List<WarehouseSearchDto> getWarehousesByMainItemType(ItemTypeName mainItemType, PageRequest pageRequest) {
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemType(mainItemType, pageRequest)
+                .stream()
+                .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
+                .collect(Collectors.toList());
+
+        if(warehouses.size() == 0) throw new WarehouseNotFoundException();
+
+        return warehouses;
+    }
+
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehouses(PageRequest pageRequest) {
         List<WarehouseSearchDto> warehouses = warehousesRepository.findAll(pageRequest).getContent()

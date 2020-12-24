@@ -1,7 +1,9 @@
 package com.banchango.warehouses.controller;
 
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.exception.BadRequestException;
 import com.banchango.common.interceptor.ValidateRequired;
+import com.banchango.domain.warehouses.ItemTypeName;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
@@ -33,14 +35,17 @@ public class WarehousesApiController {
     @GetMapping("/v3/warehouses")
     public WarehouseSearchResponseDto getAllWarehouses(
             @RequestParam(required = false) String address,
+            @RequestParam(required = false, name = "mainitem") ItemTypeName mainItemType,
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {
         List<WarehouseSearchDto> warehouses;
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        if(address != null) warehouses = warehousesService.searchWarehouses(address, pageRequest);
-        else warehouses = warehousesService.getWarehouses(pageRequest);
+        if(address != null && mainItemType == null) warehouses = warehousesService.getWarehousesByAddress(address, pageRequest);
+        else if(address == null && mainItemType != null) warehouses = warehousesService.getWarehousesByMainItemType(mainItemType, pageRequest);
+        else if(address == null && mainItemType == null) warehouses = warehousesService.getWarehouses(pageRequest);
+        else throw new BadRequestException("mainitem 또는 address 하나만 있어야합니다.");
 
         return new WarehouseSearchResponseDto(warehouses);
     }

@@ -19,4 +19,5 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
     List<Warehouses> findByAddressContaining(String address, Pageable pageable);
     Optional<Warehouses> findById(Integer warehouseId);
     List<Warehouses> findByUserId(Integer userId);
+    List<Warehouses> findByMainItemType(ItemTypeName mainItemType, Pageable pageable);
 }
