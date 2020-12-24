@@ -60,7 +60,7 @@ public class UserApiTest {
     public void userInfo_responseIsOk_IfAllConditionsAreRight() {
         Integer userId = getUserIdByEmail(TEST_EMAIL);
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
@@ -79,7 +79,7 @@ public class UserApiTest {
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsAbsent() {
         Integer userId = getUserIdByEmail(TEST_EMAIL);
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId)).build();
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -88,7 +88,7 @@ public class UserApiTest {
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
         Integer userId = getUserIdByEmail(TEST_EMAIL);
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/" + userId)).build();
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -97,7 +97,7 @@ public class UserApiTest {
     @Test
     public void userInfo_responseIsNoContent_IfUserIdIsWrong() {
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/users/0"))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -110,7 +110,7 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "123");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-in");
+        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-in");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().contains("accessToken"));
@@ -136,7 +136,7 @@ public class UserApiTest {
         requestBody.put("email", "WRONG_EMAIL");
         requestBody.put("password", "123");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-in");
+        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-in");
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
@@ -147,7 +147,7 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "1234");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-in");
+        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-in");
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
@@ -159,7 +159,7 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("pass", "123");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-in");
+        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-in");
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -175,7 +175,7 @@ public class UserApiTest {
         requestBody.put("phoneNumber", "010234234");
         requestBody.put("companyName", "TEST_COMP_2");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-up");
+        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
 
 
         Users savedUser = usersRepository.findByEmail("TEST_EMAIL_2").orElseThrow(UserEmailNotFoundException::new);
@@ -209,7 +209,7 @@ public class UserApiTest {
         requestBody.put("phoneNumber", "010234234");
         requestBody.put("companyName", "TEST_COMP_2");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-up");
+        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
@@ -226,7 +226,7 @@ public class UserApiTest {
         requestBody.put("phoneNumber", "010234234");
         requestBody.put("companyName", "TEST_COMP_2");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v2/users/sign-up");
+        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -245,7 +245,7 @@ public class UserApiTest {
         Integer userId = getUserIdByEmail(TEST_EMAIL);
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
-        RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/" + userId))
+        RequestEntity<String> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
 
@@ -272,7 +272,7 @@ public class UserApiTest {
 
         Integer userId = getUserIdByEmail(TEST_EMAIL);
 
-        RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/" + userId))
+        RequestEntity<String> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + "THIS IS WRONG TOKEN!")
                 .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
@@ -294,7 +294,7 @@ public class UserApiTest {
         Integer userId = getUserIdByEmail(TEST_EMAIL);
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
-        RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/0"))
+        RequestEntity<String> request = RequestEntity.patch(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
@@ -315,7 +315,7 @@ public class UserApiTest {
 
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
-        RequestEntity<String> request = RequestEntity.patch(URI.create("/v2/users/0"))
+        RequestEntity<String> request = RequestEntity.patch(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);

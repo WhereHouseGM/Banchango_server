@@ -20,7 +20,7 @@ public class WarehousesApiController {
     private final WarehousesService warehousesService;
 
     @ValidateRequired
-    @PostMapping("/v2/warehouses")
+    @PostMapping("/v3/warehouses")
     public BasicMessageResponseDto registerAgency(
             @Valid @RequestBody NewWarehouseRequestDto newWarehouseRequestDto,
             @RequestAttribute(name = "accessToken") String accessToken
@@ -30,13 +30,13 @@ public class WarehousesApiController {
         return new BasicMessageResponseDto("창고가 정상적으로 등록 되었습니다");
     }
 
-    @GetMapping("/v2/warehouses")
+    @GetMapping("/v3/warehouses")
     public WarehouseSearchResponseDto getAllWarehouses(
             @RequestParam(required = false) String address,
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {
-        List<WarehouseSearchDto> warehouses = null;
+        List<WarehouseSearchDto> warehouses;
         PageRequest pageRequest = PageRequest.of(page, size);
 
         if(address != null) warehouses = warehousesService.searchWarehouses(address, pageRequest);
@@ -46,7 +46,7 @@ public class WarehousesApiController {
     }
 //
     @ValidateRequired
-    @DeleteMapping("/v2/warehouses/{warehouseId}")
+    @DeleteMapping("/v3/warehouses/{warehouseId}")
     public BasicMessageResponseDto delete(
             @PathVariable Integer warehouseId,
             @RequestAttribute(name = "accessToken") String accessToken
@@ -69,7 +69,7 @@ public class WarehousesApiController {
 //        }
 //    }
 //
-    @GetMapping("/v2/warehouses/{warehouseId}")
+    @GetMapping("/v3/warehouses/{warehouseId}")
     public WarehouseDetailResponseDto getWarehouseById(
         @PathVariable Integer warehouseId
     ) {
