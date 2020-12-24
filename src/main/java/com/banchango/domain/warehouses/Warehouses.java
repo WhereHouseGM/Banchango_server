@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class Warehouses {
     private Double longitude;
 
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<DeliveryTypes> deliveryTypes = new ArrayList<>();
 
