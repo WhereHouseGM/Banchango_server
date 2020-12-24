@@ -8,7 +8,7 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
-import com.banchango.warehouses.dto.SearchWarehouseDto;
+import com.banchango.warehouses.dto.SimpleWarehouseDto;
 import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
 import org.json.JSONObject;
 import org.junit.*;
@@ -19,7 +19,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -96,14 +95,13 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
-        System.out.println(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().contains("message"));
     }
 
     @Test
     public void delete_warehouse_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses warehouse = saveWarehouseBeforeDelete();
+        Warehouses warehouse = saveWarehouse();
         String url = "/v2/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
@@ -114,6 +112,8 @@ public class WarehouseApiTest extends ApiTestContext {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
+
+        warehouseRepository.delete(warehouse);
     }
 
     @Test
@@ -138,7 +138,77 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    private Warehouses saveWarehouseBeforeDelete() {
+    @Test
+    public void get_warehouseByAddress_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses tempWarehouse = saveWarehouse();
+
+        String addressQuery = "addr";
+        String url = String.format("/v2/warehouses?address=%s&page=0&size=4", addressQuery);
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .build();
+
+        ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
+
+        List<SimpleWarehouseDto> warehouses = response.getBody().getWarehouses();
+        assertTrue(warehouses.size() > 0);
+
+        SimpleWarehouseDto warehouse = warehouses.get(0);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertNotNull(warehouse.getAddress());
+        assertNotNull(warehouse.getWarehouseId());
+        assertNotNull(warehouse.getWarehouseCondition());
+        assertNotNull(warehouse.getMinReleasePerMonth());
+        assertNotNull(warehouse.getName());
+        assertNotNull(warehouse.getWarehouseType());
+        assertNotNull(warehouse.getCloseAt());
+        assertNotNull(warehouse.getMainImageUrl());
+        assertNotNull(warehouse.getOpenAt());
+        assertNotNull(warehouse.getSpace());
+        assertNotNull(warehouse.getDeliveryTypes());
+        assertNotNull(warehouse.getMainItemType());
+
+        for(SimpleWarehouseDto _warehouse : warehouses) {
+            String address = _warehouse.getAddress();
+            assertTrue(address.contains(addressQuery));
+        }
+
+        warehouseRepository.delete(tempWarehouse);
+    }
+
+    @Test
+    public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses tempWarehouse = saveWarehouse();
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/warehouses?page=0&size=4"))
+                .build();
+
+        ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
+
+        List<SimpleWarehouseDto> warehouses = response.getBody().getWarehouses();
+        assertTrue(warehouses.size() > 0);
+
+        SimpleWarehouseDto warehouse = warehouses.get(0);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+
+        assertNotNull(warehouse.getAddress());
+        assertNotNull(warehouse.getWarehouseId());
+        assertNotNull(warehouse.getWarehouseCondition());
+        assertNotNull(warehouse.getMinReleasePerMonth());
+        assertNotNull(warehouse.getName());
+        assertNotNull(warehouse.getWarehouseType());
+        assertNotNull(warehouse.getCloseAt());
+        assertNotNull(warehouse.getMainImageUrl());
+        assertNotNull(warehouse.getOpenAt());
+        assertNotNull(warehouse.getSpace());
+        assertNotNull(warehouse.getDeliveryTypes());
+        assertNotNull(warehouse.getMainItemType());
+
+        warehouseRepository.delete(tempWarehouse);
+    }
+
+    private Warehouses saveWarehouse() {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
         Warehouses warehouse = Warehouses.builder()
@@ -168,26 +238,5 @@ public class WarehouseApiTest extends ApiTestContext {
                 .build();
 
         return warehouseRepository.save(warehouse);
-    }
-
-    public void search_warehouse_responseIsOk_IfAllConditionsAreRight() {
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v2/warehouses?address=address&limit=4&offset=0"))
-                .header("Authorization", "Bearer " + accessToken)
-                .build();
-
-        ResponseEntity<SearchWarehouseResponseDto> response = restTemplate.exchange(request, SearchWarehouseResponseDto.class);
-
-        List<SearchWarehouseDto> warehouses = response.getBody().getWarehouses();
-        assertTrue(warehouses.size() > 0);
-
-        SearchWarehouseDto warehouse = warehouses.get(0);
-
-        assertNotNull(warehouse.getWarehouseId());
-        assertNotNull(warehouse.getName());
-        assertNotNull(warehouse.getSpace());
-        assertNotNull(warehouse.getMainImageUrl());
-        assertNotNull(warehouse.getLatitude());
-        assertNotNull(warehouse.getLongitude());
-        assertNotNull(warehouse.getWarehouseCondition());
     }
 }
