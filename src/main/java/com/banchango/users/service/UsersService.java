@@ -48,6 +48,8 @@ public class UsersService {
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new));
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole()));
         responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId(), userInfoDto.getRole()));
+        responseDto.setTokenType("Bearer");
+        responseDto.setUser(userInfoDto);
         return responseDto;
     }
 

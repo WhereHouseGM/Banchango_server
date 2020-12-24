@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserApiTest {
 
-    private static final String TEST_EMAIL = "robby0909@naver.com";
+    private static final String TEST_EMAIL = "test@testing.com";
 
     @Before
     public void saveUser() {
@@ -104,7 +104,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void login_responseIsOK_IfUserExists() {
+    public void signIn_responseIsOK_IfUserExists() {
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", TEST_EMAIL);
@@ -115,10 +115,23 @@ public class UserApiTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().contains("accessToken"));
         assertTrue(response.getBody().contains("refreshToken"));
+        assertTrue(response.getBody().contains("tokenType"));
+        assertTrue(response.getBody().contains("user"));
+
+        JSONObject responseBody = new JSONObject(response.getBody());
+        JSONObject userInfoResponseBody = responseBody.getJSONObject("user");
+
+        assertEquals("TEST_NAME", userInfoResponseBody.get("name"));
+        assertEquals(TEST_EMAIL, userInfoResponseBody.get("email"));
+        assertEquals(UserType.OWNER.name(), userInfoResponseBody.get("type"));
+        assertEquals("02123123", userInfoResponseBody.get("telephoneNumber"));
+        assertEquals("010123123", userInfoResponseBody.get("phoneNumber"));
+        assertEquals("TEST_COMP", userInfoResponseBody.get("companyName"));
+        assertEquals(UserRole.USER.name(), userInfoResponseBody.get("role"));
     }
 
     @Test
-    public void login_responseIsNoContent_IfUserEmailIsWrong(){
+    public void signIn_responseIsNoContent_IfUserEmailIsWrong(){
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", "WRONG_EMAIL");
         requestBody.put("password", "123");
@@ -129,7 +142,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void login_responseIsNoContent_IfUserPasswordIsWrong() {
+    public void signIn_responseIsNoContent_IfUserPasswordIsWrong() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "1234");
@@ -141,7 +154,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void login_responseIsBadRequest_IfRequestBodyIsWrong() {
+    public void signIn_responseIsBadRequest_IfRequestBodyIsWrong() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("pass", "123");

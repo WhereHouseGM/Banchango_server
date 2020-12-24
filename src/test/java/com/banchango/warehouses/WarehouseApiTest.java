@@ -13,17 +13,22 @@ import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import org.json.JSONObject;
 import org.junit.*;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class WarehouseApiTest extends ApiTestContext {
     @Autowired
     private UsersRepository usersRepository;
@@ -129,7 +134,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void delete_warehouse_responseIsNoContent_IfWarehouseNotExist() {
-        RequestEntity<Void> request = RequestEntity.delete(URI.create("/v2/warehouses/99999"))
+        RequestEntity<Void> request = RequestEntity.delete(URI.create("/v2/warehouses/0"))
                 .header("Authorization", "Bearer "+accessToken)
                 .build();
 

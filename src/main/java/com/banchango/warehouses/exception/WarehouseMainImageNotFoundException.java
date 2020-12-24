@@ -1,11 +1,17 @@
 package com.banchango.warehouses.exception;
 
-public class WarehouseMainImageNotFoundException extends WarehouseException{
+import com.banchango.common.exception.NoContentException;
 
-    private static final long serialVersionUID = 1L;
+public class WarehouseMainImageNotFoundException extends NoContentException {
+
     public static final String MESSAGE = "해당 창고는 등록된 메인 이미지가 존재하지 않습니다.";
 
-    public WarehouseMainImageNotFoundException() {
-        super(MESSAGE);
+    public WarehouseMainImageNotFoundException(String message) {
+        super(message);
     }
+
+    public WarehouseMainImageNotFoundException() {
+        this(MESSAGE);
+    }
+
 }

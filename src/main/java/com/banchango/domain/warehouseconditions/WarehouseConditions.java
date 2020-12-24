@@ -17,7 +17,7 @@ public class WarehouseConditions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name="name")
+    @Column(nullable = false, name = "name")
     @Enumerated(EnumType.STRING)
     private WarehouseCondition condition;
 
