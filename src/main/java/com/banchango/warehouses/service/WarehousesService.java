@@ -243,10 +243,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
-        Optional<Warehouses> optionalWarehouse = warehousesRepository.findById(warehouseId);
-        if(!optionalWarehouse.isPresent()) throw new WarehouseIdNotFoundException();
-
-        Warehouses warehouse = optionalWarehouse.get();
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
 
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
