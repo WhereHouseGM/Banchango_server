@@ -5,7 +5,7 @@ import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
 import com.banchango.warehouses.dto.SimpleWarehouseDto;
-import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
+import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +31,7 @@ public class WarehousesApiController {
     }
 
     @GetMapping("/v2/warehouses")
-    public SearchWarehouseResponseDto getAllWarehouses(
+    public WarehouseSearchResponseDto getAllWarehouses(
             @RequestParam(required = false) String address,
             @RequestParam Integer page,
             @RequestParam Integer size
@@ -42,7 +42,7 @@ public class WarehousesApiController {
         if(address != null) warehouses = warehousesService.searchWarehouses(address, pageRequest);
         else warehouses = warehousesService.getWarehouses(pageRequest);
 
-        return new SearchWarehouseResponseDto(warehouses);
+        return new WarehouseSearchResponseDto(warehouses);
     }
 //
     @ValidateRequired
