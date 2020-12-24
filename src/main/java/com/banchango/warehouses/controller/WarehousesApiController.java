@@ -5,7 +5,7 @@ import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
+import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -30,14 +30,14 @@ public class WarehousesApiController {
     }
 
     @GetMapping("/v2/warehouses")
-    public SearchWarehouseResponseDto getAllWarehouses(
+    public WarehouseSearchResponseDto getAllWarehouses(
             @RequestParam(name = "address") String address,
             @RequestParam(name = "limit") Integer limit,
             @RequestParam(name = "offset") Integer offset
     ) {
             List<WarehouseSearchDto> warehouses = warehousesService.search(address, limit, offset);
 
-            return new SearchWarehouseResponseDto(warehouses);
+            return new WarehouseSearchResponseDto(warehouses);
     }
 //
     @ValidateRequired
