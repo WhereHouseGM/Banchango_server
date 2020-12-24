@@ -117,7 +117,8 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
-        if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, 1).size() >= 1) {
+        List<WarehouseImages> images = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, 1);
+        if(images.size() >= 1) {
             throw new WarehouseMainImageAlreadyRegisteredException();
         }
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
@@ -146,8 +147,9 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
-        if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, 1).size() >= 1) {
-            WarehouseImages image = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, 1).get(0);
+        List<WarehouseImages> images = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, 1);
+        if(images.size() >= 1) {
+            WarehouseImages image = images.get(0);
             String[] splitTemp = image.getUrl().split("/");
             String fileName = splitTemp[splitTemp.length - 1];
             deleteFile(fileName);
