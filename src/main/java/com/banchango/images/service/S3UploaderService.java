@@ -32,7 +32,6 @@ import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.exception.WarehouseMainImageAlreadyRegisteredException;
 import lombok.RequiredArgsConstructor;
-//import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +48,8 @@ public class S3UploaderService {
 
     private AmazonS3 s3Client;
     private final WarehouseImagesRepository warehouseImagesRepository;
-//    private final WarehouseAttachmentsRepository warehouseAttachmentsRepository;
     private final WarehousesRepository warehousesRepository;
-//    private final WarehouseMainImagesRepository warehouseMainImagesRepository;
-//
+
     @Value("${aws.s3.bucket}")
     private String bucket;
 
@@ -104,15 +101,18 @@ public class S3UploaderService {
     }
 
     @Transactional
-    public void uploadExtraImage(MultipartFile file, String token, Integer warehouseId) {
+    public ImageInfoResponseDto uploadExtraImage(MultipartFile file, String token, Integer warehouseId) {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
         if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, 0).size() >= 5) {
             throw new WarehouseExtraImageLimitException();
         }
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         String url = uploadFile(file);
-        // TODO : extra image upload
+        WarehouseImages image = WarehouseImages.builder().url(url).isMain(0).warehouse(warehouse).build();
+        WarehouseImages savedImage = warehouseImagesRepository.save(image);
+        return new ImageInfoResponseDto(savedImage);
     }
 
     @Transactional
@@ -195,45 +195,9 @@ public class S3UploaderService {
 //
 //
 //
-//    @Transactional
-//    public JSONObject uploadMainImage(MultipartFile multipartFile, String token, Integer warehouseId) throws Exception {
-//        if(!JwtTokenUtil.isTokenValidated(JwtTokenUtil.getToken(token))) {
-//            throw new AuthenticateException();
-//        }
-//        if(!isUserAuthenticatedToAccessWarehouseInfo(Integer.parseInt(JwtTokenUtil.extractUserId(JwtTokenUtil.getToken(token))), warehouseId))  {
-//            throw new WarehouseInvalidAccessException();
-//        }
-//        checkMainImageExistance(warehouseId);
-//        String uploadedImageUrl = uploadFile(multipartFile);
-//        saveMainImage(uploadedImageUrl, warehouseId);
-//        JSONObject jsonObject = ObjectMaker.getJSONObject();
-//        jsonObject.put("message", "메인 이미지 업로드에 성공했습니다.");
-//        jsonObject.put("url", uploadedImageUrl);
-//        return jsonObject;
-//    }
 //
-//    private void saveAttachment(String url, Integer warehouseId) {
-//        WarehouseAttachments attachment = WarehouseAttachments.builder()
-//                .url(url).warehouseId(warehouseId).build();
-//        warehouseAttachmentsRepository.save(attachment);
-//    }
 //
-//    private void saveMainImage(String url, Integer warehouseId) {
-//        WarehouseMainImages image = WarehouseMainImages.builder()
-//                .mainImageUrl(url).warehouseId(warehouseId).build();
-//        warehouseMainImagesRepository.save(image);
-//    }
 //
-//    private boolean isUserAuthenticatedToAccessWarehouseInfo(Integer userId, Integer warehouseId) throws WarehouseIdNotFoundException {
-//        Optional<Warehouses> warehousesOptional = warehousesRepository.findByWarehouseId(warehouseId);
-//        if(warehousesOptional.isPresent()) {
-//            return warehousesOptional.get().getUserId().equals(userId);
-//        } else throw new WarehouseIdNotFoundException();
-//    }
-//
-//    private void checkMainImageExistance(Integer warehouseId) throws WarehouseMainImageLimitException {
-//        if(warehouseMainImagesRepository.findByWarehouseId(warehouseId).isPresent()) throw new WarehouseMainImageLimitException();
-//    }
 //
 //    private void checkAttachmentsLimitSize(Integer warehouseId) throws WarehouseAttachmentLimitException {
 //        if(warehouseAttachmentsRepository.findByWarehouseId(warehouseId).size() >= 5) throw new WarehouseAttachmentLimitException();

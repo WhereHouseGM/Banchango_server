@@ -22,9 +22,10 @@ public class ImageController {
     @PostMapping("/v3/images/upload/{warehouseId}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public void uploadImage(@RequestPart(name = "file") MultipartFile multipartFile,
+    public ImageInfoResponseDto uploadImage(@RequestPart(name = "file") MultipartFile multipartFile,
                             @RequestAttribute(name = "accessToken") String accessToken,
                             @PathVariable Integer warehouseId) {
+        return s3UploaderService.uploadExtraImage(multipartFile, accessToken, warehouseId);
     }
 
     @ValidateRequired
@@ -49,24 +50,6 @@ public class ImageController {
 //        } catch(WarehouseInvalidAccessException exception) {
 //            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
 //        } catch(WarehouseAttachmentLimitException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_ACCEPTABLE);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
-//
-//    // DONE
-//    @PostMapping("/v2/images/upload/main/{warehouseId}")
-//    @ResponseBody
-//    public void uploadMain(@RequestPart(name = "file") MultipartFile multipartFile, HttpServletResponse response,
-//                           @RequestHeader(name = "Authorization") String bearerToken, @PathVariable Integer warehouseId) {
-//        try {
-//            WriteToClient.send(response, s3UploaderService.uploadMainImage(multipartFile, bearerToken, warehouseId), HttpServletResponse.SC_OK);
-//        } catch(AuthenticateException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-//        } catch(WarehouseInvalidAccessException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
-//        } catch(WarehouseMainImageLimitException exception) {
 //            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_ACCEPTABLE);
 //        } catch(Exception exception) {
 //            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
