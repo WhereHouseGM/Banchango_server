@@ -2,7 +2,7 @@ package com.banchango.warehouses.controller;
 
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
-import com.banchango.warehouses.dto.DetailWarehouseResponseDto;
+import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
 import com.banchango.warehouses.dto.SearchWarehouseDto;
 import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
@@ -65,7 +65,7 @@ public class WarehousesApiController {
 //    }
 //
     @GetMapping("/v2/warehouses/{warehouseId}")
-    public DetailWarehouseResponseDto getWarehouseById(
+    public WarehouseDetailResponseDto getWarehouseById(
         @PathVariable Integer warehouseId
     ) {
         return warehousesService.getSpecificWarehouseInfo(warehouseId);

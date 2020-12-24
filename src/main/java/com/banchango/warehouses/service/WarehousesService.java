@@ -13,7 +13,7 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.warehouses.dto.NewWarehouseRequestDto;
-import com.banchango.warehouses.dto.DetailWarehouseResponseDto;
+import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.dto.SearchWarehouseDto;
@@ -242,13 +242,13 @@ public class WarehousesService {
     }
 
     @Transactional(readOnly = true)
-    public DetailWarehouseResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
+    public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
         Optional<Warehouses> optionalWarehouse = warehousesRepository.findById(warehouseId);
         if(!optionalWarehouse.isPresent()) throw new WarehouseIdNotFoundException();
 
         Warehouses warehouse = optionalWarehouse.get();
 
-        return new DetailWarehouseResponseDto(warehouse, noImageUrl);
+        return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
 //
 //    private JSONArray createJSONArrayOfWarehouseConditions(Integer warehouseId) {

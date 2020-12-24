@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class DetailWarehouseResponseDto {
+public class WarehouseDetailResponseDto {
     private Integer warehouseId;
     private Integer ownerId;
     private String name;
@@ -51,7 +51,7 @@ public class DetailWarehouseResponseDto {
     private List<String> warehouseUsageCautions = new ArrayList<>();
     private List<String> images = new ArrayList<>();
 
-    public DetailWarehouseResponseDto(Warehouses warehouse, String defaultImageUrl) {
+    public WarehouseDetailResponseDto(Warehouses warehouse, String defaultImageUrl) {
         List<String> deliveryTypes = warehouse.getDeliveryTypes()
                 .stream()
                 .map(deliveryType -> deliveryType.getName())

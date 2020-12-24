@@ -8,7 +8,7 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
-import com.banchango.warehouses.dto.DetailWarehouseResponseDto;
+import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.SearchWarehouseDto;
 import com.banchango.warehouses.dto.SearchWarehouseResponseDto;
 import org.json.JSONObject;
@@ -199,9 +199,9 @@ public class WarehouseApiTest extends ApiTestContext {
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
 
-        ResponseEntity<DetailWarehouseResponseDto> response = restTemplate.exchange(request, DetailWarehouseResponseDto.class);
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
-        DetailWarehouseResponseDto warehouse = response.getBody();
+        WarehouseDetailResponseDto warehouse = response.getBody();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -245,9 +245,9 @@ public class WarehouseApiTest extends ApiTestContext {
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
 
-        ResponseEntity<DetailWarehouseResponseDto> response = restTemplate.exchange(request, DetailWarehouseResponseDto.class);
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
-        DetailWarehouseResponseDto warehouse = response.getBody();
+        WarehouseDetailResponseDto warehouse = response.getBody();
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
