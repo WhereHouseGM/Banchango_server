@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
-public class SimpleWarehouseDto {
+public class WarehouseSearchDto {
     private String address;
     private Integer warehouseId;
     private List<WarehouseCondition> warehouseCondition;
@@ -28,7 +28,7 @@ public class SimpleWarehouseDto {
     private List<String> deliveryTypes;
     private ItemTypeName mainItemType;
 
-    public SimpleWarehouseDto(Warehouses warehouse, String defaultImageUrl) {
+    public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl) {
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
                 .stream()
                 .map(condition -> condition.getCondition())
