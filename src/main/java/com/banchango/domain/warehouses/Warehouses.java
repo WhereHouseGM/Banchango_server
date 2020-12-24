@@ -97,7 +97,7 @@ public class Warehouses {
     private Double longitude;
 
     @Setter
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<DeliveryTypes> deliveryTypes = new ArrayList<>();
 
