@@ -50,21 +50,4 @@ public class ImageController {
                                                    @PathVariable Integer warehouseId) {
         return s3UploaderService.deleteMainImage(accessToken, warehouseId);
     }
-//
-//    // DONE
-//    @DeleteMapping("/v2/images/delete/main/{warehouseId}")
-//    public void deleteMainImage(@RequestHeader(name = "Authorization") String bearerToken,
-//                                @PathVariable Integer warehouseId, HttpServletResponse response) {
-//        try {
-//            WriteToClient.send(response, s3UploaderService.deleteMainImage(bearerToken, warehouseId), HttpServletResponse.SC_OK);
-//        } catch(AuthenticateException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_UNAUTHORIZED);
-//        } catch(WarehouseInvalidAccessException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_FORBIDDEN);
-//        } catch(WarehouseMainImageNotFoundException | WarehouseIdNotFoundException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NOT_FOUND);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
 }

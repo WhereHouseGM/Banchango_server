@@ -72,7 +72,7 @@ public class S3UploaderService {
             s3Client.putObject(putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead));
             return s3Client.getUrl(bucket, fileName).toString();
         } catch(IOException exception) {
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(exception.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class S3UploaderService {
         try {
             s3Client.deleteObject(deleteObjectRequest);
         } catch(Exception exception) {
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(exception.getMessage());
         }
     }
 
@@ -156,17 +156,4 @@ public class S3UploaderService {
             throw new WarehouseMainImageNotFoundException();
         }
     }
-//
-//    @Transactional
-//    public JSONObject deleteMainImage(String token, Integer warehouseId) throws Exception {
-//        checkTokenAndWarehouseId(token, warehouseId);
-//        WarehouseMainImages image = warehouseMainImagesRepository.findByWarehouseId(warehouseId).orElseThrow(WarehouseMainImageNotFoundException::new);
-//        JSONObject jsonObject = ObjectMaker.getJSONObject();
-//        String[] splitTemp = image.getMainImageUrl().split("/");
-//        String fileName = splitTemp[splitTemp.length - 1];
-//        deleteFileOnS3(fileName);
-//        warehouseMainImagesRepository.deleteByWarehouseId(warehouseId);
-//        jsonObject.put("message", "창고의 메인 이미지가 정상적으로 삭제되었습니다.");
-//        return jsonObject;
-//    }
 }
