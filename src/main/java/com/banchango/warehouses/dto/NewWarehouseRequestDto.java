@@ -60,7 +60,7 @@ public class NewWarehouseRequestDto {
     @NotNull(message = "doorLockExist이 없습니다.")
     Integer doorLockExist;
 
-    @ValueOfEnum(enumClass = WarehouseType.class)
+    @ValueOfEnum(enumClass = AirConditioningType.class)
     @NotNull(message = "airConditioningType이 없습니다.")
     AirConditioningType airConditioningType;
 
