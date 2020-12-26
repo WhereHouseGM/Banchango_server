@@ -25,7 +25,7 @@ public class UsersApiController {
 
     @PostMapping("/v3/users/sign-in")
     @ResponseStatus(HttpStatus.OK)
-    public UserSigninResponseDto signIn(@RequestBody UserSigninRequestDto requestDto) {
+    public UserSigninResponseDto signIn(@Valid @RequestBody UserSigninRequestDto requestDto) {
         return usersService.signIn(requestDto);
     }
 
