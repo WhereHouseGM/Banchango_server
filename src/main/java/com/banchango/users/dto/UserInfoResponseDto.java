@@ -16,9 +16,7 @@ public class UserInfoResponseDto {
     private String name;
     private String email;
     private UserType type;
-    private String telephoneNumber;
     private String phoneNumber;
-    private String companyName;
     private UserRole role;
 
     public UserInfoResponseDto(Users user) {
@@ -26,9 +24,7 @@ public class UserInfoResponseDto {
         this.name = user.getName();
         this.email = user.getEmail();
         this.type = user.getType();
-        this.telephoneNumber = user.getTelephoneNumber();
         this.phoneNumber = user.getPhoneNumber();
-        this.companyName = user.getCompanyName();
         this.role = user.getRole();
     }
 }
