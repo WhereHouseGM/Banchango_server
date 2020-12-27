@@ -1,33 +1,105 @@
 package com.banchango.warehouses.dto;
 
+import com.banchango.common.validator.ValueOfEnum;
+import com.banchango.domain.warehouses.WarehouseType;
+import com.banchango.domain.warehouses.AirConditioningType;
+import com.banchango.domain.warehouses.ItemTypeName;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.List;
+
+@NoArgsConstructor
 @Getter
-@Setter
-public abstract class WarehouseInsertRequestDto {
-    private Integer canUse;
-    private String name;
-    private String serviceType;
-    private Integer landArea;
-    private Integer totalArea;
-    private String address;
-    private String addressDetail;
-    private String description;
-    private Integer availableWeekdays;
-    private String openAt;
-    private String closeAt;
-    private String availableTimeDetail;
-    private Integer cctvExist;
-    private Integer securityCompanyExist;
-    private String securityCompanyName;
-    private Integer doorLockExist;
-    private String airConditioningType;
-    private Integer workerExist;
-    private Integer canPickup;
-    private Integer canPark;
-    private Integer parkingScale;
-    private InsuranceInsertRequestDto insurance;
-    private String warehouseType;
-    private WarehouseLocationDto location;
+public class WarehouseInsertRequestDto {
+
+    @Size(min = 1, message = "name의 최소 길이는 1입니다.")
+    @NotNull(message = "name이 없습니다.")
+    String name;
+
+    @NotNull(message = "space가 없습니다.")
+    Integer space;
+
+    @Size(min = 1, message = "address의 최소 길이는 1입니다.")
+    @NotNull(message = "address가 없습니다.")
+    String address;
+
+    @Size(min = 1, message = "addressDetail의 최소 길이는 1입니다.")
+    @NotNull(message = "addressDetail이 없습니다.")
+    String addressDetail;
+
+    @Size(min = 1, message = "description의 최소 길이는 1입니다.")
+    @NotNull(message = "description이 없습니다.")
+    String description;
+
+    @NotNull(message = "availableWeekdays가 없습니다.")
+    Integer availableWeekdays;
+
+    @Size(min = 1, message = "openAt의 최소 길이는 1입니다.")
+    @NotNull(message = "openAt이 없습니다.")
+    String openAt;
+
+    @Size(min = 1, message = "closeAt의 최소 길이는 1입니다.")
+    @NotNull(message = "closeAt이 없습니다.")
+    String closeAt;
+
+    @Size(min = 1, message = "availableTimeDetail의 최소 길이는 1입니다.")
+    @NotNull(message = "availableTimeDetail이 없습니다.")
+    String availableTimeDetail;
+
+    @Size(min = 1, message = "insurance의 최소 길이는 1입니다.")
+    @NotNull(message = "insurance이 없습니다.")
+    String insurance;
+
+    @NotNull(message = "cctvExist이 없습니다.")
+    Integer cctvExist;
+
+    String securityCompanyName;
+
+    @NotNull(message = "doorLockExist이 없습니다.")
+    Integer doorLockExist;
+
+    @ValueOfEnum(enumClass = AirConditioningType.class)
+    @NotNull(message = "airConditioningType이 없습니다.")
+    AirConditioningType airConditioningType;
+
+    @NotNull(message = "workerExist이 없습니다.")
+    Integer workerExist;
+
+    @NotNull(message = "canPickup이 없습니다.")
+    Integer canPickup;
+
+    @NotNull(message = "canPark이 없습니다.")
+    Integer canPark;
+
+    @ValueOfEnum(enumClass = ItemTypeName.class)
+    @NotNull(message = "mainItemType이 없습니다.")
+    ItemTypeName mainItemType;
+
+    @ValueOfEnum(enumClass = WarehouseType.class)
+    @NotNull(message = "warehouseType이 없습니다.")
+    WarehouseType warehouseType;
+
+    @NotNull(message = "minReleasePerMonth이 없습니다.")
+    Integer minReleasePerMonth;
+
+    @NotNull(message = "latitude가 없습니다.")
+    Double latitude;
+
+    @NotNull(message = "longitude가 없습니다.")
+    Double longitude;
+
+    @NotNull(message = "deliveryTypes가 없습니다.")
+    List<String> deliveryTypes;
+
+    @NotNull(message = "warehouseCondition이 없습니다.")
+    List<String> warehouseCondition;
+
+    @NotNull(message = "warehouseFacilityUsages가 없습니다.")
+    List<String> warehouseFacilityUsages;
+
+    @NotNull(message = "warehouseUsageCautions가 없습니다.")
+    List<String> warehouseUsageCautions;
 }
