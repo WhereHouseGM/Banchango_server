@@ -19,12 +19,8 @@ public class WarehouseFacilityUsages {
     @Column(nullable = false, length = 200)
     private String content;
 
-    @Column(nullable = false)
-    private Integer warehouseId;
-
     @Builder
-    public WarehouseFacilityUsages(String content, Integer warehouseId) {
+    public WarehouseFacilityUsages(String content) {
         this.content = content;
-        this.warehouseId = warehouseId;
     }
 }

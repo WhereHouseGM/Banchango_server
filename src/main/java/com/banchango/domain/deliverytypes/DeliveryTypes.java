@@ -19,12 +19,8 @@ public class DeliveryTypes {
     @Column(length = 30, nullable = false)
     private String name;
 
-    @Column
-    private Integer agencyWarehouseDetailId;
-
     @Builder
-    public DeliveryTypes(String name, Integer agencyWarehouseDetailId) {
+    public DeliveryTypes(String name) {
         this.name = name;
-        this.agencyWarehouseDetailId = agencyWarehouseDetailId;
     }
 }

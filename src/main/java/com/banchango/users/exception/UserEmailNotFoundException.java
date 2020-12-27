@@ -1,8 +1,9 @@
 package com.banchango.users.exception;
 
-public class UserEmailNotFoundException extends UserException{
+import com.banchango.common.exception.NoContentException;
 
-    private static final long serialVersionUID = 1L;
+public class UserEmailNotFoundException extends NoContentException{
+
     public static final String MESSAGE = "해당 이메일은 가입되어 있지 않습니다.";
 
     public UserEmailNotFoundException() {

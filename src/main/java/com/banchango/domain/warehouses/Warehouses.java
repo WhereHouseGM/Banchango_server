@@ -1,10 +1,18 @@
 package com.banchango.domain.warehouses;
 
+import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
+import com.banchango.domain.warehouseimages.WarehouseImages;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -13,23 +21,17 @@ public class Warehouses {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer warehouseId;
+    @Column(name = "warehouse_id")
+    private Integer id;
 
-    @Column(nullable = false)
-    private Integer canUse;
+    @Column
+    private Integer userId;
 
     @Column(length = 20, nullable = false)
     private String name;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ServiceType serviceType;
-
-    @Column(nullable = false)
-    private Integer landArea;
-
-    @Column(nullable = false)
-    private Integer totalArea;
+    private Integer space;
 
     @Column(length = 100, nullable = false)
     private String address;
@@ -53,13 +55,10 @@ public class Warehouses {
     private String availableTimeDetail;
 
     @Column
-    private Integer insuranceId;
+    private String insurance;
 
     @Column(nullable = false)
     private Integer cctvExist;
-
-    @Column(nullable = false)
-    private Integer securityCompanyExist;
 
     @Column(length = 100)
     private String securityCompanyName;
@@ -67,7 +66,7 @@ public class Warehouses {
     @Column(nullable = false)
     private Integer doorLockExist;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "ENUM('HEATING', 'COOLING', 'BOTH', 'NONE')")
     @Enumerated(EnumType.STRING)
     private AirConditioningType airConditioningType;
 
@@ -81,19 +80,51 @@ public class Warehouses {
     private Integer canPark;
 
     @Column(nullable = false)
-    private Integer parkingScale;
+    @Enumerated(EnumType.STRING)
+    private ItemTypeName mainItemType;
 
-    @Column
-    private Integer userId;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private WarehouseType warehouseType;
+
+    @Column(nullable = false)
+    private Integer minReleasePerMonth;
+
+    @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private List<DeliveryTypes> deliveryTypes = new ArrayList<>();
+
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
+
+    @Setter
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private List<WarehouseFacilityUsages> warehouseFacilityUsages = new ArrayList<>();
+
+    @Setter
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
+
+    @Setter
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
+    private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(Integer canUse, String name, Integer insuranceId, String serviceType, Integer landArea, Integer totalArea, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, Integer securityCompanyExist, String securityCompanyName, Integer doorLockExist, String airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, Integer parkingScale, Integer userId) {
-        this.canUse = canUse;
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, AirConditioningType airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
         this.name = name;
-        this.insuranceId = insuranceId;
-        this.serviceType = ServiceType.valueOf(serviceType);
-        this.landArea = landArea;
-        this.totalArea = totalArea;
+        this.insurance = insurance;
+        this.space = space;
         this.address = address;
         this.addressDetail = addressDetail;
         this.description = description;
@@ -102,14 +133,24 @@ public class Warehouses {
         this.closeAt = closeAt;
         this.availableTimeDetail = availableTimeDetail;
         this.cctvExist = cctvExist;
-        this.securityCompanyExist = securityCompanyExist;
         this.securityCompanyName = securityCompanyName;
         this.doorLockExist = doorLockExist;
-        this.airConditioningType = AirConditioningType.valueOf(airConditioningType);
+        this.airConditioningType = airConditioningType;
         this.workerExist = workerExist;
         this.canPickup = canPickup;
         this.canPark = canPark;
-        this.parkingScale = parkingScale;
+        this.mainItemType = mainItemType;
         this.userId = userId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.warehouseType = warehouseType;
+        this.minReleasePerMonth = minReleasePerMonth;
+    }
+
+    public WarehouseImages getMainImage() {
+        for(WarehouseImages image : warehouseImages) {
+            if(image.getIsMain() == 1) return image;
+        }
+        return null;
     }
 }

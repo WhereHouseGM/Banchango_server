@@ -1,8 +1,8 @@
 package com.banchango.warehouses.exception;
 
-public class WarehouseIdNotFoundException extends WarehouseException{
+import com.banchango.common.exception.NoContentException;
 
-    private static final long serialVersionUID = 1L;
+public class WarehouseIdNotFoundException extends NoContentException {
     public static final String MESSAGE = "해당 id로 조회된 창고 결과가 없습니다.";
 
     public WarehouseIdNotFoundException() {
