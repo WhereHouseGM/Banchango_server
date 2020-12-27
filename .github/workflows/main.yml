@@ -32,7 +32,7 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: build
-        run: ./gradlew build --info
+        run: ./gradlew build -x test
         env:
           PRD_WH_DATASOURCE_URL: ${{ secrets.PRD_WH_DATASOURCE_URL }}
           TEST_WH_DATASOURCE_URL: ${{ secrets.TEST_WH_DATASOURCE_URL }}
