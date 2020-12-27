@@ -74,6 +74,7 @@ public class WarehouseDetailResponseDto {
 
         List<String> images = warehouse.getWarehouseImages()
                 .stream()
+                .filter(image -> !image.isMain())
                 .map(image -> image.getUrl())
                 .collect(Collectors.toList());
 

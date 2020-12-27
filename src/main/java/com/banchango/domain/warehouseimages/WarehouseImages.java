@@ -33,4 +33,8 @@ public class WarehouseImages {
         this.isMain = isMain;
         this.warehouse = warehouse;
     }
+
+    public boolean isMain() {
+        return isMain == 1;
+    }
 }
