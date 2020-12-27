@@ -5,7 +5,7 @@ import com.banchango.common.exception.BadRequestException;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.warehouses.ItemTypeName;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.dto.NewWarehouseRequestDto;
+import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import com.banchango.warehouses.service.WarehousesService;
@@ -24,10 +24,10 @@ public class WarehousesApiController {
     @ValidateRequired
     @PostMapping("/v3/warehouses")
     public BasicMessageResponseDto registerAgency(
-            @Valid @RequestBody NewWarehouseRequestDto newWarehouseRequestDto,
+            @Valid @RequestBody WarehouseInsertRequestDto warehouseInsertRequestDto,
             @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        warehousesService.saveAgencyWarehouse(newWarehouseRequestDto, accessToken);
+        warehousesService.saveAgencyWarehouse(warehouseInsertRequestDto, accessToken);
 
         return new BasicMessageResponseDto("창고가 정상적으로 등록 되었습니다");
     }
@@ -49,7 +49,7 @@ public class WarehousesApiController {
 
         return new WarehouseSearchResponseDto(warehouses);
     }
-//
+
     @ValidateRequired
     @DeleteMapping("/v3/warehouses/{warehouseId}")
     public BasicMessageResponseDto delete(
@@ -60,20 +60,7 @@ public class WarehousesApiController {
 
         return new BasicMessageResponseDto("창고가 정상적으로 삭제되었습니다.");
     }
-//
-//    // DONE
-//    @GetMapping("/v2/warehouses/agency/{mainItemType}")
-//    public void getAgencyWarehouseList(HttpServletResponse response, @PathVariable String mainItemType) {
-//        try {
-//            WriteToClient.send(response, warehousesService.getAgencyWarehouseList(mainItemType), HttpServletResponse.SC_OK);
-//        } catch(WarehouseNotFoundException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
-//        } catch(Exception exception) {
-//            exception.printStackTrace();
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
-//
+
     @GetMapping("/v3/warehouses/{warehouseId}")
     public WarehouseDetailResponseDto getWarehouseById(
         @PathVariable Integer warehouseId
@@ -81,20 +68,15 @@ public class WarehousesApiController {
         return warehousesService.getSpecificWarehouseInfo(warehouseId);
     }
 
-//
-//    @GetMapping("/v2/warehouses/agency")
-//    public void getList(@RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size, HttpServletResponse response) {
-//        try {
-//            WriteToClient.send(response, warehousesService.getAgencyWarehouseList(page, size), HttpServletResponse.SC_OK);
-//        } catch(WarehouseNotFoundException | WarehouseIdNotFoundException exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectWithException(exception), HttpServletResponse.SC_NO_CONTENT);
-//        } catch(Exception exception) {
-//            WriteToClient.send(response, ObjectMaker.getJSONObjectOfBadRequest(), HttpServletResponse.SC_BAD_REQUEST);
-//        }
-//    }
-//    // TODO : 창고 정보 수정 API
-//    @PatchMapping("/v2/warehouses/{warehouseId}")
-//    public void updateWarehouseInfo(@PathVariable Integer warehouseId, HttpServletResponse response) {
-//
-//    }
+    /**
+     * <p>
+     *     TODO : 창고 정보 수정 API
+     * </p>
+     */
+    /*
+    @PatchMapping("/v2/warehouses/{warehouseId}")
+        public void updateWarehouseInfo(@PathVariable Integer warehouseId, HttpServletResponse response) {
+    }
+    */
+
 }

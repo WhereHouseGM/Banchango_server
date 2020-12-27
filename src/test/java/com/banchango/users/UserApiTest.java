@@ -37,9 +37,7 @@ public class UserApiTest {
                 .email(TEST_EMAIL)
                 .password("123")
                 .type(UserType.OWNER)
-                .telephoneNumber("02123123")
                 .phoneNumber("010123123")
-                .companyName("TEST_COMP")
                 .build();
         usersRepository.save(user);
     }
@@ -70,9 +68,7 @@ public class UserApiTest {
         assertEquals(userId, responseBody.get("userId"));
         assertEquals("TEST_NAME", responseBody.get("name"));
         assertEquals("OWNER", responseBody.get("type"));
-        assertEquals("02123123", responseBody.get("telephoneNumber"));
         assertEquals("010123123", responseBody.get("phoneNumber"));
-        assertEquals("TEST_COMP", responseBody.get("companyName"));
         assertFalse(response.getBody().contains("password"));
     }
 
@@ -124,9 +120,7 @@ public class UserApiTest {
         assertEquals("TEST_NAME", userInfoResponseBody.get("name"));
         assertEquals(TEST_EMAIL, userInfoResponseBody.get("email"));
         assertEquals(UserType.OWNER.name(), userInfoResponseBody.get("type"));
-        assertEquals("02123123", userInfoResponseBody.get("telephoneNumber"));
         assertEquals("010123123", userInfoResponseBody.get("phoneNumber"));
-        assertEquals("TEST_COMP", userInfoResponseBody.get("companyName"));
         assertEquals(UserRole.USER.name(), userInfoResponseBody.get("role"));
     }
 
@@ -171,9 +165,7 @@ public class UserApiTest {
         requestBody.put("email", "TEST_EMAIL_2");
         requestBody.put("password", "1234");
         requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "02234234");
         requestBody.put("phoneNumber", "010234234");
-        requestBody.put("companyName", "TEST_COMP_2");
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
 
@@ -187,9 +179,7 @@ public class UserApiTest {
         assertEquals(userId, responseBody.get("userId"));
         assertEquals("TEST_NAME", responseBody.get("name"));
         assertEquals("SHIPPER", responseBody.get("type"));
-        assertEquals("02234234", responseBody.get("telephoneNumber"));
         assertEquals("010234234", responseBody.get("phoneNumber"));
-        assertEquals("TEST_COMP_2", responseBody.get("companyName"));
         assertFalse(response.getBody().contains("password"));
         assertTrue(savedUser.getCreatedAt().isBefore(LocalDateTime.now()));
         assertTrue(savedUser.getLastModifiedAt().isBefore(LocalDateTime.now()));
@@ -205,9 +195,7 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "1234");
         requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "02234234");
         requestBody.put("phoneNumber", "010234234");
-        requestBody.put("companyName", "TEST_COMP_2");
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
 
@@ -222,9 +210,7 @@ public class UserApiTest {
         requestBody.put("password", "1234");
 //        requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("type", "WRONG_TYPE");
-        requestBody.put("telephoneNumber", "02234234");
         requestBody.put("phoneNumber", "010234234");
-        requestBody.put("companyName", "TEST_COMP_2");
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
 
@@ -238,8 +224,6 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "021212");
-        requestBody.put("companyName", "TEST_COMP_");
         requestBody.put("phoneNumber", "0101212");
 
         Integer userId = getUserIdByEmail(TEST_EMAIL);
@@ -254,9 +238,7 @@ public class UserApiTest {
         JSONObject responseBody = new JSONObject(response.getBody());
         assertEquals("TEST_NAME_", responseBody.get("name"));
         assertEquals(UserType.SHIPPER.name(), responseBody.get("type"));
-        assertEquals("021212", responseBody.get("telephoneNumber"));
         assertEquals("0101212", responseBody.get("phoneNumber"));
-        assertEquals("TEST_COMP_", responseBody.get("companyName"));
     }
 
     @Test
@@ -266,8 +248,6 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "021212");
-        requestBody.put("companyName", "TEST_COMP_");
         requestBody.put("phoneNumber", "0101212");
 
         Integer userId = getUserIdByEmail(TEST_EMAIL);
@@ -287,8 +267,6 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "021212");
-        requestBody.put("companyName", "TEST_COMP_");
         requestBody.put("phoneNumber", "0101212");
 
         Integer userId = getUserIdByEmail(TEST_EMAIL);
@@ -309,8 +287,6 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "021212");
-        requestBody.put("companyName", "TEST_COMP_");
         requestBody.put("phoneNumber", "0101212");
 
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);

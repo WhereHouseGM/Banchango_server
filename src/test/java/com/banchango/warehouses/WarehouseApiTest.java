@@ -45,9 +45,7 @@ public class WarehouseApiTest extends ApiTestContext {
                     .email("TEST_EMAIL1")
                     .password("123")
                     .type(UserType.OWNER)
-                    .telephoneNumber("02123123")
                     .phoneNumber("010123123")
-                    .companyName("TEST_COMP")
                     .build();
             usersRepository.save(user);
 
