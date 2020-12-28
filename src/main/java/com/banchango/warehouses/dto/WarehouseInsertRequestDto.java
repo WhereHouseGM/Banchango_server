@@ -66,7 +66,7 @@ public class WarehouseInsertRequestDto {
     AirConditioningType airConditioningType;
 
     @NotNull(message = "workerExist이 없습니다.")
-    Integer workerExist;
+    Boolean workerExist;
 
     @NotNull(message = "canPickup이 없습니다.")
     Integer canPickup;

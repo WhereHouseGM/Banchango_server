@@ -34,7 +34,7 @@ public class WarehouseDetailResponseDto {
     private String securityCompanyName;
     private Boolean doorLockExist;
     private AirConditioningType airConditioningType;
-    private Integer workerExist;
+    private Boolean workerExist;
     private Integer canPickup;
     private Integer canPark;
     private MainItemType mainItemType;
