@@ -242,7 +242,7 @@ public class WarehouseApiTest extends ApiTestContext {
     public void get_warehouseByMainItemType_responseIsOk_IfAllConditionsAreRight() {
         Warehouses warehouse = saveWarehouse();
 
-        String mainItemType = ItemTypeName.CLOTH.toString();
+        String mainItemType = MainItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -271,7 +271,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouseSearchDto.getMainItemType());
 
         for(WarehouseSearchDto _warehouse : warehouses) {
-            ItemTypeName _mainItemType = ItemTypeName.valueOf(mainItemType);
+            MainItemType _mainItemType = MainItemType.valueOf(mainItemType);
             assertEquals(_mainItemType, _warehouse.getMainItemType());
         }
 
@@ -280,9 +280,9 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByMainItemType_responseIsNoContent_IfWarehouseNotExist() {
-        warehouseRepository.deleteByMainItemType(ItemTypeName.CLOTH);
+        warehouseRepository.deleteByMainItemType(MainItemType.CLOTH);
 
-        String mainItemType = ItemTypeName.CLOTH.toString();
+        String mainItemType = MainItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -295,9 +295,9 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouse_responseIsBadRequest_IfAddressAndMainItemTypeBothGiven() {
-        warehouseRepository.deleteByMainItemType(ItemTypeName.CLOTH);
+        warehouseRepository.deleteByMainItemType(MainItemType.CLOTH);
 
-        String mainItemType = ItemTypeName.CLOTH.toString();
+        String mainItemType = MainItemType.CLOTH.toString();
         String addressQuery = "addr";
         String url = String.format("/v3/warehouses?category=%s&address=%s&page=0&offset=5", mainItemType, addressQuery);
 
@@ -391,7 +391,7 @@ public class WarehouseApiTest extends ApiTestContext {
                 .workerExist(1)
                 .canPickup(1)
                 .canPark(1)
-                .mainItemType(ItemTypeName.CLOTH)
+                .mainItemType(MainItemType.CLOTH)
                 .warehouseType(WarehouseType.THREEPL)
                 .minReleasePerMonth(2)
                 .latitude(22.2)

@@ -3,7 +3,7 @@ package com.banchango.warehouses.dto;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.ItemTypeName;
+import com.banchango.domain.warehouses.MainItemType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
 import lombok.AllArgsConstructor;
@@ -37,7 +37,7 @@ public class WarehouseDetailResponseDto {
     private Integer workerExist;
     private Integer canPickup;
     private Integer canPark;
-    private ItemTypeName mainItemType;
+    private MainItemType mainItemType;
     private WarehouseType warehouseType;
     private Integer minReleasePerMonth;
     private Double latitude;

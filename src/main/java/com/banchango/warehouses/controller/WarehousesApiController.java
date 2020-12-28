@@ -3,7 +3,7 @@ package com.banchango.warehouses.controller;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.BadRequestException;
 import com.banchango.common.interceptor.ValidateRequired;
-import com.banchango.domain.warehouses.ItemTypeName;
+import com.banchango.domain.warehouses.MainItemType;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
@@ -35,7 +35,7 @@ public class WarehousesApiController {
     @GetMapping("/v3/warehouses")
     public WarehouseSearchResponseDto getAllWarehouses(
             @RequestParam(required = false) String address,
-            @RequestParam(required = false) ItemTypeName category,
+            @RequestParam(required = false) MainItemType category,
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {

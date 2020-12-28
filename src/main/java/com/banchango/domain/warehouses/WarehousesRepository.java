@@ -18,10 +18,10 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
 
     @Transactional
     @Modifying
-    void deleteByMainItemType(ItemTypeName mainItemType);
+    void deleteByMainItemType(MainItemType mainItemType);
 
     List<Warehouses> findByAddressContaining(String address, Pageable pageable);
     Optional<Warehouses> findById(Integer warehouseId);
     List<Warehouses> findByUserId(Integer userId);
-    List<Warehouses> findByMainItemType(ItemTypeName mainItemType, Pageable pageable);
+    List<Warehouses> findByMainItemType(MainItemType mainItemType, Pageable pageable);
 }

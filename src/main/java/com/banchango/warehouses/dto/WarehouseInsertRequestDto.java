@@ -3,7 +3,7 @@ package com.banchango.warehouses.dto;
 import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.ItemTypeName;
+import com.banchango.domain.warehouses.MainItemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -74,9 +74,9 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "canPark이 없습니다.")
     Integer canPark;
 
-    @ValueOfEnum(enumClass = ItemTypeName.class)
+    @ValueOfEnum(enumClass = MainItemType.class)
     @NotNull(message = "mainItemType이 없습니다.")
-    ItemTypeName mainItemType;
+    MainItemType mainItemType;
 
     @ValueOfEnum(enumClass = WarehouseType.class)
     @NotNull(message = "warehouseType이 없습니다.")
