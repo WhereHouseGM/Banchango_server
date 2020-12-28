@@ -27,6 +27,9 @@ public class UserSignupRequestDto {
     @ValueOfEnum(enumClass = UserType.class)
     private String type;
 
+    @NotBlank(message = "Company Name field is required.")
+    private String companyName;
+
     @NotBlank(message = "Phone Number is required.")
     private String phoneNumber;
 
@@ -35,6 +38,7 @@ public class UserSignupRequestDto {
                 .name(name).email(email)
                 .password(password).type(UserType.valueOf(type))
                 .phoneNumber(phoneNumber)
+                .companyName(companyName)
                 .build();
     }
 }
