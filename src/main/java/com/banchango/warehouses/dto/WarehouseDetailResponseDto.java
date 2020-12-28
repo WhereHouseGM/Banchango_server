@@ -36,7 +36,7 @@ public class WarehouseDetailResponseDto {
     private AirConditioningType airConditioningType;
     private Boolean workerExist;
     private Boolean canPickup;
-    private Integer canPark;
+    private Boolean canPark;
     private MainItemType mainItemType;
     private WarehouseType warehouseType;
     private Integer minReleasePerMonth;

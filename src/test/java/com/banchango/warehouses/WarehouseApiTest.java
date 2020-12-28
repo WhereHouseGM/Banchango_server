@@ -390,7 +390,7 @@ public class WarehouseApiTest extends ApiTestContext {
                 .airConditioningType(AirConditioningType.HEATING)
                 .workerExist(true)
                 .canPickup(true)
-                .canPark(1)
+                .canPark(true)
                 .mainItemType(MainItemType.CLOTH)
                 .warehouseType(WarehouseType.THREEPL)
                 .minReleasePerMonth(2)

@@ -72,7 +72,7 @@ public class WarehouseInsertRequestDto {
     Boolean canPickup;
 
     @NotNull(message = "canPark이 없습니다.")
-    Integer canPark;
+    Boolean canPark;
 
     @ValueOfEnum(enumClass = MainItemType.class)
     @NotNull(message = "mainItemType이 없습니다.")
