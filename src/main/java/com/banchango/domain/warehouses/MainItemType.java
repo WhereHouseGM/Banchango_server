@@ -1,5 +1,5 @@
 package com.banchango.domain.warehouses;
 
-public enum ItemTypeName {
+public enum MainItemType {
     CLOTH, FOOD, GENERAL_MERCHANDISE, FURNITURE, COSMETIC, ACCESSORY
 }

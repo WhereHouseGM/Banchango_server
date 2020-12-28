@@ -58,30 +58,27 @@ public class Warehouses {
     private String insurance;
 
     @Column(nullable = false)
-    private Integer cctvExist;
+    private Boolean cctvExist;
 
     @Column(length = 100)
     private String securityCompanyName;
 
     @Column(nullable = false)
-    private Integer doorLockExist;
+    private Boolean doorLockExist;
 
     @Column(nullable = false, columnDefinition = "ENUM('HEATING', 'COOLING', 'BOTH', 'NONE')")
     @Enumerated(EnumType.STRING)
     private AirConditioningType airConditioningType;
 
     @Column(nullable = false)
-    private Integer workerExist;
+    private Boolean workerExist;
 
     @Column(nullable = false)
-    private Integer canPickup;
-
-    @Column(nullable = false)
-    private Integer canPark;
+    private Boolean canPark;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ItemTypeName mainItemType;
+    private MainItemType mainItemType;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -121,7 +118,7 @@ public class Warehouses {
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, AirConditioningType airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -137,7 +134,6 @@ public class Warehouses {
         this.doorLockExist = doorLockExist;
         this.airConditioningType = airConditioningType;
         this.workerExist = workerExist;
-        this.canPickup = canPickup;
         this.canPark = canPark;
         this.mainItemType = mainItemType;
         this.userId = userId;
@@ -149,7 +145,7 @@ public class Warehouses {
 
     public WarehouseImages getMainImage() {
         for(WarehouseImages image : warehouseImages) {
-            if(image.getIsMain() == 1) return image;
+            if(image.isMain()) return image;
         }
         return null;
     }

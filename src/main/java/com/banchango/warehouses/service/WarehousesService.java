@@ -2,9 +2,10 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
-import com.banchango.domain.warehouses.ItemTypeName;
+import com.banchango.domain.warehouses.MainItemType;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
@@ -54,7 +55,6 @@ public class WarehousesService {
                 .doorLockExist(warehouseInsertRequestDto.getDoorLockExist())
                 .airConditioningType(warehouseInsertRequestDto.getAirConditioningType())
                 .workerExist(warehouseInsertRequestDto.getWorkerExist())
-                .canPickup(warehouseInsertRequestDto.getCanPickup())
                 .canPark(warehouseInsertRequestDto.getCanPark())
                 .mainItemType(warehouseInsertRequestDto.getMainItemType())
                 .warehouseType(warehouseInsertRequestDto.getWarehouseType())
@@ -69,6 +69,7 @@ public class WarehousesService {
 
         List<WarehouseConditions> warehouseConditions = warehouseInsertRequestDto.getWarehouseCondition().stream()
                 .map(WarehouseConditions::new).collect(Collectors.toList());
+
         warehouse.setWarehouseConditions(warehouseConditions);
 
         List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseInsertRequestDto.getWarehouseFacilityUsages().stream()
@@ -95,7 +96,7 @@ public class WarehousesService {
     }
 
     @Transactional(readOnly = true)
-    public List<WarehouseSearchDto> getWarehousesByMainItemType(ItemTypeName mainItemType, PageRequest pageRequest) {
+    public List<WarehouseSearchDto> getWarehousesByMainItemType(MainItemType mainItemType, PageRequest pageRequest) {
         List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemType(mainItemType, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))

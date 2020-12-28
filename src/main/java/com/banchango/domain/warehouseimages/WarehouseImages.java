@@ -21,20 +21,20 @@ public class WarehouseImages {
     private String url;
 
     @Column(nullable = false)
-    private Integer isMain;
+    private Boolean isMain;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouses warehouse;
 
     @Builder
-    public WarehouseImages(String url, Integer isMain, Warehouses warehouse) {
+    public WarehouseImages(String url, Boolean isMain, Warehouses warehouse) {
         this.url = url;
         this.isMain = isMain;
         this.warehouse = warehouse;
     }
 
     public boolean isMain() {
-        return isMain == 1;
+        return isMain;
     }
 }

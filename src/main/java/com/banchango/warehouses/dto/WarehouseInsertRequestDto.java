@@ -1,9 +1,10 @@
 package com.banchango.warehouses.dto;
 
 import com.banchango.common.validator.ValueOfEnum;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.ItemTypeName;
+import com.banchango.domain.warehouses.MainItemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -54,29 +55,26 @@ public class WarehouseInsertRequestDto {
     String insurance;
 
     @NotNull(message = "cctvExist이 없습니다.")
-    Integer cctvExist;
+    Boolean cctvExist;
 
     String securityCompanyName;
 
     @NotNull(message = "doorLockExist이 없습니다.")
-    Integer doorLockExist;
+    Boolean doorLockExist;
 
     @ValueOfEnum(enumClass = AirConditioningType.class)
     @NotNull(message = "airConditioningType이 없습니다.")
     AirConditioningType airConditioningType;
 
     @NotNull(message = "workerExist이 없습니다.")
-    Integer workerExist;
-
-    @NotNull(message = "canPickup이 없습니다.")
-    Integer canPickup;
+    Boolean workerExist;
 
     @NotNull(message = "canPark이 없습니다.")
-    Integer canPark;
+    Boolean canPark;
 
-    @ValueOfEnum(enumClass = ItemTypeName.class)
+    @ValueOfEnum(enumClass = MainItemType.class)
     @NotNull(message = "mainItemType이 없습니다.")
-    ItemTypeName mainItemType;
+    MainItemType mainItemType;
 
     @ValueOfEnum(enumClass = WarehouseType.class)
     @NotNull(message = "warehouseType이 없습니다.")
@@ -94,8 +92,9 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "deliveryTypes가 없습니다.")
     List<String> deliveryTypes;
 
+    @ValueOfEnum(enumClass = WarehouseCondition.class)
     @NotNull(message = "warehouseCondition이 없습니다.")
-    List<String> warehouseCondition;
+    List<WarehouseCondition> warehouseCondition;
 
     @NotNull(message = "warehouseFacilityUsages가 없습니다.")
     List<String> warehouseFacilityUsages;

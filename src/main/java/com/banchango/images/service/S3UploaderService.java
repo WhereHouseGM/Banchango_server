@@ -107,7 +107,7 @@ public class S3UploaderService {
         }
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         String url = uploadFile(file);
-        WarehouseImages image = WarehouseImages.builder().url(url).isMain(0).warehouse(warehouse).build();
+        WarehouseImages image = WarehouseImages.builder().url(url).isMain(false).warehouse(warehouse).build();
         WarehouseImages savedImage = warehouseImagesRepository.save(image);
         return new ImageInfoResponseDto(savedImage);
     }
@@ -123,7 +123,7 @@ public class S3UploaderService {
         }
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         String url = uploadFile(file);
-        WarehouseImages image = WarehouseImages.builder().url(url).isMain(1).warehouse(warehouse).build();
+        WarehouseImages image = WarehouseImages.builder().url(url).isMain(true).warehouse(warehouse).build();
         WarehouseImages savedImage = warehouseImagesRepository.save(image);
         return new ImageInfoResponseDto(savedImage);
     }

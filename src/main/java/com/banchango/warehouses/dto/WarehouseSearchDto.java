@@ -2,7 +2,7 @@ package com.banchango.warehouses.dto;
 
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseimages.WarehouseImages;
-import com.banchango.domain.warehouses.ItemTypeName;
+import com.banchango.domain.warehouses.MainItemType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class WarehouseSearchDto {
     private String openAt;
     private Integer space;
     private List<String> deliveryTypes;
-    private ItemTypeName mainItemType;
+    private MainItemType mainItemType;
 
     public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl) {
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
