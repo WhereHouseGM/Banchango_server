@@ -32,7 +32,7 @@ public class WarehouseDetailResponseDto {
     private String insurance;
     private Boolean cctvExist;
     private String securityCompanyName;
-    private Integer doorLockExist;
+    private Boolean doorLockExist;
     private AirConditioningType airConditioningType;
     private Integer workerExist;
     private Integer canPickup;

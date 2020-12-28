@@ -59,7 +59,7 @@ public class WarehouseInsertRequestDto {
     String securityCompanyName;
 
     @NotNull(message = "doorLockExist이 없습니다.")
-    Integer doorLockExist;
+    Boolean doorLockExist;
 
     @ValueOfEnum(enumClass = AirConditioningType.class)
     @NotNull(message = "airConditioningType이 없습니다.")

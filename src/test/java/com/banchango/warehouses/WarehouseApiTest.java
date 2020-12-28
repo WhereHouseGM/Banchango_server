@@ -386,7 +386,7 @@ public class WarehouseApiTest extends ApiTestContext {
                 .insurance("insurance")
                 .cctvExist(true)
                 .securityCompanyName("name")
-                .doorLockExist(1)
+                .doorLockExist(true)
                 .airConditioningType(AirConditioningType.HEATING)
                 .workerExist(1)
                 .canPickup(1)
