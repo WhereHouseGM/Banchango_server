@@ -2,6 +2,7 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.MainItemType;
@@ -67,7 +68,7 @@ public class WarehousesService {
         warehouse.setDeliveryTypes(deliveryTypes);
 
         List<WarehouseConditions> warehouseConditions = warehouseInsertRequestDto.getWarehouseCondition().stream()
-                .map(condition -> new WarehouseConditions(condition.name())).collect(Collectors.toList());
+                .map(WarehouseConditions::new).collect(Collectors.toList());
 
         warehouse.setWarehouseConditions(warehouseConditions);
 
