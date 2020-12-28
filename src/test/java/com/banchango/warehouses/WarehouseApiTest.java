@@ -384,7 +384,7 @@ public class WarehouseApiTest extends ApiTestContext {
                 .closeAt("18:00")
                 .availableTimeDetail("availableTimeDetail")
                 .insurance("insurance")
-                .cctvExist(1)
+                .cctvExist(true)
                 .securityCompanyName("name")
                 .doorLockExist(1)
                 .airConditioningType(AirConditioningType.HEATING)

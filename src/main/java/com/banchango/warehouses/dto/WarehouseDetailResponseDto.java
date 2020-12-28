@@ -30,7 +30,7 @@ public class WarehouseDetailResponseDto {
     private String closeAt;
     private String availableTimeDetail;
     private String insurance;
-    private Integer cctvExist;
+    private Boolean cctvExist;
     private String securityCompanyName;
     private Integer doorLockExist;
     private AirConditioningType airConditioningType;

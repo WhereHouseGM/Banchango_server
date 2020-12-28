@@ -58,7 +58,7 @@ public class Warehouses {
     private String insurance;
 
     @Column(nullable = false)
-    private Integer cctvExist;
+    private Boolean cctvExist;
 
     @Column(length = 100)
     private String securityCompanyName;
@@ -121,7 +121,7 @@ public class Warehouses {
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, AirConditioningType airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Integer doorLockExist, AirConditioningType airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;

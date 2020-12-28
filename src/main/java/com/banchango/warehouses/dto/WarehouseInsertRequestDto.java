@@ -54,7 +54,7 @@ public class WarehouseInsertRequestDto {
     String insurance;
 
     @NotNull(message = "cctvExist이 없습니다.")
-    Integer cctvExist;
+    Boolean cctvExist;
 
     String securityCompanyName;
 
