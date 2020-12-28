@@ -2,7 +2,6 @@ package com.banchango.users.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
-import com.banchango.common.exception.BadRequestException;
 import com.banchango.common.exception.InternalServerErrorException;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -25,10 +24,10 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
 
-    @Value("${BANCHANGO_EMAIL_ID}")
+    @Value("${banchango.email.id}")
     private String senderEmail;
 
-    @Value("${BANCHANGO_EMAIL_PASSWORD}")
+    @Value("${banchango.email.password}")
     private String senderEmailPassword;
 
     @Transactional(readOnly = true)
@@ -77,8 +76,7 @@ public class UsersService {
                 return new BasicMessageResponseDto("임시 비밀번호 이메일이 정상적으로 전송되었습니다.");
             } catch(Exception exception) {
                 exception.printStackTrace();
-                return null;
-                //throw new InternalServerErrorException();
+                throw new InternalServerErrorException();
             }
         } else throw new UserEmailNotFoundException();
     }
