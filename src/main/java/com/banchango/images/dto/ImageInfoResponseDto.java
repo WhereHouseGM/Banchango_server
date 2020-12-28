@@ -11,7 +11,7 @@ import lombok.Setter;
 public class ImageInfoResponseDto {
 
     private String url;
-    private Integer isMain;
+    private Boolean isMain;
 
     public ImageInfoResponseDto(WarehouseImages image) {
         this.url = image.getUrl();

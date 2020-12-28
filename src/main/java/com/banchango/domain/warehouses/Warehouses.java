@@ -149,7 +149,7 @@ public class Warehouses {
 
     public WarehouseImages getMainImage() {
         for(WarehouseImages image : warehouseImages) {
-            if(image.getIsMain() == 1) return image;
+            if(image.isMain()) return image;
         }
         return null;
     }
