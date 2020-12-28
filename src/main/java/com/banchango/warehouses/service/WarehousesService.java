@@ -68,7 +68,8 @@ public class WarehousesService {
         warehouse.setDeliveryTypes(deliveryTypes);
 
         List<WarehouseConditions> warehouseConditions = warehouseInsertRequestDto.getWarehouseCondition().stream()
-                .map(WarehouseConditions::new).collect(Collectors.toList());
+                .map(condition -> new WarehouseConditions(condition.name())).collect(Collectors.toList());
+
         warehouse.setWarehouseConditions(warehouseConditions);
 
         List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseInsertRequestDto.getWarehouseFacilityUsages().stream()
