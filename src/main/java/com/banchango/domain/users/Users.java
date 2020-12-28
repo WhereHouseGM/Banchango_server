@@ -31,6 +31,9 @@ public class Users extends BaseTimeEntity {
     private UserType type;
 
     @Column(length = 40)
+    private String companyName;
+
+    @Column(length = 40)
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -41,15 +44,17 @@ public class Users extends BaseTimeEntity {
         this.name = requestDto.getName();
         this.password = requestDto.getPassword();
         this.type = UserType.valueOf(requestDto.getType());
+        this.companyName = requestDto.getCompanyName();
         this.phoneNumber = requestDto.getPhoneNumber();
     }
 
     @Builder
-    public Users(String name, String email, String password, UserType type, String phoneNumber) {
+    public Users(String name, String email, String password, UserType type, String companyName, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.type = type;
+        this.companyName = companyName;
         this.phoneNumber = phoneNumber;
         this.role = UserRole.USER;
     }
