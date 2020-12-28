@@ -54,7 +54,6 @@ public class WarehousesService {
                 .doorLockExist(warehouseInsertRequestDto.getDoorLockExist())
                 .airConditioningType(warehouseInsertRequestDto.getAirConditioningType())
                 .workerExist(warehouseInsertRequestDto.getWorkerExist())
-                .canPickup(warehouseInsertRequestDto.getCanPickup())
                 .canPark(warehouseInsertRequestDto.getCanPark())
                 .mainItemType(warehouseInsertRequestDto.getMainItemType())
                 .warehouseType(warehouseInsertRequestDto.getWarehouseType())

@@ -69,9 +69,6 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "workerExist이 없습니다.")
     Boolean workerExist;
 
-    @NotNull(message = "canPickup이 없습니다.")
-    Boolean canPickup;
-
     @NotNull(message = "canPark이 없습니다.")
     Boolean canPark;
 

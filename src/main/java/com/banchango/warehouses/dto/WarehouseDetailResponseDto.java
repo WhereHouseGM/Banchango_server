@@ -35,7 +35,6 @@ public class WarehouseDetailResponseDto {
     private Boolean doorLockExist;
     private AirConditioningType airConditioningType;
     private Boolean workerExist;
-    private Boolean canPickup;
     private Boolean canPark;
     private MainItemType mainItemType;
     private WarehouseType warehouseType;
@@ -97,7 +96,6 @@ public class WarehouseDetailResponseDto {
         this.doorLockExist = warehouse.getDoorLockExist();
         this.airConditioningType = warehouse.getAirConditioningType();
         this.workerExist = warehouse.getWorkerExist();
-        this.canPickup = warehouse.getCanPickup();
         this.canPark = warehouse.getCanPark();
         this.mainItemType = warehouse.getMainItemType();
         this.warehouseType = warehouse.getWarehouseType();

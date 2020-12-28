@@ -82,7 +82,6 @@ public class WarehouseApiTest extends ApiTestContext {
         requestBody.put("doorLockExist", 1);
         requestBody.put("airConditioningType", AirConditioningType.HEATING);
         requestBody.put("workerExist", 1);
-        requestBody.put("canPickup", 1);
         requestBody.put("canPark", 1);
         requestBody.put("mainItemType", "CLOTH");
         requestBody.put("warehouseType", "THREEPL");
@@ -339,7 +338,6 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getDoorLockExist());
         assertNotNull(warehouse.getAirConditioningType());
         assertNotNull(warehouse.getWorkerExist());
-        assertNotNull(warehouse.getCanPickup());
         assertNotNull(warehouse.getCanPark());
         assertNotNull(warehouse.getMainItemType());
         assertNotNull(warehouse.getWarehouseType());
@@ -389,7 +387,6 @@ public class WarehouseApiTest extends ApiTestContext {
                 .doorLockExist(true)
                 .airConditioningType(AirConditioningType.HEATING)
                 .workerExist(true)
-                .canPickup(true)
                 .canPark(true)
                 .mainItemType(MainItemType.CLOTH)
                 .warehouseType(WarehouseType.THREEPL)

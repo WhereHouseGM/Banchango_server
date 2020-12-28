@@ -74,9 +74,6 @@ public class Warehouses {
     private Boolean workerExist;
 
     @Column(nullable = false)
-    private Boolean canPickup;
-
-    @Column(nullable = false)
     private Boolean canPark;
 
     @Column(nullable = false)
@@ -121,7 +118,7 @@ public class Warehouses {
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPickup, Boolean canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -137,7 +134,6 @@ public class Warehouses {
         this.doorLockExist = doorLockExist;
         this.airConditioningType = airConditioningType;
         this.workerExist = workerExist;
-        this.canPickup = canPickup;
         this.canPark = canPark;
         this.mainItemType = mainItemType;
         this.userId = userId;
