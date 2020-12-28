@@ -69,7 +69,7 @@ public class WarehouseInsertRequestDto {
     Boolean workerExist;
 
     @NotNull(message = "canPickup이 없습니다.")
-    Integer canPickup;
+    Boolean canPickup;
 
     @NotNull(message = "canPark이 없습니다.")
     Integer canPark;
