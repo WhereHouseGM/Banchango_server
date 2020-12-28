@@ -30,7 +30,7 @@ public class Users extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Column(length = 40)
+    @Column(length = 100, nullable = false)
     private String companyName;
 
     @Column(length = 40)
