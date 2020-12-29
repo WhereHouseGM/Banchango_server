@@ -106,7 +106,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void delete_warehouse_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses warehouse = saveWarehouse();
+        Warehouses warehouse = saveWarehouse(false);
         String url = "/v3/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
@@ -145,7 +145,7 @@ public class WarehouseApiTest extends ApiTestContext {
     
     @Test
     public void get_warehouseByAddress_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses tempWarehouse = saveWarehouse();
+        Warehouses tempWarehouse = saveWarehouse(true);
 
         String addressQuery = "addr";
         String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
@@ -177,6 +177,7 @@ public class WarehouseApiTest extends ApiTestContext {
         for(WarehouseSearchDto _warehouse : warehouses) {
             String address = _warehouse.getAddress().toLowerCase();
             assertTrue(address.contains(addressQuery.toLowerCase()));
+            assertTrue(_warehouse.getIsViewable());
         }
 
         warehouseRepository.delete(tempWarehouse);
@@ -197,7 +198,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses tempWarehouse = saveWarehouse();
+        Warehouses tempWarehouse = saveWarehouse(true);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -222,6 +223,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getSpace());
         assertNotNull(warehouse.getDeliveryTypes());
         assertNotNull(warehouse.getMainItemType());
+        assertTrue(warehouse.getIsViewable());
 
         warehouseRepository.delete(tempWarehouse);
     }
@@ -239,7 +241,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByMainItemType_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses warehouse = saveWarehouse();
+        Warehouses warehouse = saveWarehouse(true);
 
         String mainItemType = MainItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
@@ -272,6 +274,7 @@ public class WarehouseApiTest extends ApiTestContext {
         for(WarehouseSearchDto _warehouse : warehouses) {
             MainItemType _mainItemType = MainItemType.valueOf(mainItemType);
             assertEquals(_mainItemType, _warehouse.getMainItemType());
+            assertTrue(_warehouse.getIsViewable());
         }
 
         warehouseRepository.delete(warehouse);
@@ -309,7 +312,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseDetail_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses _warehouse = saveWarehouse();
+        Warehouses _warehouse = saveWarehouse(true);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -350,6 +353,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getWarehouseFacilityUsages());
         assertNotNull(warehouse.getWarehouseUsageCautions());
         assertNotNull(warehouse.getImages());
+        assertTrue(warehouse.getIsViewable());
     }
 
     @Test
@@ -367,7 +371,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    private Warehouses saveWarehouse() {
+    private Warehouses saveWarehouse(Boolean isViewable) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
         Warehouses warehouse = Warehouses.builder()
@@ -393,6 +397,7 @@ public class WarehouseApiTest extends ApiTestContext {
                 .minReleasePerMonth(2)
                 .latitude(22.2)
                 .longitude(22.2)
+                .isViewable(isViewable)
                 .build();
 
         return warehouseRepository.save(warehouse);

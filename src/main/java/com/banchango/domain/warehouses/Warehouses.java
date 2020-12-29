@@ -94,7 +94,7 @@ public class Warehouses {
     private Double longitude;
 
     @Column(nullable = false)
-    private Boolean isViewable;
+    private Boolean isViewable = false;
 
     @Setter
     @OneToMany(cascade = CascadeType.ALL)
