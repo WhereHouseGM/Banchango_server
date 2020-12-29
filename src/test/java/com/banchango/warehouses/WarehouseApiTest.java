@@ -177,7 +177,6 @@ public class WarehouseApiTest extends ApiTestContext {
         for(WarehouseSearchDto _warehouse : warehouses) {
             String address = _warehouse.getAddress().toLowerCase();
             assertTrue(address.contains(addressQuery.toLowerCase()));
-            assertTrue(_warehouse.getIsViewableFlag());
         }
 
         warehouseRepository.delete(tempWarehouse);
@@ -238,7 +237,6 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getSpace());
         assertNotNull(warehouse.getDeliveryTypes());
         assertNotNull(warehouse.getMainItemType());
-        assertTrue(warehouse.getIsViewableFlag());
 
         warehouseRepository.delete(tempWarehouse);
     }
@@ -302,7 +300,6 @@ public class WarehouseApiTest extends ApiTestContext {
         for(WarehouseSearchDto _warehouse : warehouses) {
             MainItemType _mainItemType = MainItemType.valueOf(mainItemType);
             assertEquals(_mainItemType, _warehouse.getMainItemType());
-            assertTrue(_warehouse.getIsViewableFlag());
         }
 
         warehouseRepository.delete(warehouse);
@@ -397,7 +394,6 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getWarehouseFacilityUsages());
         assertNotNull(warehouse.getWarehouseUsageCautions());
         assertNotNull(warehouse.getImages());
-        assertTrue(warehouse.getIsViewableFlag());
 
         warehouseRepository.delete(_warehouse);
     }
@@ -413,7 +409,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         warehouseRepository.delete(_warehouse);
     }
 

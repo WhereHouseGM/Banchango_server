@@ -27,7 +27,6 @@ public class WarehouseSearchDto {
     private Integer space;
     private List<String> deliveryTypes;
     private MainItemType mainItemType;
-    private Boolean isViewableFlag;
 
     public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl) {
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
@@ -54,6 +53,5 @@ public class WarehouseSearchDto {
         this.space = warehouse.getSpace();
         this.deliveryTypes = deliveryTypes;
         this.mainItemType = warehouse.getMainItemType();
-        this.isViewableFlag = warehouse.getIsViewableFlag();
     }
 }
