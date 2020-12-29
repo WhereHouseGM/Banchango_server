@@ -93,6 +93,9 @@ public class Warehouses {
     @Column(nullable = false)
     private Double longitude;
 
+    @Column(nullable = false)
+    private Boolean isViewable;
+
     @Setter
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
@@ -118,7 +121,7 @@ public class Warehouses {
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, Boolean isViewable) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -141,6 +144,7 @@ public class Warehouses {
         this.longitude = longitude;
         this.warehouseType = warehouseType;
         this.minReleasePerMonth = minReleasePerMonth;
+        this.isViewable = isViewable;
     }
 
     public WarehouseImages getMainImage() {
