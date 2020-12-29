@@ -21,6 +21,7 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
     List<Warehouses> findAllByIsViewableFlag(Boolean isViewableFlag, Pageable pageable);
     List<Warehouses> findByAddressContainingAndIsViewableFlag(String address, Boolean isViewableFlag, Pageable pageable);
     Optional<Warehouses> findById(Integer warehouseId);
+    Optional<Warehouses> findByIdAndIsViewableFlag(Integer warehouseId, Boolean isViewableFlag);
     List<Warehouses> findByUserId(Integer userId);
     List<Warehouses> findByMainItemTypeAndIsViewableFlag(MainItemType mainItemType, Boolean isViewableFlag, Pageable pageable);
 }

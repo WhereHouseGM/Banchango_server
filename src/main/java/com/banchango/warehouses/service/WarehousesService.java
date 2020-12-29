@@ -128,9 +128,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-
-        if(!warehouse.isViewable()) throw new WarehouseNotViewableException();
+        Warehouses warehouse = warehousesRepository.findByIdAndIsViewableFlag(warehouseId, true).orElseThrow(WarehouseIdNotFoundException::new);
 
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
