@@ -10,11 +10,8 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
+import com.banchango.warehouses.exception.*;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.exception.WarehouseNotFoundException;
-import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -132,6 +129,8 @@ public class WarehousesService {
     @Transactional(readOnly = true)
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+
+        if(!warehouse.isViewable()) throw new WarehouseNotViewableException();
 
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }

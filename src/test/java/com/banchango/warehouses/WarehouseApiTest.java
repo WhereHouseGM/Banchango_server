@@ -403,7 +403,7 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_warehouseDetail_responseIsNoContent_IfIsViewableIsFalse() {
+    public void get_warehouseDetail_responseIsForbidden_IfIsViewableIsFalse() {
         Warehouses _warehouse = saveWarehouse(false);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
@@ -413,7 +413,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         warehouseRepository.delete(_warehouse);
     }
 
