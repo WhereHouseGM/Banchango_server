@@ -2,7 +2,6 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.MainItemType;
@@ -86,7 +85,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByAddress(String address, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContaining(address, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContainingAndIsViewable(address, true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -98,7 +97,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByMainItemType(MainItemType mainItemType, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemType(mainItemType, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemTypeAndIsViewable(mainItemType, true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -110,7 +109,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehouses(PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findAll(pageRequest).getContent()
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findAllByIsViewable(true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());

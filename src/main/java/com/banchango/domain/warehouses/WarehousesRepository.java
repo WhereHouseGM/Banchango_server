@@ -18,8 +18,9 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
 
     void deleteByMainItemType(MainItemType mainItemType);
 
-    List<Warehouses> findByAddressContaining(String address, Pageable pageable);
+    List<Warehouses> findAllByIsViewable(Boolean isViewable, Pageable pageable);
+    List<Warehouses> findByAddressContainingAndIsViewable(String address, Boolean isViewable, Pageable pageable);
     Optional<Warehouses> findById(Integer warehouseId);
     List<Warehouses> findByUserId(Integer userId);
-    List<Warehouses> findByMainItemType(MainItemType mainItemType, Pageable pageable);
+    List<Warehouses> findByMainItemTypeAndIsViewable(MainItemType mainItemType, Boolean isViewable, Pageable pageable);
 }
