@@ -61,6 +61,7 @@ public class WarehousesService {
                 .minReleasePerMonth(warehouseInsertRequestDto.getMinReleasePerMonth())
                 .latitude(warehouseInsertRequestDto.getLatitude())
                 .longitude(warehouseInsertRequestDto.getLongitude())
+                .isViewable(false)
                 .build();
 
         List<DeliveryTypes> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
