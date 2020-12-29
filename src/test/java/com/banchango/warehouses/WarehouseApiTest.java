@@ -3,6 +3,7 @@ package com.banchango.warehouses;
 import com.banchango.ApiTestContext;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;

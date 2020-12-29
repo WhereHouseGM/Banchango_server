@@ -1,6 +1,8 @@
 package com.banchango.domain.warehouses;
 
 import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouseimages.WarehouseImages;
@@ -45,10 +47,10 @@ public class Warehouses {
     @Column(nullable = false)
     private Integer availableWeekdays;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     private String openAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     private String closeAt;
 
     @Column(length = 100)
@@ -105,6 +107,11 @@ public class Warehouses {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
+
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private List<MainItemTypes> mainItemTypes = new ArrayList<>();
 
     @Setter
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

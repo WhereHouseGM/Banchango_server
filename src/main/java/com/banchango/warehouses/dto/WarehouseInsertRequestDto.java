@@ -4,7 +4,7 @@ import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.MainItemType;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

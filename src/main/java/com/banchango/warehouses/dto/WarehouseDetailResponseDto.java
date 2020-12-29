@@ -3,7 +3,7 @@ package com.banchango.warehouses.dto;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.MainItemType;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
 import lombok.AllArgsConstructor;
