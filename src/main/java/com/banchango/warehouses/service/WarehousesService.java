@@ -2,7 +2,6 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.MainItemType;
@@ -11,11 +10,8 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
+import com.banchango.warehouses.exception.*;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.exception.WarehouseNotFoundException;
-import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -61,6 +57,7 @@ public class WarehousesService {
                 .minReleasePerMonth(warehouseInsertRequestDto.getMinReleasePerMonth())
                 .latitude(warehouseInsertRequestDto.getLatitude())
                 .longitude(warehouseInsertRequestDto.getLongitude())
+                .isViewableFlag(false)
                 .build();
 
         List<DeliveryTypes> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
@@ -85,7 +82,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByAddress(String address, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContaining(address, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContainingAndIsViewableFlag(address, true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -97,7 +94,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByMainItemType(MainItemType mainItemType, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemType(mainItemType, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemTypeAndIsViewableFlag(mainItemType, true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -109,7 +106,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehouses(PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findAll(pageRequest).getContent()
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findAllByIsViewableFlag(true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -131,7 +128,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = warehousesRepository.findByIdAndIsViewableFlag(warehouseId, true).orElseThrow(WarehouseIdNotFoundException::new);
 
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
