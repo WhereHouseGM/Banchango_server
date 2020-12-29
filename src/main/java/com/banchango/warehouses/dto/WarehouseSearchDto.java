@@ -1,8 +1,8 @@
 package com.banchango.warehouses.dto;
 
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseimages.WarehouseImages;
-import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
 import lombok.Getter;
@@ -26,18 +26,23 @@ public class WarehouseSearchDto {
     private String openAt;
     private Integer space;
     private List<String> deliveryTypes;
-    private MainItemType mainItemType;
+    private List<MainItemType> mainItemTypes;
 
     public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl) {
+        List<MainItemType> mainItemTypes = warehouse.getMainItemTypes()
+            .stream()
+            .map(mainItemType -> mainItemType.getType())
+            .collect(Collectors.toList());
+
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
-                .stream()
-                .map(condition -> condition.getCondition())
-                .collect(Collectors.toList());
+            .stream()
+            .map(condition -> condition.getCondition())
+            .collect(Collectors.toList());
 
         List<String> deliveryTypes = warehouse.getDeliveryTypes()
-                .stream()
-                .map(deliveryType -> deliveryType.getName())
-                .collect(Collectors.toList());
+            .stream()
+            .map(deliveryType -> deliveryType.getName())
+            .collect(Collectors.toList());
 
         WarehouseImages mainImage = warehouse.getMainImage();
 
@@ -52,6 +57,6 @@ public class WarehouseSearchDto {
         this.openAt = warehouse.getOpenAt();
         this.space = warehouse.getSpace();
         this.deliveryTypes = deliveryTypes;
-        this.mainItemType = warehouse.getMainItemType();
+        this.mainItemTypes = mainItemTypes;
     }
 }

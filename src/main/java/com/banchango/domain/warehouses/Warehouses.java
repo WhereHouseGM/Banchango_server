@@ -1,7 +1,6 @@
 package com.banchango.domain.warehouses;
 
 import com.banchango.domain.deliverytypes.DeliveryTypes;
-import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
@@ -80,10 +79,6 @@ public class Warehouses {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private MainItemType mainItemType;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private WarehouseType warehouseType;
 
     @Column(nullable = false)
@@ -128,7 +123,7 @@ public class Warehouses {
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, Boolean isViewableFlag) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, Boolean isViewableFlag) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -145,7 +140,6 @@ public class Warehouses {
         this.airConditioningType = airConditioningType;
         this.workerExist = workerExist;
         this.canPark = canPark;
-        this.mainItemType = mainItemType;
         this.userId = userId;
         this.latitude = latitude;
         this.longitude = longitude;

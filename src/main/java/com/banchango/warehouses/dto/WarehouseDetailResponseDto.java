@@ -3,7 +3,6 @@ package com.banchango.warehouses.dto;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
 import lombok.AllArgsConstructor;
@@ -36,7 +35,7 @@ public class WarehouseDetailResponseDto {
     private AirConditioningType airConditioningType;
     private Boolean workerExist;
     private Boolean canPark;
-    private MainItemType mainItemType;
+    private List<String> mainItemTypes;
     private WarehouseType warehouseType;
     private Integer minReleasePerMonth;
     private Double latitude;
@@ -51,31 +50,36 @@ public class WarehouseDetailResponseDto {
     private List<String> images = new ArrayList<>();
 
     public WarehouseDetailResponseDto(Warehouses warehouse, String defaultImageUrl) {
+        List<String> mainItemTypes = warehouse.getMainItemTypes()
+            .stream()
+            .map(mainItemType -> mainItemType.getType().name())
+            .collect(Collectors.toList());
+
         List<String> deliveryTypes = warehouse.getDeliveryTypes()
-                .stream()
-                .map(deliveryType -> deliveryType.getName())
-                .collect(Collectors.toList());
+            .stream()
+            .map(deliveryType -> deliveryType.getName())
+            .collect(Collectors.toList());
 
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
-                .stream()
-                .map(condition -> condition.getCondition())
-                .collect(Collectors.toList());
+            .stream()
+            .map(condition -> condition.getCondition())
+            .collect(Collectors.toList());
 
         List<String> warehouseFacilityUsages = warehouse.getWarehouseFacilityUsages()
-                .stream()
-                .map(facilityUsage -> facilityUsage.getContent())
-                .collect(Collectors.toList());
+            .stream()
+            .map(facilityUsage -> facilityUsage.getContent())
+            .collect(Collectors.toList());
 
         List<String> warehouseUsageCautions = warehouse.getWarehouseUsageCautions()
-                .stream()
-                .map(usageCaution -> usageCaution.getContent())
-                .collect(Collectors.toList());
+            .stream()
+            .map(usageCaution -> usageCaution.getContent())
+            .collect(Collectors.toList());
 
         List<String> images = warehouse.getWarehouseImages()
-                .stream()
-                .filter(image -> !image.isMain())
-                .map(image -> image.getUrl())
-                .collect(Collectors.toList());
+            .stream()
+            .filter(image -> !image.isMain())
+            .map(image -> image.getUrl())
+            .collect(Collectors.toList());
 
         WarehouseImages mainImage = warehouse.getMainImage();
 
@@ -97,7 +101,7 @@ public class WarehouseDetailResponseDto {
         this.airConditioningType = warehouse.getAirConditioningType();
         this.workerExist = warehouse.getWorkerExist();
         this.canPark = warehouse.getCanPark();
-        this.mainItemType = warehouse.getMainItemType();
+        this.mainItemTypes = mainItemTypes;
         this.warehouseType = warehouse.getWarehouseType();
         this.minReleasePerMonth = warehouse.getMinReleasePerMonth();
         this.latitude = warehouse.getLatitude();
