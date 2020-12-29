@@ -94,7 +94,7 @@ public class Warehouses {
     private Double longitude;
 
     @Column(nullable = false)
-    private Boolean isViewable = false;
+    private Boolean isViewableFlag = false;
 
     @Setter
     @OneToMany(cascade = CascadeType.ALL)
@@ -121,7 +121,7 @@ public class Warehouses {
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, Boolean isViewable) {
+    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, MainItemType mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, Boolean isViewableFlag) {
         this.name = name;
         this.insurance = insurance;
         this.space = space;
@@ -144,7 +144,7 @@ public class Warehouses {
         this.longitude = longitude;
         this.warehouseType = warehouseType;
         this.minReleasePerMonth = minReleasePerMonth;
-        this.isViewable = isViewable;
+        this.isViewableFlag = isViewableFlag;
     }
 
     public WarehouseImages getMainImage() {
@@ -152,5 +152,9 @@ public class Warehouses {
             if(image.isMain()) return image;
         }
         return null;
+    }
+
+    public boolean isViewable() {
+        return isViewableFlag;
     }
 }

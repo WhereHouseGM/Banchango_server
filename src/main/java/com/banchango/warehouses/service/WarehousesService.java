@@ -60,7 +60,7 @@ public class WarehousesService {
                 .minReleasePerMonth(warehouseInsertRequestDto.getMinReleasePerMonth())
                 .latitude(warehouseInsertRequestDto.getLatitude())
                 .longitude(warehouseInsertRequestDto.getLongitude())
-                .isViewable(false)
+                .isViewableFlag(false)
                 .build();
 
         List<DeliveryTypes> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
@@ -85,7 +85,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByAddress(String address, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContainingAndIsViewable(address, true, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContainingAndIsViewableFlag(address, true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -97,7 +97,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByMainItemType(MainItemType mainItemType, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemTypeAndIsViewable(mainItemType, true, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemTypeAndIsViewableFlag(mainItemType, true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -109,7 +109,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehouses(PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findAllByIsViewable(true, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findAllByIsViewableFlag(true, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());

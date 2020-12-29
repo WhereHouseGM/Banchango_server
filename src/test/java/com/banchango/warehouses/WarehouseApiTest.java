@@ -177,7 +177,7 @@ public class WarehouseApiTest extends ApiTestContext {
         for(WarehouseSearchDto _warehouse : warehouses) {
             String address = _warehouse.getAddress().toLowerCase();
             assertTrue(address.contains(addressQuery.toLowerCase()));
-            assertTrue(_warehouse.getIsViewable());
+            assertTrue(_warehouse.getIsViewableFlag());
         }
 
         warehouseRepository.delete(tempWarehouse);
@@ -238,7 +238,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getSpace());
         assertNotNull(warehouse.getDeliveryTypes());
         assertNotNull(warehouse.getMainItemType());
-        assertTrue(warehouse.getIsViewable());
+        assertTrue(warehouse.getIsViewableFlag());
 
         warehouseRepository.delete(tempWarehouse);
     }
@@ -302,7 +302,7 @@ public class WarehouseApiTest extends ApiTestContext {
         for(WarehouseSearchDto _warehouse : warehouses) {
             MainItemType _mainItemType = MainItemType.valueOf(mainItemType);
             assertEquals(_mainItemType, _warehouse.getMainItemType());
-            assertTrue(_warehouse.getIsViewable());
+            assertTrue(_warehouse.getIsViewableFlag());
         }
 
         warehouseRepository.delete(warehouse);
@@ -397,7 +397,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getWarehouseFacilityUsages());
         assertNotNull(warehouse.getWarehouseUsageCautions());
         assertNotNull(warehouse.getImages());
-        assertTrue(warehouse.getIsViewable());
+        assertTrue(warehouse.getIsViewableFlag());
 
         warehouseRepository.delete(_warehouse);
     }
@@ -430,7 +430,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    private Warehouses saveWarehouse(Boolean isViewable) {
+    private Warehouses saveWarehouse(Boolean isViewableFlag) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
         Warehouses warehouse = Warehouses.builder()
@@ -456,7 +456,7 @@ public class WarehouseApiTest extends ApiTestContext {
                 .minReleasePerMonth(2)
                 .latitude(22.2)
                 .longitude(22.2)
-                .isViewable(isViewable)
+                .isViewableFlag(isViewableFlag)
                 .build();
 
         return warehouseRepository.save(warehouse);
