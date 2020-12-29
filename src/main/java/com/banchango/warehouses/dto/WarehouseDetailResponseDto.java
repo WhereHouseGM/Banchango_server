@@ -41,6 +41,7 @@ public class WarehouseDetailResponseDto {
     private Integer minReleasePerMonth;
     private Double latitude;
     private Double longitude;
+    private Boolean isViewable;
 
     private String mainImageUrl;
 
@@ -102,6 +103,7 @@ public class WarehouseDetailResponseDto {
         this.minReleasePerMonth = warehouse.getMinReleasePerMonth();
         this.latitude = warehouse.getLatitude();
         this.longitude = warehouse.getLongitude();
+        this.isViewable = warehouse.getIsViewable();
 
         this.mainImageUrl = mainImage != null ? mainImage.getUrl() : defaultImageUrl;
 
