@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidateRequired {
-    UserRole[] roles() default UserRole.USER;
+    UserRole[] roles() default { UserRole.USER };
 }
