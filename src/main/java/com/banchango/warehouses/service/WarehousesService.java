@@ -2,22 +2,27 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
-import com.banchango.domain.warehouses.MainItemType;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
-import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.exception.*;
+import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
+import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
+import com.banchango.warehouses.exception.WarehouseNotFoundException;
+import com.banchango.warehouses.exception.WarehouseSearchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,13 +57,16 @@ public class WarehousesService {
                 .airConditioningType(warehouseInsertRequestDto.getAirConditioningType())
                 .workerExist(warehouseInsertRequestDto.getWorkerExist())
                 .canPark(warehouseInsertRequestDto.getCanPark())
-                .mainItemType(warehouseInsertRequestDto.getMainItemType())
                 .warehouseType(warehouseInsertRequestDto.getWarehouseType())
                 .minReleasePerMonth(warehouseInsertRequestDto.getMinReleasePerMonth())
                 .latitude(warehouseInsertRequestDto.getLatitude())
                 .longitude(warehouseInsertRequestDto.getLongitude())
                 .isViewableFlag(false)
                 .build();
+
+        List<MainItemTypes> mainItemTypes = warehouseInsertRequestDto.getMainItemTypes().stream()
+            .map(MainItemTypes::new).collect(Collectors.toList());
+        warehouse.setMainItemTypes(mainItemTypes);
 
         List<DeliveryTypes> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
                 .map(DeliveryTypes::new).collect(Collectors.toList());
@@ -94,14 +102,16 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByMainItemType(MainItemType mainItemType, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemTypeAndIsViewableFlag(mainItemType, true, pageRequest)
-                .stream()
-                .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
-                .collect(Collectors.toList());
-
-        if(warehouses.size() == 0) throw new WarehouseNotFoundException();
-
-        return warehouses;
+        // TODO: fix
+//        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemTypeAndIsViewableFlag(mainItemType, true, pageRequest)
+//                .stream()
+//                .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
+//                .collect(Collectors.toList());
+//
+//        if(warehouses.size() == 0) throw new WarehouseNotFoundException();
+//
+//        return warehouses;
+        return new ArrayList<>();
     }
 
     @Transactional(readOnly = true)

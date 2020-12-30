@@ -1,10 +1,12 @@
 package com.banchango.warehouses.dto;
 
 import com.banchango.common.validator.ValueOfEnum;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
-import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.MainItemType;
+import com.banchango.domain.warehouses.WarehouseType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +15,9 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Builder
 public class WarehouseInsertRequestDto {
 
     @Size(min = 1, message = "name의 최소 길이는 1입니다.")
@@ -73,8 +77,8 @@ public class WarehouseInsertRequestDto {
     Boolean canPark;
 
     @ValueOfEnum(enumClass = MainItemType.class)
-    @NotNull(message = "mainItemType이 없습니다.")
-    MainItemType mainItemType;
+    @NotNull(message = "mainItemTypes가 없습니다.")
+    List<MainItemType> mainItemTypes;
 
     @ValueOfEnum(enumClass = WarehouseType.class)
     @NotNull(message = "warehouseType이 없습니다.")
