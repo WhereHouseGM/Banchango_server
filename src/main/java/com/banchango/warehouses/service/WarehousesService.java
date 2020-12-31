@@ -100,10 +100,10 @@ public class WarehousesService {
     }
 
     @Transactional(readOnly = true)
-    public List<WarehouseSearchDto> getWarehousesByMainItemType(List<MainItemType> mainItemType, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findViewableWarehouseByMainItemTypes(mainItemType, pageRequest)
+    public List<WarehouseSearchDto> getWarehousesByMainItemTypes(List<MainItemType> mainItemTypes, PageRequest pageRequest) {
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findViewableWarehouseByMainItemTypes(mainItemTypes, pageRequest)
             .stream()
-            .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl, mainItemType))
+            .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl, mainItemTypes))
             .collect(Collectors.toList());
 
         if(warehouses.size() == 0) throw new WarehouseNotFoundException();
