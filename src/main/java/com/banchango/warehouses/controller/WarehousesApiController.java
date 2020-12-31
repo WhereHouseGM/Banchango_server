@@ -43,7 +43,7 @@ public class WarehousesApiController {
         PageRequest pageRequest = PageRequest.of(page, size);
 
         if(address != null && mainItemTypes == null) warehouses = warehousesService.getWarehousesByAddress(address, pageRequest);
-        else if(address == null && mainItemTypes != null) warehouses = warehousesService.getWarehousesByMainItemType(mainItemTypes, pageRequest);
+        else if(address == null && mainItemTypes != null) warehouses = warehousesService.getWarehousesByMainItemTypes(mainItemTypes, pageRequest);
         else if(address == null && mainItemTypes == null) warehouses = warehousesService.getWarehouses(pageRequest);
         else throw new BadRequestException("mainitem 또는 address 하나만 있어야합니다.");
 
