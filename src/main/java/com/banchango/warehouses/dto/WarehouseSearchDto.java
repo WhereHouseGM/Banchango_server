@@ -8,6 +8,8 @@ import com.banchango.domain.warehouses.Warehouses;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,13 +28,20 @@ public class WarehouseSearchDto {
     private String openAt;
     private Integer space;
     private List<String> deliveryTypes;
-    private List<MainItemType> mainItemTypes;
+    private List<WarehouseMainItemTypeMatchDto> mainItemTypes;
 
     public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl) {
-        List<MainItemType> mainItemTypes = warehouse.getMainItemTypes()
+        this(warehouse, defaultImageUrl, new ArrayList<>());
+    }
+
+    public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl, List<MainItemType> queriedMainItemTypes) {
+        List<WarehouseMainItemTypeMatchDto> mainItemTypes = warehouse.getMainItemTypes()
             .stream()
-            .map(mainItemType -> mainItemType.getType())
+            .map(mainItemType -> new WarehouseMainItemTypeMatchDto(mainItemType.getType(), queriedMainItemTypes))
             .collect(Collectors.toList());
+
+        // match가 true인 것들이 앞에 오도록 정렬시켜주는 함수
+        sortMainItemTypeByMatchTrue(mainItemTypes);
 
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
             .stream()
@@ -58,5 +67,14 @@ public class WarehouseSearchDto {
         this.space = warehouse.getSpace();
         this.deliveryTypes = deliveryTypes;
         this.mainItemTypes = mainItemTypes;
+    }
+
+    private void sortMainItemTypeByMatchTrue(List<WarehouseMainItemTypeMatchDto> mainItemTypes) {
+        mainItemTypes.sort(new Comparator<WarehouseMainItemTypeMatchDto>() {
+            @Override
+            public int compare(WarehouseMainItemTypeMatchDto o1, WarehouseMainItemTypeMatchDto o2) {
+                return Boolean.compare(o2.getMatch(), o1.getMatch());
+            }
+        });
     }
 }

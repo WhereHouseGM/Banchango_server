@@ -103,7 +103,7 @@ public class WarehousesService {
     public List<WarehouseSearchDto> getWarehousesByMainItemType(List<MainItemType> mainItemType, PageRequest pageRequest) {
         List<WarehouseSearchDto> warehouses = warehousesRepository.findViewableWarehouseByMainItemTypes(mainItemType, pageRequest)
             .stream()
-            .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
+            .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl, mainItemType))
             .collect(Collectors.toList());
 
         if(warehouses.size() == 0) throw new WarehouseNotFoundException();
