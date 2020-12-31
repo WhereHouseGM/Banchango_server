@@ -300,7 +300,7 @@ public class WarehouseApiTest extends ApiTestContext {
         Warehouses warehouse2 = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH, MainItemType.ACCESSORY });
         Warehouses warehouse3 = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH, MainItemType.BOOK });
 
-        String url = "/v3/warehouses?page=0&size=5&category=CLOTH,COSMETIC";
+        String url = "/v3/warehouses?page=0&size=5&mainItemTypes=CLOTH,COSMETIC";
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .build();
@@ -349,7 +349,7 @@ public class WarehouseApiTest extends ApiTestContext {
         Warehouses warehouse = saveWarehouse(false, new MainItemType[] { MainItemType.CLOTH });
 
         String mainItemType = MainItemType.CLOTH.toString();
-        String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
+        String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .build();
@@ -365,7 +365,7 @@ public class WarehouseApiTest extends ApiTestContext {
         warehouseRepository.deleteAll();
 
         String mainItemType = MainItemType.CLOTH.toString();
-        String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
+        String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .build();
@@ -381,7 +381,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
         String mainItemType = MainItemType.CLOTH.toString();
         String addressQuery = "addr";
-        String url = String.format("/v3/warehouses?category=%s&address=%s&page=0&offset=5", mainItemType, addressQuery);
+        String url = String.format("/v3/warehouses?mainItemTypes=%s&address=%s&page=0&offset=5", mainItemType, addressQuery);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
             .build();
