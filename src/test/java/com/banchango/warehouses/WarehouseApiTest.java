@@ -34,7 +34,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -331,12 +330,12 @@ public class WarehouseApiTest extends ApiTestContext {
         for (WarehouseSearchDto _warehouse : warehouses) {
             // 매칭된 mainItemType의 match가 true인지 검사
             _warehouse.getMainItemTypes().stream()
-                .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getType() == MainItemType.CLOTH || mainItemTypeMatchDto.getType() == MainItemType.COSMETIC)
+                .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getName() == MainItemType.CLOTH || mainItemTypeMatchDto.getName() == MainItemType.COSMETIC)
                 .forEach(mainItemTypeMatchDto -> assertTrue(mainItemTypeMatchDto.getMatch()));
 
             // 매칭되지 않은 mainItemType의 match가 false인지 검사
             _warehouse.getMainItemTypes().stream()
-                .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getType() != MainItemType.CLOTH && mainItemTypeMatchDto.getType() != MainItemType.COSMETIC)
+                .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getName() != MainItemType.CLOTH && mainItemTypeMatchDto.getName() != MainItemType.COSMETIC)
                 .forEach(mainItemTypeMatchDto -> assertFalse(mainItemTypeMatchDto.getMatch()));
         }
 
