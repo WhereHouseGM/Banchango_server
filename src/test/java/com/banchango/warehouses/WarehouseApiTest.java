@@ -329,7 +329,15 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouseSearchDto.getMainItemTypes());
 
         for (WarehouseSearchDto _warehouse : warehouses) {
-            assertTrue(_warehouse.getMainItemTypes().stream().anyMatch(mainItemType -> mainItemType == MainItemType.CLOTH || mainItemType == MainItemType.COSMETIC));
+            // 매칭된 mainItemType의 match가 true인지 검사
+            _warehouse.getMainItemTypes().stream()
+                .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getType() == MainItemType.CLOTH || mainItemTypeMatchDto.getType() == MainItemType.COSMETIC)
+                .forEach(mainItemTypeMatchDto -> assertTrue(mainItemTypeMatchDto.getMatch()));
+
+            // 매칭되지 않은 mainItemType의 match가 false인지 검사
+            _warehouse.getMainItemTypes().stream()
+                .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getType() != MainItemType.CLOTH && mainItemTypeMatchDto.getType() != MainItemType.COSMETIC)
+                .forEach(mainItemTypeMatchDto -> assertFalse(mainItemTypeMatchDto.getMatch()));
         }
 
         warehouseRepository.delete(warehouse1);
