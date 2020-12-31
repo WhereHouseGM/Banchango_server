@@ -100,17 +100,15 @@ public class WarehousesService {
     }
 
     @Transactional(readOnly = true)
-    public List<WarehouseSearchDto> getWarehousesByMainItemType(MainItemType mainItemType, PageRequest pageRequest) {
-        // TODO: fix
-//        List<WarehouseSearchDto> warehouses = warehousesRepository.findByMainItemTypeAndIsViewableFlag(mainItemType, true, pageRequest)
-//                .stream()
-//                .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
-//                .collect(Collectors.toList());
-//
-//        if(warehouses.size() == 0) throw new WarehouseNotFoundException();
-//
-//        return warehouses;
-        return new ArrayList<>();
+    public List<WarehouseSearchDto> getWarehousesByMainItemType(List<MainItemType> mainItemType, PageRequest pageRequest) {
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findViewableWarehouseByMainItemTypes(mainItemType, pageRequest)
+            .stream()
+            .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
+            .collect(Collectors.toList());
+
+        if(warehouses.size() == 0) throw new WarehouseNotFoundException();
+
+        return warehouses;
     }
 
     @Transactional(readOnly = true)

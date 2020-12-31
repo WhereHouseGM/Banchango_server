@@ -35,7 +35,7 @@ public class WarehousesApiController {
     @GetMapping("/v3/warehouses")
     public WarehouseSearchResponseDto getAllWarehouses(
             @RequestParam(required = false) String address,
-            @RequestParam(required = false) MainItemType category,
+            @RequestParam(required = false) List<MainItemType> category,
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {
