@@ -1,5 +1,6 @@
 package com.banchango.domain.mainitemtypes;
 
+import com.banchango.domain.warehouses.Warehouses;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,13 @@ public class MainItemTypes {
     @Enumerated(EnumType.STRING)
     private MainItemType type;
 
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouses warehouse;
+
     @Builder
-    public MainItemTypes(MainItemType mainItemType) {
+    public MainItemTypes(MainItemType mainItemType, Warehouses warehouse) {
         this.type = mainItemType;
+        this.warehouse = warehouse;
     }
 }

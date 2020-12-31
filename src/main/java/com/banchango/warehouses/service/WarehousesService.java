@@ -64,28 +64,27 @@ public class WarehousesService {
                 .isViewableFlag(false)
                 .build();
 
+        final Warehouses savedWarehouse = warehousesRepository.save(warehouse);
+
         List<MainItemTypes> mainItemTypes = warehouseInsertRequestDto.getMainItemTypes().stream()
-            .map(MainItemTypes::new).collect(Collectors.toList());
-        warehouse.setMainItemTypes(mainItemTypes);
+            .map((type) -> new MainItemTypes(type, savedWarehouse)).collect(Collectors.toList());
+        savedWarehouse.setMainItemTypes(mainItemTypes);
 
         List<DeliveryTypes> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
-                .map(DeliveryTypes::new).collect(Collectors.toList());
-        warehouse.setDeliveryTypes(deliveryTypes);
+                .map((type) -> new DeliveryTypes(type, savedWarehouse)).collect(Collectors.toList());
+        savedWarehouse.setDeliveryTypes(deliveryTypes);
 
         List<WarehouseConditions> warehouseConditions = warehouseInsertRequestDto.getWarehouseCondition().stream()
-                .map(WarehouseConditions::new).collect(Collectors.toList());
-
-        warehouse.setWarehouseConditions(warehouseConditions);
+                .map((type) -> new WarehouseConditions(type, savedWarehouse)).collect(Collectors.toList());
+        savedWarehouse.setWarehouseConditions(warehouseConditions);
 
         List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseInsertRequestDto.getWarehouseFacilityUsages().stream()
-                .map(WarehouseFacilityUsages::new).collect(Collectors.toList());
-        warehouse.setWarehouseFacilityUsages(warehouseFacilityUsages);
+                .map((usage) -> new WarehouseFacilityUsages(usage, savedWarehouse)).collect(Collectors.toList());
+        savedWarehouse.setWarehouseFacilityUsages(warehouseFacilityUsages);
 
         List<WarehouseUsageCautions> warehouseUsageCautions = warehouseInsertRequestDto.getWarehouseUsageCautions().stream()
-                .map(WarehouseUsageCautions::new).collect(Collectors.toList());
-        warehouse.setWarehouseUsageCautions(warehouseUsageCautions);
-
-        warehousesRepository.save(warehouse);
+                .map((caution) -> new WarehouseUsageCautions(caution, savedWarehouse)).collect(Collectors.toList());
+        savedWarehouse.setWarehouseUsageCautions(warehouseUsageCautions);
     }
 
     @Transactional(readOnly = true)
