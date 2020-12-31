@@ -33,7 +33,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -133,7 +136,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void delete_warehouse_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses warehouse = saveWarehouse(false);
+        Warehouses warehouse = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH });
         String url = "/v3/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
@@ -172,7 +175,7 @@ public class WarehouseApiTest extends ApiTestContext {
     
     @Test
     public void get_warehouseByAddress_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses tempWarehouse = saveWarehouse(true);
+        Warehouses tempWarehouse = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH });
 
         String addressQuery = "addr";
         String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
@@ -211,7 +214,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByAddress_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses tempWarehouse = saveWarehouse(false);
+        Warehouses tempWarehouse = saveWarehouse(false, new MainItemType[] { MainItemType.CLOTH });
 
         String addressQuery = "addr";
         String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
@@ -239,7 +242,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses tempWarehouse = saveWarehouse(true);
+        Warehouses tempWarehouse = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH });
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -270,7 +273,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseForMain_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses tempWarehouse = saveWarehouse(false);
+        Warehouses tempWarehouse = saveWarehouse(false, new MainItemType[] { MainItemType.CLOTH });
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -292,83 +295,82 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-// TODO: fix
-//    @Test
-//    public void get_warehouseByMainItemType_responseIsOk_IfAllConditionsAreRight() {
-//        Warehouses warehouse = saveWarehouse(true);
-//
-//        String mainItemType = MainItemType.CLOTH.toString();
-//        String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
-//
-//        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
-//                .build();
-//
-//        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
-//
-//        List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
-//        assertTrue(warehouses.size() > 0);
-//
-//        WarehouseSearchDto warehouseSearchDto = warehouses.get(0);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//
-//        assertNotNull(warehouseSearchDto.getAddress());
-//        assertNotNull(warehouseSearchDto.getWarehouseId());
-//        assertNotNull(warehouseSearchDto.getWarehouseCondition());
-//        assertNotNull(warehouseSearchDto.getMinReleasePerMonth());
-//        assertNotNull(warehouseSearchDto.getName());
-//        assertNotNull(warehouseSearchDto.getWarehouseType());
-//        assertNotNull(warehouseSearchDto.getCloseAt());
-//        assertNotNull(warehouseSearchDto.getMainImageUrl());
-//        assertNotNull(warehouseSearchDto.getOpenAt());
-//        assertNotNull(warehouseSearchDto.getSpace());
-//        assertNotNull(warehouseSearchDto.getDeliveryTypes());
-//        assertNotNull(warehouseSearchDto.getMainItemTypes());
-//
-//        for(WarehouseSearchDto _warehouse : warehouses) {
-//            MainItemType _mainItemType = MainItemType.valueOf(mainItemType);
-//            assertEquals(_mainItemType, _warehouse.getMainItemTypes());
-//        }
-//
-//        warehouseRepository.delete(warehouse);
-//    }
-//
-//    @Test
-//    public void get_warehouseByMainItemType_responseIsNoContent_IfIsViewableIsFalse() {
-//        Warehouses warehouse = saveWarehouse(false);
-//
-//        String mainItemType = MainItemType.CLOTH.toString();
-//        String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
-//
-//        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
-//                .build();
-//
-//        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
-//
-//        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-//        warehouseRepository.delete(warehouse);
-//    }
-//
-//    @Test
-//    public void get_warehouseByMainItemType_responseIsNoContent_IfWarehouseNotExist() {
-//        // TODO: fix
-////        warehouseRepository.deleteByMainItemType(MainItemType.CLOTH);
-//
-//        String mainItemType = MainItemType.CLOTH.toString();
-//        String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
-//
-//        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
-//                .build();
-//
-//        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
-//
-//        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-//    }
+    @Test
+    public void get_warehouseByMainItemType_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses warehouse1 = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH, MainItemType.COSMETIC });
+        Warehouses warehouse2 = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH, MainItemType.ACCESSORY });
+        Warehouses warehouse3 = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH, MainItemType.BOOK });
+
+        String url = "/v3/warehouses?page=0&size=5&category=CLOTH,COSMETIC";
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .build();
+
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
+
+        List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
+        assertTrue(warehouses.size() > 0);
+
+        WarehouseSearchDto warehouseSearchDto = warehouses.get(0);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertNotNull(warehouseSearchDto.getAddress());
+        assertNotNull(warehouseSearchDto.getWarehouseId());
+        assertNotNull(warehouseSearchDto.getWarehouseCondition());
+        assertNotNull(warehouseSearchDto.getMinReleasePerMonth());
+        assertNotNull(warehouseSearchDto.getName());
+        assertNotNull(warehouseSearchDto.getWarehouseType());
+        assertNotNull(warehouseSearchDto.getCloseAt());
+        assertNotNull(warehouseSearchDto.getMainImageUrl());
+        assertNotNull(warehouseSearchDto.getOpenAt());
+        assertNotNull(warehouseSearchDto.getSpace());
+        assertNotNull(warehouseSearchDto.getDeliveryTypes());
+        assertNotNull(warehouseSearchDto.getMainItemTypes());
+
+        for (WarehouseSearchDto _warehouse : warehouses) {
+            assertTrue(_warehouse.getMainItemTypes().stream().anyMatch(mainItemType -> mainItemType == MainItemType.CLOTH || mainItemType == MainItemType.COSMETIC));
+        }
+
+        warehouseRepository.delete(warehouse1);
+        warehouseRepository.delete(warehouse2);
+        warehouseRepository.delete(warehouse3);
+    }
+
+    @Test
+    public void get_warehouseByMainItemType_responseIsNoContent_IfIsViewableIsFalse() {
+        Warehouses warehouse = saveWarehouse(false, new MainItemType[] { MainItemType.CLOTH });
+
+        String mainItemType = MainItemType.CLOTH.toString();
+        String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .build();
+
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        warehouseRepository.delete(warehouse);
+    }
+
+    @Test
+    public void get_warehouseByMainItemType_responseIsNoContent_IfWarehouseNotExist() {
+        warehouseRepository.deleteAll();
+
+        String mainItemType = MainItemType.CLOTH.toString();
+        String url = String.format("/v3/warehouses?category=%s&page=0&size=5", mainItemType);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .build();
+
+        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
 
     @Test
     public void get_warehouse_responseIsBadRequest_IfAddressAndMainItemTypeBothGiven() {
-        // TODO: fix
-//        warehouseRepository.deleteByMainItemType(MainItemType.CLOTH);
+        warehouseRepository.deleteAll();
 
         String mainItemType = MainItemType.CLOTH.toString();
         String addressQuery = "addr";
@@ -383,7 +385,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseDetail_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses _warehouse = saveWarehouse(true);
+        Warehouses _warehouse = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH });
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -430,7 +432,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseDetail_responseIsForbidden_IfIsViewableIsFalse() {
-        Warehouses _warehouse = saveWarehouse(false);
+        Warehouses _warehouse = saveWarehouse(false, new MainItemType[]{MainItemType.CLOTH});
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -456,7 +458,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    private Warehouses saveWarehouse(Boolean isViewableFlag) {
+    private Warehouses saveWarehouse(Boolean isViewableFlag, MainItemType[] mainItemTypes) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
         Warehouses warehouse = Warehouses.builder()
@@ -484,16 +486,11 @@ public class WarehouseApiTest extends ApiTestContext {
                 .isViewableFlag(isViewableFlag)
                 .build();
 
-        MainItemTypes clothType = MainItemTypes.builder()
-            .mainItemType(MainItemType.CLOTH)
-            .build();
+        List<MainItemTypes> m = Arrays.stream(mainItemTypes)
+            .map(mainItemType -> new MainItemTypes(mainItemType, warehouse))
+            .collect(Collectors.toList());
 
-        MainItemTypes bookType = MainItemTypes.builder()
-            .mainItemType(MainItemType.CLOTH)
-            .build();
-
-        warehouse.getMainItemTypes().add(clothType);
-        warehouse.getMainItemTypes().add(bookType);
+        warehouse.getMainItemTypes().addAll(m);
 
         return warehouseRepository.save(warehouse);
     }

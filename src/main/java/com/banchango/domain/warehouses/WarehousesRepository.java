@@ -18,9 +18,6 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
     @Modifying
     void delete_(Integer warehouseId);
 
-    // TODO: fix
-    //  void deleteByMainItemType(MainItemType mainItemType);
-
     List<Warehouses> findAllByIsViewableFlag(Boolean isViewableFlag, Pageable pageable);
     List<Warehouses> findByAddressContainingAndIsViewableFlag(String address, Boolean isViewableFlag, Pageable pageable);
     Optional<Warehouses> findById(Integer warehouseId);
