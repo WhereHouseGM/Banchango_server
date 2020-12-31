@@ -1,5 +1,7 @@
 package com.banchango.domain.warehouses;
 
+import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.warehouses.dto.WarehouseSearchDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,14 +18,12 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
     @Modifying
     void delete_(Integer warehouseId);
 
-    // TODO: fix
-    //  void deleteByMainItemType(MainItemType mainItemType);
-
     List<Warehouses> findAllByIsViewableFlag(Boolean isViewableFlag, Pageable pageable);
     List<Warehouses> findByAddressContainingAndIsViewableFlag(String address, Boolean isViewableFlag, Pageable pageable);
     Optional<Warehouses> findById(Integer warehouseId);
     Optional<Warehouses> findByIdAndIsViewableFlag(Integer warehouseId, Boolean isViewableFlag);
     List<Warehouses> findByUserId(Integer userId);
-    // TODO: fix
-    //    List<Warehouses> findByMainItemTypeAndIsViewableFlag(MainItemType mainItemType, Boolean isViewableFlag, Pageable pageable);
+
+    @Query("select w from Warehouses w inner join MainItemTypes m on w.id=m.warehouse.id where m.type in :mainItemTypes and w.isViewableFlag=true group by w.id having count(w.id)>0 order by count(w.id) desc")
+    List<Warehouses> findViewableWarehouseByMainItemTypes(List<MainItemType> mainItemTypes, Pageable pageable);
 }
