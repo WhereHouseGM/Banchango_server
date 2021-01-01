@@ -42,9 +42,6 @@ public class S3UploaderService {
     @Value("${aws.secret_access_key}")
     private String secretKey;
 
-    @Value("${aws.s3.region}")
-    private String region;
-
     @PostConstruct
     public void setS3Client() {
         s3Client = S3Client.builder()
@@ -75,14 +72,17 @@ public class S3UploaderService {
         }
     }
 
-//    private void deleteFile(final String fileName) {
-//        final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
-//        try {
-//            s3Client.deleteObject(deleteObjectRequest);
-//        } catch(Exception exception) {
-//            throw new InternalServerErrorException(exception.getMessage());
-//        }
-//    }
+    private void deleteFile(final String fileName) {
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(bucket)
+                .key(fileName)
+                .build();
+        try {
+            s3Client.deleteObject(deleteObjectRequest);
+        } catch(Exception exception) {
+            throw new InternalServerErrorException(exception.getMessage());
+        }
+    }
 
     private boolean isUserAuthenticatedToModifyWarehouseInfo(Integer userId, Integer warehouseId) {
         List<Warehouses> warehouses = warehousesRepository.findByUserId(userId);
@@ -134,7 +134,7 @@ public class S3UploaderService {
         }
         if(warehouseImagesRepository.findByUrlContaining(fileName).isPresent()) {
             warehouseImagesRepository.deleteByUrlContaining(fileName);
-            //deleteFile(fileName);
+            deleteFile(fileName);
             return new BasicMessageResponseDto("삭제에 성공했습니다.");
         } else {
             throw new WarehouseExtraImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
@@ -151,7 +151,8 @@ public class S3UploaderService {
             WarehouseImages image = images.get(0);
             String[] splitTemp = image.getUrl().split("/");
             String fileName = splitTemp[splitTemp.length - 1];
-            //deleteFile(fileName);
+            deleteFile(fileName);
+            warehouseImagesRepository.deleteByUrlContaining(fileName);
             return new BasicMessageResponseDto("삭제에 성공했습니다.");
         } else {
             throw new WarehouseMainImageNotFoundException();
