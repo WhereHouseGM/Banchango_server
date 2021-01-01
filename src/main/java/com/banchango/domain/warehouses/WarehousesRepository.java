@@ -1,7 +1,6 @@
 package com.banchango.domain.warehouses;
 
 import com.banchango.domain.mainitemtypes.MainItemType;
-import com.banchango.warehouses.dto.WarehouseSearchDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
