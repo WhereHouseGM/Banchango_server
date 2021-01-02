@@ -1,14 +1,20 @@
 package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.service.EmailSender;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.users.Users;
+import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
+import com.banchango.tools.EmailContent;
+import com.banchango.users.exception.UserIdNotFoundException;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
@@ -22,7 +28,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,13 +36,17 @@ import java.util.stream.Collectors;
 public class WarehousesService {
 
     private final WarehousesRepository warehousesRepository;
+    private final UsersRepository usersRepository;
+    private final EmailSender emailSender;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
 
     @Transactional
-    public void saveAgencyWarehouse(WarehouseInsertRequestDto warehouseInsertRequestDto, String accessToken) {
+    public BasicMessageResponseDto saveAgencyWarehouse(WarehouseInsertRequestDto warehouseInsertRequestDto, String accessToken) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
+        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+
 
         Warehouses warehouse = Warehouses.builder()
                 .userId(userId)
@@ -85,6 +94,9 @@ public class WarehousesService {
         List<WarehouseUsageCautions> warehouseUsageCautions = warehouseInsertRequestDto.getWarehouseUsageCautions().stream()
                 .map((caution) -> new WarehouseUsageCautions(caution, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseUsageCautions(warehouseUsageCautions);
+
+        EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchango.shop");
+        return emailSender.send(user.getEmail(), emailContent);
     }
 
     @Transactional(readOnly = true)

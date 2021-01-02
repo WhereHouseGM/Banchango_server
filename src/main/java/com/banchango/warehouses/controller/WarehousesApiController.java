@@ -3,7 +3,9 @@ package com.banchango.warehouses.controller;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.BadRequestException;
 import com.banchango.common.interceptor.ValidateRequired;
+import com.banchango.common.service.EmailSender;
 import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.tools.EmailContent;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
@@ -27,9 +29,7 @@ public class WarehousesApiController {
             @Valid @RequestBody WarehouseInsertRequestDto warehouseInsertRequestDto,
             @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        warehousesService.saveAgencyWarehouse(warehouseInsertRequestDto, accessToken);
-
-        return new BasicMessageResponseDto("창고가 정상적으로 등록 되었습니다");
+        return warehousesService.saveAgencyWarehouse(warehouseInsertRequestDto, accessToken);
     }
 
     @GetMapping("/v3/warehouses")

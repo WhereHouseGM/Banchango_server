@@ -18,7 +18,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleBadRequest(RuntimeException exception, WebRequest request) {
         HashMap<String, Object> body = new HashMap<>();
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-
+        exception.printStackTrace();
         body.put("timestamp", new Date());
         body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());

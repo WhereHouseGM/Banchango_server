@@ -45,7 +45,8 @@ public class ImageController {
     }
 
     @ValidateRequired
-    @DeleteMapping("/v3/images/delete/main/{warehouseId")
+    @DeleteMapping("/v3/images/delete/main/{warehouseId}")
+    @ResponseStatus(HttpStatus.OK)
     public BasicMessageResponseDto deleteMainImage(@RequestAttribute(name = "accessToken") String accessToken,
                                                    @PathVariable Integer warehouseId) {
         return s3UploaderService.deleteMainImage(accessToken, warehouseId);
