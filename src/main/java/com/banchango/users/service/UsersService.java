@@ -3,6 +3,7 @@ package com.banchango.users.service;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.InternalServerErrorException;
+import com.banchango.common.service.EmailSender;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.tools.Email;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsersService {
 
     private final UsersRepository usersRepository;
+    private final EmailSender emailSender;
 
     @Value("${banchango.email.id}")
     private String senderEmail;
@@ -79,5 +81,12 @@ public class UsersService {
                 throw new InternalServerErrorException();
             }
         } else throw new UserEmailNotFoundException();
+    }
+
+    public BasicMessageResponseDto sendTestEmail(String token) {
+        Integer userId = JwtTokenUtil.extractUserId(token);
+        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "상우 로지스에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchango.shop");
+        return emailSender.send(user.getEmail(), emailContent);
     }
 }

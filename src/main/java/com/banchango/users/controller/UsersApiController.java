@@ -48,4 +48,11 @@ public class UsersApiController {
     public BasicMessageResponseDto sendTemporaryPasswordToEmail(@Valid @RequestBody UserEmailSendRequestDto requestDto) {
         return usersService.sendTemporaryPasswordEmail(requestDto.getEmail());
     }
+
+    @ValidateRequired
+    @PostMapping("/email-test")
+    @ResponseStatus(HttpStatus.OK)
+    public BasicMessageResponseDto emailTest(@RequestAttribute(name = "accessToken") String token) {
+        return usersService.sendTestEmail(token);
+    }
 }
