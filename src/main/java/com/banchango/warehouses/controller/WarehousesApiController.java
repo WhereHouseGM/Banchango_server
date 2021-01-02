@@ -29,9 +29,7 @@ public class WarehousesApiController {
             @Valid @RequestBody WarehouseInsertRequestDto warehouseInsertRequestDto,
             @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        warehousesService.saveAgencyWarehouse(warehouseInsertRequestDto, accessToken);
-
-        return new BasicMessageResponseDto("창고가 정상적으로 등록 되었습니다");
+        return warehousesService.saveAgencyWarehouse(warehouseInsertRequestDto, accessToken);
     }
 
     @GetMapping("/v3/warehouses")
