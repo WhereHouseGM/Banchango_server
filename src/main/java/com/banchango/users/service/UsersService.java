@@ -70,17 +70,10 @@ public class UsersService {
     @Transactional
     public BasicMessageResponseDto sendTemporaryPasswordEmail(String recipient) {
         String temporaryPassword = PasswordGenerator.generate();
-        if(usersRepository.findByEmail(recipient).isPresent()) {
-            try {
-                usersRepository.updatePassword(temporaryPassword, recipient);
-                EmailContent emailContent = new EmailContent("[반창고] 임시 비밀번호 발급", "안녕하세요, 반창고 입니다!", "발급해드린 임시 비밀번호는 <span style='font-size: 20px'>" + temporaryPassword + "</span> 입니다.", "이 임시 비밀번호로 로그인 해주세요.", "로그인 하기", "dev.banchango.shop/login");
-                Email.sendEmail(emailContent, recipient, senderEmail, senderEmailPassword, false);
-                return new BasicMessageResponseDto("임시 비밀번호 이메일이 정상적으로 전송되었습니다.");
-            } catch(Exception exception) {
-                exception.printStackTrace();
-                throw new InternalServerErrorException();
-            }
-        } else throw new UserEmailNotFoundException();
+        Users user = usersRepository.findByEmail(recipient).orElseThrow(UserEmailNotFoundException::new);
+        usersRepository.updatePassword(temporaryPassword, recipient);
+        EmailContent emailContent = new EmailContent("[반창고] 임시 비밀번호 발급", "안녕하세요, 반창고 입니다!", "발급해드린 임시 비밀번호는 <span style='font-size: 20px'>" + temporaryPassword + "</span> 입니다.", "이 임시 비밀번호로 로그인 해주세요.", "로그인 하기", "dev.banchango.shop/login");
+        return emailSender.send(user.getEmail(), emailContent);
     }
 
     public BasicMessageResponseDto sendTestEmail(String token) {
