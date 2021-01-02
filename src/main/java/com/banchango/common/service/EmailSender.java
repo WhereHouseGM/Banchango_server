@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.ses.model.*;
 
 import javax.annotation.PostConstruct;
 import javax.mail.Address;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
@@ -54,6 +55,7 @@ public class EmailSender {
             message.setSubject("[반창고]");
             message.setSender(new InternetAddress("support@banchango.shop"));
             message.setReplyTo(new Address[]{new InternetAddress("wherehousegm@gmail.com")});
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
             String content = EmailContent.SimpleTemplate(emailContent);
 
             Multipart multipart = new MimeMultipart();
