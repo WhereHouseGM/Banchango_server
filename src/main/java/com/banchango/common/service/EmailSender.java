@@ -44,7 +44,7 @@ public class EmailSender {
                 .region(Region.AP_NORTHEAST_2).build();
     }
 
-    public BasicMessageResponseDto send(String recipient, EmailContent emailContent) {
+    public BasicMessageResponseDto send(String recipient, EmailContent emailContent, boolean isAdminIncluded) {
 
         try {
             Session session = Session.getDefaultInstance(new Properties());
@@ -53,7 +53,11 @@ public class EmailSender {
             message.setSubject("[반창고]");
             message.setSender(new InternetAddress("support@banchango.shop"));
             message.setReplyTo(new Address[]{new InternetAddress("wherehousegm@gmail.com")});
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+            if(isAdminIncluded) {
+                message.setRecipients(Message.RecipientType.TO, new Address[]{new InternetAddress(recipient), new InternetAddress("wherehousegm@gmail.com")});
+            } else {
+                message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+            }
             String content = EmailContent.SimpleTemplate(emailContent);
 
             Multipart multipart = new MimeMultipart();
