@@ -5,13 +5,13 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.exception.ForbiddenException;
 import com.banchango.domain.users.UserRole;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
-public class AuthInterceptor extends HandlerInterceptorAdapter {
+public class AuthInterceptor implements HandlerInterceptor {
 
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -32,7 +32,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 request.setAttribute(ACCESS_TOKEN, accessToken);
             }
         }
-        return super.preHandle(request, response, handler);
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     private boolean isHandlerMethod(Object handler) {
