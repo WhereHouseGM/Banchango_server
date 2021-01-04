@@ -207,7 +207,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByAddress_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.NOT_VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[] { MainItemType.CLOTH });
 
         String addressQuery = "addr";
         String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
@@ -266,7 +266,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseForMain_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.NOT_VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[] { MainItemType.CLOTH });
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -338,7 +338,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByMainItemType_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses warehouse = saveWarehouse(WarehouseStatus.NOT_VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses warehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[] { MainItemType.CLOTH });
 
         String mainItemType = MainItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);
@@ -431,7 +431,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseDetail_responseIsForbidden_IfIsViewableIsFalse() {
-        Warehouses _warehouse = saveWarehouse(WarehouseStatus.NOT_VIEWABLE, new MainItemType[]{MainItemType.CLOTH});
+        Warehouses _warehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[]{MainItemType.CLOTH});
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
