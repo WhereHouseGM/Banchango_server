@@ -1,5 +1,6 @@
 package com.banchango.domain.estimates;
 
+import com.banchango.domain.BaseTimeEntity;
 import com.banchango.domain.estimateitems.EstimateItems;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Estimates {
+public class Estimates extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
