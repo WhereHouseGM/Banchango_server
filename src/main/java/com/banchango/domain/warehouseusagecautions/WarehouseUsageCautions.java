@@ -20,13 +20,8 @@ public class WarehouseUsageCautions {
     @Column(nullable = false, length = 200)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
-
     @Builder
-    public WarehouseUsageCautions(String content, Warehouses warehouse) {
+    public WarehouseUsageCautions(String content) {
         this.content = content;
-        this.warehouse = warehouse;
     }
 }

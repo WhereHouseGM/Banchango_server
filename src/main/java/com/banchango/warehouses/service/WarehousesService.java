@@ -10,6 +10,7 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
+import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
@@ -70,7 +71,6 @@ public class WarehousesService {
                 .minReleasePerMonth(warehouseInsertRequestDto.getMinReleasePerMonth())
                 .latitude(warehouseInsertRequestDto.getLatitude())
                 .longitude(warehouseInsertRequestDto.getLongitude())
-                .isViewableFlag(false)
                 .build();
 
         final Warehouses savedWarehouse = warehousesRepository.save(warehouse);
@@ -80,19 +80,19 @@ public class WarehousesService {
         savedWarehouse.setMainItemTypes(mainItemTypes);
 
         List<DeliveryTypes> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
-                .map((type) -> new DeliveryTypes(type, savedWarehouse)).collect(Collectors.toList());
+                .map((type) -> new DeliveryTypes(type)).collect(Collectors.toList());
         savedWarehouse.setDeliveryTypes(deliveryTypes);
 
         List<WarehouseConditions> warehouseConditions = warehouseInsertRequestDto.getWarehouseCondition().stream()
-                .map((type) -> new WarehouseConditions(type, savedWarehouse)).collect(Collectors.toList());
+                .map((type) -> new WarehouseConditions(type)).collect(Collectors.toList());
         savedWarehouse.setWarehouseConditions(warehouseConditions);
 
         List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseInsertRequestDto.getWarehouseFacilityUsages().stream()
-                .map((usage) -> new WarehouseFacilityUsages(usage, savedWarehouse)).collect(Collectors.toList());
+                .map((usage) -> new WarehouseFacilityUsages(usage)).collect(Collectors.toList());
         savedWarehouse.setWarehouseFacilityUsages(warehouseFacilityUsages);
 
         List<WarehouseUsageCautions> warehouseUsageCautions = warehouseInsertRequestDto.getWarehouseUsageCautions().stream()
-                .map((caution) -> new WarehouseUsageCautions(caution, savedWarehouse)).collect(Collectors.toList());
+                .map((caution) -> new WarehouseUsageCautions(caution)).collect(Collectors.toList());
         savedWarehouse.setWarehouseUsageCautions(warehouseUsageCautions);
 
         EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchango.shop");
@@ -101,7 +101,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByAddress(String address, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContainingAndIsViewableFlag(address, true, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContainingAndStatus(address, WarehouseStatus.VIEWABLE, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -125,7 +125,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehouses(PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findAllByIsViewableFlag(true, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehousesRepository.findAllByStatus(WarehouseStatus.VIEWABLE, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -147,7 +147,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
-        Warehouses warehouse = warehousesRepository.findByIdAndIsViewableFlag(warehouseId, true).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = warehousesRepository.findByIdAndStatus(warehouseId, WarehouseStatus.VIEWABLE).orElseThrow(WarehouseIdNotFoundException::new);
 
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }

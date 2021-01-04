@@ -8,10 +8,7 @@ import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.WarehouseType;
-import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
@@ -132,7 +129,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void delete_warehouse_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses warehouse = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses warehouse = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
         String url = "/v3/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
@@ -171,7 +168,7 @@ public class WarehouseApiTest extends ApiTestContext {
     
     @Test
     public void get_warehouseByAddress_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses tempWarehouse = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
 
         String addressQuery = "addr";
         String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
@@ -210,7 +207,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByAddress_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses tempWarehouse = saveWarehouse(false, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.NOT_VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
 
         String addressQuery = "addr";
         String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
@@ -238,7 +235,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses tempWarehouse = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -269,7 +266,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseForMain_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses tempWarehouse = saveWarehouse(false, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.NOT_VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -293,9 +290,9 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByMainItemType_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses warehouse1 = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH, MainItemType.COSMETIC });
-        Warehouses warehouse2 = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH, MainItemType.ACCESSORY });
-        Warehouses warehouse3 = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH, MainItemType.BOOK });
+        Warehouses warehouse1 = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH, MainItemType.COSMETIC });
+        Warehouses warehouse2 = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH, MainItemType.ACCESSORY });
+        Warehouses warehouse3 = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH, MainItemType.BOOK });
 
         String url = "/v3/warehouses?page=0&size=5&mainItemTypes=CLOTH,COSMETIC";
 
@@ -341,7 +338,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByMainItemType_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses warehouse = saveWarehouse(false, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses warehouse = saveWarehouse(WarehouseStatus.NOT_VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
 
         String mainItemType = MainItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);
@@ -387,7 +384,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseDetail_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses _warehouse = saveWarehouse(true, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses _warehouse = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -434,7 +431,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseDetail_responseIsForbidden_IfIsViewableIsFalse() {
-        Warehouses _warehouse = saveWarehouse(false, new MainItemType[]{MainItemType.CLOTH});
+        Warehouses _warehouse = saveWarehouse(WarehouseStatus.NOT_VIEWABLE, new MainItemType[]{MainItemType.CLOTH});
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -460,7 +457,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    private Warehouses saveWarehouse(Boolean isViewableFlag, MainItemType[] mainItemTypes) {
+    private Warehouses saveWarehouse(WarehouseStatus status, MainItemType[] mainItemTypes) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
         Warehouses warehouse = Warehouses.builder()
@@ -485,7 +482,7 @@ public class WarehouseApiTest extends ApiTestContext {
                 .minReleasePerMonth(2)
                 .latitude(22.2)
                 .longitude(22.2)
-                .isViewableFlag(isViewableFlag)
+                .status(status)
                 .build();
 
         List<MainItemTypes> m = Arrays.stream(mainItemTypes)

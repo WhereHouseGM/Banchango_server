@@ -32,7 +32,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 request.setAttribute(ACCESS_TOKEN, accessToken);
             }
         }
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 
     private boolean isHandlerMethod(Object handler) {

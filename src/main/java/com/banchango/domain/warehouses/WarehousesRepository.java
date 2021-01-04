@@ -17,12 +17,12 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
     @Modifying
     void delete_(Integer warehouseId);
 
-    List<Warehouses> findAllByIsViewableFlag(Boolean isViewableFlag, Pageable pageable);
-    List<Warehouses> findByAddressContainingAndIsViewableFlag(String address, Boolean isViewableFlag, Pageable pageable);
+    List<Warehouses> findAllByStatus(WarehouseStatus status, Pageable pageable);
+    List<Warehouses> findByAddressContainingAndStatus(String address, WarehouseStatus status, Pageable pageable);
     Optional<Warehouses> findById(Integer warehouseId);
-    Optional<Warehouses> findByIdAndIsViewableFlag(Integer warehouseId, Boolean isViewableFlag);
+    Optional<Warehouses> findByIdAndStatus(Integer warehouseId, WarehouseStatus status);
     List<Warehouses> findByUserId(Integer userId);
 
-    @Query("select w from Warehouses w inner join MainItemTypes m on w.id=m.warehouse.id where m.type in :mainItemTypes and w.isViewableFlag=true group by w.id having count(w.id)>0 order by count(w.id) desc")
+    @Query("select w from Warehouses w inner join MainItemTypes m on w.id=m.warehouse.id where m.type in :mainItemTypes and w.status='VIEWABLE' group by w.id having count(w.id)>0 order by count(w.id) desc")
     List<Warehouses> findViewableWarehouseByMainItemTypes(List<MainItemType> mainItemTypes, Pageable pageable);
 }
