@@ -1,5 +1,6 @@
 package com.banchango.domain.warehouses;
 
+import com.banchango.domain.BaseTimeEntity;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Warehouses {
+public class Warehouses extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
