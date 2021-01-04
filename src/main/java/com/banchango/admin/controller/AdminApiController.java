@@ -6,10 +6,8 @@ import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.users.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +19,7 @@ public class AdminApiController {
 
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/warehouses")
+    @ResponseStatus(HttpStatus.OK)
     public List<WarehouseInsertRequestResponseDto> getWaitingWarehouses(@RequestAttribute(name = "accessToken") String token,
                                                                         @RequestParam(name = "page") Integer page,
                                                                         @RequestParam(name = "size") Integer size) {

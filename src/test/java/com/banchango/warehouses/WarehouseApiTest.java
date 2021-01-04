@@ -5,6 +5,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -53,6 +54,7 @@ public class WarehouseApiTest extends ApiTestContext {
                     .type(UserType.OWNER)
                     .phoneNumber("010123123")
                     .companyName("companyName")
+                    .role(UserRole.USER)
                     .build();
             usersRepository.save(user);
 
