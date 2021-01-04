@@ -25,4 +25,7 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
 
     @Query("select w from Warehouses w inner join MainItemTypes m on w.id=m.warehouse.id where m.type in :mainItemTypes and w.status='VIEWABLE' group by w.id having count(w.id)>0 order by count(w.id) desc")
     List<Warehouses> findViewableWarehouseByMainItemTypes(List<MainItemType> mainItemTypes, Pageable pageable);
+
+    @Query("SELECT w FROM Warehouses w WHERE w.status = :status ORDER BY w.createdAt")
+    List<Warehouses> findWarehousesByStatusOrderByCreatedAt(WarehouseStatus status, Pageable pageable);
 }
