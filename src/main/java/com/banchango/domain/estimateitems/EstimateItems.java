@@ -39,6 +39,9 @@ public class EstimateItems {
     @Column(length = 1000)
     private String url;
 
+    @Column(nullable = false)
+    private Integer monthlyAverageRelease;
+
     @ManyToOne
     @JoinColumn(name = "estimate_id")
     private Estimates estimate;
