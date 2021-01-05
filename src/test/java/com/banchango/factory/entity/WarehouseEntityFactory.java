@@ -9,9 +9,7 @@ import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,19 +76,18 @@ public class WarehouseEntityFactory {
             .status(status)
             .build();
 
-        List<MainItemTypes> m = Arrays.stream(mainItemTypes)
+        List<MainItemTypes> mainItemTypesList = Arrays.stream(mainItemTypes)
             .map(mainItemType -> new MainItemTypes(mainItemType, warehouse))
             .collect(Collectors.toList());
+        warehouse.setMainItemTypes(mainItemTypesList);
 
-        warehouse.getMainItemTypes().addAll(m);
+        List<Insurances> insurances = Arrays.stream(new String[]{"INSURANCE1", "INSURANCE2", "INSURANCE3"})
+                .map(Insurances::new).collect(Collectors.toList());
+        warehouse.setInsurances(insurances);
 
-//        List<Insurances> insurances = Arrays.stream(new String[]{"INSURANCE1", "INSURANCE2", "INSURANCE3"})
-//                .map(Insurances::new).collect(Collectors.toList());
-//        warehouse.setInsurances(insurances);
-//
-//        List<SecurityCompanies> securityCompanies = Arrays.stream(new String[]{"SEC_COMP1", "SEC_COMP2", "SEC_COMP3"})
-//                .map(SecurityCompanies::new).collect(Collectors.toList());
-//        warehouse.setSecurityCompanies(securityCompanies);
+        List<SecurityCompanies> securityCompanies = Arrays.stream(new String[]{"SEC_COMP1", "SEC_COMP2", "SEC_COMP3"})
+                .map(SecurityCompanies::new).collect(Collectors.toList());
+        warehouse.setSecurityCompanies(securityCompanies);
 
         List<DeliveryTypes> deliveryTypes = Arrays.stream(new String[]{"DELIVERY1", "DELIVERY2", "DELIVERY3"})
                 .map(DeliveryTypes::new).collect(Collectors.toList());
