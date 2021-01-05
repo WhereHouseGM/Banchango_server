@@ -5,10 +5,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.request.EstimatesInsertRequestFactory;
 import com.banchango.users.dto.ChangePasswordRequestDto;
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +25,7 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+// TODO: 작업 중인거 다 머지 되면 UserApiTest로 이동
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -92,13 +90,13 @@ public class ChangePasswordTest extends ApiTestContext {
     public void patch_changePassword_responseNoContent_IfUserIdIsInvalid() {
         String originalPassword = user.getPassword();
         String newPassword = "newPassword";
-        String accessTokenInvalidUserId = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
+        String accessTokenWithInvalidUserId = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
 
         RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
             .contentType(MediaType.APPLICATION_JSON)
-            .header("Authorization", "Bearer " + accessTokenInvalidUserId)
+            .header("Authorization", "Bearer " + accessTokenWithInvalidUserId)
             .body(changePasswordRequestDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
