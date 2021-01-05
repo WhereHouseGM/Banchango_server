@@ -51,6 +51,7 @@ public class UsersApiController {
 
     @PatchMapping("/v3/users/change-password")
     @ResponseStatus(HttpStatus.OK)
+    @ValidateRequired
     public BasicMessageResponseDto changePassword(
         @Valid @RequestBody ChangePasswordRequestDto changePasswordRequestDto,
         @RequestAttribute(name = "accessToken") String accessToken
