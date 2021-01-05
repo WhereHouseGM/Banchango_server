@@ -16,24 +16,27 @@ import java.util.stream.Collectors;
 
 @Component
 public class WarehouseEntityFactory {
-    private static final String NAME = "NAME";
-    private static final Integer SPACE = 123;
-    private static final String ADDRESS = "ADDRESS";
-    private static final String ADDRESS_DETAIL = "ADDRESS_DETAIL";
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final Integer AVAILABLE_WEEKDAYS = 1;
-    private static final String OPEN_AT = "09:00";
-    private static final String CLOSE_AT = "18:00";
-    private static final String AVAILABLE_TIME_DETAIL = "AVAILABLE_TIME_DETAIL";
-    private static final Boolean CCTV_EXISTS = true;
-    private static final Boolean DOOR_LOCK_EXIST = true;
-    private static final AirConditioningType AIR_CONDITIONING_TYPE = AirConditioningType.BOTH;
-    private static final Boolean WORKER_EXIST = true;
-    private static final Boolean CAN_PARK = true;
-    private static final WarehouseType WAREHOUSE_TYPE = WarehouseType.THREEPL;
-    private static final Integer MIN_RELEASE_PER_MONTH = 1000;
-    private static final Double LATITUDE = 22.2;
-    private static final Double LONGITUDE = 22.2;
+    public static final String NAME = "NAME";
+    public static final Integer SPACE = 123;
+    public static final String ADDRESS = "ADDRESS";
+    public static final String ADDRESS_DETAIL = "ADDRESS_DETAIL";
+    public static final String DESCRIPTION = "DESCRIPTION";
+    public static final Integer AVAILABLE_WEEKDAYS = 1;
+    public static final String OPEN_AT = "09:00";
+    public static final String CLOSE_AT = "18:00";
+    public static final String AVAILABLE_TIME_DETAIL = "AVAILABLE_TIME_DETAIL";
+    public static final Boolean CCTV_EXISTS = true;
+    public static final Boolean DOOR_LOCK_EXIST = true;
+    public static final AirConditioningType AIR_CONDITIONING_TYPE = AirConditioningType.BOTH;
+    public static final Boolean WORKER_EXIST = true;
+    public static final Boolean CAN_PARK = true;
+    public static final WarehouseType WAREHOUSE_TYPE = WarehouseType.THREEPL;
+    public static final Integer MIN_RELEASE_PER_MONTH = 1000;
+    public static final Double LATITUDE = 22.2;
+    public static final Double LONGITUDE = 22.2;
+    public static final String[] INSURANCES = {"INSURANCE_1", "INSURANCE_2", "INSURANCE_3"};
+    public static final String[] SECURITY_COMPANIES = {"SEC_COMP_1", "SEC_COMP_2", "SEC_COMP_3"};
+    public static final String[] DELIVERY_TYPES = {"DELIVERY_1", "DELIVERY_2", "DELIVERY_3"};
 
     private WarehousesRepository warehousesRepository;
 
@@ -48,6 +51,14 @@ public class WarehouseEntityFactory {
 
     public Warehouses createInProgressWithNoMainItemTypes(String accessToken) {
         return create(accessToken, WarehouseStatus.IN_PROGRESS, new MainItemType[] {});
+    }
+
+    public Warehouses createInProgressWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+        return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes);
+    }
+
+    public Warehouses createViewableWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+        return create(accessToken, WarehouseStatus.VIEWABLE, mainItemTypes);
     }
 
     private Warehouses create(String accessToken, WarehouseStatus status, MainItemType[] mainItemTypes) {
@@ -81,15 +92,15 @@ public class WarehouseEntityFactory {
             .collect(Collectors.toList());
         warehouse.setMainItemTypes(mainItemTypesList);
 
-        List<Insurances> insurances = Arrays.stream(new String[]{"INSURANCE1", "INSURANCE2", "INSURANCE3"})
+        List<Insurances> insurances = Arrays.stream(INSURANCES)
                 .map(Insurances::new).collect(Collectors.toList());
         warehouse.setInsurances(insurances);
 
-        List<SecurityCompanies> securityCompanies = Arrays.stream(new String[]{"SEC_COMP1", "SEC_COMP2", "SEC_COMP3"})
+        List<SecurityCompanies> securityCompanies = Arrays.stream(SECURITY_COMPANIES)
                 .map(SecurityCompanies::new).collect(Collectors.toList());
         warehouse.setSecurityCompanies(securityCompanies);
 
-        List<DeliveryTypes> deliveryTypes = Arrays.stream(new String[]{"DELIVERY1", "DELIVERY2", "DELIVERY3"})
+        List<DeliveryTypes> deliveryTypes = Arrays.stream(DELIVERY_TYPES)
                 .map(DeliveryTypes::new).collect(Collectors.toList());
         warehouse.setDeliveryTypes(deliveryTypes);
 
