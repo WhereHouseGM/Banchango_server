@@ -5,6 +5,7 @@ import com.banchango.users.dto.UserSignupRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -38,6 +39,7 @@ public class Users extends BaseTimeEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Setter
     private UserRole role;
 
     public void updateUserInfo(UserSignupRequestDto requestDto) {
