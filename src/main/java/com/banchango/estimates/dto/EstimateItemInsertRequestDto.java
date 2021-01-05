@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class WarehouseEstimateItemInsertRequestDto {
+public class EstimateItemInsertRequestDto {
     private String name;
     private Integer keepingNumber;
     private Double perimeter;
@@ -22,7 +22,7 @@ public class WarehouseEstimateItemInsertRequestDto {
     private Integer monthlyAverageRelease;
 
     @Builder
-    public WarehouseEstimateItemInsertRequestDto(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Integer monthlyAverageRelease) {
+    public EstimateItemInsertRequestDto(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Integer monthlyAverageRelease) {
         this.name = name;
         this.keepingNumber = keepingNumber;
         this.perimeter = perimeter;

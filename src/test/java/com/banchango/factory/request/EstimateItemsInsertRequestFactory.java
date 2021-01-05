@@ -2,13 +2,11 @@ package com.banchango.factory.request;
 
 import com.banchango.domain.estimateitems.EstimateBarcode;
 import com.banchango.domain.estimateitems.EstimateKeepingType;
-import com.banchango.domain.estimates.Estimates;
-import com.banchango.estimates.dto.WarehouseEstimateInsertRequestDto;
-import com.banchango.estimates.dto.WarehouseEstimateItemInsertRequestDto;
+import com.banchango.estimates.dto.EstimateItemInsertRequestDto;
 
 public class EstimateItemsInsertRequestFactory {
-    public static WarehouseEstimateItemInsertRequestDto create() {
-        return WarehouseEstimateItemInsertRequestDto.builder()
+    public static EstimateItemInsertRequestDto create() {
+        return EstimateItemInsertRequestDto.builder()
             .name("name0")
             .weight(11.1)
             .barcode(EstimateBarcode.ALL)

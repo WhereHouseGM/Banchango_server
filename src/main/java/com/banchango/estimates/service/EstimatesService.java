@@ -7,7 +7,7 @@ import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.estimates.dto.WarehouseEstimateInsertRequestDto;
+import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,22 +23,22 @@ public class EstimatesService {
     private final WarehousesRepository warehousesRepository;
 
     @Transactional
-    public void saveEstimate(String accessToken, WarehouseEstimateInsertRequestDto warehouseEstimateInsertRequestDto) {
+    public void saveEstimate(String accessToken, EstimateInsertRequestDto estimateInsertRequestDto) {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
 
-        WarehouseStatus status = warehousesRepository.findStatusById(warehouseEstimateInsertRequestDto.getWarehouseId());
+        WarehouseStatus status = warehousesRepository.findStatusById(estimateInsertRequestDto.getWarehouseId());
         if(status != WarehouseStatus.VIEWABLE) throw new WarehouseIsNotViewableException();
 
         Estimates newEstimate = Estimates.builder()
-            .content(warehouseEstimateInsertRequestDto.getContent())
+            .content(estimateInsertRequestDto.getContent())
             .userId(userId)
-            .warehouseId(warehouseEstimateInsertRequestDto.getWarehouseId())
+            .warehouseId(estimateInsertRequestDto.getWarehouseId())
             .status(EstimateStatus.IN_PROGRESS)
             .build();
 
         estimatesRepository.save(newEstimate);
 
-        List<EstimateItems> newEstimateItems = warehouseEstimateInsertRequestDto.getEstimateItems()
+        List<EstimateItems> newEstimateItems = estimateInsertRequestDto.getEstimateItems()
             .stream()
             .map(estimateItemDto -> estimateItemDto.toEntity(newEstimate))
             .collect(Collectors.toList());

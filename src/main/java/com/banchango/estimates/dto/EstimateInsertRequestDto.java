@@ -8,13 +8,13 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
-public class WarehouseEstimateInsertRequestDto {
+public class EstimateInsertRequestDto {
     private Integer warehouseId;
     private String content;
-    private List<WarehouseEstimateItemInsertRequestDto> estimateItems;
+    private List<EstimateItemInsertRequestDto> estimateItems;
 
     @Builder
-    public WarehouseEstimateInsertRequestDto(Integer warehouseId, String content, List<WarehouseEstimateItemInsertRequestDto> estimateItems) {
+    public EstimateInsertRequestDto(Integer warehouseId, String content, List<EstimateItemInsertRequestDto> estimateItems) {
         this.warehouseId = warehouseId;
         this.content = content;
         this.estimateItems = estimateItems;

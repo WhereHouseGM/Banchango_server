@@ -1,18 +1,18 @@
 package com.banchango.factory.request;
 
-import com.banchango.estimates.dto.WarehouseEstimateInsertRequestDto;
-import com.banchango.estimates.dto.WarehouseEstimateItemInsertRequestDto;
+import com.banchango.estimates.dto.EstimateInsertRequestDto;
+import com.banchango.estimates.dto.EstimateItemInsertRequestDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EstimatesInsertRequestFactory {
-    public static WarehouseEstimateInsertRequestDto create(Integer warehouseId) {
-        List<WarehouseEstimateItemInsertRequestDto> estimateItemInsertRequestDtos = new ArrayList<>();
+    public static EstimateInsertRequestDto create(Integer warehouseId) {
+        List<EstimateItemInsertRequestDto> estimateItemInsertRequestDtos = new ArrayList<>();
         estimateItemInsertRequestDtos.add(EstimateItemsInsertRequestFactory.create());
         estimateItemInsertRequestDtos.add(EstimateItemsInsertRequestFactory.create());
 
-        return WarehouseEstimateInsertRequestDto.builder()
+        return EstimateInsertRequestDto.builder()
             .warehouseId(warehouseId)
             .content("content")
             .estimateItems(estimateItemInsertRequestDtos)

@@ -3,14 +3,11 @@ package com.banchango.estimates;
 import com.banchango.ApiTestContext;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
-import com.banchango.domain.estimateitems.EstimateBarcode;
-import com.banchango.domain.estimateitems.EstimateKeepingType;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
-import com.banchango.estimates.dto.WarehouseEstimateInsertRequestDto;
-import com.banchango.estimates.dto.WarehouseEstimateItemInsertRequestDto;
+import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.factory.request.EstimatesInsertRequestFactory;
@@ -28,8 +25,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -76,12 +71,12 @@ public class EstimateApiTests extends ApiTestContext {
     public void post_estimate_responseIsOk_IfAllConditionsAreRight() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
 
-        WarehouseEstimateInsertRequestDto newWarehouseEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
+        EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
 
-        RequestEntity<WarehouseEstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
+        RequestEntity<EstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
-            .body(newWarehouseEstimateInsertRequestDto);
+            .body(newEstimateInsertRequestDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
@@ -95,11 +90,11 @@ public class EstimateApiTests extends ApiTestContext {
     public void post_estimate_responseIsUnauthorized_IfAccessTokenNotGiven() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
 
-        WarehouseEstimateInsertRequestDto newWarehouseEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
+        EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
 
-        RequestEntity<WarehouseEstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
+        RequestEntity<EstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(newWarehouseEstimateInsertRequestDto);
+            .body(newEstimateInsertRequestDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
@@ -113,12 +108,12 @@ public class EstimateApiTests extends ApiTestContext {
     public void post_estimate_responseIsForbidden_IfWarehouseNotViewable() {
         Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
 
-        WarehouseEstimateInsertRequestDto newWarehouseEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
+        EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
 
-        RequestEntity<WarehouseEstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
+        RequestEntity<EstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
-            .body(newWarehouseEstimateInsertRequestDto);
+            .body(newEstimateInsertRequestDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 

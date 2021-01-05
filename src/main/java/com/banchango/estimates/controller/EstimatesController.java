@@ -2,7 +2,7 @@ package com.banchango.estimates.controller;
 
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
-import com.banchango.estimates.dto.WarehouseEstimateInsertRequestDto;
+import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.estimates.service.EstimatesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,10 +17,10 @@ public class EstimatesController {
     @ResponseStatus(HttpStatus.CREATED)
     @ValidateRequired
     public BasicMessageResponseDto saveEstimate(
-        @RequestBody WarehouseEstimateInsertRequestDto warehouseEstimateInsertRequestDto,
+        @RequestBody EstimateInsertRequestDto estimateInsertRequestDto,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        estimatesService.saveEstimate(accessToken, warehouseEstimateInsertRequestDto);
+        estimatesService.saveEstimate(accessToken, estimateInsertRequestDto);
 
         return new BasicMessageResponseDto("견적 문의가 성공적으로 생성됐습니다");
     }
