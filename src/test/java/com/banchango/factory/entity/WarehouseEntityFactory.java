@@ -34,15 +34,9 @@ public class WarehouseEntityFactory {
     public static final Integer MIN_RELEASE_PER_MONTH = 1000;
     public static final Double LATITUDE = 22.2;
     public static final Double LONGITUDE = 22.2;
-    public static final String INSURANCE_1 = "INSURANCE_1";
-    public static final String INSURANCE_2 = "INSURANCE_2";
-    public static final String INSURANCE_3 = "INSURANCE_3";
-    public static final String SEC_COMP_1 = "SEC_COMP_1";
-    public static final String SEC_COMP_2 = "SEC_COMP_2";
-    public static final String SEC_COMP_3 = "SEC_COMP_3";
-    public static final String DELIVERY_1 = "DELIVERY_1";
-    public static final String DELIVERY_2 = "DELIVERY_2";
-    public static final String DELIVERY_3 = "DELIVERY_3";
+    public static final String[] INSURANCES = {"INSURANCE_1", "INSURANCE_2", "INSURANCE_3"};
+    public static final String[] SECURITY_COMPANIES = {"SEC_COMP_1", "SEC_COMP_2", "SEC_COMP_3"};
+    public static final String[] DELIVERY_TYPES = {"DELIVERY_1", "DELIVERY_2", "DELIVERY_3"};
 
     private WarehousesRepository warehousesRepository;
 
@@ -98,15 +92,15 @@ public class WarehouseEntityFactory {
             .collect(Collectors.toList());
         warehouse.setMainItemTypes(mainItemTypesList);
 
-        List<Insurances> insurances = Arrays.stream(new String[]{INSURANCE_1, INSURANCE_2, INSURANCE_3})
+        List<Insurances> insurances = Arrays.stream(INSURANCES)
                 .map(Insurances::new).collect(Collectors.toList());
         warehouse.setInsurances(insurances);
 
-        List<SecurityCompanies> securityCompanies = Arrays.stream(new String[]{SEC_COMP_1, SEC_COMP_2, SEC_COMP_3})
+        List<SecurityCompanies> securityCompanies = Arrays.stream(SECURITY_COMPANIES)
                 .map(SecurityCompanies::new).collect(Collectors.toList());
         warehouse.setSecurityCompanies(securityCompanies);
 
-        List<DeliveryTypes> deliveryTypes = Arrays.stream(new String[]{DELIVERY_1, DELIVERY_2, DELIVERY_3})
+        List<DeliveryTypes> deliveryTypes = Arrays.stream(DELIVERY_TYPES)
                 .map(DeliveryTypes::new).collect(Collectors.toList());
         warehouse.setDeliveryTypes(deliveryTypes);
 

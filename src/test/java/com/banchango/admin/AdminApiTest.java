@@ -11,6 +11,7 @@ import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
+import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -48,6 +49,9 @@ public class AdminApiTest extends ApiTestContext {
     @Autowired
     private WarehouseEntityFactory warehouseEntityFactory;
 
+    @Autowired
+    private UserEntityFactory userEntityFactory;
+
     Users user = null;
     String accessToken = null;
     Users admin = null;
@@ -56,29 +60,11 @@ public class AdminApiTest extends ApiTestContext {
     @Before
     public void beforeTest() {
         if(user == null) {
-            user = Users.builder()
-                    .name("TEST_NAME")
-                    .password("123")
-                    .type(UserType.OWNER)
-                    .email("TEST_EMAIL")
-                    .phoneNumber("010123123")
-                    .companyName("companyName")
-                    .role(UserRole.USER)
-                    .build();
-            usersRepository.save(user);
+            user = userEntityFactory.createUser();
             accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), UserRole.USER);
         }
         if(admin == null) {
-            admin = Users.builder()
-                    .name("ADMIN_NAME")
-                    .password("!@#$")
-                    .type(UserType.OWNER)
-                    .email("ADMIN_EMAIL")
-                    .phoneNumber("010234234")
-                    .companyName("adminComp")
-                    .role(UserRole.ADMIN)
-                    .build();
-            usersRepository.save(admin);
+            admin = userEntityFactory.createAdmin();
             adminAccessToken = JwtTokenUtil.generateAccessToken(admin.getUserId(), UserRole.ADMIN);
         }
         warehousesRepository.deleteAll();
@@ -167,9 +153,9 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(WarehouseEntityFactory.MIN_RELEASE_PER_MONTH, response.getBody().getMinReleasePerMonth());
         assertEquals(WarehouseEntityFactory.LATITUDE, response.getBody().getLatitude());
         assertEquals(WarehouseEntityFactory.LONGITUDE, response.getBody().getLongitude());
-        assertTrue(response.getBody().getDeliveryTypes().containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_1, WarehouseEntityFactory.DELIVERY_2, WarehouseEntityFactory.DELIVERY_3)));
-        assertTrue(response.getBody().getInsurances().containsAll(Arrays.asList(WarehouseEntityFactory.INSURANCE_1, WarehouseEntityFactory.INSURANCE_2, WarehouseEntityFactory.INSURANCE_3)));
-        assertTrue(response.getBody().getSecurityCompanies().containsAll(Arrays.asList(WarehouseEntityFactory.SEC_COMP_1, WarehouseEntityFactory.SEC_COMP_2, WarehouseEntityFactory.SEC_COMP_3)));
+        assertTrue(response.getBody().getDeliveryTypes().containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES)));
+        assertTrue(response.getBody().getInsurances().containsAll(Arrays.asList(WarehouseEntityFactory.INSURANCES)));
+        assertTrue(response.getBody().getSecurityCompanies().containsAll(Arrays.asList(WarehouseEntityFactory.SECURITY_COMPANIES)));
         assertNotNull(response.getBody().getCreatedAt());
         assertEquals(WarehouseStatus.VIEWABLE, response.getBody().getStatus());
     }
