@@ -70,6 +70,6 @@ public class UsersService {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
 
         Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
-        user.setPassword(changePasswordRequestDto.getPassword());
+        user.updatePassword(changePasswordRequestDto.getPassword());
     }
 }

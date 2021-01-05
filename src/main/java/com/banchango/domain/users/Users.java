@@ -19,7 +19,6 @@ public class Users extends BaseTimeEntity {
     private Integer userId;
 
     @Column(nullable = false, length = 400)
-    @Setter
     private String password;
 
     @Column(nullable = false, length = 50)
@@ -59,5 +58,9 @@ public class Users extends BaseTimeEntity {
         this.companyName = companyName;
         this.phoneNumber = phoneNumber;
         this.role = role == null ? UserRole.USER : role;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }
