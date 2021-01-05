@@ -39,7 +39,6 @@ public class Users extends BaseTimeEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @Setter
     private UserRole role;
 
     public void updateUserInfo(UserSignupRequestDto requestDto) {
@@ -51,13 +50,13 @@ public class Users extends BaseTimeEntity {
     }
 
     @Builder
-    public Users(String name, String email, String password, UserType type, String companyName, String phoneNumber) {
+    public Users(String name, String email, String password, UserType type, String companyName, String phoneNumber, UserRole role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.type = type;
         this.companyName = companyName;
         this.phoneNumber = phoneNumber;
-        this.role = UserRole.USER;
+        this.role = role == null ? UserRole.USER : role;
     }
 }

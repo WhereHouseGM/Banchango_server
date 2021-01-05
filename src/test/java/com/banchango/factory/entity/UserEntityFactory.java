@@ -41,9 +41,8 @@ public class UserEntityFactory {
             .password(PASSWORD)
             .phoneNumber(PHONE_NUMBER)
             .type(TYPE)
+            .role(role)
             .build();
-
-        user.setRole(role);
 
         usersRepository.save(user);
         return user;
