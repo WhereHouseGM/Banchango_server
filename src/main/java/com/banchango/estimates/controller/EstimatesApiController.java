@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-public class EstimatesController {
+public class EstimatesApiController {
     private final EstimatesService estimatesService;
 
     @PostMapping("/v3/estimates")
