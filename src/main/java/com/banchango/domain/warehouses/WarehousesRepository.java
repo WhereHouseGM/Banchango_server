@@ -1,5 +1,6 @@
 package com.banchango.domain.warehouses;
 
+import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +26,7 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
 
     @Query("select w from Warehouses w inner join MainItemTypes m on w.id=m.warehouse.id where m.type in :mainItemTypes and w.status='VIEWABLE' group by w.id having count(w.id)>0 order by count(w.id) desc")
     List<Warehouses> findViewableWarehouseByMainItemTypes(List<MainItemType> mainItemTypes, Pageable pageable);
+
+    @Query("select w.status from Warehouses w where w.id=:warehouseId")
+    WarehouseStatus findStatusById(Integer warehouseId);
 }
