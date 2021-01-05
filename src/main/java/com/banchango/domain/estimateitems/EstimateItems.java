@@ -1,10 +1,13 @@
 package com.banchango.domain.estimateitems;
 
 import com.banchango.domain.estimates.Estimates;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
 @Entity
 @Getter
 public class EstimateItems {
@@ -39,7 +42,24 @@ public class EstimateItems {
     @Column(length = 1000)
     private String url;
 
+    @Column(nullable = false)
+    private Integer monthlyAverageRelease;
+
     @ManyToOne
     @JoinColumn(name = "estimate_id")
     private Estimates estimate;
+
+    @Builder
+    public EstimateItems(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Integer monthlyAverageRelease, Estimates estimate) {
+        this.name = name;
+        this.keepingNumber = keepingNumber;
+        this.perimeter = perimeter;
+        this.keepingType = keepingType;
+        this.weight = weight;
+        this.barcode = barcode;
+        this.sku = sku;
+        this.url = url;
+        this.monthlyAverageRelease = monthlyAverageRelease;
+        this.estimate = estimate;
+    }
 }

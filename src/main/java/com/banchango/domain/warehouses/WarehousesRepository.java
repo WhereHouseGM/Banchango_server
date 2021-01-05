@@ -1,5 +1,6 @@
 package com.banchango.domain.warehouses;
 
+import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,7 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
 
     @Query("SELECT w FROM Warehouses w WHERE w.status = :status ORDER BY w.createdAt")
     List<Warehouses> findWarehousesByStatusOrderByCreatedAt(WarehouseStatus status, Pageable pageable);
+
+    @Query("select w.status from Warehouses w where w.id=:warehouseId")
+    WarehouseStatus findStatusById(Integer warehouseId);
 }
