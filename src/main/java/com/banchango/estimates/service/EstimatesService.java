@@ -27,7 +27,7 @@ public class EstimatesService {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
 
         WarehouseStatus status = warehousesRepository.findStatusById(estimateInsertRequestDto.getWarehouseId());
-        if(status != WarehouseStatus.VIEWABLE) throw new WarehouseIsNotViewableException();
+        if(!status.equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
 
         Estimates newEstimate = Estimates.builder()
             .content(estimateInsertRequestDto.getContent())
