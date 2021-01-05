@@ -39,6 +39,9 @@ public class ChangePasswordTest extends ApiTestContext {
     String accessToken = null;
     Users user = null;
 
+    private final String VALID_PASSWORD = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+    private final String INVALID_PASSWORD = "test";
+
     @Before
     public void beforeTest() {
         usersRepository.deleteAll();
@@ -55,7 +58,7 @@ public class ChangePasswordTest extends ApiTestContext {
     @Test
     public void patch_passwordChange_responseIsOk_IfAllConditionsAreRight() {
         String originalPassword = user.getPassword();
-        String newPassword = "newPassword";
+        String newPassword = VALID_PASSWORD;
 
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
 
@@ -71,9 +74,26 @@ public class ChangePasswordTest extends ApiTestContext {
     }
 
     @Test
+    public void patch_passwordChange_responseIsBadRequest_IfNewPasswordLengthIsNot64() {
+        String originalPassword = user.getPassword();
+        String newPassword = INVALID_PASSWORD;
+
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
+
+        RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .body(changePasswordRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
     public void patch_changePassword_responseIsUnauthorized_IfAccessTokenNotGiven() {
         String originalPassword = user.getPassword();
-        String newPassword = "newPassword";
+        String newPassword = VALID_PASSWORD;
 
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
 
@@ -89,7 +109,7 @@ public class ChangePasswordTest extends ApiTestContext {
     @Test
     public void patch_changePassword_responseNoContent_IfUserIdIsInvalid() {
         String originalPassword = user.getPassword();
-        String newPassword = "newPassword";
+        String newPassword = VALID_PASSWORD;
         String accessTokenWithInvalidUserId = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
