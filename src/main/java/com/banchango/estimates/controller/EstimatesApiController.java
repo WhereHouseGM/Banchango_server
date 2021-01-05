@@ -14,7 +14,7 @@ public class EstimatesApiController {
     private final EstimatesService estimatesService;
 
     @PostMapping("/v3/estimates")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @ValidateRequired
     public BasicMessageResponseDto saveEstimate(
         @RequestBody EstimateInsertRequestDto estimateInsertRequestDto,
