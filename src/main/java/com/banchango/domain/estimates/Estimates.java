@@ -2,6 +2,7 @@ package com.banchango.domain.estimates;
 
 import com.banchango.domain.BaseTimeEntity;
 import com.banchango.domain.estimateitems.EstimateItems;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,4 +36,13 @@ public class Estimates extends BaseTimeEntity {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "estimate_id")
     private List<EstimateItems> estimateItems = new ArrayList<>();
+
+    @Builder
+    public Estimates(String content, Integer userId, Integer warehouseId, EstimateStatus status, List<EstimateItems> estimateItems) {
+        this.content = content;
+        this.userId = userId;
+        this.warehouseId = warehouseId;
+        this.status = status;
+        this.estimateItems.addAll(estimateItems);
+    }
 }
