@@ -15,9 +15,6 @@ import com.banchango.domain.warehouses.*;
 import com.banchango.estimates.dto.WarehouseEstimateInsertRequestDto;
 import com.banchango.estimates.dto.WarehouseEstimateItemInsertRequestDto;
 import com.banchango.users.exception.UserEmailNotFoundException;
-import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +53,9 @@ public class EstimateApiTests extends ApiTestContext {
     Users user = null;
     @Before
     public void beforeTest() {
+        estimatesRepository.deleteAll();
+        usersRepository.deleteAll();
+        warehouseRepository.deleteAll();
         if(user == null) {
             user = Users.builder().name("TEST_NAME")
                 .email("TEST_EMAIL1")
@@ -68,15 +68,12 @@ public class EstimateApiTests extends ApiTestContext {
 
             accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), user.getRole());
         }
-        warehouseRepository.deleteAll();
     }
 
     @After
     public void afterTest() {
-        if(user != null) {
-            user = usersRepository.findByEmail("TEST_EMAIL1").orElseThrow(UserEmailNotFoundException::new);
-            usersRepository.delete(user);
-        }
+        estimatesRepository.deleteAll();
+        usersRepository.deleteAll();
         warehouseRepository.deleteAll();
     }
 

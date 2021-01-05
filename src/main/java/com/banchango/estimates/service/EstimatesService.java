@@ -29,19 +29,23 @@ public class EstimatesService {
         WarehouseStatus status = warehousesRepository.findStatusById(warehouseEstimateInsertRequestDto.getWarehouseId());
         if(status != WarehouseStatus.VIEWABLE) throw new WarehouseIsNotViewableException();
 
-        List<EstimateItems> newEstimateItems = warehouseEstimateInsertRequestDto.getEstimateItems()
-            .stream()
-            .map(estimateItemDto -> estimateItemDto.toEntity())
-            .collect(Collectors.toList());
-
         Estimates newEstimate = Estimates.builder()
             .content(warehouseEstimateInsertRequestDto.getContent())
             .userId(userId)
             .warehouseId(warehouseEstimateInsertRequestDto.getWarehouseId())
             .status(EstimateStatus.IN_PROGRESS)
-            .estimateItems(newEstimateItems)
             .build();
 
         estimatesRepository.save(newEstimate);
+
+//        List<EstimateItems> newEstimateItems = warehouseEstimateInsertRequestDto.getEstimateItems()
+//            .stream()
+//            .map(estimateItemDto -> estimateItemDto.toEntity(newEstimate))
+//            .collect(Collectors.toList());
+//
+//        newEstimate.setEstimateItems(newEstimateItems);
+
+        System.out.println("newEstimate");
+        System.out.println(newEstimate);
     }
 }

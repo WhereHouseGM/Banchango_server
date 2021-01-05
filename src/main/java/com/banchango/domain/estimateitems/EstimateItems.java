@@ -3,9 +3,11 @@ package com.banchango.domain.estimateitems;
 import com.banchango.domain.estimates.Estimates;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
 @Entity
 @Getter
 public class EstimateItems {
@@ -48,7 +50,7 @@ public class EstimateItems {
     private Estimates estimate;
 
     @Builder
-    public EstimateItems(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url) {
+    public EstimateItems(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Integer monthlyAverageRelease, Estimates estimate) {
         this.name = name;
         this.keepingNumber = keepingNumber;
         this.perimeter = perimeter;
@@ -57,5 +59,7 @@ public class EstimateItems {
         this.barcode = barcode;
         this.sku = sku;
         this.url = url;
+        this.monthlyAverageRelease = monthlyAverageRelease;
+        this.estimate = estimate;
     }
 }
