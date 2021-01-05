@@ -1,12 +1,15 @@
 package com.banchango.factory.entity;
 
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +25,8 @@ public class WarehouseEntityFactory {
     private static final String OPEN_AT = "09:00";
     private static final String CLOSE_AT = "18:00";
     private static final String AVAILABLE_TIME_DETAIL = "AVAILABLE_TIME_DETAIL";
-    private static final String INSURANCE = "INSURANCE";
     private static final Boolean CCTV_EXISTS = true;
-    private static final String SECURITY_COMPANY_NAME = "SECURITY_COMPANY_NAME";
-    private static final Boolean DDOR_LOCK_EXIST = true;
+    private static final Boolean DOOR_LOCK_EXIST = true;
     private static final AirConditioningType AIR_CONDITIONING_TYPE = AirConditioningType.BOTH;
     private static final Boolean WORKER_EXIST = true;
     private static final Boolean CAN_PARK = true;
@@ -63,10 +64,8 @@ public class WarehouseEntityFactory {
             .openAt(OPEN_AT)
             .closeAt(CLOSE_AT)
             .availableTimeDetail(AVAILABLE_TIME_DETAIL)
-            .insurance(INSURANCE)
             .cctvExist(CCTV_EXISTS)
-            .securityCompanyName(SECURITY_COMPANY_NAME)
-            .doorLockExist(DDOR_LOCK_EXIST)
+            .doorLockExist(DOOR_LOCK_EXIST)
             .airConditioningType(AIR_CONDITIONING_TYPE)
             .workerExist(WORKER_EXIST)
             .canPark(CAN_PARK)
@@ -82,6 +81,14 @@ public class WarehouseEntityFactory {
             .collect(Collectors.toList());
 
         warehouse.getMainItemTypes().addAll(m);
+
+        List<Insurances> insurances = Arrays.stream(new String[]{"INSURANCE1", "INSURANCE2", "INSURANCE3"})
+                .map(insurance -> new Insurances(insurance)).collect(Collectors.toList());
+        warehouse.setInsurances(insurances);
+
+        List<SecurityCompanies> securityCompanies = Arrays.stream(new String[]{"SEC_COMP1", "SEC_COMP2", "SEC_COMP3"})
+                .map(company -> new SecurityCompanies(company)).collect(Collectors.toList());
+        warehouse.setSecurityCompanies(securityCompanies);
 
         return warehousesRepository.save(warehouse);
     }

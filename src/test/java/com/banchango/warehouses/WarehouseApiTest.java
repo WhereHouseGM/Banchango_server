@@ -409,9 +409,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getOpenAt());
         assertNotNull(warehouse.getCloseAt());
         assertNotNull(warehouse.getAvailableTimeDetail());
-        assertNotNull(warehouse.getInsurance());
         assertNotNull(warehouse.getCctvExist());
-        assertNotNull(warehouse.getSecurityCompanyName());
         assertNotNull(warehouse.getDoorLockExist());
         assertNotNull(warehouse.getAirConditioningType());
         assertNotNull(warehouse.getWorkerExist());
@@ -473,9 +471,7 @@ public class WarehouseApiTest extends ApiTestContext {
                 .openAt("06:00")
                 .closeAt("18:00")
                 .availableTimeDetail("availableTimeDetail")
-                .insurance("insurance")
                 .cctvExist(true)
-                .securityCompanyName("name")
                 .doorLockExist(true)
                 .airConditioningType(AirConditioningType.HEATING)
                 .workerExist(true)
