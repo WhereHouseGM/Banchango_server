@@ -14,7 +14,6 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.estimates.dto.WarehouseEstimateInsertRequestDto;
 import com.banchango.estimates.dto.WarehouseEstimateItemInsertRequestDto;
-import com.banchango.users.exception.UserEmailNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

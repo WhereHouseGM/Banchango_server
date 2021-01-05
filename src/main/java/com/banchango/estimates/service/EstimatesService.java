@@ -38,14 +38,11 @@ public class EstimatesService {
 
         estimatesRepository.save(newEstimate);
 
-//        List<EstimateItems> newEstimateItems = warehouseEstimateInsertRequestDto.getEstimateItems()
-//            .stream()
-//            .map(estimateItemDto -> estimateItemDto.toEntity(newEstimate))
-//            .collect(Collectors.toList());
-//
-//        newEstimate.setEstimateItems(newEstimateItems);
+        List<EstimateItems> newEstimateItems = warehouseEstimateInsertRequestDto.getEstimateItems()
+            .stream()
+            .map(estimateItemDto -> estimateItemDto.toEntity(newEstimate))
+            .collect(Collectors.toList());
 
-        System.out.println("newEstimate");
-        System.out.println(newEstimate);
+        newEstimate.setEstimateItems(newEstimateItems);
     }
 }
