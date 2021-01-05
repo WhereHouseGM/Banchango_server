@@ -54,14 +54,8 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "availableTimeDetail이 없습니다.")
     String availableTimeDetail;
 
-    @Size(min = 1, message = "insurance의 최소 길이는 1입니다.")
-    @NotNull(message = "insurance이 없습니다.")
-    String insurance;
-
     @NotNull(message = "cctvExist이 없습니다.")
     Boolean cctvExist;
-
-    String securityCompanyName;
 
     @NotNull(message = "doorLockExist이 없습니다.")
     Boolean doorLockExist;
@@ -100,9 +94,13 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "warehouseCondition이 없습니다.")
     List<WarehouseCondition> warehouseCondition;
 
-    @NotNull(message = "warehouseFacilityUsages가 없습니다.")
     List<String> warehouseFacilityUsages;
 
-    @NotNull(message = "warehouseUsageCautions가 없습니다.")
     List<String> warehouseUsageCautions;
+
+    @NotNull(message = "보험사 정보가 없습니다.")
+    List<String> insurances;
+
+    @NotNull(message = "경비 업체 정보가 없습니다.")
+    List<String> securityCompanies;
 }

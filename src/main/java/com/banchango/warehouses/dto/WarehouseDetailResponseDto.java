@@ -28,9 +28,7 @@ public class WarehouseDetailResponseDto {
     private String openAt;
     private String closeAt;
     private String availableTimeDetail;
-    private String insurance;
     private Boolean cctvExist;
-    private String securityCompanyName;
     private Boolean doorLockExist;
     private AirConditioningType airConditioningType;
     private Boolean workerExist;
@@ -48,6 +46,8 @@ public class WarehouseDetailResponseDto {
     private List<String> warehouseFacilityUsages = new ArrayList<>();
     private List<String> warehouseUsageCautions = new ArrayList<>();
     private List<String> images = new ArrayList<>();
+    private List<String> insurances = new ArrayList<>();
+    private List<String> securityCompanies = new ArrayList<>();
 
     public WarehouseDetailResponseDto(Warehouses warehouse, String defaultImageUrl) {
         List<String> mainItemTypes = warehouse.getMainItemTypes()
@@ -81,6 +81,16 @@ public class WarehouseDetailResponseDto {
             .map(image -> image.getUrl())
             .collect(Collectors.toList());
 
+        List<String> insurances = warehouse.getInsurances()
+                .stream()
+                .map(insurance -> insurance.getName())
+                .collect(Collectors.toList());
+
+        List<String> securityCompanies = warehouse.getSecurityCompanies()
+                .stream()
+                .map(company -> company.getName())
+                .collect(Collectors.toList());
+
         WarehouseImages mainImage = warehouse.getMainImage();
 
         this.warehouseId = warehouse.getId();
@@ -94,9 +104,7 @@ public class WarehouseDetailResponseDto {
         this.openAt = warehouse.getOpenAt();
         this.closeAt = warehouse.getCloseAt();
         this.availableTimeDetail = warehouse.getAvailableTimeDetail();
-        this.insurance = warehouse.getInsurance();
         this.cctvExist = warehouse.getCctvExist();
-        this.securityCompanyName = warehouse.getSecurityCompanyName();
         this.doorLockExist = warehouse.getDoorLockExist();
         this.airConditioningType = warehouse.getAirConditioningType();
         this.workerExist = warehouse.getWorkerExist();
@@ -111,6 +119,8 @@ public class WarehouseDetailResponseDto {
         this.warehouseCondition = warehouseConditionNames;
         this.warehouseFacilityUsages = warehouseFacilityUsages;
         this.warehouseUsageCautions = warehouseUsageCautions;
+        this.insurances = insurances;
+        this.securityCompanies = securityCompanies;
         this.images = images;
     }
 }
