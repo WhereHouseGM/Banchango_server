@@ -106,9 +106,7 @@ public class WarehouseDetailResponseDto {
         this.minReleasePerMonth = warehouse.getMinReleasePerMonth();
         this.latitude = warehouse.getLatitude();
         this.longitude = warehouse.getLongitude();
-
         this.mainImageUrl = mainImage != null ? mainImage.getUrl() : defaultImageUrl;
-
         this.deliveryTypes = deliveryTypes;
         this.warehouseCondition = warehouseConditionNames;
         this.warehouseFacilityUsages = warehouseFacilityUsages;
