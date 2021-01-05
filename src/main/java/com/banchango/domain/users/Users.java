@@ -19,6 +19,7 @@ public class Users extends BaseTimeEntity {
     private Integer userId;
 
     @Column(nullable = false, length = 400)
+    @Setter
     private String password;
 
     @Column(nullable = false, length = 50)

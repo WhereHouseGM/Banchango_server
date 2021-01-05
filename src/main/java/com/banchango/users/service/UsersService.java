@@ -7,11 +7,9 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.tools.EmailContent;
 import com.banchango.tools.PasswordGenerator;
-import com.banchango.users.dto.UserInfoResponseDto;
-import com.banchango.users.dto.UserSigninRequestDto;
-import com.banchango.users.dto.UserSigninResponseDto;
-import com.banchango.users.dto.UserSignupRequestDto;
+import com.banchango.users.dto.*;
 import com.banchango.users.exception.*;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,5 +63,13 @@ public class UsersService {
         usersRepository.updatePassword(temporaryPassword, recipient);
         EmailContent emailContent = new EmailContent("[반창고] 임시 비밀번호 발급", "안녕하세요, 반창고 입니다!", "발급해드린 임시 비밀번호는 <span style='font-size: 20px'>" + temporaryPassword + "</span> 입니다.", "이 임시 비밀번호로 로그인 해주세요.", "로그인 하기", "dev.banchango.shop/login");
         return emailSender.send(user.getEmail(), emailContent, false);
+    }
+
+    @Transactional
+    public void changePassword(String accessToken, ChangePasswordRequestDto changePasswordRequestDto) {
+        Integer userId = JwtTokenUtil.extractUserId(accessToken);
+
+        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        user.setPassword(changePasswordRequestDto.getPassword());
     }
 }

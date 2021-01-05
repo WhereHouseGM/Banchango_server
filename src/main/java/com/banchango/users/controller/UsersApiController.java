@@ -48,4 +48,15 @@ public class UsersApiController {
     public BasicMessageResponseDto sendTemporaryPasswordToEmail(@Valid @RequestBody UserEmailSendRequestDto requestDto) {
         return usersService.sendTemporaryPasswordEmail(requestDto.getEmail());
     }
+
+    @PatchMapping("/v3/users/change-password")
+    @ResponseStatus(HttpStatus.OK)
+    public BasicMessageResponseDto changePassword(
+        @Valid @RequestBody ChangePasswordRequestDto changePasswordRequestDto,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        usersService.changePassword(accessToken, changePasswordRequestDto);
+        
+        return new BasicMessageResponseDto("비밀번호를 성공적으로 변경했습니다");
+    }
 }
