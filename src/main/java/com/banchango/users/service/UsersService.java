@@ -9,7 +9,6 @@ import com.banchango.tools.EmailContent;
 import com.banchango.tools.PasswordGenerator;
 import com.banchango.users.dto.*;
 import com.banchango.users.exception.*;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
