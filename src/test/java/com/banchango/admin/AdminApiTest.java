@@ -170,6 +170,8 @@ public class AdminApiTest extends ApiTestContext {
         assertTrue(response.getBody().getDeliveryTypes().containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_1, WarehouseEntityFactory.DELIVERY_2, WarehouseEntityFactory.DELIVERY_3)));
         assertTrue(response.getBody().getInsurances().containsAll(Arrays.asList(WarehouseEntityFactory.INSURANCE_1, WarehouseEntityFactory.INSURANCE_2, WarehouseEntityFactory.INSURANCE_3)));
         assertTrue(response.getBody().getSecurityCompanies().containsAll(Arrays.asList(WarehouseEntityFactory.SEC_COMP_1, WarehouseEntityFactory.SEC_COMP_2, WarehouseEntityFactory.SEC_COMP_3)));
+        assertNotNull(response.getBody().getCreatedAt());
+        assertEquals(WarehouseStatus.VIEWABLE, response.getBody().getStatus());
     }
 
     @Test
