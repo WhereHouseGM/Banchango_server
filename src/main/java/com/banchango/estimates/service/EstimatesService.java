@@ -10,6 +10,7 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.dto.EstimateSearchResponseDto;
+import com.banchango.estimates.exception.EstimateNoContentException;
 import com.banchango.users.exception.UserInvalidAccessException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
@@ -66,6 +67,8 @@ public class EstimatesService {
                 return estimateSearchResponseDto;
             })
             .collect(Collectors.toList());
+
+        if(estimates.size() == 0) throw new EstimateNoContentException();
 
         return estimates;
     }
