@@ -1,4 +1,4 @@
-package com.banchango.domain.deliverytypes;
+package com.banchango.domain.insurances;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,18 +9,17 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "delivery_types")
-public class DeliveryTypes {
+public class Insurances {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 50, nullable = false)
     private String name;
 
     @Builder
-    public DeliveryTypes(String name) {
+    public Insurances(String name) {
         this.name = name;
     }
 }

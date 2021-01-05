@@ -2,7 +2,9 @@ package com.banchango.domain.warehouses;
 
 import com.banchango.domain.BaseTimeEntity;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouseimages.WarehouseImages;
@@ -56,14 +58,8 @@ public class Warehouses extends BaseTimeEntity {
     @Column(length = 100)
     private String availableTimeDetail;
 
-    @Column
-    private String insurance;
-
     @Column(nullable = false)
     private Boolean cctvExist;
-
-    @Column(length = 100)
-    private String securityCompanyName;
 
     @Column(nullable = false)
     private Boolean doorLockExist;
@@ -103,8 +99,17 @@ public class Warehouses extends BaseTimeEntity {
     @Setter
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
-    private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
+    private List<Insurances> insurances = new ArrayList<>();
 
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private List<SecurityCompanies> securityCompanies = new ArrayList<>();
+
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
 
     @Setter
     @OneToMany( cascade = CascadeType.ALL)
@@ -125,9 +130,8 @@ public class Warehouses extends BaseTimeEntity {
     private List<MainItemTypes> mainItemTypes = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, String securityCompanyName, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, WarehouseStatus status) {
+    public Warehouses(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, WarehouseStatus status) {
         this.name = name;
-        this.insurance = insurance;
         this.space = space;
         this.address = address;
         this.addressDetail = addressDetail;
@@ -137,7 +141,6 @@ public class Warehouses extends BaseTimeEntity {
         this.closeAt = closeAt;
         this.availableTimeDetail = availableTimeDetail;
         this.cctvExist = cctvExist;
-        this.securityCompanyName = securityCompanyName;
         this.doorLockExist = doorLockExist;
         this.airConditioningType = airConditioningType;
         this.workerExist = workerExist;
