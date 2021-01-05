@@ -102,7 +102,6 @@ public class AdminApiTest extends ApiTestContext {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(responseBody.length() > 0);
-        System.err.println(responseBody.get(0));
         assertNotNull(new JSONObject(responseBody.get(0).toString()).get("warehouseId"));
         assertNotNull(new JSONObject(responseBody.get(0).toString()).get("name"));
         assertNotNull(new JSONObject(responseBody.get(0).toString()).get("createdAt"));
