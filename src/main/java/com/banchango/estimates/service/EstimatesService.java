@@ -10,10 +10,10 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.exception.EstimateNoContentException;
-import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
 import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
+import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +63,7 @@ public class EstimatesService {
             .map(estimate -> {
                 EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
                 Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
+
                 if(optionalProjection.isPresent()) {
                     WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
                     WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
