@@ -9,9 +9,9 @@ import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.estimates.dto.EstimateSearchDto;
-import com.banchango.estimates.dto.EstimateSearchResponseDto;
 import com.banchango.estimates.exception.EstimateNoContentException;
-import com.banchango.users.exception.UserInvalidAccessException;
+import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
+import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
 import lombok.RequiredArgsConstructor;
@@ -56,14 +56,23 @@ public class EstimatesService {
     public List<EstimateSearchDto> getEstimatesByUserId(String accessToken, Integer userId) {
         Integer userIdFromAccessToken = JwtTokenUtil.extractUserId(accessToken);
 
-        if(!userIdFromAccessToken.equals(userId)) throw new UserInvalidAccessException();
+        if(!userIdFromAccessToken.equals(userId)) throw new ForbiddenUserIdException();
 
         List<EstimateSearchDto> estimates = estimatesRepository.findAllByUserId(userId)
             .stream()
             .map(estimate -> {
                 EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
-                Optional<WarehouseSummaryDto> optionalWarehouseSummaryDto = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseSummaryDto.class);
-                if(optionalWarehouseSummaryDto.isPresent()) estimateSearchResponseDto.updateWarehouse(optionalWarehouseSummaryDto.get());
+                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
+                if(optionalProjection.isPresent()) {
+                    WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
+                    WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
+                        .id(projection.getId())
+                        .name(projection.getName())
+                        .address(projection.getAddress())
+                        .build();
+
+                    estimateSearchResponseDto.updateWarehouse(warehouseSummaryDto);
+                }
                 return estimateSearchResponseDto;
             })
             .collect(Collectors.toList());

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 
 @Component
 public class EstimateEntityFactory {
@@ -47,8 +49,9 @@ public class EstimateEntityFactory {
             .userId(userId)
             .content(CONTENT)
             .status(status)
+            .estimateItems(new ArrayList<>())
             .build();
 
-        return estimate;
+        return estimatesRepository.save(estimate);
     }
 }

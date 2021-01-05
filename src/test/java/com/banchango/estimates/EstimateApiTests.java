@@ -183,18 +183,7 @@ public class EstimateApiTests extends ApiTestContext {
 
         ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody().getEstimates());
-
-        response.getBody().getEstimates().stream()
-            .forEach(estimateSearchDto -> {
-                assertNotNull(estimateSearchDto.getId());
-                assertNotNull(estimateSearchDto.getWarehouse());
-                assertNotNull(estimateSearchDto.getWarehouse().getId());
-                assertNotNull(estimateSearchDto.getWarehouse().getAddress());
-                assertNotNull(estimateSearchDto.getWarehouse().getName());
-                assertNotNull(estimateSearchDto.getStatus());
-            });
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
