@@ -45,6 +45,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     String accessToken = null;
     Users user = null;
+
     @Before
     public void beforeTest() {
         if(user == null) {

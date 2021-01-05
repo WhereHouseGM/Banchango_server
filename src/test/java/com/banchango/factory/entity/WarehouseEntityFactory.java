@@ -1,6 +1,7 @@
 package com.banchango.factory.entity;
 
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
@@ -8,6 +9,7 @@ import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,13 +84,17 @@ public class WarehouseEntityFactory {
 
         warehouse.getMainItemTypes().addAll(m);
 
-        List<Insurances> insurances = Arrays.stream(new String[]{"INSURANCE1", "INSURANCE2", "INSURANCE3"})
-                .map(insurance -> new Insurances(insurance)).collect(Collectors.toList());
-        warehouse.setInsurances(insurances);
+//        List<Insurances> insurances = Arrays.stream(new String[]{"INSURANCE1", "INSURANCE2", "INSURANCE3"})
+//                .map(Insurances::new).collect(Collectors.toList());
+//        warehouse.setInsurances(insurances);
+//
+//        List<SecurityCompanies> securityCompanies = Arrays.stream(new String[]{"SEC_COMP1", "SEC_COMP2", "SEC_COMP3"})
+//                .map(SecurityCompanies::new).collect(Collectors.toList());
+//        warehouse.setSecurityCompanies(securityCompanies);
 
-        List<SecurityCompanies> securityCompanies = Arrays.stream(new String[]{"SEC_COMP1", "SEC_COMP2", "SEC_COMP3"})
-                .map(company -> new SecurityCompanies(company)).collect(Collectors.toList());
-        warehouse.setSecurityCompanies(securityCompanies);
+        List<DeliveryTypes> deliveryTypes = Arrays.stream(new String[]{"DELIVERY1", "DELIVERY2", "DELIVERY3"})
+                .map(DeliveryTypes::new).collect(Collectors.toList());
+        warehouse.setDeliveryTypes(deliveryTypes);
 
         return warehousesRepository.save(warehouse);
     }
