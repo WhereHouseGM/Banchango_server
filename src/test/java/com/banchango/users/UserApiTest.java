@@ -41,6 +41,7 @@ public class UserApiTest {
                 .type(UserType.OWNER)
                 .phoneNumber("010123123")
                 .companyName("companyName")
+                .role(UserRole.USER)
                 .build();
         usersRepository.save(user);
     }

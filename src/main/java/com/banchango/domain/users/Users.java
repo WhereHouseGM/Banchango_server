@@ -5,7 +5,6 @@ import com.banchango.users.dto.UserSignupRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -57,7 +56,7 @@ public class Users extends BaseTimeEntity {
         this.type = type;
         this.companyName = companyName;
         this.phoneNumber = phoneNumber;
-        this.role = role == null ? UserRole.USER : role;
+        this.role = role;
     }
 
     public void updatePassword(String password) {

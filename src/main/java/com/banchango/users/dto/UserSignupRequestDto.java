@@ -1,6 +1,7 @@
 package com.banchango.users.dto;
 
 import com.banchango.common.validator.ValueOfEnum;
+import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class UserSignupRequestDto {
                 .password(password).type(UserType.valueOf(type))
                 .phoneNumber(phoneNumber)
                 .companyName(companyName)
+                .role(UserRole.USER)
                 .build();
     }
 }
