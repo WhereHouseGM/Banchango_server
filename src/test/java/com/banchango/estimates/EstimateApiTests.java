@@ -139,7 +139,7 @@ public class EstimateApiTests extends ApiTestContext {
         Estimates estimate2 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
         Estimates estimate3 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates?userId="+user.getUserId()))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/users/"+user.getUserId()))
             .header("Authorization", "Bearer " + accessToken)
             .build();
 
@@ -161,7 +161,7 @@ public class EstimateApiTests extends ApiTestContext {
 
     @Test
     public void get_estimateByUserId_responseIsNoContent_IfEstimatesNotExist() {
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates?userId="+user.getUserId()))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/users/"+user.getUserId()))
             .header("Authorization", "Bearer " + accessToken)
             .build();
 
@@ -171,29 +171,13 @@ public class EstimateApiTests extends ApiTestContext {
     }
 
     @Test
-    public void get_estimateByUserId_responseIsBadRequest_IfUserIdNotGiven() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        Estimates estimate2 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        Estimates estimate3 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates"))
-            .header("Authorization", "Bearer " + accessToken)
-            .build();
-
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-    @Test
     public void get_estimateByUserId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
         Estimates estimate2 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
         Estimates estimate3 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates?userId="+user.getUserId()))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/users/"+user.getUserId()))
             .build();
 
         ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
@@ -211,7 +195,7 @@ public class EstimateApiTests extends ApiTestContext {
 
         String otherUsersAccessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates?userId="+user.getUserId()))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/users/"+user.getUserId()))
             .header("Authorization", "Bearer " + otherUsersAccessToken)
             .build();
 

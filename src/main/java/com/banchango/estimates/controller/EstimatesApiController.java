@@ -29,11 +29,11 @@ public class EstimatesApiController {
         return new BasicMessageResponseDto("견적 문의가 성공적으로 생성됐습니다");
     }
 
-    @GetMapping("/v3/estimates")
+    @GetMapping("/v3/estimates/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ValidateRequired
     public EstimateSearchResponseDto getEstimates(
-        @RequestParam Integer userId,
+        @PathVariable Integer userId,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         List<EstimateSearchDto> estimates = estimatesService.getEstimatesByUserId(accessToken, userId);
