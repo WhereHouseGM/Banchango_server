@@ -19,10 +19,9 @@ public class EstimateItemInsertRequestDto {
     private EstimateBarcode barcode;
     private Integer sku;
     private String url;
-    private Integer monthlyAverageRelease;
 
     @Builder
-    public EstimateItemInsertRequestDto(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Integer monthlyAverageRelease) {
+    public EstimateItemInsertRequestDto(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url) {
         this.name = name;
         this.keepingNumber = keepingNumber;
         this.perimeter = perimeter;
@@ -31,7 +30,6 @@ public class EstimateItemInsertRequestDto {
         this.barcode = barcode;
         this.sku = sku;
         this.url = url;
-        this.monthlyAverageRelease = monthlyAverageRelease;
     }
 
 
@@ -45,7 +43,6 @@ public class EstimateItemInsertRequestDto {
             .barcode(barcode)
             .sku(sku)
             .url(url)
-            .monthlyAverageRelease(monthlyAverageRelease)
             .estimate(estimate)
             .build();
     }

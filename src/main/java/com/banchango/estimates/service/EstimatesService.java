@@ -40,6 +40,7 @@ public class EstimatesService {
             .userId(userId)
             .warehouseId(estimateInsertRequestDto.getWarehouseId())
             .status(EstimateStatus.IN_PROGRESS)
+            .monthlyAverageRelease(estimateInsertRequestDto.getMonthlyAverageRelease())
             .build();
 
         estimatesRepository.save(newEstimate);

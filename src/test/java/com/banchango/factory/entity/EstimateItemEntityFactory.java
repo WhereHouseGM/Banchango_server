@@ -20,7 +20,6 @@ public class EstimateItemEntityFactory {
 
     public EstimateItems create(Estimates estimate) {
         return EstimateItems.builder()
-            .monthlyAverageRelease(MONTHLY_AVERAGE_RELEASE)
             .barcode(BARCODE)
             .keepingNumber(KEEPING_NUMBER)
             .keepingType(KEEPING_TYPE)

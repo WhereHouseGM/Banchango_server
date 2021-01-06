@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
 @Component
 public class EstimateEntityFactory {
     public static final String CONTENT = "CONTENT";
+    public static final Integer MONTHLY_AVERAGE_RELEASE = 1299;
 
     private EstimateItemEntityFactory estimateItemEntityFactory;
     private EstimatesRepository estimatesRepository;
@@ -31,11 +32,11 @@ public class EstimateEntityFactory {
     public Estimates createInProgressWithEstimateItems(Integer warehouseId, Integer userId) {
         Estimates estimate = create(warehouseId, userId, EstimateStatus.IN_PROGRESS);
 
-        List<EstimateItems> esimateItems = IntStream.range(0, 3)
+        List<EstimateItems> estimateItems = IntStream.range(0, 3)
             .mapToObj(number -> estimateItemEntityFactory.create(estimate))
             .collect(Collectors.toList());
 
-        estimate.setEstimateItems(esimateItems);
+        estimate.setEstimateItems(estimateItems);
 
         return estimate;
     }
@@ -49,6 +50,7 @@ public class EstimateEntityFactory {
             .warehouseId(warehouseId)
             .userId(userId)
             .content(CONTENT)
+            .monthlyAverageRelease(MONTHLY_AVERAGE_RELEASE)
             .status(status)
             .estimateItems(new ArrayList<>())
             .build();

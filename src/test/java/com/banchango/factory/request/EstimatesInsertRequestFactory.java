@@ -15,6 +15,7 @@ public class EstimatesInsertRequestFactory {
         return EstimateInsertRequestDto.builder()
             .warehouseId(warehouseId)
             .content("content")
+            .monthlyAverageRelease(1299)
             .estimateItems(estimateItemInsertRequestDtos)
             .build();
     }

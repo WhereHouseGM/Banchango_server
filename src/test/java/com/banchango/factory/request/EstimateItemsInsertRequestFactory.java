@@ -15,7 +15,6 @@ public class EstimateItemsInsertRequestFactory {
             .perimeter(33.3)
             .sku(100)
             .url("https://google.com")
-            .monthlyAverageRelease(12)
             .build();
     }
 }

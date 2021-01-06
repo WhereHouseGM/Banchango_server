@@ -34,16 +34,20 @@ public class Estimates extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private EstimateStatus status;
 
+    @Column(nullable = false)
+    private Integer monthlyAverageRelease;
+
     @Setter
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL)
     private List<EstimateItems> estimateItems = new ArrayList<>();
 
     @Builder
-    public Estimates(String content, Integer userId, Integer warehouseId, EstimateStatus status, List<EstimateItems> estimateItems) {
+    public Estimates(String content, Integer userId, Integer warehouseId, EstimateStatus status, Integer monthlyAverageRelease, List<EstimateItems> estimateItems) {
         this.content = content;
         this.userId = userId;
         this.warehouseId = warehouseId;
         this.status = status;
+        this.monthlyAverageRelease = monthlyAverageRelease;
         this.estimateItems = estimateItems;
     }
 }

@@ -42,15 +42,12 @@ public class EstimateItems {
     @Column(length = 1000)
     private String url;
 
-    @Column(nullable = false)
-    private Integer monthlyAverageRelease;
-
     @ManyToOne
     @JoinColumn(name = "estimate_id")
     private Estimates estimate;
 
     @Builder
-    public EstimateItems(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Integer monthlyAverageRelease, Estimates estimate) {
+    public EstimateItems(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Estimates estimate) {
         this.name = name;
         this.keepingNumber = keepingNumber;
         this.perimeter = perimeter;
@@ -59,7 +56,6 @@ public class EstimateItems {
         this.barcode = barcode;
         this.sku = sku;
         this.url = url;
-        this.monthlyAverageRelease = monthlyAverageRelease;
         this.estimate = estimate;
     }
 }
