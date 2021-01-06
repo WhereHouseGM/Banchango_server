@@ -6,6 +6,8 @@ import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,6 +39,7 @@ public class WarehouseEntityFactory {
     public static final String[] INSURANCES = {"INSURANCE_1", "INSURANCE_2", "INSURANCE_3"};
     public static final String[] SECURITY_COMPANIES = {"SEC_COMP_1", "SEC_COMP_2", "SEC_COMP_3"};
     public static final String[] DELIVERY_TYPES = {"DELIVERY_1", "DELIVERY_2", "DELIVERY_3"};
+    public static final WarehouseCondition[] WAREHOUSE_CONDITIONS = {WarehouseCondition.ROOM_TEMPERATURE, WarehouseCondition.LOW_TEMPERATURE};
 
     private WarehousesRepository warehousesRepository;
 
@@ -91,6 +94,11 @@ public class WarehouseEntityFactory {
             .map(mainItemType -> new MainItemTypes(mainItemType, warehouse))
             .collect(Collectors.toList());
         warehouse.setMainItemTypes(mainItemTypesList);
+
+        List<WarehouseConditions> warehouseConditions = Arrays.stream(WAREHOUSE_CONDITIONS)
+                .map(WarehouseConditions::new)
+                .collect(Collectors.toList());
+        warehouse.setWarehouseConditions(warehouseConditions);
 
         List<Insurances> insurances = Arrays.stream(INSURANCES)
                 .map(Insurances::new).collect(Collectors.toList());

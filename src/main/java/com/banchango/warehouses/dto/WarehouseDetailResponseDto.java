@@ -1,5 +1,6 @@
 package com.banchango.warehouses.dto;
 
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.AirConditioningType;
@@ -33,7 +34,7 @@ public class WarehouseDetailResponseDto {
     private AirConditioningType airConditioningType;
     private Boolean workerExist;
     private Boolean canPark;
-    private List<String> mainItemTypes;
+    private List<MainItemType> mainItemTypes;
     private WarehouseType warehouseType;
     private Integer minReleasePerMonth;
     private Double latitude;
@@ -50,9 +51,9 @@ public class WarehouseDetailResponseDto {
     private List<String> securityCompanies = new ArrayList<>();
 
     public WarehouseDetailResponseDto(Warehouses warehouse, String defaultImageUrl) {
-        List<String> mainItemTypes = warehouse.getMainItemTypes()
+        List<MainItemType> mainItemTypes = warehouse.getMainItemTypes()
             .stream()
-            .map(mainItemType -> mainItemType.getType().name())
+            .map(type -> type.getType())
             .collect(Collectors.toList());
 
         List<String> deliveryTypes = warehouse.getDeliveryTypes()

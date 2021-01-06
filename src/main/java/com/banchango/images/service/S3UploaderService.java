@@ -1,8 +1,12 @@
 package com.banchango.images.service;
 
+import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.InternalServerErrorException;
+import com.banchango.domain.users.UserRole;
+import com.banchango.domain.users.Users;
+import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouseimages.WarehouseImagesRepository;
 import com.banchango.domain.warehouses.Warehouses;
@@ -32,6 +36,7 @@ public class S3UploaderService {
     private S3Client s3Client;
     private final WarehouseImagesRepository warehouseImagesRepository;
     private final WarehousesRepository warehousesRepository;
+    private final UsersRepository usersRepository;
 
     @Value("${aws.s3.bucket}")
     private String bucket;
@@ -96,19 +101,68 @@ public class S3UploaderService {
         return false;
     }
 
+    private void doubleCheckAdminAccess(Integer userId) {
+        Users user = usersRepository.findById(userId).orElseThrow(AdminInvalidAccessException::new);
+        if(!user.getRole().equals(UserRole.ADMIN)) throw new AdminInvalidAccessException();
+    }
+
+    private ImageInfoResponseDto saveImage(Integer warehouseId, MultipartFile file, Boolean isMain) {
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        String url = uploadFile(file);
+        WarehouseImages image = WarehouseImages.builder().url(url).isMain(isMain).warehouse(warehouse).build();
+        WarehouseImages savedImage = warehouseImagesRepository.save(image);
+        return new ImageInfoResponseDto(savedImage);
+    }
+
+    private void checkCountOfExtraImage(Integer warehouseId) {
+        if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, false).size() >= 5) {
+            throw new WarehouseExtraImageLimitException();
+        }
+    }
+
+    private void checkCountOfMainImage(Integer warehouseId) {
+        if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, true).size() > 1) {
+            throw new WarehouseMainImageAlreadyRegisteredException();
+        }
+    }
+
+    private void checkIfFileToRemoveExists(Integer warehouseId, String fileName) {
+        if(!warehouseImagesRepository.findByWarehouseIdAndUrlContaining(warehouseId, fileName).isPresent()) {
+            throw new WarehouseExtraImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
+        }
+    }
+
+    private String checkIfMainImageToDeleteExists(Integer warehouseId) {
+        List<WarehouseImages> images = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, true);
+        if(images.size() >= 1) {
+            WarehouseImages image = images.get(0);
+            String[] splitTemp = image.getUrl().split("/");
+            String fileName = splitTemp[splitTemp.length - 1];
+            return fileName;
+        } else throw new WarehouseMainImageNotFoundException();
+    }
+
+    @Transactional
+    public ImageInfoResponseDto uploadExtraImageByAdmin(MultipartFile file, String token, Integer warehouseId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        checkCountOfExtraImage(warehouseId);
+        return saveImage(warehouseId, file, false);
+    }
+
     @Transactional
     public ImageInfoResponseDto uploadExtraImage(MultipartFile file, String token, Integer warehouseId) {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
-        if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, false).size() >= 5) {
-            throw new WarehouseExtraImageLimitException();
-        }
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        String url = uploadFile(file);
-        WarehouseImages image = WarehouseImages.builder().url(url).isMain(false).warehouse(warehouse).build();
-        WarehouseImages savedImage = warehouseImagesRepository.save(image);
-        return new ImageInfoResponseDto(savedImage);
+        checkCountOfExtraImage(warehouseId);
+        return saveImage(warehouseId, file, false);
+    }
+
+    @Transactional
+    public ImageInfoResponseDto uploadMainImageByAdmin(MultipartFile file, String token, Integer warehouseId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        checkCountOfMainImage(warehouseId);
+        return saveImage(warehouseId, file, true);
     }
 
     @Transactional
@@ -116,15 +170,17 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
-        List<WarehouseImages> images = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, true);
-        if(images.size() >= 1) {
-            throw new WarehouseMainImageAlreadyRegisteredException();
-        }
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        String url = uploadFile(file);
-        WarehouseImages image = WarehouseImages.builder().url(url).isMain(true).warehouse(warehouse).build();
-        WarehouseImages savedImage = warehouseImagesRepository.save(image);
-        return new ImageInfoResponseDto(savedImage);
+        checkCountOfMainImage(warehouseId);
+        return saveImage(warehouseId, file, true);
+    }
+
+    @Transactional
+    public BasicMessageResponseDto deleteExtraImageByAdmin(String fileName, String token, Integer warehouseId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        checkIfFileToRemoveExists(warehouseId, fileName);
+        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
+        deleteFile(fileName);
+        return new BasicMessageResponseDto("삭제에 성공했습니다.");
     }
 
     @Transactional
@@ -132,13 +188,19 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
-        if(warehouseImagesRepository.findByUrlContaining(fileName).isPresent()) {
-            warehouseImagesRepository.deleteByUrlContaining(fileName);
-            deleteFile(fileName);
-            return new BasicMessageResponseDto("삭제에 성공했습니다.");
-        } else {
-            throw new WarehouseExtraImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
-        }
+        checkIfFileToRemoveExists(warehouseId, fileName);
+        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
+        deleteFile(fileName);
+        return new BasicMessageResponseDto("삭제에 성공했습니다.");
+    }
+
+    @Transactional
+    public BasicMessageResponseDto deleteMainImageByAdmin(String token, Integer warehouseId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        String fileName = checkIfMainImageToDeleteExists(warehouseId);
+        deleteFile(fileName);
+        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
+        return new BasicMessageResponseDto("삭제에 성공했습니다.");
     }
 
     @Transactional
@@ -146,16 +208,9 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
-        List<WarehouseImages> images = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, true);
-        if(images.size() >= 1) {
-            WarehouseImages image = images.get(0);
-            String[] splitTemp = image.getUrl().split("/");
-            String fileName = splitTemp[splitTemp.length - 1];
-            deleteFile(fileName);
-            warehouseImagesRepository.deleteByUrlContaining(fileName);
-            return new BasicMessageResponseDto("삭제에 성공했습니다.");
-        } else {
-            throw new WarehouseMainImageNotFoundException();
-        }
+        String fileName = checkIfMainImageToDeleteExists(warehouseId);
+        deleteFile(fileName);
+        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
+        return new BasicMessageResponseDto("삭제에 성공했습니다.");
     }
 }

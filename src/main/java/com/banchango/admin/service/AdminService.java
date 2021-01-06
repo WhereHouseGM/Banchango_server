@@ -1,10 +1,13 @@
 package com.banchango.admin.service;
 
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
+import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
+import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -27,6 +30,7 @@ public class AdminService {
 
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
+    private final MainItemTypesRepository mainItemTypesRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -37,11 +41,12 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public List<WarehouseInsertRequestResponseDto> findWaitingWarehouses(String token, PageRequest pageRequest) {
+    public WarehouseInsertRequestResponseListDto findWaitingWarehouses(String token, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         List<Warehouses> warehouses = warehousesRepository.findWarehousesByStatusOrderByCreatedAt(WarehouseStatus.IN_PROGRESS, pageRequest);
         if(warehouses.size() == 0) throw new WaitingWarehousesNotFoundException();
-        return warehouses.stream().map(WarehouseInsertRequestResponseDto::new).collect(Collectors.toList());
+        return WarehouseInsertRequestResponseListDto.builder()
+                .requests(warehouses.stream().map(WarehouseInsertRequestResponseDto::new).collect(Collectors.toList())).build();
     }
 
     @Transactional(readOnly = true)
@@ -51,5 +56,14 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    // TODO : 창고 정보값 및 등록 신청 상태 수정하게 해주는 API
+    @Transactional
+    public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).equals(requestDto.getMainItemTypes())) {
+            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+        }
+        warehouse.update(requestDto);
+        return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
+    }
 }

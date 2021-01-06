@@ -1,9 +1,10 @@
-package com.banchango.warehouses.dto;
+package com.banchango.admin.dto;
 
 import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
+import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.WarehouseType;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +16,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
-@Builder
-public class WarehouseInsertRequestDto {
+public class WarehouseAdminUpdateRequestDto {
 
     @Size(min = 1, message = "name의 최소 길이는 1입니다.")
     @NotNull(message = "name이 없습니다.")
@@ -102,8 +102,12 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "경비 업체 정보가 없습니다.")
     List<String> securityCompanies;
 
+    @NotNull(message = "Warehouse status is missing.")
+    @ValueOfEnum(enumClass = WarehouseStatus.class)
+    WarehouseStatus status;
+
     @Builder
-    public WarehouseInsertRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<MainItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies) {
+    public WarehouseAdminUpdateRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<MainItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies, WarehouseStatus status) {
         this.name = name;
         this.space = space;
         this.address = address;
@@ -129,5 +133,6 @@ public class WarehouseInsertRequestDto {
         this.warehouseUsageCautions = warehouseUsageCautions;
         this.insurances = insurances;
         this.securityCompanies = securityCompanies;
+        this.status = status;
     }
 }
