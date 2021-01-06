@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class UserInfoResponseDto {
 
-    private int userId;
+    private Integer userId;
     private String name;
     private String email;
     private UserType type;
