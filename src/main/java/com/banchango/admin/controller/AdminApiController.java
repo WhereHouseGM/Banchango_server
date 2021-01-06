@@ -1,8 +1,10 @@
 package com.banchango.admin.controller;
 
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
+import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
 import com.banchango.admin.service.AdminService;
+import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.users.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -38,11 +41,12 @@ public class AdminApiController {
 
     // TODO : 창고 정보값 및 등록 신청 상태 수정하게 해주는 API
     @ValidateRequired(roles = UserRole.ADMIN)
-    @PatchMapping("/v3/admin/warehouses/edit/{warehouseId}")
+    @PutMapping("/v3/admin/warehouses/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateWarehouses(@RequestAttribute(name = "accessToken") String token,
-                                                            @PathVariable Integer warehouseId) {
-
+    public WarehouseAdminDetailResponseDto updateWarehouses(@Valid @RequestBody WarehouseAdminUpdateRequestDto requestDto,
+                                                    @RequestAttribute(name = "accessToken") String token,
+                                                    @PathVariable Integer warehouseId) {
+        return adminService.updateWarehouse(requestDto, token, warehouseId);
     }
 
 }

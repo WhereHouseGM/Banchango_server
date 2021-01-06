@@ -1,10 +1,12 @@
 package com.banchango.admin.service;
 
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
+import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -51,5 +53,11 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    // TODO : 창고 정보값 및 등록 신청 상태 수정하게 해주는 API
+    @Transactional
+    public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        warehouse.update(requestDto);
+        return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
+    }
 }

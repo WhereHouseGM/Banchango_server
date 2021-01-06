@@ -122,6 +122,4 @@ public class EstimateApiTests extends ApiTestContext {
 
         warehouseRepository.delete(warehouse);
     }
-
-
 }
