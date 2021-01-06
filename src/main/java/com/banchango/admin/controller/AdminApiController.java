@@ -4,7 +4,6 @@ import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
 import com.banchango.admin.service.AdminService;
-import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.users.UserRole;
 import lombok.RequiredArgsConstructor;

@@ -6,7 +6,6 @@ import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
-import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;

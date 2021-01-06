@@ -1,6 +1,5 @@
 package com.banchango.domain.warehousefacilityusages;
 
-import com.banchango.domain.warehouses.Warehouses;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

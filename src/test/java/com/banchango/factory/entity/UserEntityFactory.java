@@ -7,8 +7,6 @@ import com.banchango.domain.users.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
-
 @Component
 public class UserEntityFactory {
     private static final String NAME = "NAME";

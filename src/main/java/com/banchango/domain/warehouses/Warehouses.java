@@ -4,7 +4,6 @@ import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.domain.BaseTimeEntity;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.insurances.Insurances;
-import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
