@@ -58,7 +58,7 @@ public class EstimatesService {
 
         if(!userIdFromAccessToken.equals(userId)) throw new ForbiddenUserIdException();
 
-        List<EstimateSearchDto> estimates = estimatesRepository.findAllByUserId(userId)
+        List<EstimateSearchDto> estimates = estimatesRepository.findByUserId(userId)
             .stream()
             .map(estimate -> {
                 EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);

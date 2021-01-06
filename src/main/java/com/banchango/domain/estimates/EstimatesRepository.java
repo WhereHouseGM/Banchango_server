@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface EstimatesRepository extends JpaRepository<Estimates, Integer> {
-    public List<Estimates> findAllByUserId(Integer userId);
+    public List<Estimates> findByUserId(Integer userId);
 }
