@@ -2,7 +2,6 @@ package com.banchango.admin.controller;
 
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.admin.service.AdminService;
 import com.banchango.common.interceptor.ValidateRequired;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

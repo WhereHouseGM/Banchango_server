@@ -148,11 +148,11 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(WarehouseEntityFactory.MIN_RELEASE_PER_MONTH, response.getBody().getMinReleasePerMonth());
         assertEquals(WarehouseEntityFactory.LATITUDE, response.getBody().getLatitude());
         assertEquals(WarehouseEntityFactory.LONGITUDE, response.getBody().getLongitude());
-        assertTrue(response.getBody().getDeliveryTypes().equals(Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES)));
-        assertTrue(response.getBody().getInsurances().equals(Arrays.asList(WarehouseEntityFactory.INSURANCES)));
-        assertTrue(response.getBody().getSecurityCompanies().equals(Arrays.asList(WarehouseEntityFactory.SECURITY_COMPANIES)));
+        assertEquals(response.getBody().getDeliveryTypes(), Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES));
+        assertEquals(response.getBody().getInsurances(), Arrays.asList(WarehouseEntityFactory.INSURANCES));
+        assertEquals(response.getBody().getSecurityCompanies(), Arrays.asList(WarehouseEntityFactory.SECURITY_COMPANIES));
         assertNotNull(response.getBody().getCreatedAt());
-        assertTrue(response.getBody().getWarehouseCondition().equals(Arrays.asList(WarehouseEntityFactory.WAREHOUSE_CONDITIONS)));
+        assertEquals(response.getBody().getWarehouseCondition(), Arrays.asList(WarehouseEntityFactory.WAREHOUSE_CONDITIONS));
         assertEquals(WarehouseStatus.VIEWABLE, response.getBody().getStatus());
     }
 
@@ -231,7 +231,7 @@ public class AdminApiTest extends ApiTestContext {
         assertFalse(firstResponse.getBody().getWorkerExist());
         assertFalse(firstResponse.getBody().getCanPark());
         assertEquals(AirConditioningType.NONE, firstResponse.getBody().getAirConditioningType());
-        assertTrue(firstResponse.getBody().getMainItemTypes().equals(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS})));
+        assertEquals(firstResponse.getBody().getMainItemTypes(), Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}));
         assertEquals(WarehouseType.FULFILLMENT, firstResponse.getBody().getWarehouseType());
         assertEquals(Integer.valueOf(101), firstResponse.getBody().getMinReleasePerMonth());
         assertEquals(Double.valueOf(11.11), firstResponse.getBody().getLatitude());
@@ -261,16 +261,16 @@ public class AdminApiTest extends ApiTestContext {
         assertFalse(secondResponse.getBody().getWorkerExist());
         assertFalse(secondResponse.getBody().getCanPark());
         assertEquals(AirConditioningType.NONE, secondResponse.getBody().getAirConditioningType());
-        assertTrue(secondResponse.getBody().getMainItemTypes().equals(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS})));
+        assertEquals(secondResponse.getBody().getMainItemTypes(), Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}));
         assertEquals(WarehouseType.FULFILLMENT, secondResponse.getBody().getWarehouseType());
         assertEquals(Integer.valueOf(101), secondResponse.getBody().getMinReleasePerMonth());
         assertEquals(Double.valueOf(11.11), secondResponse.getBody().getLatitude());
         assertEquals(Double.valueOf(33.33), secondResponse.getBody().getLongitude());
-        assertTrue(secondResponse.getBody().getInsurances().equals(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-        assertTrue(secondResponse.getBody().getSecurityCompanies().equals(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-        assertTrue(secondResponse.getBody().getDeliveryTypes().equals(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-        assertTrue(secondResponse.getBody().getWarehouseCondition().equals(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-        assertTrue(secondResponse.getBody().getWarehouseFacilityUsages().equals(Arrays.asList(new String[]{"WH_FACILITY_USAGE"})));
+        assertEquals(secondResponse.getBody().getInsurances(), Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}));
+        assertEquals(secondResponse.getBody().getSecurityCompanies(), Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}));
+        assertEquals(secondResponse.getBody().getDeliveryTypes(), Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}));
+        assertEquals(secondResponse.getBody().getWarehouseCondition(), Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}));
+        assertEquals(secondResponse.getBody().getWarehouseFacilityUsages(), Arrays.asList(new String[]{"WH_FACILITY_USAGE"}));
         assertEquals(WarehouseStatus.REJECTED, secondResponse.getBody().getStatus());
     }
 }
