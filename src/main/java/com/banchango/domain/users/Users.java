@@ -34,6 +34,9 @@ public class Users extends BaseTimeEntity {
     private String companyName;
 
     @Column(length = 40)
+    private String telephoneNumber;
+
+    @Column(length = 40)
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -49,12 +52,13 @@ public class Users extends BaseTimeEntity {
     }
 
     @Builder
-    public Users(String name, String email, String password, UserType type, String companyName, String phoneNumber, UserRole role) {
+    public Users(String name, String email, String password, UserType type, String companyName, String telephoneNumber, String phoneNumber, UserRole role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.type = type;
         this.companyName = companyName;
+        this.telephoneNumber = telephoneNumber;
         this.phoneNumber = phoneNumber;
         this.role = role;
     }

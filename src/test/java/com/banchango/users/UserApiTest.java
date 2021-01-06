@@ -39,6 +39,7 @@ public class UserApiTest {
                 .email(TEST_EMAIL)
                 .password("123")
                 .type(UserType.OWNER)
+                .telephoneNumber("010123123")
                 .phoneNumber("010123123")
                 .companyName("companyName")
                 .role(UserRole.USER)
@@ -171,6 +172,7 @@ public class UserApiTest {
         requestBody.put("email", "TEST_EMAIL_2");
         requestBody.put("password", "1234");
         requestBody.put("type", UserType.SHIPPER.name());
+        requestBody.put("telephoneNumber", "010234234");
         requestBody.put("phoneNumber", "010234234");
         requestBody.put("companyName", "companyName");
 
@@ -204,6 +206,7 @@ public class UserApiTest {
         requestBody.put("password", "1234");
         requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("phoneNumber", "010234234");
+        requestBody.put("telephoneNumber", "010234234");
         requestBody.put("companyName", "companyName");
 
         ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
@@ -234,6 +237,7 @@ public class UserApiTest {
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
         requestBody.put("phoneNumber", "0101212");
+        requestBody.put("telephoneNumber", "0101212");
         requestBody.put("companyName", "companyName");
 
         Integer userId = getUserIdByEmail(TEST_EMAIL);
@@ -279,6 +283,7 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
+        requestBody.put("telephoneNumber", "0101212");
         requestBody.put("phoneNumber", "0101212");
         requestBody.put("companyName", "companyName");
 
@@ -300,6 +305,7 @@ public class UserApiTest {
         requestBody.put("email", TEST_EMAIL);
         requestBody.put("password", "0000");
         requestBody.put("type", UserType.SHIPPER.name());
+        requestBody.put("telephoneNumber", "0101212");
         requestBody.put("phoneNumber", "0101212");
         requestBody.put("companyName", "companyName");
 
