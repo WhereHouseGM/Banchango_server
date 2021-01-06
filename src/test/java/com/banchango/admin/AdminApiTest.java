@@ -5,12 +5,16 @@ import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.estimates.EstimateStatus;
+import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.*;
+import com.banchango.estimates.dto.EstimateSearchResponseDto;
+import com.banchango.factory.entity.EstimateEntityFactory;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import org.junit.After;
@@ -48,6 +52,9 @@ public class AdminApiTest extends ApiTestContext {
 
     @Autowired
     private UserEntityFactory userEntityFactory;
+
+    @Autowired
+    private EstimateEntityFactory estimateEntityFactory;
 
     Users user = null;
     String accessToken = null;
@@ -272,5 +279,155 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(secondResponse.getBody().getWarehouseCondition(), Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}));
         assertEquals(secondResponse.getBody().getWarehouseFacilityUsages(), Arrays.asList(new String[]{"WH_FACILITY_USAGE"}));
         assertEquals(WarehouseStatus.REJECTED, secondResponse.getBody().getStatus());
+    }
+
+    @Test
+    public void get_adminAllEstimates_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createDoneWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10"))
+            .header("Authorization", "Bearer " + adminAccessToken)
+            .build();
+
+        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getEstimates());
+
+        response.getBody().getEstimates().stream()
+            .forEach(estimateSearchDto -> {
+                assertNotNull(estimateSearchDto.getId());
+                assertNotNull(estimateSearchDto.getWarehouse());
+                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
+                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
+                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
+                assertNotNull(estimateSearchDto.getStatus());
+            });
+    }
+
+    @Test
+    public void get_adminReceptedEstimates_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createDoneWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10&status=RECEPTED"))
+            .header("Authorization", "Bearer " + adminAccessToken)
+            .build();
+
+        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getEstimates());
+
+        response.getBody().getEstimates().stream()
+            .forEach(estimateSearchDto -> {
+                assertNotNull(estimateSearchDto.getId());
+                assertNotNull(estimateSearchDto.getWarehouse());
+                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
+                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
+                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
+                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
+            });
+    }
+
+    @Test
+    public void get_adminInProgressEstimates_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createDoneWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10&status=IN_PROGRESS"))
+            .header("Authorization", "Bearer " + adminAccessToken)
+            .build();
+
+        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getEstimates());
+
+        response.getBody().getEstimates().stream()
+            .forEach(estimateSearchDto -> {
+                assertNotNull(estimateSearchDto.getId());
+                assertNotNull(estimateSearchDto.getWarehouse());
+                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
+                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
+                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
+                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.IN_PROGRESS);
+            });
+    }
+
+    @Test
+    public void get_adminDoneEstimates_responseIsOk_IfAllConditionsAreRight() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createDoneWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10&status=DONE"))
+            .header("Authorization", "Bearer " + adminAccessToken)
+            .build();
+
+        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getEstimates());
+
+        response.getBody().getEstimates().stream()
+            .forEach(estimateSearchDto -> {
+                assertNotNull(estimateSearchDto.getId());
+                assertNotNull(estimateSearchDto.getWarehouse());
+                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
+                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
+                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
+                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.DONE);
+            });
+    }
+
+    @Test
+    public void get_adminAllEstimates_responseIsNoContent_IfEstimatesNotExist() {
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10"))
+            .header("Authorization", "Bearer " + adminAccessToken)
+            .build();
+
+        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void get_adminAllEstimates_responseIsUnAuthorized_IfAccessTokenNotGiven() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createDoneWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10"))
+            .build();
+
+        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void get_adminAllEstimates_responseIsForbidden_IfNotAdmin() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createDoneWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10"))
+            .header("Authorization", "Bearer " + accessToken)
+            .build();
+
+        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 }

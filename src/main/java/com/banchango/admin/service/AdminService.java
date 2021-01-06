@@ -18,7 +18,10 @@ import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimates.dto.EstimateSearchDto;
+import com.banchango.estimates.exception.EstimateNoContentException;
+import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -74,11 +78,28 @@ public class AdminService {
 
     public List<EstimateSearchDto> getEstimates(EstimateStatus status, PageRequest pageRequest) {
         List<Estimates> estimates;
-        if (status == null) estimates = estimatesRepository.findByOrderByCreatedAtDesc(pageRequest);
-        else estimates = estimatesRepository.findByStatusOrderByCreatedAtDesc(status, pageRequest);
+        if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
+        else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);
+
+        if(estimates.isEmpty()) throw new EstimateNoContentException();
 
         return estimates.stream()
-            .map(estimate -> new EstimateSearchDto(estimate))
+            .map(estimate -> {
+                EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
+                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
+
+                if(optionalProjection.isPresent()) {
+                    WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
+                    WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
+                        .warehouseId(projection.getId())
+                        .name(projection.getName())
+                        .address(projection.getAddress())
+                        .build();
+
+                    estimateSearchResponseDto.updateWarehouse(warehouseSummaryDto);
+                }
+                return estimateSearchResponseDto;
+            })
             .collect(Collectors.toList());
     }
 }
