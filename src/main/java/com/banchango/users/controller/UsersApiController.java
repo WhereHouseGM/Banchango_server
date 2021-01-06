@@ -57,7 +57,6 @@ public class UsersApiController {
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         usersService.changePassword(accessToken, changePasswordRequestDto);
-        
         return new BasicMessageResponseDto("비밀번호를 성공적으로 변경했습니다");
     }
 }

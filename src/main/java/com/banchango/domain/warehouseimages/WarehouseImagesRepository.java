@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface WarehouseImagesRepository extends JpaRepository<WarehouseImages, Long> {
     List<WarehouseImages> findByWarehouseIdAndIsMain(Integer warehouseId, Boolean isMain);
-    Optional<WarehouseImages> findByUrlContaining(String fileName);
-    void deleteByUrlContaining(String fileName);
+    Optional<WarehouseImages> findByWarehouseIdAndUrlContaining(Integer warehouseId, String fileName);
+    void deleteByWarehouseIdAndUrlContaining(Integer warehouseId, String fileName);
 }

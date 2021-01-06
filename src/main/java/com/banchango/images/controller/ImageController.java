@@ -38,7 +38,7 @@ public class ImageController {
     @ValidateRequired
     @DeleteMapping("/v3/images/delete/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
-    public BasicMessageResponseDto deleteMainImage(@RequestParam(name = "file") String fileName,
+    public BasicMessageResponseDto deleteExtraImage(@RequestParam(name = "file") String fileName,
                                                    @RequestAttribute(name = "accessToken") String accessToken,
                                                    @PathVariable Integer warehouseId) {
         return s3UploaderService.deleteExtraImage(fileName, accessToken, warehouseId);
