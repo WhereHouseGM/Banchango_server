@@ -3,6 +3,7 @@ package com.banchango.admin.controller;
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
+import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.admin.service.AdminService;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.users.UserRole;
@@ -23,9 +24,9 @@ public class AdminApiController {
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/warehouses")
     @ResponseStatus(HttpStatus.OK)
-    public List<WarehouseInsertRequestResponseDto> getWaitingWarehouses(@RequestAttribute(name = "accessToken") String token,
-                                                                        @RequestParam(name = "page") Integer page,
-                                                                        @RequestParam(name = "size") Integer size) {
+    public WarehouseInsertRequestResponseListDto getWaitingWarehouses(@RequestAttribute(name = "accessToken") String token,
+                                                                      @RequestParam(name = "page") Integer page,
+                                                                      @RequestParam(name = "size") Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return adminService.findWaitingWarehouses(token, pageRequest);
     }
@@ -38,7 +39,6 @@ public class AdminApiController {
         return adminService.getSpecificWarehouseInfo(token, warehouseId);
     }
 
-    // TODO : 창고 정보값 및 등록 신청 상태 수정하게 해주는 API
     @ValidateRequired(roles = UserRole.ADMIN)
     @PutMapping("/v3/admin/warehouses/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)

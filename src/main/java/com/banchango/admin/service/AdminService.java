@@ -3,6 +3,7 @@ package com.banchango.admin.service;
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
+import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
@@ -40,11 +41,12 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public List<WarehouseInsertRequestResponseDto> findWaitingWarehouses(String token, PageRequest pageRequest) {
+    public WarehouseInsertRequestResponseListDto findWaitingWarehouses(String token, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         List<Warehouses> warehouses = warehousesRepository.findWarehousesByStatusOrderByCreatedAt(WarehouseStatus.IN_PROGRESS, pageRequest);
         if(warehouses.size() == 0) throw new WaitingWarehousesNotFoundException();
-        return warehouses.stream().map(WarehouseInsertRequestResponseDto::new).collect(Collectors.toList());
+        return WarehouseInsertRequestResponseListDto.builder()
+                .requests(warehouses.stream().map(WarehouseInsertRequestResponseDto::new).collect(Collectors.toList())).build();
     }
 
     @Transactional(readOnly = true)

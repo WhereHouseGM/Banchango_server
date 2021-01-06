@@ -3,6 +3,7 @@ package com.banchango.admin;
 import com.banchango.ApiTestContext;
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
+import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.UserRole;
@@ -12,8 +13,6 @@ import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.*;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -103,14 +102,12 @@ public class AdminApiTest extends ApiTestContext {
         warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.ELECTRONICS, MainItemType.SPORTS});
         warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.GENERAL_MERCHANDISE, MainItemType.BOOK});
 
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        JSONArray responseBody = new JSONArray(response.getBody());
-
+        ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(responseBody.length() > 0);
-        assertNotNull(new JSONObject(responseBody.get(0).toString()).get("warehouseId"));
-        assertNotNull(new JSONObject(responseBody.get(0).toString()).get("name"));
-        assertNotNull(new JSONObject(responseBody.get(0).toString()).get("createdAt"));
+        assertTrue(response.getBody().getRequests().size() > 0);
+        assertNotNull(response.getBody().getRequests().get(0).getName());
+        assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
+        assertNotNull(response.getBody().getRequests().get(0).getCreatedAt());
     }
 
     @Test
