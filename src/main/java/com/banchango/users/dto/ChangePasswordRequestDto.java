@@ -11,7 +11,11 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Getter
 public class ChangePasswordRequestDto {
+    @NotBlank(message = "기존 비밀번호 값이 주어지지 않았습니다")
+    @Size(min = 64, max = 64)
+    private String originalPassword;
+
     @NotBlank(message = "새로운 비밀번호 값이 주어지지 않았습니다")
     @Size(min = 64, max = 64)
-    private String password;
+    private String newPassword;
 }

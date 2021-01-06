@@ -69,6 +69,11 @@ public class UsersService {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
 
         Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
-        user.updatePassword(changePasswordRequestDto.getPassword());
+
+        String originalPasswordFromTable = user.getPassword();
+        String originalPasswordFromRequset = changePasswordRequestDto.getOriginalPassword();
+        if(!originalPasswordFromRequset.equals(originalPasswordFromTable)) throw new PasswordDoesNotMatchException();
+
+        user.updatePassword(changePasswordRequestDto.getNewPassword());
     }
 }
