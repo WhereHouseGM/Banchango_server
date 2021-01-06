@@ -7,6 +7,7 @@ import com.banchango.admin.service.AdminService;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.users.UserRole;
+import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,10 @@ public class AdminApiController {
     @ResponseStatus(HttpStatus.OK)
     public WarehouseInsertRequestResponseListDto getWaitingWarehouses(@RequestAttribute(name = "accessToken") String token,
                                                                       @RequestParam(name = "page") Integer page,
-                                                                      @RequestParam(name = "size") Integer size) {
+                                                                      @RequestParam(name = "size") Integer size,
+                                                                      @RequestParam(name = "status")WarehouseStatus status) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return adminService.findWaitingWarehouses(token, pageRequest);
+        return adminService.findWaitingWarehouses(token, pageRequest, status);
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)

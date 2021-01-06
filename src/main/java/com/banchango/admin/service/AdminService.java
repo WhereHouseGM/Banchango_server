@@ -41,9 +41,9 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public WarehouseInsertRequestResponseListDto findWaitingWarehouses(String token, PageRequest pageRequest) {
+    public WarehouseInsertRequestResponseListDto findWaitingWarehouses(String token, PageRequest pageRequest, WarehouseStatus status) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
-        List<Warehouses> warehouses = warehousesRepository.findWarehousesByStatusOrderByCreatedAt(WarehouseStatus.IN_PROGRESS, pageRequest);
+        List<Warehouses> warehouses = warehousesRepository.findWarehousesByStatusOrderByCreatedAt(status, pageRequest);
         if(warehouses.size() == 0) throw new WaitingWarehousesNotFoundException();
         return WarehouseInsertRequestResponseListDto.builder()
                 .requests(warehouses.stream().map(WarehouseInsertRequestResponseDto::new).collect(Collectors.toList())).build();

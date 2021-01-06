@@ -75,7 +75,7 @@ public class AdminApiTest extends ApiTestContext {
 
     @Test
     public void get_InProgressWarehouses_ResultIsNoContent_ifNotExist() {
-        String url = String.format("/v3/admin/warehouses?page=%d&size=%d", 0, 4);
+        String url = String.format("/v3/admin/warehouses?page=%d&size=%d&status=%s", 0, 4, WarehouseStatus.IN_PROGRESS.name());
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
@@ -91,7 +91,7 @@ public class AdminApiTest extends ApiTestContext {
 
     @Test
     public void get_InProgressWarehouses_ResultHasItems_ifExist() {
-        String url = String.format("/v3/admin/warehouses?page=%d&size=%d", 0, 4);
+        String url = String.format("/v3/admin/warehouses?page=%d&size=%d&status=%s", 0, 4, WarehouseStatus.IN_PROGRESS.name());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .header("Authorization", "Bearer " + adminAccessToken)
@@ -112,7 +112,7 @@ public class AdminApiTest extends ApiTestContext {
 
     @Test
     public void get_InProgressWarehouses_responseIsForbidden_IfTokenIsBad() {
-        String url = String.format("/v3/admin/warehouses?page=%d&size=%d", 0, 4);
+        String url = String.format("/v3/admin/warehouses?page=%d&size=%d&status=%s", 0, 4, WarehouseStatus.IN_PROGRESS.name());
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
