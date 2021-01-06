@@ -7,6 +7,7 @@ import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -29,6 +30,7 @@ public class AdminService {
 
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
+    private final MainItemTypesRepository mainItemTypesRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -57,6 +59,9 @@ public class AdminService {
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).equals(requestDto.getMainItemTypes())) {
+            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+        }
         warehouse.update(requestDto);
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }

@@ -195,10 +195,14 @@ public class Warehouses extends BaseTimeEntity {
                 .map(SecurityCompanies::new).collect(Collectors.toList());
         this.warehouseConditions = dto.getWarehouseCondition().stream()
                 .map(WarehouseConditions::new).collect(Collectors.toList());
-        this.warehouseFacilityUsages = dto.getWarehouseFacilityUsages().stream()
-                .map(WarehouseFacilityUsages::new).collect(Collectors.toList());
-        this.warehouseUsageCautions = dto.getWarehouseUsageCautions().stream()
-                .map(WarehouseUsageCautions::new).collect(Collectors.toList());
+        if(dto.getWarehouseFacilityUsages() != null) {
+            this.warehouseFacilityUsages = dto.getWarehouseFacilityUsages().stream()
+                    .map(WarehouseFacilityUsages::new).collect(Collectors.toList());
+        }
+        if(dto.getWarehouseUsageCautions() != null) {
+            this.warehouseUsageCautions = dto.getWarehouseUsageCautions().stream()
+                    .map(WarehouseUsageCautions::new).collect(Collectors.toList());
+        }
         this.mainItemTypes = dto.getMainItemTypes().stream()
                 .map(type -> new MainItemTypes(type, this)).collect(Collectors.toList());
         this.status = dto.getStatus();
