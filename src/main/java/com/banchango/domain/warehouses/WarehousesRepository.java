@@ -20,6 +20,7 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
     List<Warehouses> findAllByStatus(WarehouseStatus status, Pageable pageable);
     List<Warehouses> findByAddressContainingAndStatus(String address, WarehouseStatus status, Pageable pageable);
     Optional<Warehouses> findById(Integer warehouseId);
+    <T> Optional<T> findById(Integer warehouseId, Class<T> type);
     Optional<Warehouses> findByIdAndStatus(Integer warehouseId, WarehouseStatus status);
     List<Warehouses> findByUserId(Integer userId);
 
