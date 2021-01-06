@@ -152,7 +152,7 @@ public class EstimateApiTests extends ApiTestContext {
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertNotNull(estimateSearchDto.getWarehouse());
-                assertNotNull(estimateSearchDto.getWarehouse().getId());
+                assertNotNull(estimateSearchDto.getWarehouse().getWarehouseId());
                 assertNotNull(estimateSearchDto.getWarehouse().getAddress());
                 assertNotNull(estimateSearchDto.getWarehouse().getName());
                 assertNotNull(estimateSearchDto.getStatus());

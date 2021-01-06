@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class WarehouseSummaryDto {
-    private Integer id;
+    private Integer warehouseId;
     private String name;
     private String address;
 
     @Builder
-    public WarehouseSummaryDto(Integer id, String name, String address) {
-        this.id = id;
+    public WarehouseSummaryDto(Integer warehouseId, String name, String address) {
+        this.warehouseId = warehouseId;
         this.name = name;
         this.address = address;
     }

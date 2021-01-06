@@ -67,7 +67,7 @@ public class EstimatesService {
                 if(optionalProjection.isPresent()) {
                     WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
                     WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
-                        .id(projection.getId())
+                        .warehouseId(projection.getId())
                         .name(projection.getName())
                         .address(projection.getAddress())
                         .build();
