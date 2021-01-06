@@ -60,7 +60,7 @@ public class ChangePasswordTest extends ApiTestContext {
         String originalPassword = user.getPassword();
         String newPassword = VALID_PASSWORD;
 
-        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(user.getPassword(), newPassword);
 
         RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
             .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +78,7 @@ public class ChangePasswordTest extends ApiTestContext {
         String originalPassword = user.getPassword();
         String newPassword = INVALID_PASSWORD;
 
-        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(user.getPassword(), newPassword);
 
         RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
             .contentType(MediaType.APPLICATION_JSON)
@@ -95,7 +95,7 @@ public class ChangePasswordTest extends ApiTestContext {
         String originalPassword = user.getPassword();
         String newPassword = VALID_PASSWORD;
 
-        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(user.getPassword(), newPassword);
 
         RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
             .contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +112,7 @@ public class ChangePasswordTest extends ApiTestContext {
         String newPassword = VALID_PASSWORD;
         String accessTokenWithInvalidUserId = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
-        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(newPassword);
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(user.getPassword(), newPassword);
 
         RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
             .contentType(MediaType.APPLICATION_JSON)
