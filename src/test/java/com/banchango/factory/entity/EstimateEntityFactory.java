@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Component
@@ -28,13 +31,11 @@ public class EstimateEntityFactory {
     public Estimates createInProgressWithEstimateItems(Integer warehouseId, Integer userId) {
         Estimates estimate = create(warehouseId, userId, EstimateStatus.IN_PROGRESS);
 
-        EstimateItems item1 = estimateItemEntityFactory.create(estimate);
-        EstimateItems item2 = estimateItemEntityFactory.create(estimate);
-        EstimateItems item3 = estimateItemEntityFactory.create(estimate);
+        List<EstimateItems> esimateItems = IntStream.range(0, 3)
+            .mapToObj(number -> estimateItemEntityFactory.create(estimate))
+            .collect(Collectors.toList());
 
-        estimate.getEstimateItems().add(item1);
-        estimate.getEstimateItems().add(item2);
-        estimate.getEstimateItems().add(item3);
+        estimate.setEstimateItems(esimateItems);
 
         return estimate;
     }
