@@ -201,5 +201,6 @@ public class Warehouses extends BaseTimeEntity {
                 .map(WarehouseUsageCautions::new).collect(Collectors.toList());
         this.mainItemTypes = dto.getMainItemTypes().stream()
                 .map(type -> new MainItemTypes(type, this)).collect(Collectors.toList());
+        this.status = dto.getStatus();
     }
 }
