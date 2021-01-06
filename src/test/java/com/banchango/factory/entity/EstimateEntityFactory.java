@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 @Component
 public class EstimateEntityFactory {
-    private static final String CONTENT = "CONTENT";
+    public static final String CONTENT = "CONTENT";
 
     private EstimateItemEntityFactory estimateItemEntityFactory;
     private EstimatesRepository estimatesRepository;

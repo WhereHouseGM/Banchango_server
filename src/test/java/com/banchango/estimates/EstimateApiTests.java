@@ -3,6 +3,7 @@ package com.banchango.estimates;
 import com.banchango.ApiTestContext;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.users.UserRole;
@@ -152,10 +153,10 @@ public class EstimateApiTests extends ApiTestContext {
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertNotNull(estimateSearchDto.getWarehouse());
-                assertNotNull(estimateSearchDto.getWarehouse().getWarehouseId());
-                assertNotNull(estimateSearchDto.getWarehouse().getAddress());
-                assertNotNull(estimateSearchDto.getWarehouse().getName());
-                assertNotNull(estimateSearchDto.getStatus());
+                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
+                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
+                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
+                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.IN_PROGRESS);
             });
     }
 

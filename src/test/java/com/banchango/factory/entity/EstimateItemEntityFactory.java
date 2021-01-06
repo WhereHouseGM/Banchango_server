@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EstimateItemEntityFactory {
-    private static final Integer MONTHLY_AVERAGE_RELEASE = 1000;
-    private static final EstimateBarcode BARCODE = EstimateBarcode.ALL;
-    private static final Integer KEEPING_NUMBER = 32;
-    private static final EstimateKeepingType KEEPING_TYPE = EstimateKeepingType.COLD;
-    private static final Double PERIMETER = 303.3;
-    private static final Integer SKU = 31;
-    private static final String NAME = "NAME";
-    private static final String URL = "https://www.google.com";
-    private static final Double WEIGHT = 33.3;
+    public static final Integer MONTHLY_AVERAGE_RELEASE = 1000;
+    public static final EstimateBarcode BARCODE = EstimateBarcode.ALL;
+    public static final Integer KEEPING_NUMBER = 32;
+    public static final EstimateKeepingType KEEPING_TYPE = EstimateKeepingType.COLD;
+    public static final Double PERIMETER = 303.3;
+    public static final Integer SKU = 31;
+    public static final String NAME = "NAME";
+    public static final String URL = "https://www.google.com";
+    public static final Double WEIGHT = 33.3;
 
     public EstimateItems create(Estimates estimate) {
         return EstimateItems.builder()
