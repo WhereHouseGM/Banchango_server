@@ -140,7 +140,7 @@ public class EstimateApiTests extends ApiTestContext {
         Estimates estimate2 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
         Estimates estimate3 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/users/"+user.getUserId()))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/estimates"))
             .header("Authorization", "Bearer " + accessToken)
             .build();
 
@@ -162,7 +162,7 @@ public class EstimateApiTests extends ApiTestContext {
 
     @Test
     public void get_estimateByUserId_responseIsNoContent_IfEstimatesNotExist() {
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/users/"+user.getUserId()))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/estimates"))
             .header("Authorization", "Bearer " + accessToken)
             .build();
 
@@ -178,7 +178,7 @@ public class EstimateApiTests extends ApiTestContext {
         Estimates estimate2 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
         Estimates estimate3 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/users/"+user.getUserId()))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/estimates"))
             .build();
 
         ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
@@ -196,7 +196,7 @@ public class EstimateApiTests extends ApiTestContext {
 
         String otherUsersAccessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/users/"+user.getUserId()))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/estimates"))
             .header("Authorization", "Bearer " + otherUsersAccessToken)
             .build();
 

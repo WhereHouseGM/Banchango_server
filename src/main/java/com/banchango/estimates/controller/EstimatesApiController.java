@@ -29,7 +29,7 @@ public class EstimatesApiController {
         return new BasicMessageResponseDto("견적 문의가 성공적으로 생성됐습니다");
     }
 
-    @GetMapping("/v3/estimates/users/{userId}")
+    @GetMapping("/v3/users/{userId}/estimates")
     @ResponseStatus(HttpStatus.OK)
     @ValidateRequired
     public EstimateSearchResponseDto getEstimates(
