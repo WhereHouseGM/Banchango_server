@@ -79,6 +79,7 @@ public class UserApiTest {
         assertEquals(user.getType(), responseBody.getType());
         assertEquals(user.getPhoneNumber(), responseBody.getPhoneNumber());
         assertEquals(user.getCompanyName(), responseBody.getCompanyName());
+        assertEquals(user.getTelephoneNumber(), responseBody.getTelephoneNumber());
     }
 
     @Test
@@ -124,13 +125,16 @@ public class UserApiTest {
         assertNotNull(responseBody.getAccessToken());
         assertNotNull(responseBody.getRefreshToken());
         assertEquals("Bearer", responseBody.getTokenType() );
+
         assertNotNull(responseBody.getUser());
-        assertEquals(user.getEmail(), responseBody.getUser().getEmail());
         assertEquals(user.getUserId(), responseBody.getUser().getUserId());
         assertEquals(user.getName(), responseBody.getUser().getName());
-        assertEquals(user.getType(), responseBody.getUser().getType());
+        assertEquals(user.getEmail(), responseBody.getUser().getEmail());
         assertEquals(user.getPhoneNumber(), responseBody.getUser().getPhoneNumber());
+        assertEquals(user.getType(), responseBody.getUser().getType());
+        assertEquals(user.getTelephoneNumber(), responseBody.getUser().getTelephoneNumber());
         assertEquals(user.getCompanyName(), responseBody.getUser().getCompanyName());
+        assertEquals(user.getRole(), responseBody.getUser().getRole());
     }
 
     @Test
@@ -191,12 +195,16 @@ public class UserApiTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         UserInfoResponseDto responseBody = response.getBody();
+
         assertEquals(requestBody.getEmail(), responseBody.getEmail());
         assertEquals(userId, responseBody.getUserId());
         assertEquals(requestBody.getName(), responseBody.getName());
+        assertEquals(requestBody.getEmail(), responseBody.getEmail());
         assertEquals(requestBody.getType(), responseBody.getType());
         assertEquals(requestBody.getPhoneNumber(), responseBody.getPhoneNumber());
+        assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
         assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
+
         assertTrue(savedUser.getCreatedAt().isBefore(LocalDateTime.now()));
         assertTrue(savedUser.getLastModifiedAt().isBefore(LocalDateTime.now()));
     }
@@ -252,12 +260,12 @@ public class UserApiTest {
 
         UserInfoResponseDto responseBody = response.getBody();
 
-        assertEquals(requestBody.getName(), responseBody.getName());
+        assertEquals(requestBody.getType(), responseBody.getType());
+        assertEquals(requestBody.getEmail(), responseBody.getEmail());
         assertEquals(requestBody.getType(), responseBody.getType());
         assertEquals(requestBody.getPhoneNumber(), responseBody.getPhoneNumber());
-        assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
-        assertEquals(requestBody.getEmail(), responseBody.getEmail());
         assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
+        assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
     }
 
     @Test
