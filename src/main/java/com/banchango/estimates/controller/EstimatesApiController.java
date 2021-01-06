@@ -36,8 +36,6 @@ public class EstimatesApiController {
         @PathVariable Integer userId,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        List<EstimateSearchDto> estimates = estimatesService.getEstimatesByUserId(accessToken, userId);
-
-        return new EstimateSearchResponseDto(estimates);
+        return new EstimateSearchResponseDto(estimatesService.getEstimatesByUserId(accessToken, userId));
     }
 }
