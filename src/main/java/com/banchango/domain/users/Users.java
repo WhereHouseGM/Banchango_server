@@ -2,6 +2,7 @@ package com.banchango.domain.users;
 
 import com.banchango.domain.BaseTimeEntity;
 import com.banchango.users.dto.UserSignupRequestDto;
+import com.banchango.users.dto.UserUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,10 +44,8 @@ public class Users extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public void updateUserInfo(UserSignupRequestDto requestDto) {
+    public void updateUserInfo(UserUpdateRequestDto requestDto) {
         this.name = requestDto.getName();
-        this.password = requestDto.getPassword();
-        this.type = requestDto.getType();
         this.companyName = requestDto.getCompanyName();
         this.phoneNumber = requestDto.getPhoneNumber();
         this.telephoneNumber = requestDto.getTelephoneNumber();
