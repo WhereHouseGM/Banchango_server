@@ -26,7 +26,6 @@ public class EsimateItemsService {
 
         Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNoContentException::new);
 
-        // estimateId 주인이 userId인지 검사
         if(!estimate.getUserId().equals(userId)) throw new ForbiddenException();
 
         List<EstimateItems> estimateItems = estimate.getEstimateItems();
