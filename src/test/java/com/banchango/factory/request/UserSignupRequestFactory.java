@@ -1,11 +1,7 @@
 package com.banchango.factory.request;
 
-import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
 import com.banchango.users.dto.UserSignupRequestDto;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserSignupRequestFactory {
     private static final String NAME = "NAME";
@@ -19,6 +15,10 @@ public class UserSignupRequestFactory {
 
     public static UserSignupRequestDto createNewUser() {
         return create(generateEmail());
+    }
+
+    public static UserSignupRequestDto createNewUser(String email) {
+        return create(email);
     }
 
     public static UserSignupRequestDto createDuplicateUser(String duplicateEmail) {

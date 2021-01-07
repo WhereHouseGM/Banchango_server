@@ -46,7 +46,7 @@ public class UsersService {
     }
 
     @Transactional
-    public UserInfoResponseDto updateUserInfo(UserSignupRequestDto requestDto, Integer userId, String token) {
+    public UserInfoResponseDto updateUserInfo(UserUpdateRequestDto requestDto, Integer userId, String token) {
         if(!userId.equals(JwtTokenUtil.extractUserId(token))) {
             throw new UserInvalidAccessException();
         }

@@ -2,15 +2,12 @@ package com.banchango.users;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.users.UserRole;
-import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.request.UserSignupRequestFactory;
-import com.banchango.users.dto.UserInfoResponseDto;
-import com.banchango.users.dto.UserSigninRequestDto;
-import com.banchango.users.dto.UserSigninResponseDto;
-import com.banchango.users.dto.UserSignupRequestDto;
+import com.banchango.factory.request.UserUpdateRequestFactory;
+import com.banchango.users.dto.*;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -244,12 +241,12 @@ public class UserApiTest {
 
     @Test
     public void updateInfo_responseIsOk() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
+        UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
+        RequestEntity<UserUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
@@ -260,21 +257,32 @@ public class UserApiTest {
 
         UserInfoResponseDto responseBody = response.getBody();
 
-        assertEquals(requestBody.getType(), responseBody.getType());
-        assertEquals(requestBody.getEmail(), responseBody.getEmail());
-        assertEquals(requestBody.getType(), responseBody.getType());
+        assertEquals(requestBody.getName(), responseBody.getName());
+        assertEquals(UserRole.USER, responseBody.getRole());
         assertEquals(requestBody.getPhoneNumber(), responseBody.getPhoneNumber());
         assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
         assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
+
+        RequestEntity<Void> secondRequest = RequestEntity.get(URI.create("/v3/users/" + userId))
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
+
+        ResponseEntity<UserInfoResponseDto> secondResponse = restTemplate.exchange(secondRequest, UserInfoResponseDto.class);
+        assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
+        assertEquals(UserUpdateRequestFactory.NEW_NAME, secondResponse.getBody().getName());
+        assertEquals(UserRole.USER, secondResponse.getBody().getRole());
+        assertEquals(UserUpdateRequestFactory.NEW_TELEPHONE_NUMBER, secondResponse.getBody().getTelephoneNumber());
+        assertEquals(UserUpdateRequestFactory.NEW_PHONE_NUMBER, secondResponse.getBody().getPhoneNumber());
+        assertEquals(UserUpdateRequestFactory.NEW_COMP_NAME, secondResponse.getBody().getCompanyName());
     }
 
     @Test
     public void updateInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
+        UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         Integer userId = user.getUserId();
 
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
+        RequestEntity<UserUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + "THIS IS WRONG TOKEN!")
                 .contentType(MediaType.APPLICATION_JSON).body(requestBody);
 
@@ -285,12 +293,12 @@ public class UserApiTest {
 
     @Test
     public void updateInfo_responseIsUnAuthorized_IfUserIdAndTokenIsWrong() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
+        UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
+        RequestEntity<UserUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
@@ -302,11 +310,11 @@ public class UserApiTest {
 
     @Test
     public void updateInfo_responseIsNoContent_IfUserIdIsWrong() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
+        UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
+        RequestEntity<UserUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
