@@ -14,7 +14,7 @@ public class EstimateItemsApiController {
     private final EstimatesService estimatesService;
     private final EsimateItemsService estimateItemsService;
 
-    @GetMapping("/v3/esimates/{estimateId}/item")
+    @GetMapping("/v3/estimates/{estimateId}/items")
     @ResponseStatus(HttpStatus.OK)
     @ValidateRequired
     public EstimateItemSearchResponseDto getEstimates(
