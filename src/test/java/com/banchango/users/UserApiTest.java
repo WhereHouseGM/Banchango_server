@@ -278,11 +278,11 @@ public class UserApiTest {
 
     @Test
     public void updateInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
+        UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         Integer userId = user.getUserId();
 
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
+        RequestEntity<UserUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + "THIS IS WRONG TOKEN!")
                 .contentType(MediaType.APPLICATION_JSON).body(requestBody);
 
@@ -293,12 +293,12 @@ public class UserApiTest {
 
     @Test
     public void updateInfo_responseIsUnAuthorized_IfUserIdAndTokenIsWrong() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
+        UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
+        RequestEntity<UserUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
@@ -310,11 +310,11 @@ public class UserApiTest {
 
     @Test
     public void updateInfo_responseIsNoContent_IfUserIdIsWrong() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
+        UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
+        RequestEntity<UserUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
