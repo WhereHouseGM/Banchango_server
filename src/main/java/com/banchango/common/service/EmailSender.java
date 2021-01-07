@@ -49,9 +49,9 @@ public class EmailSender {
         try {
             Session session = Session.getDefaultInstance(new Properties());
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("support@banchango.shop"));
+            message.setFrom(new InternetAddress("no-reply@banchangohub.com"));
             message.setSubject("[반창고]");
-            message.setSender(new InternetAddress("support@banchango.shop"));
+            message.setSender(new InternetAddress("no-reply@banchangohub.com"));
             message.setReplyTo(new Address[]{new InternetAddress("wherehousegm@gmail.com")});
             if(isAdminIncluded) {
                 message.setRecipients(Message.RecipientType.TO, new Address[]{new InternetAddress(recipient), new InternetAddress("wherehousegm@gmail.com")});
