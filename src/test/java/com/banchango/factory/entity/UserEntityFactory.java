@@ -12,6 +12,7 @@ public class UserEntityFactory {
     private static final String NAME = "NAME";
     private static final String PASSWORD = "PASSWORD";
     private static final String PHONE_NUMBER = "010-0000-0100";
+    private static final String TELEPHONE_NUMBER = "02-0000-0100";
     private static final UserType TYPE = UserType.OWNER;
     private static final String COMPANY_NAME = "COMPANY_NAME";
 
@@ -37,6 +38,7 @@ public class UserEntityFactory {
             .email(generateEmail())
             .name(NAME)
             .password(PASSWORD)
+            .telephoneNumber(TELEPHONE_NUMBER)
             .phoneNumber(PHONE_NUMBER)
             .type(TYPE)
             .role(role)

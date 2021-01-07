@@ -31,6 +31,9 @@ public class UserSignupRequestDto {
     @NotBlank(message = "Company Name field is required.")
     private String companyName;
 
+    @NotBlank(message = "Telephone Number is required.")
+    private String telephoneNumber;
+
     @NotBlank(message = "Phone Number is required.")
     private String phoneNumber;
 
@@ -38,6 +41,7 @@ public class UserSignupRequestDto {
         return Users.builder()
                 .name(name).email(email)
                 .password(password).type(UserType.valueOf(type))
+                .telephoneNumber(telephoneNumber)
                 .phoneNumber(phoneNumber)
                 .companyName(companyName)
                 .role(UserRole.USER)
