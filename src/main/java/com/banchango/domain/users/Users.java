@@ -49,6 +49,7 @@ public class Users extends BaseTimeEntity {
         this.type = requestDto.getType();
         this.companyName = requestDto.getCompanyName();
         this.phoneNumber = requestDto.getPhoneNumber();
+        this.telephoneNumber = requestDto.getTelephoneNumber();
     }
 
     @Builder

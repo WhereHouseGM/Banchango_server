@@ -21,6 +21,10 @@ public class UserSignupRequestFactory {
         return create(generateEmail());
     }
 
+    public static UserSignupRequestDto createNewUser(String email) {
+        return create(email);
+    }
+
     public static UserSignupRequestDto createDuplicateUser(String duplicateEmail) {
         return create(duplicateEmail);
     }

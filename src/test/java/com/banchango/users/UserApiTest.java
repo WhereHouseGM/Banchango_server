@@ -244,7 +244,7 @@ public class UserApiTest {
 
     @Test
     public void updateInfo_responseIsOk() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
+        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser(user.getEmail());
 
         Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
@@ -260,12 +260,27 @@ public class UserApiTest {
 
         UserInfoResponseDto responseBody = response.getBody();
 
-        assertEquals(requestBody.getType(), responseBody.getType());
+        assertEquals(requestBody.getName(), responseBody.getName());
+        assertEquals(UserRole.USER, responseBody.getRole());
         assertEquals(requestBody.getEmail(), responseBody.getEmail());
         assertEquals(requestBody.getType(), responseBody.getType());
         assertEquals(requestBody.getPhoneNumber(), responseBody.getPhoneNumber());
         assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
         assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
+
+        RequestEntity<Void> secondRequest = RequestEntity.get(URI.create("/v3/users/" + userId))
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
+
+        ResponseEntity<UserInfoResponseDto> secondResponse = restTemplate.exchange(secondRequest, UserInfoResponseDto.class);
+        assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
+        assertEquals(requestBody.getName(), secondResponse.getBody().getName());
+        assertEquals(UserRole.USER, secondResponse.getBody().getRole());
+        assertEquals(requestBody.getEmail(), secondResponse.getBody().getEmail());
+        assertEquals(requestBody.getType(), secondResponse.getBody().getType());
+        assertEquals(requestBody.getTelephoneNumber(), secondResponse.getBody().getTelephoneNumber());
+        assertEquals(requestBody.getPhoneNumber(), secondResponse.getBody().getPhoneNumber());
+        assertEquals(requestBody.getCompanyName(), secondResponse.getBody().getCompanyName());
     }
 
     @Test
