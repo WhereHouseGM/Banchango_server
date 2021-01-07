@@ -1,7 +1,6 @@
 package com.banchango.domain.users;
 
 import com.banchango.domain.BaseTimeEntity;
-import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.dto.UserUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;

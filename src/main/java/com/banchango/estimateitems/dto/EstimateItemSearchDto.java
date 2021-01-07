@@ -3,7 +3,6 @@ package com.banchango.estimateitems.dto;
 import com.banchango.domain.estimateitems.EstimateBarcode;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimateitems.EstimateKeepingType;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -2,7 +2,6 @@ package com.banchango.users;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.users.UserRole;
-import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.factory.entity.UserEntityFactory;
