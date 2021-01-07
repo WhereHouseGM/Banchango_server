@@ -5,6 +5,12 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.factory.entity.UserEntityFactory;
+import com.banchango.factory.request.UserSignupRequestFactory;
+import com.banchango.users.dto.UserInfoResponseDto;
+import com.banchango.users.dto.UserSigninRequestDto;
+import com.banchango.users.dto.UserSigninResponseDto;
+import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -31,27 +37,11 @@ import static org.junit.Assert.*;
 @ActiveProfiles("test")
 public class UserApiTest {
 
-    private static final String TEST_EMAIL = "test@testing.com";
+    private static final String WRONG_EMAIL = "WRONG_EMAIL";
+    private static final String WRONG_PASSWORD = "WRONG_PASSWORD";
 
-    @Before
-    public void saveUser() {
-        Users user = Users.builder().name("TEST_NAME")
-                .email(TEST_EMAIL)
-                .password("123")
-                .type(UserType.OWNER)
-                .telephoneNumber("010123123")
-                .phoneNumber("010123123")
-                .companyName("companyName")
-                .role(UserRole.USER)
-                .build();
-        usersRepository.save(user);
-    }
-
-    @After
-    public void removeUser() {
-        Users user = usersRepository.findByEmail(TEST_EMAIL).orElseThrow(UserEmailNotFoundException::new);
-        usersRepository.delete(user);
-    }
+    @Autowired
+    private UserEntityFactory userEntityFactory;
 
     @Autowired
     private UsersRepository usersRepository;
@@ -59,28 +49,42 @@ public class UserApiTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private Users user = null;
+
+    @Before
+    public void saveUser() {
+        usersRepository.deleteAll();
+        user = userEntityFactory.createUser();
+    }
+
+    @After
+    public void removeUser() {
+        usersRepository.deleteAll();
+    }
+
     @Test
     public void userInfo_responseIsOk_IfAllConditionsAreRight() {
-        Integer userId = getUserIdByEmail(TEST_EMAIL);
+        Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken).build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
+
+        UserInfoResponseDto responseBody = response.getBody();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        JSONObject responseBody = new JSONObject(response.getBody());
-        assertEquals(TEST_EMAIL, responseBody.get("email"));
-        assertEquals(userId, responseBody.get("userId"));
-        assertEquals("TEST_NAME", responseBody.get("name"));
-        assertEquals("OWNER", responseBody.get("type"));
-        assertEquals("010123123", responseBody.get("phoneNumber"));
-        assertEquals("companyName", responseBody.get("companyName"));
-        assertFalse(response.getBody().contains("password"));
+        assertEquals(user.getEmail(), responseBody.getEmail());
+        assertEquals(userId, responseBody.getUserId());
+        assertEquals(user.getName(), responseBody.getName());
+        assertEquals(user.getType(), responseBody.getType());
+        assertEquals(user.getPhoneNumber(), responseBody.getPhoneNumber());
+        assertEquals(user.getCompanyName(), responseBody.getCompanyName());
+        assertEquals(user.getTelephoneNumber(), responseBody.getTelephoneNumber());
     }
 
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsAbsent() {
-        Integer userId = getUserIdByEmail(TEST_EMAIL);
+        Integer userId = user.getUserId();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
@@ -89,7 +93,7 @@ public class UserApiTest {
 
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        Integer userId = getUserIdByEmail(TEST_EMAIL);
+        Integer userId = user.getUserId();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
@@ -107,109 +111,114 @@ public class UserApiTest {
 
     @Test
     public void signIn_responseIsOK_IfUserExists() {
+        UserSigninRequestDto requestBody = new UserSigninRequestDto(user.getEmail(), user.getPassword());
 
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("email", TEST_EMAIL);
-        requestBody.put("password", "123");
+        RequestEntity<UserSigninRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-in"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(requestBody);
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-in");
+        ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
+
+        UserSigninResponseDto responseBody = response.getBody();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().contains("accessToken"));
-        assertTrue(response.getBody().contains("refreshToken"));
-        assertTrue(response.getBody().contains("tokenType"));
-        assertTrue(response.getBody().contains("user"));
+        assertNotNull(responseBody.getAccessToken());
+        assertNotNull(responseBody.getRefreshToken());
+        assertEquals("Bearer", responseBody.getTokenType() );
 
-        JSONObject responseBody = new JSONObject(response.getBody());
-        JSONObject userInfoResponseBody = responseBody.getJSONObject("user");
-
-        assertEquals("TEST_NAME", userInfoResponseBody.get("name"));
-        assertEquals(TEST_EMAIL, userInfoResponseBody.get("email"));
-        assertEquals(UserType.OWNER.name(), userInfoResponseBody.get("type"));
-        assertEquals("010123123", userInfoResponseBody.get("phoneNumber"));
-        assertEquals("companyName", userInfoResponseBody.get("companyName"));
-        assertEquals(UserRole.USER.name(), userInfoResponseBody.get("role"));
+        assertNotNull(responseBody.getUser());
+        assertEquals(user.getUserId(), responseBody.getUser().getUserId());
+        assertEquals(user.getName(), responseBody.getUser().getName());
+        assertEquals(user.getEmail(), responseBody.getUser().getEmail());
+        assertEquals(user.getPhoneNumber(), responseBody.getUser().getPhoneNumber());
+        assertEquals(user.getType(), responseBody.getUser().getType());
+        assertEquals(user.getTelephoneNumber(), responseBody.getUser().getTelephoneNumber());
+        assertEquals(user.getCompanyName(), responseBody.getUser().getCompanyName());
+        assertEquals(user.getRole(), responseBody.getUser().getRole());
     }
 
     @Test
     public void signIn_responseIsNoContent_IfUserEmailIsWrong(){
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("email", "WRONG_EMAIL");
-        requestBody.put("password", "123");
+        UserSigninRequestDto requestBody = new UserSigninRequestDto(WRONG_EMAIL, WRONG_PASSWORD);
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-in");
+        RequestEntity<UserSigninRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-in"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(requestBody);
+
+        ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
     public void signIn_responseIsNoContent_IfUserPasswordIsWrong() {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("email", TEST_EMAIL);
-        requestBody.put("password", "1234");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-in");
+        UserSigninRequestDto requestBody = new UserSigninRequestDto(user.getEmail(), WRONG_PASSWORD);
+
+        RequestEntity<UserSigninRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-in"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(requestBody);
+
+        ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-
     }
 
     @Test
     public void signIn_responseIsBadRequest_IfRequestBodyIsWrong() {
         JSONObject requestBody = new JSONObject();
-        requestBody.put("email", TEST_EMAIL);
-        requestBody.put("pass", "123");
+        requestBody.put("email", user.getEmail());
+        requestBody.put("pass", user.getPassword());
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-in");
+        RequestEntity<String> request = RequestEntity.post(URI.create("/v3/users/sign-up"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(requestBody.toString());
+
+        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
     public void signUp_responseIsOK() {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("name", "TEST_NAME");
-        requestBody.put("email", "TEST_EMAIL_2");
-        requestBody.put("password", "1234");
-        requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "010234234");
-        requestBody.put("phoneNumber", "010234234");
-        requestBody.put("companyName", "companyName");
+        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
+        RequestEntity<UserSignupRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-up"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(requestBody);
 
+        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
-        Users savedUser = usersRepository.findByEmail("TEST_EMAIL_2").orElseThrow(UserEmailNotFoundException::new);
+        Users savedUser = usersRepository.findByEmail(requestBody.getEmail()).orElseThrow(UserEmailNotFoundException::new);
         Integer userId = savedUser.getUserId();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        JSONObject responseBody = new JSONObject(response.getBody());
-        assertEquals("TEST_EMAIL_2", responseBody.get("email"));
-        assertEquals(userId, responseBody.get("userId"));
-        assertEquals("TEST_NAME", responseBody.get("name"));
-        assertEquals("SHIPPER", responseBody.get("type"));
-        assertEquals("010234234", responseBody.get("phoneNumber"));
-        assertEquals("companyName", responseBody.get("companyName"));
-        assertFalse(response.getBody().contains("password"));
+
+        UserInfoResponseDto responseBody = response.getBody();
+
+        assertEquals(requestBody.getEmail(), responseBody.getEmail());
+        assertEquals(userId, responseBody.getUserId());
+        assertEquals(requestBody.getName(), responseBody.getName());
+        assertEquals(requestBody.getEmail(), responseBody.getEmail());
+        assertEquals(requestBody.getType(), responseBody.getType());
+        assertEquals(requestBody.getPhoneNumber(), responseBody.getPhoneNumber());
+        assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
+        assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
+
         assertTrue(savedUser.getCreatedAt().isBefore(LocalDateTime.now()));
         assertTrue(savedUser.getLastModifiedAt().isBefore(LocalDateTime.now()));
-
-        removeUserByUserId(userId);
     }
 
     @Test
     public void signUp_responseIsConflict_IfEmailExists() {
 
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("name", "TEST_NAME");
-        requestBody.put("email", TEST_EMAIL);
-        requestBody.put("password", "1234");
-        requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("phoneNumber", "010234234");
-        requestBody.put("telephoneNumber", "010234234");
-        requestBody.put("companyName", "companyName");
+        UserSignupRequestDto requestBody = UserSignupRequestFactory.createDuplicateUser(user.getEmail());
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
+        RequestEntity<UserSignupRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-up"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(requestBody);
+
+        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
@@ -224,114 +233,86 @@ public class UserApiTest {
         requestBody.put("phoneNumber", "010234234");
         requestBody.put("companyName", "companyName");
 
-        ResponseEntity<String> response = getResponse(requestBody.toString(), "/v3/users/sign-up");
+        RequestEntity<String> request = RequestEntity.post(URI.create("/v3/users/sign-up"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(requestBody.toString());
+
+        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
     public void updateInfo_responseIsOk() {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("name", "TEST_NAME_");
-        requestBody.put("email", TEST_EMAIL);
-        requestBody.put("password", "0000");
-        requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("phoneNumber", "0101212");
-        requestBody.put("telephoneNumber", "0101212");
-        requestBody.put("companyName", "companyName");
+        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
 
-        Integer userId = getUserIdByEmail(TEST_EMAIL);
+        Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
-        RequestEntity<String> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
+        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(requestBody);
 
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        JSONObject responseBody = new JSONObject(response.getBody());
-        assertEquals("TEST_NAME_", responseBody.get("name"));
-        assertEquals(UserType.SHIPPER.name(), responseBody.get("type"));
-        assertEquals("0101212", responseBody.get("phoneNumber"));
-        assertEquals("companyName", responseBody.get("companyName"));
+
+        UserInfoResponseDto responseBody = response.getBody();
+
+        assertEquals(requestBody.getType(), responseBody.getType());
+        assertEquals(requestBody.getEmail(), responseBody.getEmail());
+        assertEquals(requestBody.getType(), responseBody.getType());
+        assertEquals(requestBody.getPhoneNumber(), responseBody.getPhoneNumber());
+        assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
+        assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
     }
 
     @Test
     public void updateInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("name", "TEST_NAME_");
-        requestBody.put("email", TEST_EMAIL);
-        requestBody.put("password", "0000");
-        requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("phoneNumber", "0101212");
-        requestBody.put("companyName", "companyName");
+        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
 
-        Integer userId = getUserIdByEmail(TEST_EMAIL);
+        Integer userId = user.getUserId();
 
-        RequestEntity<String> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
+        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/" + userId))
                 .header("Authorization", "Bearer " + "THIS IS WRONG TOKEN!")
-                .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+                .contentType(MediaType.APPLICATION_JSON).body(requestBody);
+
+        ResponseEntity<UserSignupRequestDto> response = restTemplate.exchange(request, UserSignupRequestDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
     public void updateInfo_responseIsUnAuthorized_IfUserIdAndTokenIsWrong() {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("name", "TEST_NAME_");
-        requestBody.put("email", TEST_EMAIL);
-        requestBody.put("password", "0000");
-        requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "0101212");
-        requestBody.put("phoneNumber", "0101212");
-        requestBody.put("companyName", "companyName");
+        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
 
-        Integer userId = getUserIdByEmail(TEST_EMAIL);
+        Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
 
-        RequestEntity<String> request = RequestEntity.patch(URI.create("/v3/users/0"))
+        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(requestBody);
+
+        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
     public void updateInfo_responseIsNoContent_IfUserIdIsWrong() {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("name", "TEST_NAME_");
-        requestBody.put("email", TEST_EMAIL);
-        requestBody.put("password", "0000");
-        requestBody.put("type", UserType.SHIPPER.name());
-        requestBody.put("telephoneNumber", "0101212");
-        requestBody.put("phoneNumber", "0101212");
-        requestBody.put("companyName", "companyName");
+        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
 
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
-        RequestEntity<String> request = RequestEntity.patch(URI.create("/v3/users/0"))
+        RequestEntity<UserSignupRequestDto> request = RequestEntity.patch(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON).body(requestBody.toString());
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-    }
-
-    private ResponseEntity<String> getResponse(String requestBody, String url) {
-        RequestEntity<String> request = RequestEntity.post(URI.create(url))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
 
-        return restTemplate.exchange(request, String.class);
-    }
+        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
-    private Integer getUserIdByEmail(String email) {
-        return usersRepository.findByEmail(email).orElseThrow(UserEmailNotFoundException::new).getUserId();
-    }
-
-    private void removeUserByUserId(Integer userId) {
-        usersRepository.deleteById(userId);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 }
