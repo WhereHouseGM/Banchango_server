@@ -136,9 +136,9 @@ public class EstimateApiTests extends ApiTestContext {
     @Test
     public void get_estimateByUserId_responseIsOk_IfAllConditionsAreRight() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        Estimates estimate2 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        Estimates estimate3 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/estimates"))
             .header("Authorization", "Bearer " + accessToken)
@@ -156,7 +156,7 @@ public class EstimateApiTests extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.IN_PROGRESS);
+                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
             });
     }
 
@@ -174,9 +174,9 @@ public class EstimateApiTests extends ApiTestContext {
     @Test
     public void get_estimateByUserId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        Estimates estimate2 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        Estimates estimate3 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/estimates"))
             .build();
@@ -190,9 +190,9 @@ public class EstimateApiTests extends ApiTestContext {
     @Test
     public void get_estimateByUserId_responseIsForbidden_IfOtherUserId() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        Estimates estimate2 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        Estimates estimate3 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         String otherUsersAccessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
