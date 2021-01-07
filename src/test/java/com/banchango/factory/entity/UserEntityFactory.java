@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserEntityFactory {
     private static final String NAME = "NAME";
-    private static final String PASSWORD = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+    private static final String PASSWORD = "97210bf40747d347dc5664526548bd23c71a869bbdb87045dabb1971ef3ce1df";
     private static final String PHONE_NUMBER = "010-0000-0100";
     private static final String TELEPHONE_NUMBER = "02-0000-0100";
     private static final UserType TYPE = UserType.OWNER;

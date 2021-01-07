@@ -74,6 +74,23 @@ public class ChangePasswordTest extends ApiTestContext {
     }
 
     @Test
+    public void patch_passwordChange_responseIsForbidden_IfOriginalPasswordNotMatch() {
+        String originalPassword = user.getPassword();
+        String newPassword = VALID_PASSWORD;
+
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto("744ea9ec6fa0a83e9764b4e323d5be6b55a5accfc7fe4c08eab6a8de1fca4855", newPassword);
+
+        RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .body(changePasswordRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     public void patch_passwordChange_responseIsBadRequest_IfNewPasswordLengthIsNot64() {
         String originalPassword = user.getPassword();
         String newPassword = INVALID_PASSWORD;
