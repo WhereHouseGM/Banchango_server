@@ -73,7 +73,8 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    public List<EstimateSearchDto> getEstimates(EstimateStatus status, PageRequest pageRequest) {
+    public List<EstimateSearchDto> getEstimates(String acccessToken, EstimateStatus status, PageRequest pageRequest) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(acccessToken));
         List<Estimates> estimates;
         if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
         else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);

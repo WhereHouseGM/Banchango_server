@@ -99,10 +99,11 @@ public class AdminApiController {
     public EstimateSearchResponseDto getEstimates(
         @RequestParam(required = false)EstimateStatus status,
         @RequestParam Integer page,
-        @RequestParam Integer size
+        @RequestParam Integer size,
+        @RequestAttribute(name = "accessToken") String accessToken
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return new EstimateSearchResponseDto(adminService.getEstimates(status, pageRequest));
+        return new EstimateSearchResponseDto(adminService.getEstimates(accessToken, status, pageRequest));
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
