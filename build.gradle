@@ -42,12 +42,6 @@ dependencies {
     implementation('software.amazon.awssdk:ses')
     implementation('software.amazon.awssdk:s3')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.junit.jupiter:junit-jupiter-engine')
-}
+    testImplementation('junit:junit:4.13.1')
 
-tasks.test {
-    useJUnitPlatform()
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
 }
