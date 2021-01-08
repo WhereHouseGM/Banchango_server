@@ -51,10 +51,3 @@ tasks.test {
         events("passed", "skipped", "failed")
     }
 }
-
-gradleEnterprise {
-    buildScan {
-        licenseAgreementUrl = "https://gradle.com/terms-of-service"
-        licenseAgree = "yes"
-    }
-}
