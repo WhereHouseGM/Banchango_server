@@ -46,11 +46,14 @@ jobs:
           AWS_EMAIL_ACCESS_KEY: ${{ secrets.AWS_EMAIL_ACCESS_KEY }}
           AWS_EMAIL_SECRET_ACCESS_KEY: ${{ secrets.AWS_EMAIL_SECRET_ACCESS_KEY }}
 
-      - name: dockerize
-        run: docker build -t banchango-api:3.0 . && docker images
-      
-      - name: upload to ecr
-        run: echo "UPLOAD TO ECR"
+      - name: authorize docker client
+        run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrests.AWS_ECR_REPOSITORY }} 
 
-      - name: check aws cli
-        run: aws --version
+      - name: dockerize
+        run: docker build -t banchango_server
+      
+      - name: tag image
+        run: docker tag banchango_server:latest ${{ secrets.AWS_ECR_REPOSITORY }}/banchango_server:latest 
+
+      - name: push image to ecr
+        run: docker push ${{ AWS_ECR_REPOSITORY }}/banchango_server:latest
