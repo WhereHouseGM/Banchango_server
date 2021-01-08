@@ -32,7 +32,7 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: build
-        run: ./gradlew build -x test --info
+        run: ./gradlew build -x test
         env:
           PRD_WH_DATASOURCE_URL: ${{ secrets.PRD_WH_DATASOURCE_URL }}
           TEST_WH_DATASOURCE_URL: ${{ secrets.TEST_WH_DATASOURCE_URL }}
@@ -47,7 +47,7 @@ jobs:
           AWS_EMAIL_SECRET_ACCESS_KEY: ${{ secrets.AWS_EMAIL_SECRET_ACCESS_KEY }}
 
       - name: dockerize
-        run: docker --version
+        run: docker build -t banchango:api . && docker images
       
       - name: upload to ecr
         run: echo "UPLOAD TO ECR"
