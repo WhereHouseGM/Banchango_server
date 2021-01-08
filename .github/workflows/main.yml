@@ -32,8 +32,20 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: build
-        run: ./gradlew build
-    
+        run: ./gradlew build --info
+        env:
+          PRD_WH_DATASOURCE_URL: ${{ secrets.PRD_WH_DATASOURCE_URL }}
+          TEST_WH_DATASOURCE_URL: ${{ secrets.TEST_WH_DATASOURCE_URL }}
+          WH_DATASOURCE_USERNAME: ${{ secrets.WH_DATASOURCE_USERNAME }}
+          WH_DATASOURCE_PASSWORD: ${{ secrets.WH_DATASOURCE_PASSWORD }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.BANCHANGO_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BANCHANGO_AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_BUCKET: ${{ secrets.BANCHANGO_AWS_S3_BUCKET }}
+          AWS_S3_REGION: ${{ secrets.BANCHANGO_AWS_S3_REGION }}
+          WH_DEFAULT_IMAGE_URL: ${{ secrets.WH_DEFAULT_IMAGE_URL }}
+          AWS_EMAIL_ACCESS_KEY: ${{ secrets.AWS_EMAIL_ACCESS_KEY }}
+          AWS_EMAIL_SECRET_ACCESS_KEY: ${{ secrets.AWS_EMAIL_SECRET_ACCESS_KEY }}
+
       - name: compress files for deploy
         run: zip -r wherehouse-backend.zip build/libs appspec.yml scripts
       

@@ -38,7 +38,7 @@ public class UsersApiController {
     @ValidateRequired
     @PatchMapping("/v3/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserInfoResponseDto updateUserInfo(@Valid @RequestBody UserSignupRequestDto requestDto, @PathVariable Integer userId,
+    public UserInfoResponseDto updateUserInfo(@Valid @RequestBody UserUpdateRequestDto requestDto, @PathVariable Integer userId,
                                @RequestAttribute(name = "accessToken") String token) {
         return usersService.updateUserInfo(requestDto, userId, token);
     }
@@ -47,5 +47,16 @@ public class UsersApiController {
     @ResponseStatus(HttpStatus.OK)
     public BasicMessageResponseDto sendTemporaryPasswordToEmail(@Valid @RequestBody UserEmailSendRequestDto requestDto) {
         return usersService.sendTemporaryPasswordEmail(requestDto.getEmail());
+    }
+
+    @PatchMapping("/v3/users/change-password")
+    @ResponseStatus(HttpStatus.OK)
+    @ValidateRequired
+    public BasicMessageResponseDto changePassword(
+        @Valid @RequestBody ChangePasswordRequestDto changePasswordRequestDto,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        usersService.changePassword(accessToken, changePasswordRequestDto);
+        return new BasicMessageResponseDto("비밀번호를 성공적으로 변경했습니다");
     }
 }

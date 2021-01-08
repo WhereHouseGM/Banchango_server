@@ -12,11 +12,13 @@ import lombok.Setter;
 @Setter
 public class UserInfoResponseDto {
 
-    private int userId;
+    private Integer userId;
     private String name;
     private String email;
     private UserType type;
     private String phoneNumber;
+    private String telephoneNumber;
+    private String companyName;
     private UserRole role;
 
     public UserInfoResponseDto(Users user) {
@@ -25,6 +27,8 @@ public class UserInfoResponseDto {
         this.email = user.getEmail();
         this.type = user.getType();
         this.phoneNumber = user.getPhoneNumber();
+        this.telephoneNumber = user.getTelephoneNumber();
+        this.companyName = user.getCompanyName();
         this.role = user.getRole();
     }
 }

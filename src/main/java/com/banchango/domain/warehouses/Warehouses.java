@@ -1,6 +1,11 @@
 package com.banchango.domain.warehouses;
 
+import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
+import com.banchango.domain.BaseTimeEntity;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.insurances.Insurances;
+import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouseimages.WarehouseImages;
@@ -13,11 +18,12 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
 @Entity
-public class Warehouses {
+public class Warehouses extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,43 +51,30 @@ public class Warehouses {
     @Column(nullable = false)
     private Integer availableWeekdays;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     private String openAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     private String closeAt;
 
     @Column(length = 100)
     private String availableTimeDetail;
 
-    @Column
-    private String insurance;
+    @Column(nullable = false)
+    private Boolean cctvExist;
 
     @Column(nullable = false)
-    private Integer cctvExist;
-
-    @Column(length = 100)
-    private String securityCompanyName;
-
-    @Column(nullable = false)
-    private Integer doorLockExist;
+    private Boolean doorLockExist;
 
     @Column(nullable = false, columnDefinition = "ENUM('HEATING', 'COOLING', 'BOTH', 'NONE')")
     @Enumerated(EnumType.STRING)
     private AirConditioningType airConditioningType;
 
     @Column(nullable = false)
-    private Integer workerExist;
+    private Boolean workerExist;
 
     @Column(nullable = false)
-    private Integer canPickup;
-
-    @Column(nullable = false)
-    private Integer canPark;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ItemTypeName mainItemType;
+    private Boolean canPark;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -96,6 +89,10 @@ public class Warehouses {
     @Column(nullable = false)
     private Double longitude;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private WarehouseStatus status;
+
     @Setter
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
@@ -104,15 +101,25 @@ public class Warehouses {
     @Setter
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
+    private List<Insurances> insurances = new ArrayList<>();
+
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
+    private List<SecurityCompanies> securityCompanies = new ArrayList<>();
+
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
     private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
 
     @Setter
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany( cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseFacilityUsages> warehouseFacilityUsages = new ArrayList<>();
 
     @Setter
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
 
@@ -120,10 +127,13 @@ public class Warehouses {
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
+    @Setter
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
+    private List<MainItemTypes> mainItemTypes = new ArrayList<>();
+
     @Builder
-    public Warehouses(String name, String insurance, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Integer cctvExist, String securityCompanyName, Integer doorLockExist, AirConditioningType airConditioningType, Integer workerExist, Integer canPickup, Integer canPark, ItemTypeName mainItemType, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth) {
+    public Warehouses(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, WarehouseStatus status) {
         this.name = name;
-        this.insurance = insurance;
         this.space = space;
         this.address = address;
         this.addressDetail = addressDetail;
@@ -133,24 +143,67 @@ public class Warehouses {
         this.closeAt = closeAt;
         this.availableTimeDetail = availableTimeDetail;
         this.cctvExist = cctvExist;
-        this.securityCompanyName = securityCompanyName;
         this.doorLockExist = doorLockExist;
         this.airConditioningType = airConditioningType;
         this.workerExist = workerExist;
-        this.canPickup = canPickup;
         this.canPark = canPark;
-        this.mainItemType = mainItemType;
         this.userId = userId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.warehouseType = warehouseType;
         this.minReleasePerMonth = minReleasePerMonth;
+        this.status = status;
     }
 
     public WarehouseImages getMainImage() {
         for(WarehouseImages image : warehouseImages) {
-            if(image.getIsMain() == 1) return image;
+            if(image.isMain()) return image;
         }
         return null;
+    }
+
+    public boolean isViewable() {
+        return this.status.equals(WarehouseStatus.VIEWABLE);
+    }
+
+    public void update(WarehouseAdminUpdateRequestDto dto) {
+        this.name = dto.getName();
+        this.space = dto.getSpace();
+        this.address = dto.getAddress();
+        this.addressDetail = dto.getAddressDetail();
+        this.description = dto.getDescription();
+        this.availableWeekdays = dto.getAvailableWeekdays();
+        this.openAt = dto.getOpenAt();
+        this.closeAt = dto.getCloseAt();
+        this.availableTimeDetail = dto.getAvailableTimeDetail();
+        this.cctvExist = dto.getCctvExist();
+        this.doorLockExist = dto.getDoorLockExist();
+        this.airConditioningType = dto.getAirConditioningType();
+        this.workerExist = dto.getWorkerExist();
+        this.canPark = dto.getCanPark();
+        this.latitude = dto.getLatitude();
+        this.longitude = dto.getLongitude();
+        this.warehouseType = dto.getWarehouseType();
+        this.minReleasePerMonth = dto.getMinReleasePerMonth();
+        this.status = dto.getStatus();
+        this.deliveryTypes = dto.getDeliveryTypes().stream()
+                .map(DeliveryTypes::new).collect(Collectors.toList());
+        this.insurances = dto.getInsurances().stream()
+                .map(Insurances::new).collect(Collectors.toList());
+        this.securityCompanies = dto.getSecurityCompanies().stream()
+                .map(SecurityCompanies::new).collect(Collectors.toList());
+        this.warehouseConditions = dto.getWarehouseCondition().stream()
+                .map(WarehouseConditions::new).collect(Collectors.toList());
+        if(dto.getWarehouseFacilityUsages() != null) {
+            this.warehouseFacilityUsages = dto.getWarehouseFacilityUsages().stream()
+                    .map(WarehouseFacilityUsages::new).collect(Collectors.toList());
+        }
+        if(dto.getWarehouseUsageCautions() != null) {
+            this.warehouseUsageCautions = dto.getWarehouseUsageCautions().stream()
+                    .map(WarehouseUsageCautions::new).collect(Collectors.toList());
+        }
+        this.mainItemTypes = dto.getMainItemTypes().stream()
+                .map(type -> new MainItemTypes(type, this)).collect(Collectors.toList());
+        this.status = dto.getStatus();
     }
 }
