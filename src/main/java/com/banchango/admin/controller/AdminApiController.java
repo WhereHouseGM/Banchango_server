@@ -6,8 +6,10 @@ import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.admin.service.AdminService;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
+import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.warehouses.WarehouseStatus;
+import com.banchango.estimates.dto.EstimateSearchResponseDto;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
 import lombok.RequiredArgsConstructor;
@@ -90,4 +92,15 @@ public class AdminApiController {
         return s3UploaderService.deleteExtraImageByAdmin(fileName, token, warehouseId);
     }
 
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/estimates")
+    @ResponseStatus(HttpStatus.OK)
+    public EstimateSearchResponseDto getEstimates(
+        @RequestParam(required = false)EstimateStatus status,
+        @RequestParam Integer page,
+        @RequestParam Integer size
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return new EstimateSearchResponseDto(adminService.getEstimates(status, pageRequest));
+    }
 }

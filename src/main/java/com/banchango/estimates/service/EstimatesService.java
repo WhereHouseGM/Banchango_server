@@ -39,7 +39,7 @@ public class EstimatesService {
             .content(estimateInsertRequestDto.getContent())
             .userId(userId)
             .warehouseId(estimateInsertRequestDto.getWarehouseId())
-            .status(EstimateStatus.IN_PROGRESS)
+            .status(EstimateStatus.RECEPTED)
             .monthlyAverageRelease(estimateInsertRequestDto.getMonthlyAverageRelease())
             .build();
 

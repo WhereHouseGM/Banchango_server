@@ -45,6 +45,40 @@ public class EstimateEntityFactory {
         return create(warehouseId, userId, EstimateStatus.IN_PROGRESS);
     }
 
+    @Transactional
+    public Estimates createReceptedWithEstimateItems(Integer warehouseId, Integer userId) {
+        Estimates estimate = create(warehouseId, userId, EstimateStatus.RECEPTED);
+
+        List<EstimateItems> estimateItems = IntStream.range(0, 3)
+            .mapToObj(number -> estimateItemEntityFactory.create(estimate))
+            .collect(Collectors.toList());
+
+        estimate.setEstimateItems(estimateItems);
+
+        return estimate;
+    }
+
+    public Estimates createReceptedWithoutEstimateItems(Integer warehouseId, Integer userId) {
+        return create(warehouseId, userId, EstimateStatus.RECEPTED);
+    }
+
+    @Transactional
+    public Estimates createDoneWithEstimateItems(Integer warehouseId, Integer userId) {
+        Estimates estimate = create(warehouseId, userId, EstimateStatus.DONE);
+
+        List<EstimateItems> estimateItems = IntStream.range(0, 3)
+            .mapToObj(number -> estimateItemEntityFactory.create(estimate))
+            .collect(Collectors.toList());
+
+        estimate.setEstimateItems(estimateItems);
+
+        return estimate;
+    }
+
+    public Estimates createDoneWithoutEstimateItems(Integer warehouseId, Integer userId) {
+        return create(warehouseId, userId, EstimateStatus.DONE);
+    }
+
     private Estimates create(Integer warehouseId, Integer userId, EstimateStatus status) {
         Estimates estimate = Estimates.builder()
             .warehouseId(warehouseId)
