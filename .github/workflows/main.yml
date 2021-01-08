@@ -47,7 +47,7 @@ jobs:
           AWS_EMAIL_SECRET_ACCESS_KEY: ${{ secrets.AWS_EMAIL_SECRET_ACCESS_KEY }}
 
       - name: authorize docker client
-        run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrests.AWS_ECR_REPOSITORY }} 
+        run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REPOSITORY }} 
 
       - name: dockerize
         run: docker build -t banchango_server
