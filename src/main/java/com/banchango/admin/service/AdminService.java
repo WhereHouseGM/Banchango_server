@@ -7,6 +7,9 @@ import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.estimates.EstimateStatus;
+import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
@@ -14,7 +17,11 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.estimates.dto.EstimateSearchDto;
+import com.banchango.estimates.exception.EstimateNoContentException;
+import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -31,6 +39,7 @@ public class AdminService {
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
     private final MainItemTypesRepository mainItemTypesRepository;
+    private final EstimatesRepository estimatesRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -65,5 +74,32 @@ public class AdminService {
         }
         warehouse.update(requestDto);
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
+    }
+
+    public List<EstimateSearchDto> getEstimates(EstimateStatus status, PageRequest pageRequest) {
+        List<Estimates> estimates;
+        if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
+        else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);
+
+        if(estimates.isEmpty()) throw new EstimateNoContentException();
+
+        return estimates.stream()
+            .map(estimate -> {
+                EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
+                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
+
+                if(optionalProjection.isPresent()) {
+                    WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
+                    WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
+                        .warehouseId(projection.getId())
+                        .name(projection.getName())
+                        .address(projection.getAddress())
+                        .build();
+
+                    estimateSearchResponseDto.updateWarehouse(warehouseSummaryDto);
+                }
+                return estimateSearchResponseDto;
+            })
+            .collect(Collectors.toList());
     }
 }
