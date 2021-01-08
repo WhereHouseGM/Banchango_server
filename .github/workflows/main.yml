@@ -56,4 +56,4 @@ jobs:
         run: docker tag banchango_server:latest ${{ secrets.AWS_ECR_REPOSITORY }}/banchango_server:latest 
 
       - name: push image to ecr
-        run: docker push ${{ AWS_ECR_REPOSITORY }}/banchango_server:latest
+        run: docker push ${{ secrets.AWS_ECR_REPOSITORY }}/banchango_server:latest
