@@ -50,4 +50,4 @@ jobs:
         run: docker --version
       
       - name: upload to ecr
-        run: echo "TODO: UPLOAD TO ECR"
+        run: echo "UPLOAD TO ECR"
