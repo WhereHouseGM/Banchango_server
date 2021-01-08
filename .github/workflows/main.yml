@@ -50,7 +50,7 @@ jobs:
         run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REPOSITORY }} 
 
       - name: dockerize
-        run: docker build -t banchango_server
+        run: docker build -t banchango_server .
       
       - name: tag image
         run: docker tag banchango_server:latest ${{ secrets.AWS_ECR_REPOSITORY }}/banchango_server:latest 
