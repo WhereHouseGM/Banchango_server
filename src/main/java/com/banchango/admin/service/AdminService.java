@@ -1,9 +1,6 @@
 package com.banchango.admin.service;
 
-import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
-import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
+import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
@@ -101,5 +98,10 @@ public class AdminService {
                 return estimateSearchResponseDto;
             })
             .collect(Collectors.toList());
+    }
+
+    public void updateEstimateStatus(String accessToken, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        estimatesRepository.updateStatusById(estimateId, estimateStatusUpdateRequestDto.getStatus());
     }
 }

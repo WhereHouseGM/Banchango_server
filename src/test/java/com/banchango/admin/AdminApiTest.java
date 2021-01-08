@@ -1,6 +1,7 @@
 package com.banchango.admin;
 
 import com.banchango.ApiTestContext;
+import com.banchango.admin.dto.EstimateStatusUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
@@ -8,6 +9,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
@@ -47,6 +49,9 @@ public class AdminApiTest extends ApiTestContext {
 
     @Autowired
     private WarehousesRepository warehousesRepository;
+
+    @Autowired
+    private EstimatesRepository estimatesRepository;
 
     @Autowired
     private WarehouseEntityFactory warehouseEntityFactory;
@@ -447,6 +452,10 @@ public class AdminApiTest extends ApiTestContext {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
+
+        estimate = estimatesRepository.findById(estimate.getId()).get();
+
+        assertEquals(EstimateStatus.IN_PROGRESS, estimate.getStatus());
     }
 
     @Test

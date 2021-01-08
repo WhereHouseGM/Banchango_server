@@ -1,5 +1,6 @@
 package com.banchango.admin.controller;
 
+import com.banchango.admin.dto.EstimateStatusUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
@@ -103,4 +104,18 @@ public class AdminApiController {
         PageRequest pageRequest = PageRequest.of(page, size);
         return new EstimateSearchResponseDto(adminService.getEstimates(status, pageRequest));
     }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @PatchMapping("/v3/admin/estimates/{estimateId}/status")
+    @ResponseStatus(HttpStatus.OK)
+    public BasicMessageResponseDto updateEstimateStatus(
+        @PathVariable Integer estimateId,
+        @RequestBody EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        adminService.updateEstimateStatus(accessToken, estimateId, estimateStatusUpdateRequestDto);
+
+        return new BasicMessageResponseDto("견적 문의 상태를 성공적으로 변경했습니다");
+    }
+
 }
