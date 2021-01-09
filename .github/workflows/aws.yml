@@ -92,4 +92,5 @@ jobs:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: BanchangoService
         cluster: BanchangoCluster
+        codedeploy-deployment-group: BanchangoECSDeploymentGroup
         wait-for-service-stability: true
