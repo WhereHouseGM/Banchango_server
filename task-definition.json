@@ -1,0 +1,74 @@
+{
+    "executionRoleArn": "arn:aws:iam::598334522273:role/ecsAutoscaleRole",
+    "containerDefinitions": [{
+      "name": "BanchangoContainer",
+      "image": "598334522273.dkr.ecr.ap-northeast-2.amazonaws.com/banchango_server",
+      "essential": true,
+      "portMappings": [{
+        "hostPort": 8080,
+        "protocol": "tcp",
+        "containerPort": 8080
+      }]
+    }],
+    "requiresCompatibilities": [
+      "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "512",
+    "memory": "1024",
+    "family": "BanchangoTask",
+    "secrets": [
+    {
+        "name": "AWS_ACCESS_KEY_ID",
+        "valueFrom": "ACCESS_KEY_ID"
+    },
+    {
+        "name": "BANCHANGO_EMAIL_ID",
+        "valueFrom": "BANCHANGO_EMAIL_ID"
+    },
+    {
+        "name": "BANCHANGO_EMAIL_PASSWORD",
+        "valueFrom": "BANCHANGO_EMAIL_PASSWORD"
+    },
+    {
+        "name": "AWS_EMAIL_ACCESS_KEY",
+        "valueFrom": "EMAIL_ACCESS_KEY"
+    },
+    {
+        "name": "AWS_EMAIL_SECRET_ACCESS_KEY",
+        "valueFrom": "EMAIL_SECRET_ACCESS_KEY"
+    },
+    {
+        "name": "PRD_WH_DATASOURCE_URL",
+        "valueFrom": "PRD_WH_DATASOURCE_URL"
+    },
+    {
+        "name": "AWS_S3_BUCKET",
+        "valueFrom": "S3_BUCKET"
+    },
+    {
+        "name": "AWS_S3_REGION",
+        "valueFrom": "S3_REGION"
+    },
+    {
+        "name": "AWS_SECRET_ACCESS_KEY",
+        "valueFrom": "SECRET_ACCESS_KEY"
+    },
+    {
+	      "name": "TEST_WH_DATASOURCE_URL",
+	      "valueFrom": "TEST_WH_DATASOURCE_URL"
+    },
+    {
+	      "name": "WH_DATASOURCE_PASSWORD",
+	      "valueFrom": "WH_DATASOURCE_PASSWORD"
+    },
+    {
+	    "name": "WH_DATASOURCE_USERNAME",
+	    "valueFrom": "WH_DATASOURCE_USERNAME"
+    },
+    {
+	    "name": "WH_DEFAULT_IMAGE_URL",
+	    "valueFrom": "WH_DEFAULT_IMAGE_URL"
+    } 
+  ]
+}
