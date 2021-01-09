@@ -93,5 +93,4 @@ jobs:
         service: BanchangoService
         cluster: BanchangoCluster
         codedeploy-deployment-group: BanchangoECSDeploymentGroup
-        codedeploy-appspec: appspec.yml 
         wait-for-service-stability: true
