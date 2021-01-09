@@ -8,16 +8,8 @@
         "hostPort": 8080,
         "protocol": "tcp",
         "containerPort": 8080
-      }]
-    }],
-    "requiresCompatibilities": [
-      "FARGATE"
-    ],
-    "networkMode": "awsvpc",
-    "cpu": "512",
-    "memory": "1024",
-    "family": "BanchangoTask",
-    "secrets": [
+      }],
+      "secrets": [
     {
         "name": "AWS_ACCESS_KEY_ID",
         "valueFrom": "ACCESS_KEY_ID"
@@ -70,5 +62,13 @@
 	    "name": "WH_DEFAULT_IMAGE_URL",
 	    "valueFrom": "WH_DEFAULT_IMAGE_URL"
     } 
-  ]
+  ]	    
+    }],
+    "requiresCompatibilities": [
+      "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "512",
+    "memory": "1024",
+    "family": "BanchangoTask"
 }
