@@ -1,0 +1,10 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "arn:aws:ecs:ap-northeast-2:598334522273:task-definition/BanchangoTask:7"
+        LoadBalancerInfo:
+          ContainerName: "BanchangoContainer"
+          ContainerPort: 8080
+        PlatformVersion: "LATEST"
