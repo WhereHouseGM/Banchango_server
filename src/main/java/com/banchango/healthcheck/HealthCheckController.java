@@ -11,6 +11,6 @@ public class HealthCheckController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/health-check")
     public String responseToHealthCheck() {
-        return "I AM HEALTHY!";
+        return "I AM NEW HEALTHY!";
     }
 }
