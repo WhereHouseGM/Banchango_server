@@ -2,7 +2,7 @@
     "executionRoleArn": "arn:aws:iam::598334522273:role/ecsAutoscaleRole",
     "containerDefinitions": [{
       "name": "BanchangoContainer",
-      "image": "598334522273.dkr.ecr.ap-northeast-2.amazonaws.com/banchango_server",
+      "image": "Placeholder: HELLO",
       "essential": true,
       "portMappings": [{
         "hostPort": 8080,
