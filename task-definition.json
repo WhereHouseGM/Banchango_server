@@ -1,7 +1,7 @@
 {
     "executionRoleArn": "arn:aws:iam::598334522273:role/ecsAutoscaleRole",
     "containerDefinitions": [{
-      "name": "BanchangoContainer",
+      "name": "BanchangoDevContainer",
       "image": "Placeholder: HELLO",
       "essential": true,
       "portMappings": [{
@@ -70,5 +70,5 @@
     "networkMode": "awsvpc",
     "cpu": "512",
     "memory": "1024",
-    "family": "BanchangoTask"
+    "family": "BanchangoDevTask"
 }
