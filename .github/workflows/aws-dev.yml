@@ -82,7 +82,7 @@ jobs:
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: task-definition.json
+        task-definition: task-definition-dev.json
         container-name: BanchangoDevContainer
         image: ${{ steps.build-image.outputs.image }}
 
@@ -93,4 +93,5 @@ jobs:
         service: BanchangoDevService
         cluster: BanchangoDevCluster
         codedeploy-deployment-group: DgpECS-BanchangoDevCluster-BanchangoDevService
+        codedeploy-appspec: appspec-dev.yaml
         wait-for-service-stability: true
