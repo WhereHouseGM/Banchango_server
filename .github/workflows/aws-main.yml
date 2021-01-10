@@ -44,12 +44,9 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ secrets.PRD_AWS_ECR_REPOSITORY }}
-        ECR_REPOSITORY: banchango_server
+        ECR_REPOSITORY: banchango_server_product
         IMAGE_TAG: latest
       run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
