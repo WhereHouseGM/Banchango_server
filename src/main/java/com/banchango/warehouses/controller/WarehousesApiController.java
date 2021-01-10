@@ -4,14 +4,14 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.BadRequestException;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.mainitemtypes.MainItemType;
-import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
-import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
+import com.banchango.warehouses.dto.*;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -66,15 +66,13 @@ public class WarehousesApiController {
         return warehousesService.getSpecificWarehouseInfo(warehouseId);
     }
 
-    /**
-     * <p>
-     *     TODO : 창고 정보 수정 API
-     * </p>
-     */
-    /*
-    @PatchMapping("/v2/warehouses/{warehouseId}")
-        public void updateWarehouseInfo(@PathVariable Integer warehouseId, HttpServletResponse response) {
+    @ValidateRequired
+    @PutMapping("/v3/warehouses/{warehouseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public WarehouseDetailResponseDto updateWarehouseInfo(
+        @RequestParam Integer warehouseId,
+        @RequestBody WarehouseUpdateRequestDto warehouseUpdateRequestDto
+    ) {
+        return warehousesService.updateWarehouse(warehouseId, warehouseUpdateRequestDto);
     }
-    */
-
 }

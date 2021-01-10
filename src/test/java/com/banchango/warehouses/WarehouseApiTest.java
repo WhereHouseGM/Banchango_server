@@ -18,6 +18,7 @@ import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
+import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -534,7 +535,7 @@ public class WarehouseApiTest extends ApiTestContext {
             .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
             .build();
 
-        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+        RequestEntity<WarehouseUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
             .body(body);
@@ -628,7 +629,7 @@ public class WarehouseApiTest extends ApiTestContext {
             .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
             .build();
 
-        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+        RequestEntity<WarehouseUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
             .body(body);
@@ -669,7 +670,7 @@ public class WarehouseApiTest extends ApiTestContext {
             .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
             .build();
 
-        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+        RequestEntity<WarehouseUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
             .contentType(MediaType.APPLICATION_JSON)
             .body(body);
 

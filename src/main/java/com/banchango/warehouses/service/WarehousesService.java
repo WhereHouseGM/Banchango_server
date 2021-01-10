@@ -1,5 +1,6 @@
 package com.banchango.warehouses.service;
 
+import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.service.EmailSender;
@@ -7,6 +8,7 @@ import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -21,6 +23,7 @@ import com.banchango.users.exception.UserIdNotFoundException;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
+import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
 import com.banchango.warehouses.exception.WarehouseNotFoundException;
@@ -41,6 +44,7 @@ public class WarehousesService {
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
     private final EmailSender emailSender;
+    private final MainItemTypesRepository mainItemTypesRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -157,6 +161,16 @@ public class WarehousesService {
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
         Warehouses warehouse = warehousesRepository.findByIdAndStatus(warehouseId, WarehouseStatus.VIEWABLE).orElseThrow(WarehouseIdNotFoundException::new);
 
+        return new WarehouseDetailResponseDto(warehouse, noImageUrl);
+    }
+
+    public WarehouseDetailResponseDto updateWarehouse(Integer warehouseId, WarehouseUpdateRequestDto requestDto) {
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).equals(requestDto.getMainItemTypes())) {
+            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+        }
+
+        warehouse.update(requestDto);
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
 }
