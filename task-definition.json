@@ -1,5 +1,5 @@
 {
-    "executionRoleArn": "arn:aws:iam::598334522273:role/ecsAutoscaleRole",
+    "executionRoleArn": "arn:aws:iam::598334522273:role/wherehouse-backend-CodeDeployRole",
     "containerDefinitions": [{
       "name": "BanchangoDevContainer",
       "image": "Placeholder: HELLO",
