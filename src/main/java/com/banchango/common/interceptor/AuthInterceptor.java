@@ -2,13 +2,16 @@ package com.banchango.common.interceptor;
 
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.exception.ForbiddenException;
+import com.banchango.domain.users.UserRole;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
-public class AuthInterceptor extends HandlerInterceptorAdapter {
+public class AuthInterceptor implements HandlerInterceptor {
 
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -24,10 +27,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 String authorizationHeader = extractAuthorizationHeader(request);
                 String accessToken = extractAccessToken(authorizationHeader);
                 if(JwtTokenUtil.isTokenExpired(accessToken)) throw new AuthenticateException("JWT Token is expired.");
+
+                if(shouldAuthorize(method)) authorizeRequest(method, accessToken);
                 request.setAttribute(ACCESS_TOKEN, accessToken);
             }
         }
-        return super.preHandle(request, response, handler);
+        return true;
     }
 
     private boolean isHandlerMethod(Object handler) {
@@ -51,5 +56,18 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         if(authorizationHeaderSplits.length != 2) throw new AuthenticateException("Malformed Authorization Header");
         String scheme = authorizationHeaderSplits[0];
         if(!scheme.equals(BEARER_SCHEME)) throw new AuthenticateException("Scheme should be Bearer.");
+    }
+
+    private boolean shouldAuthorize(HandlerMethod method) {
+        ValidateRequired annotation = method.getMethodAnnotation(ValidateRequired.class);
+        return annotation.roles().length > 0;
+    }
+
+    private void authorizeRequest(HandlerMethod method, String accessToken) {
+        ValidateRequired annotation = method.getMethodAnnotation(ValidateRequired.class);
+        UserRole accessTokenRole = JwtTokenUtil.extractUserRole(accessToken);
+        boolean isAuthorized = Arrays.stream(annotation.roles()).anyMatch(role -> role == accessTokenRole);
+
+        if(!isAuthorized) throw new ForbiddenException("해당 요청을 수행할 수 있는 권한이 없습니다");
     }
 }

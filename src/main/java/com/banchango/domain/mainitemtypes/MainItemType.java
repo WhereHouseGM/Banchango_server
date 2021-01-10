@@ -1,0 +1,5 @@
+package com.banchango.domain.mainitemtypes;
+
+public enum MainItemType {
+    CLOTH, COSMETIC, ACCESSORY, GENERAL_MERCHANDISE, FOOD, BOOK, INTERIOR, ELECTRONICS, SPORTS, COLD_STORAGE, FREEZE_STORAGE, LARGE_SIZE
+}

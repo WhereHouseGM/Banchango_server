@@ -22,7 +22,7 @@ public class WarehouseConditions {
     private WarehouseCondition condition;
 
     @Builder
-    public WarehouseConditions(String condition) {
-        this.condition = WarehouseCondition.valueOf(condition);
+    public WarehouseConditions(WarehouseCondition condition) {
+        this.condition=condition;
     }
 }

@@ -26,11 +26,5 @@ public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, Ch
         } else {
             return true;
         }
-//        try {
-//            if (value == null) return true;
-//            return acceptedValues.contains(value.toString());
-//        } catch(Exception exception) {
-//            throw new BadRequestException();
-//        }
     }
 }

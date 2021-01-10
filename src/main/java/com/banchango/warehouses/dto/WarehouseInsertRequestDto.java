@@ -1,9 +1,11 @@
 package com.banchango.warehouses.dto;
 
 import com.banchango.common.validator.ValueOfEnum;
-import com.banchango.domain.warehouses.WarehouseType;
+import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.ItemTypeName;
+import com.banchango.domain.warehouses.WarehouseType;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
+@Builder
 public class WarehouseInsertRequestDto {
 
     @Size(min = 1, message = "name의 최소 길이는 1입니다.")
@@ -49,34 +52,25 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "availableTimeDetail이 없습니다.")
     String availableTimeDetail;
 
-    @Size(min = 1, message = "insurance의 최소 길이는 1입니다.")
-    @NotNull(message = "insurance이 없습니다.")
-    String insurance;
-
     @NotNull(message = "cctvExist이 없습니다.")
-    Integer cctvExist;
-
-    String securityCompanyName;
+    Boolean cctvExist;
 
     @NotNull(message = "doorLockExist이 없습니다.")
-    Integer doorLockExist;
+    Boolean doorLockExist;
 
     @ValueOfEnum(enumClass = AirConditioningType.class)
     @NotNull(message = "airConditioningType이 없습니다.")
     AirConditioningType airConditioningType;
 
     @NotNull(message = "workerExist이 없습니다.")
-    Integer workerExist;
-
-    @NotNull(message = "canPickup이 없습니다.")
-    Integer canPickup;
+    Boolean workerExist;
 
     @NotNull(message = "canPark이 없습니다.")
-    Integer canPark;
+    Boolean canPark;
 
-    @ValueOfEnum(enumClass = ItemTypeName.class)
-    @NotNull(message = "mainItemType이 없습니다.")
-    ItemTypeName mainItemType;
+    @ValueOfEnum(enumClass = MainItemType.class)
+    @NotNull(message = "mainItemTypes가 없습니다.")
+    List<MainItemType> mainItemTypes;
 
     @ValueOfEnum(enumClass = WarehouseType.class)
     @NotNull(message = "warehouseType이 없습니다.")
@@ -94,12 +88,46 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "deliveryTypes가 없습니다.")
     List<String> deliveryTypes;
 
+    @ValueOfEnum(enumClass = WarehouseCondition.class)
     @NotNull(message = "warehouseCondition이 없습니다.")
-    List<String> warehouseCondition;
+    List<WarehouseCondition> warehouseCondition;
 
-    @NotNull(message = "warehouseFacilityUsages가 없습니다.")
     List<String> warehouseFacilityUsages;
 
-    @NotNull(message = "warehouseUsageCautions가 없습니다.")
     List<String> warehouseUsageCautions;
+
+    @NotNull(message = "보험사 정보가 없습니다.")
+    List<String> insurances;
+
+    @NotNull(message = "경비 업체 정보가 없습니다.")
+    List<String> securityCompanies;
+
+    @Builder
+    public WarehouseInsertRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<MainItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies) {
+        this.name = name;
+        this.space = space;
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.description = description;
+        this.availableWeekdays = availableWeekdays;
+        this.openAt = openAt;
+        this.closeAt = closeAt;
+        this.availableTimeDetail = availableTimeDetail;
+        this.cctvExist = cctvExist;
+        this.doorLockExist = doorLockExist;
+        this.airConditioningType = airConditioningType;
+        this.workerExist = workerExist;
+        this.canPark = canPark;
+        this.mainItemTypes = mainItemTypes;
+        this.warehouseType = warehouseType;
+        this.minReleasePerMonth = minReleasePerMonth;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.deliveryTypes = deliveryTypes;
+        this.warehouseCondition = warehouseCondition;
+        this.warehouseFacilityUsages = warehouseFacilityUsages;
+        this.warehouseUsageCautions = warehouseUsageCautions;
+        this.insurances = insurances;
+        this.securityCompanies = securityCompanies;
+    }
 }

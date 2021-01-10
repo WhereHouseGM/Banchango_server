@@ -1,7 +1,7 @@
 package com.banchango.domain.users;
 
 import com.banchango.domain.BaseTimeEntity;
-import com.banchango.users.dto.UserSignupRequestDto;
+import com.banchango.users.dto.UserUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +30,12 @@ public class Users extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
+    @Column(length = 100, nullable = false)
+    private String companyName;
+
+    @Column(length = 40)
+    private String telephoneNumber;
+
     @Column(length = 40)
     private String phoneNumber;
 
@@ -37,20 +43,26 @@ public class Users extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public void updateUserInfo(UserSignupRequestDto requestDto) {
+    public void updateUserInfo(UserUpdateRequestDto requestDto) {
         this.name = requestDto.getName();
-        this.password = requestDto.getPassword();
-        this.type = UserType.valueOf(requestDto.getType());
+        this.companyName = requestDto.getCompanyName();
         this.phoneNumber = requestDto.getPhoneNumber();
+        this.telephoneNumber = requestDto.getTelephoneNumber();
     }
 
     @Builder
-    public Users(String name, String email, String password, UserType type, String phoneNumber) {
+    public Users(String name, String email, String password, UserType type, String companyName, String telephoneNumber, String phoneNumber, UserRole role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.type = type;
+        this.companyName = companyName;
+        this.telephoneNumber = telephoneNumber;
         this.phoneNumber = phoneNumber;
-        this.role = UserRole.USER;
+        this.role = role;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }
