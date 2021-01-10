@@ -3,7 +3,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "arn:aws:ecs:ap-northeast-2:598334522273:task-definition/BanchangoTask"
+        TaskDefinition: "Placeholder: HELLO"
         LoadBalancerInfo:
           ContainerName: "BanchangoContainer"
           ContainerPort: 8080
