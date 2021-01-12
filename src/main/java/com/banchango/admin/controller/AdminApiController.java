@@ -111,7 +111,7 @@ public class AdminApiController {
     @ResponseStatus(HttpStatus.OK)
     public BasicMessageResponseDto updateEstimateStatus(
         @PathVariable Integer estimateId,
-        @RequestBody EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto,
+        @Valid @RequestBody EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         adminService.updateEstimateStatus(accessToken, estimateId, estimateStatusUpdateRequestDto);
