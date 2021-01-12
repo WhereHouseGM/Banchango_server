@@ -398,17 +398,6 @@ public class AdminApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_adminAllEstimates_responseIsNoContent_IfEstimatesNotExist() {
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10"))
-            .header("Authorization", "Bearer " + adminAccessToken)
-            .build();
-
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-    }
-
-    @Test
     public void get_adminAllEstimates_responseIsUnAuthorized_IfAccessTokenNotGiven() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate1 = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
@@ -492,7 +481,7 @@ public class AdminApiTest extends ApiTestContext {
     }
 
     @Test
-    public void patch_adminUpdateEstimateStatus_responseIsNoContent_IfEstimateNotFound() {
+    public void patch_adminUpdateEstimateStatus_responseIsNotFound_IfEstimateNotFound() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
         int estimateId = 0;
@@ -503,7 +492,7 @@ public class AdminApiTest extends ApiTestContext {
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -535,7 +524,7 @@ public class AdminApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_adminEstimateItemsByestimateId_responseIsNoContent_IfEstimateNotExist() {
+    public void get_adminEstimateItemsByestimateId_responseIsNotFound_IfEstimateNotExist() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         final int estimateId = 0;
 
@@ -545,7 +534,7 @@ public class AdminApiTest extends ApiTestContext {
 
         ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test

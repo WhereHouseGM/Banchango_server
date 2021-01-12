@@ -102,7 +102,7 @@ public class EstimateItemsApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_estimateItemsByestimateId_responseIsNoContent_IfEstimateNotExist() {
+    public void get_estimateItemsByestimateId_responseIsNotFound_IfEstimateNotExist() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         final int estimateId = 0;
 
@@ -112,12 +112,12 @@ public class EstimateItemsApiTest extends ApiTestContext {
 
         ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
-    public void get_estimateItemsByestimateId_responseIsNoContent_IfEstimateItemsNotExist() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+    public void get_estimateItemsByestimateId_responseIsNotFound_IfWarehouseStatusIsDeleted() {
+        Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createInProgressWithoutEstimateItems(warehouse.getId(), user.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
@@ -126,7 +126,7 @@ public class EstimateItemsApiTest extends ApiTestContext {
 
         ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test

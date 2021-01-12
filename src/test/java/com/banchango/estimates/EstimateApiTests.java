@@ -161,17 +161,6 @@ public class EstimateApiTests extends ApiTestContext {
     }
 
     @Test
-    public void get_estimateByUserId_responseIsNoContent_IfEstimatesNotExist() {
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/estimates"))
-            .header("Authorization", "Bearer " + accessToken)
-            .build();
-
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-    }
-
-    @Test
     public void get_estimateByUserId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
