@@ -124,8 +124,7 @@ public class ChangePasswordTest extends ApiTestContext {
     }
 
     @Test
-    public void patch_changePassword_responseNoContent_IfUserIdIsInvalid() {
-        String originalPassword = user.getPassword();
+    public void patch_changePassword_responseNotFound_IfUserIdIsInvalid() {
         String newPassword = VALID_PASSWORD;
         String accessTokenWithInvalidUserId = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
@@ -138,6 +137,6 @@ public class ChangePasswordTest extends ApiTestContext {
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

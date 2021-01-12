@@ -172,13 +172,13 @@ public class AdminApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_AllInfosOfSpecificWarehouse_responseIsNoContent_IfWarehouseNotExist() {
+    public void get_AllInfosOfSpecificWarehouse_responseIsNotFound_IfWarehouseNotExist() {
         String url = String.format("/v3/admin/warehouses/%d", 0);
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
