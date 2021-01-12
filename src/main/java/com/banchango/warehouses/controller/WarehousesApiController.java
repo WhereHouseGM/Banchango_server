@@ -71,7 +71,7 @@ public class WarehousesApiController {
     @ResponseStatus(HttpStatus.OK)
     public WarehouseDetailResponseDto updateWarehouseInfo(
         @PathVariable Integer warehouseId,
-        @RequestBody WarehouseUpdateRequestDto warehouseUpdateRequestDto,
+        @Valid @RequestBody WarehouseUpdateRequestDto warehouseUpdateRequestDto,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         return warehousesService.updateWarehouse(accessToken, warehouseId, warehouseUpdateRequestDto);
