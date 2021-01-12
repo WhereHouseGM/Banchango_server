@@ -1,9 +1,6 @@
 package com.banchango.admin.service;
 
-import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
-import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
+import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
@@ -76,7 +73,8 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    public List<EstimateSearchDto> getEstimates(EstimateStatus status, PageRequest pageRequest) {
+    public List<EstimateSearchDto> getEstimates(String acccessToken, EstimateStatus status, PageRequest pageRequest) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(acccessToken));
         List<Estimates> estimates;
         if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
         else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);
@@ -101,5 +99,12 @@ public class AdminService {
                 return estimateSearchResponseDto;
             })
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateEstimateStatus(String accessToken, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNoContentException::new);
+        estimate.updateStatus(estimateStatusUpdateRequestDto.getStatus());
     }
 }
