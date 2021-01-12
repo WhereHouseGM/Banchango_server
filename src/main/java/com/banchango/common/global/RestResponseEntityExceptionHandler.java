@@ -19,15 +19,7 @@ import java.util.HashMap;
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
     @ExceptionHandler(value = ApiException.class)
     protected ResponseEntity<Object> handleApiException(ApiException exception, WebRequest request) {
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        System.out.println("handle api exception");
-        if (exception.getClass().isAnnotationPresent(ResponseStatus.class)) {
-            System.out.println("has annotation");
-            ResponseStatus responseStatus = exception.getClass().getAnnotation(ResponseStatus.class);
-            httpStatus = responseStatus.code();
-        }
-
-        return handleExceptionInternal(exception, null, new HttpHeaders(), httpStatus, request);
+        return handleExceptionInternal(exception, null, new HttpHeaders(), exception.getHttpStatus(), request);
     }
 
     @Override
