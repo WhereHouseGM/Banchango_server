@@ -98,12 +98,12 @@ public class UserApiTest {
     }
 
     @Test
-    public void userInfo_responseIsNoContent_IfUserIdIsWrong() {
+    public void userInfo_responseIsNotFound_IfUserIdIsWrong() {
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -135,7 +135,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void signIn_responseIsNoContent_IfUserEmailIsWrong(){
+    public void signIn_responseIsNotFound_IfUserEmailIsWrong(){
         UserSigninRequestDto requestBody = new UserSigninRequestDto(WRONG_EMAIL, WRONG_PASSWORD);
 
         RequestEntity<UserSigninRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-in"))
@@ -144,11 +144,11 @@ public class UserApiTest {
 
         ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
-    public void signIn_responseIsNoContent_IfUserPasswordIsWrong() {
+    public void signIn_responseIsNotFound_IfUserPasswordIsWrong() {
 
         UserSigninRequestDto requestBody = new UserSigninRequestDto(user.getEmail(), WRONG_PASSWORD);
 
@@ -158,7 +158,7 @@ public class UserApiTest {
 
         ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -309,7 +309,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void updateInfo_responseIsNoContent_IfUserIdIsWrong() {
+    public void updateInfo_responseIsNotFound_IfUserIdIsWrong() {
         UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
@@ -321,6 +321,6 @@ public class UserApiTest {
 
         ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }
