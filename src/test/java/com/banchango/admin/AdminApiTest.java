@@ -488,4 +488,19 @@ public class AdminApiTest extends ApiTestContext {
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
+
+    @Test
+    public void patch_adminUpdateEstimateStatus_responseIsNoContent_IfEstimateNotFound() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        int estimateId = 0;
+
+        RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimateId+"/status"))
+            .header("Authorization", "Bearer " + adminAccessToken)
+            .body(estimateStatusUpdatedto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
 }

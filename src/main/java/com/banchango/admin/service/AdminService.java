@@ -101,8 +101,10 @@ public class AdminService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public void updateEstimateStatus(String accessToken, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
-        estimatesRepository.updateStatusById(estimateId, estimateStatusUpdateRequestDto.getStatus());
+        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNoContentException::new);
+        estimate.updateStatus(estimateStatusUpdateRequestDto.getStatus());
     }
 }
