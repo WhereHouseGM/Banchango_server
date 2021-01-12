@@ -4,6 +4,7 @@ import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
@@ -14,6 +15,8 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.estimateitems.dto.EstimateItemSearchDto;
+import com.banchango.estimateitems.exception.EstimateItemNoContentException;
 import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.exception.EstimateNoContentException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
@@ -106,5 +109,20 @@ public class AdminService {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
         Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNoContentException::new);
         estimate.updateStatus(estimateStatusUpdateRequestDto.getStatus());
+    }
+
+    @Transactional(readOnly = true)
+    public List<EstimateItemSearchDto> getEstimateItems(String accessToken, Integer estimateId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        Integer userId = JwtTokenUtil.extractUserId(accessToken);
+
+        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNoContentException::new);
+
+        List<EstimateItems> estimateItems = estimate.getEstimateItems();
+        if(estimateItems.size() == 0) throw new EstimateItemNoContentException();
+
+        return estimate.getEstimateItems().stream()
+            .map(estimateItem -> new EstimateItemSearchDto(estimateItem))
+            .collect(Collectors.toList());
     }
 }

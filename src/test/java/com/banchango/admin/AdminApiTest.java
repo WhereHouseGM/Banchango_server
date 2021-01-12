@@ -554,7 +554,7 @@ public class AdminApiTest extends ApiTestContext {
         Estimates estimate = estimateEntityFactory.createInProgressWithoutEstimateItems(warehouse.getId(), user.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates/"+estimate.getId()+"/items"))
-            .header("Authorization", "Bearer " + accessToken)
+            .header("Authorization", "Bearer " + adminAccessToken)
             .build();
 
         ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
@@ -580,7 +580,7 @@ public class AdminApiTest extends ApiTestContext {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates/"+estimate.getId()+"/items"))
             .header("Authorization", "Bearer " + accessToken)
             .build();
 

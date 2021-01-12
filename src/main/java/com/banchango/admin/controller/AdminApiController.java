@@ -10,6 +10,7 @@ import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.warehouses.WarehouseStatus;
+import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
 import com.banchango.estimates.dto.EstimateSearchResponseDto;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
@@ -119,4 +120,13 @@ public class AdminApiController {
         return new BasicMessageResponseDto("견적 문의 상태를 성공적으로 변경했습니다");
     }
 
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/estimates/{estimateId}/items")
+    @ResponseStatus(HttpStatus.OK)
+    public EstimateItemSearchResponseDto getEstimateItems(
+        @PathVariable Integer estimateId,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        return new EstimateItemSearchResponseDto(adminService.getEstimateItems(accessToken, estimateId));
+    }
 }
