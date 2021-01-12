@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalServerErrorException extends ApiException{
     public InternalServerErrorException(String message) {
-        super(message);
+        super(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public InternalServerErrorException() {
