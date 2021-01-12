@@ -169,14 +169,14 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void delete_warehouse_responseIsNoContent_IfWarehouseNotExist() {
+    public void delete_warehouse_responseIsNotFound_IfWarehouseNotExist() {
         RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/0"))
                 .header("Authorization", "Bearer "+accessToken)
                 .build();
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
     
     @Test
@@ -278,27 +278,27 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_warehouseForMain_responseIsNoContent_IfIsViewableIsFalse() {
+    public void get_warehouseForMain_responseIsNotFound_IfIsViewableIsFalse() {
         Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[] { MainItemType.CLOTH });
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
         ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         warehouseRepository.delete(tempWarehouse);
     }
 
     @Test
-    public void get_warehouseForMain_responseIsNoContent_IfWarehouseNotExist() {
+    public void get_warehouseForMain_responseIsNotFound_IfWarehouseNotExist() {
         warehouseRepository.deleteAll();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
         ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -350,7 +350,7 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_warehouseByMainItemType_responseIsNoContent_IfIsViewableIsFalse() {
+    public void get_warehouseByMainItemType_responseIsNotFound_IfIsViewableIsFalse() {
         Warehouses warehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[] { MainItemType.CLOTH });
 
         String mainItemType = MainItemType.CLOTH.toString();
@@ -361,12 +361,12 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         warehouseRepository.delete(warehouse);
     }
 
     @Test
-    public void get_warehouseByMainItemType_responseIsNoContent_IfWarehouseNotExist() {
+    public void get_warehouseByMainItemType_responseIsNotFound_IfWarehouseNotExist() {
         warehouseRepository.deleteAll();
 
         String mainItemType = MainItemType.CLOTH.toString();
@@ -377,7 +377,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -441,7 +441,7 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_warehouseDetail_responseIsForbidden_IfIsViewableIsFalse() {
+    public void get_warehouseDetail_responseIsNotFound_IfIsViewableIsFalse() {
         Warehouses _warehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[]{MainItemType.CLOTH});
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
@@ -451,12 +451,12 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         warehouseRepository.delete(_warehouse);
     }
 
     @Test
-    public void get_warehouseDetail_responseIsNoContent_IfWarehouseNotExist() {
+    public void get_warehouseDetail_responseIsNotFound_IfWarehouseNotExist() {
         String url = String.format("/v3/warehouses/%d", 0);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -465,7 +465,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     private Warehouses saveWarehouse(WarehouseStatus status, MainItemType[] mainItemTypes) {
@@ -598,7 +598,7 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void put_WarehouseInfoIsUpdated_responseIsNoContent_ifWarehouseNotExist() {
+    public void put_WarehouseInfoIsUpdated_responseIsNotFound_ifWarehouseNotExist() {
         Integer warehouseId = 0;
         String url = String.format("/v3/warehouses/%d", warehouseId);
         WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
@@ -634,11 +634,11 @@ public class WarehouseApiTest extends ApiTestContext {
             .body(body);
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
-    public void put_WarehouseInfoIsUpdated_responseIsNoContent_ifWarehouseStatusIsDeleted() {
+    public void put_WarehouseInfoIsUpdated_responseIsNotFound_ifWarehouseStatusIsDeleted() {
         Warehouses warehouse = warehouseEntityFactory.createDeletedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
@@ -676,7 +676,7 @@ public class WarehouseApiTest extends ApiTestContext {
             .body(body);
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
