@@ -27,6 +27,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         ErrorResponseDto errorResponseDto;
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
         errorResponseDto = new ErrorResponseDto(new Date(), status.value(), status.getReasonPhrase(), ex.getMessage(), servletWebRequest.getRequest().getRequestURI());
-        return super.handleExceptionInternal(ex, errorResponseDto, headers, status, request);
+        return new ResponseEntity<>(errorResponseDto, headers, status);
     }
 }
