@@ -569,7 +569,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
         RequestEntity<Void> getRequest = RequestEntity.get(URI.create(url)).
             header("Authorization", "Bearer " + accessToken).build();
-        ResponseEntity<WarehouseAdminDetailResponseDto> secondResponse = restTemplate.exchange(getRequest, WarehouseAdminDetailResponseDto.class);
+        ResponseEntity<WarehouseDetailResponseDto> secondResponse = restTemplate.exchange(getRequest, WarehouseDetailResponseDto.class);
         assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
         assertEquals("NEW NAME", secondResponse.getBody().getName());
         assertEquals(Integer.valueOf(999), secondResponse.getBody().getSpace());
@@ -595,12 +595,53 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(secondResponse.getBody().getDeliveryTypes(), Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}));
         assertEquals(secondResponse.getBody().getWarehouseCondition(), Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}));
         assertEquals(secondResponse.getBody().getWarehouseFacilityUsages(), Arrays.asList(new String[]{"WH_FACILITY_USAGE"}));
-        assertEquals(WarehouseStatus.VIEWABLE, secondResponse.getBody().getStatus());
     }
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsNoContent_ifWarehouseNotExist() {
         Integer warehouseId = 0;
+        String url = String.format("/v3/warehouses/%d", warehouseId);
+        WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
+            .name("NEW NAME")
+            .space(999)
+            .address("NEW ADDRESS")
+            .addressDetail("NEW ADDR_DETAIL")
+            .description("NEW DESC")
+            .availableWeekdays(101010)
+            .openAt("08:00")
+            .closeAt("23:30")
+            .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
+            .cctvExist(false)
+            .doorLockExist(false)
+            .airConditioningType(AirConditioningType.NONE)
+            .workerExist(false)
+            .canPark(false)
+            .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+            .warehouseType(WarehouseType.FULFILLMENT)
+            .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+            .minReleasePerMonth(101)
+            .latitude(11.11)
+            .longitude(33.33)
+            .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
+            .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
+            .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
+            .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
+            .build();
+
+        RequestEntity<WarehouseUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .body(body);
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void put_WarehouseInfoIsUpdated_responseIsNoContent_ifWarehouseStatusIsDeleted() {
+        Warehouses warehouse = warehouseEntityFactory.createDeletedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Integer warehouseId = warehouse.getId();
+
         String url = String.format("/v3/warehouses/%d", warehouseId);
         WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
             .name("NEW NAME")
@@ -675,6 +716,133 @@ public class WarehouseApiTest extends ApiTestContext {
             .body(body);
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifOtherUsersTokenGiven() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Integer warehouseId = warehouse.getId();
+        String otherUserAccessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
+
+        String url = String.format("/v3/warehouses/%d", warehouseId);
+        WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
+            .name("NEW NAME")
+            .space(999)
+            .address("NEW ADDRESS")
+            .addressDetail("NEW ADDR_DETAIL")
+            .description("NEW DESC")
+            .availableWeekdays(101010)
+            .openAt("08:00")
+            .closeAt("23:30")
+            .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
+            .cctvExist(false)
+            .doorLockExist(false)
+            .airConditioningType(AirConditioningType.NONE)
+            .workerExist(false)
+            .canPark(false)
+            .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+            .warehouseType(WarehouseType.FULFILLMENT)
+            .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+            .minReleasePerMonth(101)
+            .latitude(11.11)
+            .longitude(33.33)
+            .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
+            .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
+            .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
+            .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
+            .build();
+
+        RequestEntity<WarehouseUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer" + otherUserAccessToken)
+            .body(body);
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsInProgress() {
+        Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Integer warehouseId = warehouse.getId();
+
+        String url = String.format("/v3/warehouses/%d", warehouseId);
+        WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
+            .name("NEW NAME")
+            .space(999)
+            .address("NEW ADDRESS")
+            .addressDetail("NEW ADDR_DETAIL")
+            .description("NEW DESC")
+            .availableWeekdays(101010)
+            .openAt("08:00")
+            .closeAt("23:30")
+            .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
+            .cctvExist(false)
+            .doorLockExist(false)
+            .airConditioningType(AirConditioningType.NONE)
+            .workerExist(false)
+            .canPark(false)
+            .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+            .warehouseType(WarehouseType.FULFILLMENT)
+            .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+            .minReleasePerMonth(101)
+            .latitude(11.11)
+            .longitude(33.33)
+            .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
+            .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
+            .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
+            .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
+            .build();
+
+        RequestEntity<WarehouseUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .body(body);
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsRejected() {
+        Warehouses warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Integer warehouseId = warehouse.getId();
+
+        String url = String.format("/v3/warehouses/%d", warehouseId);
+        WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
+            .name("NEW NAME")
+            .space(999)
+            .address("NEW ADDRESS")
+            .addressDetail("NEW ADDR_DETAIL")
+            .description("NEW DESC")
+            .availableWeekdays(101010)
+            .openAt("08:00")
+            .closeAt("23:30")
+            .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
+            .cctvExist(false)
+            .doorLockExist(false)
+            .airConditioningType(AirConditioningType.NONE)
+            .workerExist(false)
+            .canPark(false)
+            .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+            .warehouseType(WarehouseType.FULFILLMENT)
+            .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+            .minReleasePerMonth(101)
+            .latitude(11.11)
+            .longitude(33.33)
+            .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
+            .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
+            .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
+            .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
+            .build();
+
+        RequestEntity<WarehouseUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .body(body);
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 }

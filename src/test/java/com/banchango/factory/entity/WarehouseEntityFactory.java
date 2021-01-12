@@ -52,6 +52,10 @@ public class WarehouseEntityFactory {
         return create(accessToken, WarehouseStatus.VIEWABLE, new MainItemType[] {});
     }
 
+    public Warehouses createViewableWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+        return create(accessToken, WarehouseStatus.VIEWABLE, mainItemTypes);
+    }
+
     public Warehouses createInProgressWithNoMainItemTypes(String accessToken) {
         return create(accessToken, WarehouseStatus.IN_PROGRESS, new MainItemType[] {});
     }
@@ -60,8 +64,20 @@ public class WarehouseEntityFactory {
         return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes);
     }
 
-    public Warehouses createViewableWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
-        return create(accessToken, WarehouseStatus.VIEWABLE, mainItemTypes);
+    public Warehouses createdRejectedWithNoMainItemTypes(String accessToken) {
+        return create(accessToken, WarehouseStatus.REJECTED, new MainItemType[] {});
+    }
+
+    public Warehouses createRejectedWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+        return create(accessToken, WarehouseStatus.REJECTED, mainItemTypes);
+    }
+
+    public Warehouses createDeletedWithNoMainItemTypes(String accessToken) {
+        return create(accessToken, WarehouseStatus.DELETED, new MainItemType[] {});
+    }
+
+    public Warehouses createDeletedWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+        return create(accessToken, WarehouseStatus.DELETED, mainItemTypes);
     }
 
     private Warehouses create(String accessToken, WarehouseStatus status, MainItemType[] mainItemTypes) {

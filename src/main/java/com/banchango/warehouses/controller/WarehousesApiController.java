@@ -70,9 +70,10 @@ public class WarehousesApiController {
     @PutMapping("/v3/warehouses/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public WarehouseDetailResponseDto updateWarehouseInfo(
-        @RequestParam Integer warehouseId,
-        @RequestBody WarehouseUpdateRequestDto warehouseUpdateRequestDto
+        @PathVariable Integer warehouseId,
+        @RequestBody WarehouseUpdateRequestDto warehouseUpdateRequestDto,
+        @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        return warehousesService.updateWarehouse(warehouseId, warehouseUpdateRequestDto);
+        return warehousesService.updateWarehouse(accessToken, warehouseId, warehouseUpdateRequestDto);
     }
 }
