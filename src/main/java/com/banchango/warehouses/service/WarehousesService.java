@@ -1,5 +1,6 @@
 package com.banchango.warehouses.service;
 
+import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.service.EmailSender;
@@ -7,6 +8,7 @@ import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -17,14 +19,13 @@ import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.tools.EmailContent;
+import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.users.exception.UserIdNotFoundException;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
-import com.banchango.warehouses.exception.WarehouseNotFoundException;
-import com.banchango.warehouses.exception.WarehouseSearchException;
+import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
+import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +42,7 @@ public class WarehousesService {
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
     private final EmailSender emailSender;
+    private final MainItemTypesRepository mainItemTypesRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -71,6 +73,7 @@ public class WarehousesService {
                 .minReleasePerMonth(warehouseInsertRequestDto.getMinReleasePerMonth())
                 .latitude(warehouseInsertRequestDto.getLatitude())
                 .longitude(warehouseInsertRequestDto.getLongitude())
+                .status(WarehouseStatus.IN_PROGRESS)
                 .build();
 
         final Warehouses savedWarehouse = warehousesRepository.save(warehouse);
@@ -157,6 +160,24 @@ public class WarehousesService {
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
         Warehouses warehouse = warehousesRepository.findByIdAndStatus(warehouseId, WarehouseStatus.VIEWABLE).orElseThrow(WarehouseIdNotFoundException::new);
 
+        return new WarehouseDetailResponseDto(warehouse, noImageUrl);
+    }
+
+    @Transactional
+    public WarehouseDetailResponseDto updateWarehouse(String accessToken, Integer warehouseId, WarehouseUpdateRequestDto requestDto) {
+        int userId = JwtTokenUtil.extractUserId(accessToken);
+
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(warehouse.getStatus().equals(WarehouseStatus.DELETED)) throw new WarehouseNotFoundException();
+        if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
+
+        if(!warehouse.getUserId().equals(userId)) throw new ForbiddenUserIdException();
+
+        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).equals(requestDto.getMainItemTypes())) {
+            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+        }
+
+        warehouse.update(requestDto);
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
 }
