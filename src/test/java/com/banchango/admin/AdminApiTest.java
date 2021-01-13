@@ -169,6 +169,7 @@ public class AdminApiTest extends ApiTestContext {
         assertNotNull(response.getBody().getCreatedAt());
         assertEquals(response.getBody().getWarehouseCondition(), Arrays.asList(WarehouseEntityFactory.WAREHOUSE_CONDITIONS));
         assertEquals(WarehouseStatus.VIEWABLE, response.getBody().getStatus());
+        assertNull(response.getBody().getBlogUrl());
     }
 
     @Test
@@ -251,7 +252,7 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(Integer.valueOf(101), firstResponse.getBody().getMinReleasePerMonth());
         assertEquals(Double.valueOf(11.11), firstResponse.getBody().getLatitude());
         assertEquals(Double.valueOf(33.33), firstResponse.getBody().getLongitude());
-        assertEquals(null, firstResponse.getBody().getBlogUrl());
+        assertNull(firstResponse.getBody().getBlogUrl());
         assertTrue(firstResponse.getBody().getInsurances().containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
         assertTrue(firstResponse.getBody().getSecurityCompanies().containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
         assertTrue(firstResponse.getBody().getDeliveryTypes().containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
@@ -282,7 +283,7 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(Integer.valueOf(101), secondResponse.getBody().getMinReleasePerMonth());
         assertEquals(Double.valueOf(11.11), secondResponse.getBody().getLatitude());
         assertEquals(Double.valueOf(33.33), secondResponse.getBody().getLongitude());
-        assertEquals(null, secondResponse.getBody().getBlogUrl());
+        assertNull(secondResponse.getBody().getBlogUrl());
         assertEquals(secondResponse.getBody().getInsurances(), Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}));
         assertEquals(secondResponse.getBody().getSecurityCompanies(), Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}));
         assertEquals(secondResponse.getBody().getDeliveryTypes(), Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}));

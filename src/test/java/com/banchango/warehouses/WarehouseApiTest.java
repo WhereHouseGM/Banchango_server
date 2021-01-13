@@ -430,6 +430,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertNotNull(warehouse.getMinReleasePerMonth());
         assertNotNull(warehouse.getLatitude());
         assertNotNull(warehouse.getLongitude());
+        assertNull(warehouse.getBlogUrl());
         assertNotNull(warehouse.getMainImageUrl());
         assertNotNull(warehouse.getDeliveryTypes());
         assertNotNull(warehouse.getWarehouseCondition());
