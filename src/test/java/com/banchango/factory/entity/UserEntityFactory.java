@@ -4,8 +4,12 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.withdraws.Withdraws;
+import com.banchango.domain.withdraws.WithdrawsRepository;
+import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserEntityFactory {
@@ -15,17 +19,32 @@ public class UserEntityFactory {
     private static final String TELEPHONE_NUMBER = "02-0000-0100";
     private static final UserType TYPE = UserType.OWNER;
     private static final String COMPANY_NAME = "COMPANY_NAME";
+    private static final String CAUSE = "CAUSE";
 
     private UsersRepository usersRepository;
+    private WithdrawsRepository withdrawsRepository;
     private int countUsers = 0;
 
     @Autowired
-    public UserEntityFactory(UsersRepository usersRepository) {
+    public UserEntityFactory(UsersRepository usersRepository, WithdrawsRepository withdrawsRepository) {
         this.usersRepository = usersRepository;
+        this.withdrawsRepository = withdrawsRepository;
     }
 
     public Users createUser() {
         return create(UserRole.USER);
+    }
+
+    public Users createDeletedUser() {
+        Users user = create(UserRole.USER);
+
+        Withdraws withdraw = Withdraws.builder()
+            .userId(user.getUserId())
+            .cause(CAUSE)
+            .build();
+        withdrawsRepository.save(withdraw);
+
+        return user;
     }
 
     public Users createAdmin() {
