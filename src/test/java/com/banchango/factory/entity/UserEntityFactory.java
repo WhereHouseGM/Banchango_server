@@ -6,10 +6,8 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.withdraws.Withdraws;
 import com.banchango.domain.withdraws.WithdrawsRepository;
-import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserEntityFactory {
