@@ -173,6 +173,12 @@ public class Warehouses extends BaseTimeEntity {
     }
 
     public void update(WarehouseUpdateRequestParentDto dto) {
+        if(dto instanceof WarehouseAdminUpdateRequestDto) {
+            WarehouseAdminUpdateRequestDto _dto = (WarehouseAdminUpdateRequestDto)dto;
+            this.status = _dto.getStatus();
+            this.blogUrl = _dto.getBlogUrl();
+        }
+
         this.name = dto.getName();
         this.space = dto.getSpace();
         this.address = dto.getAddress();
