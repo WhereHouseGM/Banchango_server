@@ -22,7 +22,6 @@ public class WarehouseAdminUpdateRequestDto extends WarehouseUpdateRequestParent
     @ValueOfEnum(enumClass = WarehouseStatus.class)
     WarehouseStatus status;
 
-    @NotNull(message = "blogUrl이 없습니다. 블로그 주소가 없다면 null이라도 전달해주시기 바랍니다")
     private String blogUrl;
 
     @Builder
