@@ -1,9 +1,14 @@
 package com.banchango.users;
 
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.warehouses.WarehouseStatus;
+import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.request.UserSignupRequestFactory;
 import com.banchango.factory.request.UserUpdateRequestFactory;
@@ -26,6 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -42,6 +48,9 @@ public class UserApiTest {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private WarehousesRepository warehousesRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -322,5 +331,37 @@ public class UserApiTest {
         ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void withdrawUser_responseIsOk_IfAllConditionsAreRight() {
+        Users userToDelete = userEntityFactory.createUser();
+        String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(userToDelete.getUserId(), userToDelete.getRole());
+        UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
+
+        RequestEntity<Void> request = RequestEntity.post(URI.create("/v3/users/withdraw"))
+            .header("Authorization", "Bearer " + accessTokenForUserToDelete)
+            .body(userWithdrawRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getMessage());
+
+        List<Warehouses> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
+        warehouses.stream()
+            .forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
+    }
+
+    @Test
+    public void withdrawUser_responseIsUnAuthorized_IfAccessTokenNotGiven() {
+        UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
+
+        RequestEntity<Void> request = RequestEntity.post(URI.create("/v3/users/withdraw"))
+            .body(userWithdrawRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 }
