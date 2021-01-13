@@ -95,6 +95,9 @@ public class Warehouses extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private WarehouseStatus status;
 
+    @Column(length = 300)
+    private String blogUrl;
+
     @Setter
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
@@ -134,7 +137,7 @@ public class Warehouses extends BaseTimeEntity {
     private List<MainItemTypes> mainItemTypes = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, WarehouseStatus status) {
+    public Warehouses(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, WarehouseStatus status, String blogUrl) {
         this.name = name;
         this.space = space;
         this.address = address;
@@ -155,6 +158,7 @@ public class Warehouses extends BaseTimeEntity {
         this.warehouseType = warehouseType;
         this.minReleasePerMonth = minReleasePerMonth;
         this.status = status;
+        this.blogUrl = blogUrl;
     }
 
     public WarehouseImages getMainImage() {
