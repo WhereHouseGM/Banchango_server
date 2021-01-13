@@ -9,6 +9,7 @@ import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.estimates.dto.EstimateSearchDto;
+import com.banchango.estimates.exception.EstimateNotFoundException;
 import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
@@ -78,6 +79,7 @@ public class EstimatesService {
             })
             .filter(estimateSearchDto -> !estimateSearchDto.getWarehouse().equals(null))
             .collect(Collectors.toList());
+        if(estimates.size() == 0) throw new EstimateNotFoundException();
 
         return estimates;
     }

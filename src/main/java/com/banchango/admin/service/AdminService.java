@@ -16,7 +16,7 @@ import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
-import com.banchango.estimateitems.exception.EstimateItemNoContentException;
+import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.exception.EstimateNotFoundException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
@@ -82,6 +82,8 @@ public class AdminService {
         if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
         else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);
 
+        if(estimates.isEmpty()) throw new EstimateNotFoundException();
+
         return estimates.stream()
             .map(estimate -> {
                 EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
@@ -117,7 +119,7 @@ public class AdminService {
         Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
 
         List<EstimateItems> estimateItems = estimate.getEstimateItems();
-        if(estimateItems.size() == 0) throw new EstimateItemNoContentException();
+        if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
 
         return estimate.getEstimateItems().stream()
             .map(estimateItem -> new EstimateItemSearchDto(estimateItem))
