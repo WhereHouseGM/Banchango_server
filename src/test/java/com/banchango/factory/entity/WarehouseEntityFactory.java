@@ -112,20 +112,20 @@ public class WarehouseEntityFactory {
         warehouse.setMainItemTypes(mainItemTypesList);
 
         List<WarehouseConditions> warehouseConditions = Arrays.stream(WAREHOUSE_CONDITIONS)
-                .map(WarehouseConditions::new)
+                .map(condition -> new WarehouseConditions(condition, warehouse))
                 .collect(Collectors.toList());
         warehouse.setWarehouseConditions(warehouseConditions);
 
         List<Insurances> insurances = Arrays.stream(INSURANCES)
-                .map(Insurances::new).collect(Collectors.toList());
+                .map(insurance -> new Insurances(insurance, warehouse)).collect(Collectors.toList());
         warehouse.setInsurances(insurances);
 
         List<SecurityCompanies> securityCompanies = Arrays.stream(SECURITY_COMPANIES)
-                .map(SecurityCompanies::new).collect(Collectors.toList());
+                .map(company -> new SecurityCompanies(company, warehouse)).collect(Collectors.toList());
         warehouse.setSecurityCompanies(securityCompanies);
 
         List<DeliveryTypes> deliveryTypes = Arrays.stream(DELIVERY_TYPES)
-                .map(DeliveryTypes::new).collect(Collectors.toList());
+                .map(type -> new DeliveryTypes(type, warehouse)).collect(Collectors.toList());
         warehouse.setDeliveryTypes(deliveryTypes);
 
         return warehousesRepository.save(warehouse);

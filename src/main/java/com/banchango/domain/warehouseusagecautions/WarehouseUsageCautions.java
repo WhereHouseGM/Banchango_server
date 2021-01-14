@@ -1,5 +1,6 @@
 package com.banchango.domain.warehouseusagecautions;
 
+import com.banchango.domain.warehouses.Warehouses;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +20,13 @@ public class WarehouseUsageCautions {
     @Column(nullable = false, length = 200)
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouses warehouse;
+
     @Builder
-    public WarehouseUsageCautions(String content) {
+    public WarehouseUsageCautions(String content, Warehouses warehouse) {
         this.content = content;
+        this.warehouse = warehouse;
     }
 }
