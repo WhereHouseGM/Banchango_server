@@ -1,5 +1,6 @@
 package com.banchango.domain.deliverytypes;
 
+import com.banchango.domain.warehouses.Warehouses;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +20,13 @@ public class DeliveryTypes {
     @Column(length = 30, nullable = false)
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouses warehouse;
+
     @Builder
-    public DeliveryTypes(String name) {
+    public DeliveryTypes(String name, Warehouses warehouse) {
         this.name = name;
+        this.warehouse = warehouse;
     }
 }
