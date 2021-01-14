@@ -22,8 +22,10 @@ public class WarehouseAdminUpdateRequestDto extends WarehouseUpdateRequestParent
     @ValueOfEnum(enumClass = WarehouseStatus.class)
     WarehouseStatus status;
 
+    private String blogUrl;
+
     @Builder
-    public WarehouseAdminUpdateRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<MainItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies, WarehouseStatus status) {
+    public WarehouseAdminUpdateRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<MainItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies, WarehouseStatus status, String blogUrl) {
         this.name = name;
         this.space = space;
         this.address = address;
@@ -50,5 +52,6 @@ public class WarehouseAdminUpdateRequestDto extends WarehouseUpdateRequestParent
         this.insurances = insurances;
         this.securityCompanies = securityCompanies;
         this.status = status;
+        this.blogUrl = blogUrl;
     }
 }

@@ -39,6 +39,7 @@ public class WarehouseDetailResponseDto {
     private Integer minReleasePerMonth;
     private Double latitude;
     private Double longitude;
+    private String blogUrl;
 
     private String mainImageUrl;
 
@@ -115,6 +116,7 @@ public class WarehouseDetailResponseDto {
         this.minReleasePerMonth = warehouse.getMinReleasePerMonth();
         this.latitude = warehouse.getLatitude();
         this.longitude = warehouse.getLongitude();
+        this.blogUrl = warehouse.getBlogUrl();
         this.mainImageUrl = mainImage != null ? mainImage.getUrl() : defaultImageUrl;
         this.deliveryTypes = deliveryTypes;
         this.warehouseCondition = warehouseConditionNames;
