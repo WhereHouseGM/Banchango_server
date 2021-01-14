@@ -210,83 +210,9 @@ public class Warehouses extends BaseTimeEntity {
         }
 
     }
-//    public void update(WarehouseAdminUpdateRequestDto dto) {
-//        this.name = dto.getName();
-//        this.space = dto.getSpace();
-//        this.address = dto.getAddress();
-//        this.addressDetail = dto.getAddressDetail();
-//        this.description = dto.getDescription();
-//        this.availableWeekdays = dto.getAvailableWeekdays();
-//        this.openAt = dto.getOpenAt();
-//        this.closeAt = dto.getCloseAt();
-//        this.availableTimeDetail = dto.getAvailableTimeDetail();
-//        this.cctvExist = dto.getCctvExist();
-//        this.doorLockExist = dto.getDoorLockExist();
-//        this.airConditioningType = dto.getAirConditioningType();
-//        this.workerExist = dto.getWorkerExist();
-//        this.canPark = dto.getCanPark();
-//        this.latitude = dto.getLatitude();
-//        this.longitude = dto.getLongitude();
-//        this.warehouseType = dto.getWarehouseType();
-//        this.minReleasePerMonth = dto.getMinReleasePerMonth();
-//        this.status = dto.getStatus();
-//        this.deliveryTypes = dto.getDeliveryTypes().stream()
-//                .map(type -> new DeliveryTypes(type, this)).collect(Collectors.toList());
-//        this.insurances = dto.getInsurances().stream()
-//                .map(insurance -> new Insurances(insurance, this)).collect(Collectors.toList());
-//        this.securityCompanies = dto.getSecurityCompanies().stream()
-//                .map(company -> new SecurityCompanies(company, this)).collect(Collectors.toList());
-//        this.warehouseConditions = dto.getWarehouseCondition().stream()
-//                .map(condition -> new WarehouseConditions(condition, this)).collect(Collectors.toList());
-//        if(dto.getWarehouseFacilityUsages() != null) {
-//            this.warehouseFacilityUsages = dto.getWarehouseFacilityUsages().stream()
-//                    .map(usage -> new WarehouseFacilityUsages(usage, this)).collect(Collectors.toList());
-//        }
-//        if(dto.getWarehouseUsageCautions() != null) {
-//            this.warehouseUsageCautions = dto.getWarehouseUsageCautions().stream()
-//                    .map(caution -> new WarehouseUsageCautions(caution, this)).collect(Collectors.toList());
-//        }
-//        this.mainItemTypes = dto.getMainItemTypes().stream()
-//                .map(type -> new MainItemTypes(type, this)).collect(Collectors.toList());
-//        this.status = dto.getStatus();
-//    }
-//
-//    public void update(WarehouseUpdateRequestDto dto) {
-//        this.name = dto.getName();
-//        this.space = dto.getSpace();
-//        this.address = dto.getAddress();
-//        this.addressDetail = dto.getAddressDetail();
-//        this.description = dto.getDescription();
-//        this.availableWeekdays = dto.getAvailableWeekdays();
-//        this.openAt = dto.getOpenAt();
-//        this.closeAt = dto.getCloseAt();
-//        this.availableTimeDetail = dto.getAvailableTimeDetail();
-//        this.cctvExist = dto.getCctvExist();
-//        this.doorLockExist = dto.getDoorLockExist();
-//        this.airConditioningType = dto.getAirConditioningType();
-//        this.workerExist = dto.getWorkerExist();
-//        this.canPark = dto.getCanPark();
-//        this.latitude = dto.getLatitude();
-//        this.longitude = dto.getLongitude();
-//        this.warehouseType = dto.getWarehouseType();
-//        this.minReleasePerMonth = dto.getMinReleasePerMonth();
-//        this.deliveryTypes = dto.getDeliveryTypes().stream()
-//             .map(type -> new DeliveryTypes(type, this)).collect(Collectors.toList());
-//        this.insurances = dto.getInsurances().stream()
-//            .map(insurance -> new Insurances(insurance, this)).collect(Collectors.toList());
-//        this.securityCompanies = dto.getSecurityCompanies().stream()
-//            .map(company -> new SecurityCompanies(company, this)).collect(Collectors.toList());
-//        this.warehouseConditions = dto.getWarehouseCondition().stream()
-//            .map(condition -> new WarehouseConditions(condition, this)).collect(Collectors.toList());
-//        if(dto.getWarehouseFacilityUsages() != null) {
-//            this.warehouseFacilityUsages = dto.getWarehouseFacilityUsages().stream()
-//                .map(usage -> new WarehouseFacilityUsages(usage, this)).collect(Collectors.toList());
-//        }
-//        if(dto.getWarehouseUsageCautions() != null) {
-//            this.warehouseUsageCautions = dto.getWarehouseUsageCautions().stream()
-//                .map(caution -> new WarehouseUsageCautions(caution, this)).collect(Collectors.toList());
-//        }
-//        this.mainItemTypes = dto.getMainItemTypes().stream()
-//            .map(type -> new MainItemTypes(type, this)).collect(Collectors.toList());
-//    }
+
+    public void updateStatus(WarehouseStatus status) {
+        this.status = status;
+    }
+
 }

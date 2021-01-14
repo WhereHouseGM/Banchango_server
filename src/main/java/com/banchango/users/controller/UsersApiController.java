@@ -59,4 +59,15 @@ public class UsersApiController {
         usersService.changePassword(accessToken, changePasswordRequestDto);
         return new BasicMessageResponseDto("비밀번호를 성공적으로 변경했습니다");
     }
+
+    @PostMapping("/v3/users/withdraw")
+    @ResponseStatus(HttpStatus.OK)
+    @ValidateRequired
+    public BasicMessageResponseDto withdrawUser(
+        @Valid @RequestBody UserWithdrawRequestDto userWithdrawRequestDto,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        usersService.withdrawUser(accessToken, userWithdrawRequestDto);
+        return new BasicMessageResponseDto("탈퇴에 성공했습니다");
+    }
 }

@@ -161,14 +161,14 @@ public class EstimateApiTests extends ApiTestContext {
     }
 
     @Test
-    public void get_estimateByUserId_responseIsNoContent_IfEstimatesNotExist() {
+    public void get_estimateByUserId_responseIsNotFound_IfEstimatesNotExist() {
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/estimates"))
             .header("Authorization", "Bearer " + accessToken)
             .build();
 
         ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
