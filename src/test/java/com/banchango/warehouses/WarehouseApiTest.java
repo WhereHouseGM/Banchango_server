@@ -593,11 +593,11 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(Double.valueOf(11.11), secondResponse.getBody().getLatitude());
         assertEquals(Double.valueOf(33.33), secondResponse.getBody().getLongitude());
         assertNull(secondResponse.getBody().getBlogUrl());
-        assertEquals(secondResponse.getBody().getInsurances(), Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}));
-        assertEquals(secondResponse.getBody().getSecurityCompanies(), Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}));
-        assertEquals(secondResponse.getBody().getDeliveryTypes(), Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}));
-        assertEquals(secondResponse.getBody().getWarehouseCondition(), Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}));
-        assertEquals(secondResponse.getBody().getWarehouseFacilityUsages(), Arrays.asList(new String[]{"WH_FACILITY_USAGE"}));
+        assertTrue(secondResponse.getBody().getInsurances().containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
+        assertTrue(secondResponse.getBody().getSecurityCompanies().containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
+        assertTrue(secondResponse.getBody().getDeliveryTypes().containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
+        assertTrue(secondResponse.getBody().getWarehouseCondition().containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
+        assertTrue(secondResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
     }
 
     @Test
