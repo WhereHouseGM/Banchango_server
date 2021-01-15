@@ -13,6 +13,7 @@ import com.banchango.estimates.exception.EstimateNotFoundException;
 import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
+import com.banchango.warehouses.exception.WarehouseNotFoundException;
 import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class EstimatesService {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
 
         WarehouseStatus status = warehousesRepository.findStatusById(estimateInsertRequestDto.getWarehouseId());
+        if(status == null) throw new WarehouseNotFoundException("창고가 없습니다");
         if(!status.equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
 
         Estimates newEstimate = Estimates.builder()
