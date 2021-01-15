@@ -134,6 +134,22 @@ public class EstimateApiTests extends ApiTestContext {
     }
 
     @Test
+    public void post_estimate_responseIsNotFound_IfWarehouseNotExist() {
+        Integer warehouseId = 0;
+        EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouseId);
+
+        RequestEntity<EstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .body(newEstimateInsertRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody().getMessage());
+    }
+
+    @Test
     public void get_estimateByUserId_responseIsOk_IfAllConditionsAreRight() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
