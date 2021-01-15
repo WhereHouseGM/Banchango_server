@@ -157,6 +157,7 @@ public class EstimateApiTests extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
+                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 

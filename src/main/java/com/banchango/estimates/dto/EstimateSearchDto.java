@@ -13,11 +13,13 @@ public class EstimateSearchDto {
     private Integer id;
     private WarehouseSummaryDto warehouse;
     private EstimateStatus status;
+    private Integer montlyAverageRelease;
 
     public EstimateSearchDto(Estimates estimate) {
         this.id = estimate.getId();
         this.warehouse = null;
         this.status = estimate.getStatus();
+        this.montlyAverageRelease = estimate.getMonthlyAverageRelease();
     }
 
     public void updateWarehouse(WarehouseSummaryDto warehouse) {

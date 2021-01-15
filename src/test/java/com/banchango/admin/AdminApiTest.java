@@ -418,6 +418,7 @@ public class AdminApiTest extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertNotNull(estimateSearchDto.getStatus());
+                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 
@@ -445,6 +446,7 @@ public class AdminApiTest extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
+                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 
@@ -472,6 +474,7 @@ public class AdminApiTest extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.IN_PROGRESS);
+                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 
@@ -499,6 +502,7 @@ public class AdminApiTest extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.DONE);
+                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 
