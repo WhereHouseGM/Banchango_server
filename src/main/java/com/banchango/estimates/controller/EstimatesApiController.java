@@ -21,9 +21,7 @@ public class EstimatesApiController {
         @RequestBody EstimateInsertRequestDto estimateInsertRequestDto,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        estimatesService.saveEstimate(accessToken, estimateInsertRequestDto);
-
-        return new BasicMessageResponseDto("견적 문의가 성공적으로 생성됐습니다");
+        return estimatesService.saveEstimate(accessToken, estimateInsertRequestDto);
     }
 
     @GetMapping("/v3/users/{userId}/estimates")

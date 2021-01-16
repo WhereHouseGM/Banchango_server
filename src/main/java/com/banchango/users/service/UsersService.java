@@ -86,8 +86,8 @@ public class UsersService {
         Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
 
         String originalPasswordFromTable = user.getPassword();
-        String originalPasswordFromRequset = changePasswordRequestDto.getOriginalPassword();
-        if(!originalPasswordFromRequset.equals(originalPasswordFromTable)) throw new PasswordDoesNotMatchException();
+        String originalPasswordFromRequest = changePasswordRequestDto.getOriginalPassword();
+        if(!originalPasswordFromRequest.equals(originalPasswordFromTable)) throw new PasswordDoesNotMatchException();
 
         user.updatePassword(changePasswordRequestDto.getNewPassword());
     }
