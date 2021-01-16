@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 public class EstimatesApiController {
@@ -18,12 +20,10 @@ public class EstimatesApiController {
     @ResponseStatus(HttpStatus.OK)
     @ValidateRequired
     public BasicMessageResponseDto saveEstimate(
-        @RequestBody EstimateInsertRequestDto estimateInsertRequestDto,
+        @Valid @RequestBody EstimateInsertRequestDto estimateInsertRequestDto,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        estimatesService.saveEstimate(accessToken, estimateInsertRequestDto);
-
-        return new BasicMessageResponseDto("견적 문의가 성공적으로 생성됐습니다");
+        return estimatesService.saveEstimate(accessToken, estimateInsertRequestDto);
     }
 
     @GetMapping("/v3/users/{userId}/estimates")
