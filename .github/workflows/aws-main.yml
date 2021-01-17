@@ -43,7 +43,7 @@ jobs:
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
-        ECR_REGISTRY: ${{ secrets.PRD_AWS_ECR_REPOSITORY }}
+        ECR_REGISTRY: ${{ secrets.AWS_ECR_REPOSITORY }}
         ECR_REPOSITORY: banchango_server_product
         IMAGE_TAG: latest
       run: |
