@@ -93,8 +93,10 @@ public class UsersService {
     }
 
     @Transactional
-    public void withdrawUser(String accessToken, UserWithdrawRequestDto userWithdrawRequestDto) {
-        int userId = JwtTokenUtil.extractUserId(accessToken);
+    public void withdrawUser(String accessToken, Integer userId, UserWithdrawRequestDto userWithdrawRequestDto) {
+        int userIdFromAccessToken = JwtTokenUtil.extractUserId(accessToken);
+        if(!userId.equals(userIdFromAccessToken)) throw new ForbiddenUserIdException("해당 사용자를 탈퇴 처리할 수 있는 권한이 없습니다");
+
         deleteUser(userId, userWithdrawRequestDto);
         deleteWarehousesOwnedByUser(userId);
     }
