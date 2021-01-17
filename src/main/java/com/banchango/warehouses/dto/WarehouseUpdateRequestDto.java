@@ -1,31 +1,21 @@
-package com.banchango.admin.dto;
+package com.banchango.warehouses.dto;
 
-import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
-import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.WarehouseType;
-import com.banchango.warehouses.dto.WarehouseUpdateRequestParentDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
-public class WarehouseAdminUpdateRequestDto extends WarehouseUpdateRequestParentDto {
-
-    @NotNull(message = "Warehouse status is missing.")
-    @ValueOfEnum(enumClass = WarehouseStatus.class)
-    WarehouseStatus status;
-
-    private String blogUrl;
+public class WarehouseUpdateRequestDto extends WarehouseUpdateRequestParentDto{
 
     @Builder
-    public WarehouseAdminUpdateRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<MainItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies, WarehouseStatus status, String blogUrl) {
+    public WarehouseUpdateRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<MainItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies) {
         this.name = name;
         this.space = space;
         this.address = address;
@@ -51,7 +41,5 @@ public class WarehouseAdminUpdateRequestDto extends WarehouseUpdateRequestParent
         this.warehouseUsageCautions = warehouseUsageCautions;
         this.insurances = insurances;
         this.securityCompanies = securityCompanies;
-        this.status = status;
-        this.blogUrl = blogUrl;
     }
 }

@@ -50,4 +50,8 @@ public class Estimates extends BaseTimeEntity {
         this.monthlyAverageRelease = monthlyAverageRelease;
         this.estimateItems = estimateItems;
     }
+
+    public void updateStatus(EstimateStatus status) {
+        this.status = status;
+    }
 }

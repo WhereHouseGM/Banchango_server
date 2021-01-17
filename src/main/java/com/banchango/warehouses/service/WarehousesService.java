@@ -7,6 +7,7 @@ import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -17,14 +18,13 @@ import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.tools.EmailContent;
+import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.users.exception.UserIdNotFoundException;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseInvalidAccessException;
-import com.banchango.warehouses.exception.WarehouseNotFoundException;
-import com.banchango.warehouses.exception.WarehouseSearchException;
+import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
+import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +41,7 @@ public class WarehousesService {
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
     private final EmailSender emailSender;
+    private final MainItemTypesRepository mainItemTypesRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -71,6 +72,7 @@ public class WarehousesService {
                 .minReleasePerMonth(warehouseInsertRequestDto.getMinReleasePerMonth())
                 .latitude(warehouseInsertRequestDto.getLatitude())
                 .longitude(warehouseInsertRequestDto.getLongitude())
+                .status(WarehouseStatus.IN_PROGRESS)
                 .build();
 
         final Warehouses savedWarehouse = warehousesRepository.save(warehouse);
@@ -80,30 +82,30 @@ public class WarehousesService {
         savedWarehouse.setMainItemTypes(mainItemTypes);
 
         List<DeliveryTypes> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
-                .map(type -> new DeliveryTypes(type)).collect(Collectors.toList());
+                .map(type -> new DeliveryTypes(type, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setDeliveryTypes(deliveryTypes);
 
         List<WarehouseConditions> warehouseConditions = warehouseInsertRequestDto.getWarehouseCondition().stream()
-                .map(type -> new WarehouseConditions(type)).collect(Collectors.toList());
+                .map(type -> new WarehouseConditions(type, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseConditions(warehouseConditions);
 
         List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseInsertRequestDto.getWarehouseFacilityUsages().stream()
-                .map(usage -> new WarehouseFacilityUsages(usage)).collect(Collectors.toList());
+                .map(usage -> new WarehouseFacilityUsages(usage, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseFacilityUsages(warehouseFacilityUsages);
 
         List<WarehouseUsageCautions> warehouseUsageCautions = warehouseInsertRequestDto.getWarehouseUsageCautions().stream()
-                .map(caution -> new WarehouseUsageCautions(caution)).collect(Collectors.toList());
+                .map(caution -> new WarehouseUsageCautions(caution, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseUsageCautions(warehouseUsageCautions);
 
         List<Insurances> insurances = warehouseInsertRequestDto.getInsurances().stream()
-                .map(insurance -> new Insurances(insurance)).collect(Collectors.toList());
+                .map(insurance -> new Insurances(insurance, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setInsurances(insurances);
 
         List<SecurityCompanies> securityCompanies = warehouseInsertRequestDto.getSecurityCompanies().stream()
-                .map(company -> new SecurityCompanies(company)).collect(Collectors.toList());
+                .map(company -> new SecurityCompanies(company, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setSecurityCompanies(securityCompanies);
 
-        EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchango.shop");
+        EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchangohub.com");
         return emailSender.send(user.getEmail(), emailContent, true);
     }
 
@@ -157,6 +159,24 @@ public class WarehousesService {
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
         Warehouses warehouse = warehousesRepository.findByIdAndStatus(warehouseId, WarehouseStatus.VIEWABLE).orElseThrow(WarehouseIdNotFoundException::new);
 
+        return new WarehouseDetailResponseDto(warehouse, noImageUrl);
+    }
+
+    @Transactional
+    public WarehouseDetailResponseDto updateWarehouse(String accessToken, Integer warehouseId, WarehouseUpdateRequestDto requestDto) {
+        int userId = JwtTokenUtil.extractUserId(accessToken);
+
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        if(warehouse.getStatus().equals(WarehouseStatus.DELETED)) throw new WarehouseNotFoundException();
+        if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
+
+        if(!warehouse.getUserId().equals(userId)) throw new ForbiddenUserIdException();
+
+        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).equals(requestDto.getMainItemTypes())) {
+            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+        }
+
+        warehouse.update(requestDto);
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
 }

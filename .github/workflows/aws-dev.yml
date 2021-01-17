@@ -46,9 +46,9 @@ jobs:
         aws-region: ${{ secrets.AWS_S3_REGION }}
 
     - name: build
-      run: ./gradlew build -x test
+      run: ./gradlew build
       env:
-        PRD_WH_DATASOURCE_URL: ${{ secrets.PRD_WH_DATASOURCE_URL }}
+        PRD_WH_DATASOURCE_URL: ${{ secrets.DEV_WH_DATASOURCE_URL }}
         TEST_WH_DATASOURCE_URL: ${{ secrets.TEST_WH_DATASOURCE_URL }}
         WH_DATASOURCE_USERNAME: ${{ secrets.WH_DATASOURCE_USERNAME }}
         WH_DATASOURCE_PASSWORD: ${{ secrets.WH_DATASOURCE_PASSWORD }}

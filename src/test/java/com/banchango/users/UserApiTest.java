@@ -1,9 +1,13 @@
 package com.banchango.users;
 
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.warehouses.WarehouseStatus;
+import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.request.UserSignupRequestFactory;
 import com.banchango.factory.request.UserUpdateRequestFactory;
@@ -26,6 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -42,6 +47,9 @@ public class UserApiTest {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private WarehousesRepository warehousesRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -98,12 +106,12 @@ public class UserApiTest {
     }
 
     @Test
-    public void userInfo_responseIsNoContent_IfUserIdIsWrong() {
+    public void userInfo_responseIsNotFound_IfUserIdIsWrong() {
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken).build();
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -135,7 +143,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void signIn_responseIsNoContent_IfUserEmailIsWrong(){
+    public void signIn_responseIsNotFound_IfUserEmailIsWrong(){
         UserSigninRequestDto requestBody = new UserSigninRequestDto(WRONG_EMAIL, WRONG_PASSWORD);
 
         RequestEntity<UserSigninRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-in"))
@@ -144,11 +152,11 @@ public class UserApiTest {
 
         ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
-    public void signIn_responseIsNoContent_IfUserPasswordIsWrong() {
+    public void signIn_responseIsNotFound_IfUserPasswordIsWrong() {
 
         UserSigninRequestDto requestBody = new UserSigninRequestDto(user.getEmail(), WRONG_PASSWORD);
 
@@ -158,7 +166,21 @@ public class UserApiTest {
 
         ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void signIn_responseIsNotFound_IfUserIsWithdrawm(){
+        Users deletedUser = userEntityFactory.createDeletedUser();
+        UserSigninRequestDto requestBody = new UserSigninRequestDto(deletedUser.getEmail(), deletedUser.getPassword());
+
+        RequestEntity<UserSigninRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-in"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(requestBody);
+
+        ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -309,7 +331,7 @@ public class UserApiTest {
     }
 
     @Test
-    public void updateInfo_responseIsNoContent_IfUserIdIsWrong() {
+    public void updateInfo_responseIsNotFound_IfUserIdIsWrong() {
         UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
         String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
@@ -321,6 +343,68 @@ public class UserApiTest {
 
         ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void withdrawUser_responseIsOk_IfAllConditionsAreRight() {
+        Users userToDelete = userEntityFactory.createUser();
+        String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(userToDelete.getUserId(), userToDelete.getRole());
+        UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
+
+        RequestEntity<UserWithdrawRequestDto> request = RequestEntity.post(URI.create("/v3/users/withdraw"))
+            .header("Authorization", "Bearer " + accessTokenForUserToDelete)
+            .body(userWithdrawRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getMessage());
+
+        List<Warehouses> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
+        warehouses.stream()
+            .forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
+    }
+
+    @Test
+    public void withdrawUser_responseIsUnAuthorized_IfAccessTokenNotGiven() {
+        UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
+
+        RequestEntity<UserWithdrawRequestDto> request = RequestEntity.post(URI.create("/v3/users/withdraw"))
+            .body(userWithdrawRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void withdrawUser_responseIsNotFound_IfUserNotExist() {
+        int userId = 0;
+        String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
+        UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
+
+        RequestEntity<UserWithdrawRequestDto> request = RequestEntity.post(URI.create("/v3/users/withdraw"))
+            .header("Authorization", "Bearer " + accessTokenForUserToDelete)
+            .body(userWithdrawRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void withdrawUser_responseIsConflict_IfUserAlreadyDeleted() {
+        Users deletedUser = userEntityFactory.createDeletedUser();
+        String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(deletedUser.getUserId(), deletedUser.getRole());
+        UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
+
+        RequestEntity<UserWithdrawRequestDto> request = RequestEntity.post(URI.create("/v3/users/withdraw"))
+            .header("Authorization", "Bearer " + accessTokenForUserToDelete)
+            .body(userWithdrawRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
 }

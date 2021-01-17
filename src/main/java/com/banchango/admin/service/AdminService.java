@@ -1,12 +1,10 @@
 package com.banchango.admin.service;
 
-import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
-import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
+import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
@@ -17,8 +15,10 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.estimateitems.dto.EstimateItemSearchDto;
+import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.dto.EstimateSearchDto;
-import com.banchango.estimates.exception.EstimateNoContentException;
+import com.banchango.estimates.exception.EstimateNotFoundException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
@@ -76,12 +76,13 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    public List<EstimateSearchDto> getEstimates(EstimateStatus status, PageRequest pageRequest) {
+    public List<EstimateSearchDto> getEstimates(String acccessToken, EstimateStatus status, PageRequest pageRequest) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(acccessToken));
         List<Estimates> estimates;
         if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
         else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);
 
-        if(estimates.isEmpty()) throw new EstimateNoContentException();
+        if(estimates.isEmpty()) throw new EstimateNotFoundException();
 
         return estimates.stream()
             .map(estimate -> {
@@ -100,6 +101,28 @@ public class AdminService {
                 }
                 return estimateSearchResponseDto;
             })
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateEstimateStatus(String accessToken, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        estimate.updateStatus(estimateStatusUpdateRequestDto.getStatus());
+    }
+
+    @Transactional(readOnly = true)
+    public List<EstimateItemSearchDto> getEstimateItems(String accessToken, Integer estimateId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        Integer userId = JwtTokenUtil.extractUserId(accessToken);
+
+        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+
+        List<EstimateItems> estimateItems = estimate.getEstimateItems();
+        if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
+
+        return estimate.getEstimateItems().stream()
+            .map(estimateItem -> new EstimateItemSearchDto(estimateItem))
             .collect(Collectors.toList());
     }
 }

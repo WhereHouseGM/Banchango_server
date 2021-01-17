@@ -1,13 +1,16 @@
 package com.banchango.users.exception;
 
-import com.banchango.common.exception.NoContentException;
+import com.banchango.common.exception.NotFoundException;
 
-public class UserNotFoundException extends NoContentException{
+public class UserNotFoundException extends NotFoundException {
 
-    private static final long serialVersionUID = 1L;
     public static final String MESSAGE = "이메일 또는 비밀번호가 잘못되었습니다.";
 
+    public UserNotFoundException(String message) {
+        super(message);
+    }
+
     public UserNotFoundException() {
-        super(MESSAGE);
+        this(MESSAGE);
     }
 }

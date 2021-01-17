@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.CONFLICT)
 public class ConflictException extends ApiException{
     public ConflictException(String message) {
-        super(message);
+        super(message, HttpStatus.CONFLICT);
     }
 
     public ConflictException() {

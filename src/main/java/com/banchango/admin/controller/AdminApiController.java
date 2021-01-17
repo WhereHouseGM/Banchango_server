@@ -1,5 +1,6 @@
 package com.banchango.admin.controller;
 
+import com.banchango.admin.dto.EstimateStatusUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
@@ -9,6 +10,7 @@ import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.warehouses.WarehouseStatus;
+import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
 import com.banchango.estimates.dto.EstimateSearchResponseDto;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
@@ -98,9 +100,33 @@ public class AdminApiController {
     public EstimateSearchResponseDto getEstimates(
         @RequestParam(required = false)EstimateStatus status,
         @RequestParam Integer page,
-        @RequestParam Integer size
+        @RequestParam Integer size,
+        @RequestAttribute(name = "accessToken") String accessToken
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return new EstimateSearchResponseDto(adminService.getEstimates(status, pageRequest));
+        return new EstimateSearchResponseDto(adminService.getEstimates(accessToken, status, pageRequest));
+    }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @PatchMapping("/v3/admin/estimates/{estimateId}/status")
+    @ResponseStatus(HttpStatus.OK)
+    public BasicMessageResponseDto updateEstimateStatus(
+        @PathVariable Integer estimateId,
+        @Valid @RequestBody EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        adminService.updateEstimateStatus(accessToken, estimateId, estimateStatusUpdateRequestDto);
+
+        return new BasicMessageResponseDto("견적 문의 상태를 성공적으로 변경했습니다");
+    }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/estimates/{estimateId}/items")
+    @ResponseStatus(HttpStatus.OK)
+    public EstimateItemSearchResponseDto getEstimateItems(
+        @PathVariable Integer estimateId,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        return new EstimateItemSearchResponseDto(adminService.getEstimateItems(accessToken, estimateId));
     }
 }
