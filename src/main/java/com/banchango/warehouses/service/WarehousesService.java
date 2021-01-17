@@ -1,6 +1,5 @@
 package com.banchango.warehouses.service;
 
-import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.service.EmailSender;
