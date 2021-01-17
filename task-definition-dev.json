@@ -32,7 +32,7 @@
     },
     {
         "name": "PRD_WH_DATASOURCE_URL",
-        "valueFrom": "PRD_WH_DATASOURCE_URL"
+        "valueFrom": "DEV_WH_DATASOURCE_URL"
     },
     {
         "name": "AWS_S3_BUCKET",
