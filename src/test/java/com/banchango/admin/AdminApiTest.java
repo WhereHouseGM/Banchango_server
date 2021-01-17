@@ -410,7 +410,7 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
-        response.getBody().getEstimates().stream()
+        response.getBody().getEstimates()
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertNotNull(estimateSearchDto.getWarehouse());
@@ -418,7 +418,7 @@ public class AdminApiTest extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertNotNull(estimateSearchDto.getStatus());
-                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 
@@ -438,7 +438,7 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
-        response.getBody().getEstimates().stream()
+        response.getBody().getEstimates()
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertNotNull(estimateSearchDto.getWarehouse());
@@ -446,7 +446,7 @@ public class AdminApiTest extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
-                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 
@@ -466,7 +466,7 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
-        response.getBody().getEstimates().stream()
+        response.getBody().getEstimates()
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertNotNull(estimateSearchDto.getWarehouse());
@@ -474,7 +474,7 @@ public class AdminApiTest extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.IN_PROGRESS);
-                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 
@@ -494,7 +494,7 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
-        response.getBody().getEstimates().stream()
+        response.getBody().getEstimates()
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertNotNull(estimateSearchDto.getWarehouse());
@@ -502,7 +502,7 @@ public class AdminApiTest extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.DONE);
-                assertEquals(estimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
             });
     }
 
@@ -629,7 +629,7 @@ public class AdminApiTest extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimateItems());
 
-        response.getBody().getEstimateItems().stream()
+        response.getBody().getEstimateItems()
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertEquals(estimateSearchDto.getName(), EstimateItemEntityFactory.NAME);

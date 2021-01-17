@@ -1,8 +1,6 @@
 package com.banchango.warehouses;
 
 import com.banchango.ApiTestContext;
-import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
-import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.mainitemtypes.MainItemType;

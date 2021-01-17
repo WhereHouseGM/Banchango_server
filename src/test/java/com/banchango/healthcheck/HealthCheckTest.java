@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
