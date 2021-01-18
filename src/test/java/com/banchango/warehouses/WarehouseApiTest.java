@@ -11,6 +11,7 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.*;
+import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
@@ -43,6 +44,9 @@ import static org.junit.Assert.*;
 public class WarehouseApiTest extends ApiTestContext {
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private UserEntityFactory userEntityFactory;
 
     @Autowired
     private WarehousesRepository warehouseRepository;
@@ -845,5 +849,154 @@ public class WarehouseApiTest extends ApiTestContext {
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void get_myWarehouses_responseIsOk_IfWarehouseStatusViewable() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+            .header("Authorization", "Bearer "+accessToken)
+            .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getId());
+
+        response.getBody().getWarehouses().stream()
+            .forEach(myWarehouse -> {
+                assertNotNull(myWarehouse.getWarehouses());
+                assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
+                assertEquals(WarehouseEntityFactory.ADDRESS, myWarehouse.getAddress());
+                assertEquals(WarehouseEntityFactory.ADDRESS_DETAIL, myWarehouse.getAddressDetail());
+                assertEquals(WarehouseStatus.VIEWABLE, myWarehouse.getStatus());
+                assertNotNull(myWarehouse.getMainImageUrl());
+            });
+
+        warehouseRepository.delete(warehouse);
+    }
+
+
+    @Test
+    public void get_myWarehouses_responseIsOk_IfWarehouseStatusInProgress() {
+        Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+            .header("Authorization", "Bearer "+accessToken)
+            .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getId());
+
+        response.getBody().getWarehouses().stream()
+            .forEach(myWarehouse -> {
+                assertNotNull(myWarehouse.getWarehouses());
+                assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
+                assertEquals(WarehouseEntityFactory.ADDRESS, myWarehouse.getAddress());
+                assertEquals(WarehouseEntityFactory.ADDRESS_DETAIL, myWarehouse.getAddressDetail());
+                assertEquals(WarehouseStatus.IN_PROGRESS, myWarehouse.getStatus());
+                assertNotNull(myWarehouse.getMainImageUrl());
+            });
+
+        warehouseRepository.delete(warehouse);
+    }
+
+    @Test
+    public void get_myWarehouses_responseIsOk_IfWarehouseStatusRejected() {
+        Warehouses warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+            .header("Authorization", "Bearer "+accessToken)
+            .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getId());
+
+        response.getBody().getWarehouses().stream()
+            .forEach(myWarehouse -> {
+                assertNotNull(myWarehouse.getWarehouses());
+                assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
+                assertEquals(WarehouseEntityFactory.ADDRESS, myWarehouse.getAddress());
+                assertEquals(WarehouseEntityFactory.ADDRESS_DETAIL, myWarehouse.getAddressDetail());
+                assertEquals(WarehouseStatus.REJECTED, myWarehouse.getStatus());
+                assertNotNull(myWarehouse.getMainImageUrl());
+            });
+
+        warehouseRepository.delete(warehouse);
+    }
+
+    @Test
+    public void get_myWarehouses_responseIsUnauthorized_IfAccessTokenNotGiven() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+            .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+
+        warehouseRepository.delete(warehouse);
+    }
+
+    @Test
+    public void get_myWarehouses_responseIsForbidden_IfGivenOtherUserId() {
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Users otherUser = userEntityFactory.createUser();
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+otherUser.getUserId()+"/warehouses"))
+            .header("Authorization", "Bearer "+accessToken)
+            .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        warehouseRepository.delete(warehouse);
+    }
+
+    @Test
+    public void get_myWarehouses_responseIsNotFound_IfWarehouseNotExist() {
+        warehouseRepository.deleteAll();
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+            .header("Authorization", "Bearer "+accessToken)
+            .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void get_myWarehouses_responseIsNotFound_IfWarehouseStatusDeleted() {
+        Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+            .header("Authorization", "Bearer "+accessToken)
+            .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        warehouseRepository.delete(warehouse);
+    }
+
+    @Test
+    public void get_myWarehouses_responseIsNotFound_IfUserNotExist() {
+        int invalidUserId = 0;
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+invalidUserId+"/warehouses"))
+            .header("Authorization", "Bearer "+accessToken)
+            .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }
