@@ -21,7 +21,7 @@ public class Estimates extends BaseTimeEntity {
     @Column(name = "estimate_id")
     private Integer id;
 
-    @Column(nullable = false, length = 1000)
+    @Column(length = 1000)
     private String content;
 
     @Column(nullable = false)

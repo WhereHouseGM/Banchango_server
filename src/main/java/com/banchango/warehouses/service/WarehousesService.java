@@ -128,7 +128,7 @@ public class WarehousesService {
             .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl, mainItemTypes))
             .collect(Collectors.toList());
 
-        if(warehouses.size() == 0) throw new WarehouseNotFoundException();
+        if(warehouses.size() == 0) throw new WarehouseNotFoundException("해당 카테고리로 등록된 창고 결과가 존재하지 않습니다");
 
         return warehouses;
     }
