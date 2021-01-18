@@ -75,4 +75,14 @@ public class WarehousesApiController {
     ) {
         return warehousesService.updateWarehouse(accessToken, warehouseId, warehouseUpdateRequestDto);
     }
+
+    @ValidateRequired
+    @GetMapping("/v3/users/{userId}/warehouses")
+    @ResponseStatus(HttpStatus.OK)
+    public MyWarehousesResponseDto getMyWarehouses(
+        @PathVariable Integer userId,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        return new MyWarehousesResponseDto(warehousesService.getMyWarehouses(accessToken, userId));
+    }
 }

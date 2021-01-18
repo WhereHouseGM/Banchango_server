@@ -14,10 +14,7 @@ import com.banchango.domain.warehouses.*;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.users.exception.UserEmailNotFoundException;
-import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
-import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
+import com.banchango.warehouses.dto.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -862,11 +859,11 @@ public class WarehouseApiTest extends ApiTestContext {
         ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody().getId());
+        assertNotNull(response.getBody().getWarehouses());
 
         response.getBody().getWarehouses().stream()
             .forEach(myWarehouse -> {
-                assertNotNull(myWarehouse.getWarehouses());
+                assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
                 assertEquals(WarehouseEntityFactory.ADDRESS, myWarehouse.getAddress());
                 assertEquals(WarehouseEntityFactory.ADDRESS_DETAIL, myWarehouse.getAddressDetail());
@@ -889,11 +886,11 @@ public class WarehouseApiTest extends ApiTestContext {
         ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody().getId());
+        assertNotNull(response.getBody().getWarehouses());
 
         response.getBody().getWarehouses().stream()
             .forEach(myWarehouse -> {
-                assertNotNull(myWarehouse.getWarehouses());
+                assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
                 assertEquals(WarehouseEntityFactory.ADDRESS, myWarehouse.getAddress());
                 assertEquals(WarehouseEntityFactory.ADDRESS_DETAIL, myWarehouse.getAddressDetail());
@@ -906,7 +903,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_myWarehouses_responseIsOk_IfWarehouseStatusRejected() {
-        Warehouses warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken);
+        Warehouses warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
             .header("Authorization", "Bearer "+accessToken)
@@ -915,11 +912,11 @@ public class WarehouseApiTest extends ApiTestContext {
         ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody().getId());
+        assertNotNull(response.getBody().getWarehouses());
 
         response.getBody().getWarehouses().stream()
             .forEach(myWarehouse -> {
-                assertNotNull(myWarehouse.getWarehouses());
+                assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
                 assertEquals(WarehouseEntityFactory.ADDRESS, myWarehouse.getAddress());
                 assertEquals(WarehouseEntityFactory.ADDRESS_DETAIL, myWarehouse.getAddressDetail());
@@ -991,8 +988,10 @@ public class WarehouseApiTest extends ApiTestContext {
     @Test
     public void get_myWarehouses_responseIsNotFound_IfUserNotExist() {
         int invalidUserId = 0;
+        String invalidUserAccessToken = JwtTokenUtil.generateAccessToken(invalidUserId, UserRole.USER);
+
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+invalidUserId+"/warehouses"))
-            .header("Authorization", "Bearer "+accessToken)
+            .header("Authorization", "Bearer "+invalidUserAccessToken)
             .build();
 
         ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
