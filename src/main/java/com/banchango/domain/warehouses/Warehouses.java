@@ -94,7 +94,7 @@ public class Warehouses extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private WarehouseStatus status;
 
-    @Column(length = 300)
+    @Column(length = 1000)
     private String blogUrl;
 
     @Setter
