@@ -20,10 +20,7 @@ import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.tools.EmailContent;
 import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.users.exception.UserIdNotFoundException;
-import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
-import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
+import com.banchango.warehouses.dto.*;
 import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,8 +102,9 @@ public class WarehousesService {
                 .map(company -> new SecurityCompanies(company, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setSecurityCompanies(securityCompanies);
 
-        EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchangohub.com");
-        return emailSender.send(user.getEmail(), emailContent, true);
+//        EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchangohub.com");
+//        return emailSender.send(user.getEmail(), emailContent, true);
+        return new BasicMessageResponseDto("창고가 정상적으로 등록되었습니다.");
     }
 
     @Transactional(readOnly = true)
@@ -128,7 +126,7 @@ public class WarehousesService {
             .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl, mainItemTypes))
             .collect(Collectors.toList());
 
-        if(warehouses.size() == 0) throw new WarehouseNotFoundException();
+        if(warehouses.size() == 0) throw new WarehouseNotFoundException("해당 카테고리로 등록된 창고 결과가 존재하지 않습니다");
 
         return warehouses;
     }
@@ -178,6 +176,22 @@ public class WarehousesService {
 
         warehouse.update(requestDto);
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyWarehouseDto> getMyWarehouses(String accessToken, Integer userId) {
+        int userIdFromAccessToken = JwtTokenUtil.extractUserId(accessToken);
+        if(!userId.equals(userIdFromAccessToken)) throw new ForbiddenUserIdException("해당 사용자의 창고 목록을 볼 수 있는 권한이 없습니다");
+        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+
+        List<MyWarehouseDto> warehouses = warehousesRepository.findByUserId(userId).stream()
+            .filter(warehouse -> !warehouse.getStatus().equals(WarehouseStatus.DELETED))
+            .map(warehouse -> new MyWarehouseDto(warehouse, noImageUrl))
+            .collect(Collectors.toList());
+
+        if(warehouses.isEmpty()) throw new WarehouseNotFoundException();
+
+        return warehouses;
     }
 }
 
