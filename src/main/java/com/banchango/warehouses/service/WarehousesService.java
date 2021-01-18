@@ -20,10 +20,7 @@ import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.tools.EmailContent;
 import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.users.exception.UserIdNotFoundException;
-import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
-import com.banchango.warehouses.dto.WarehouseSearchDto;
-import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
+import com.banchango.warehouses.dto.*;
 import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -178,6 +175,22 @@ public class WarehousesService {
 
         warehouse.update(requestDto);
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyWarehouseDto> getMyWarehouses(String accessToken, Integer userId) {
+        int userIdFromAccessToken = JwtTokenUtil.extractUserId(accessToken);
+        if(!userId.equals(userIdFromAccessToken)) throw new ForbiddenUserIdException("해당 사용자의 창고 목록을 볼 수 있는 권한이 없습니다");
+        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+
+        List<MyWarehouseDto> warehouses = warehousesRepository.findByUserId(userId).stream()
+            .filter(warehouse -> !warehouse.getStatus().equals(WarehouseStatus.DELETED))
+            .map(warehouse -> new MyWarehouseDto(warehouse, noImageUrl))
+            .collect(Collectors.toList());
+
+        if(warehouses.isEmpty()) throw new WarehouseNotFoundException();
+
+        return warehouses;
     }
 }
 
