@@ -551,7 +551,9 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void put_WarehouseInfoIsUpdated_ifAllConditionsAreRight() {
+    public void put_WarehouseInfoIsUpdated_ifUserIsOwner() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -648,6 +650,8 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsNotFound_ifWarehouseNotExist() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Integer warehouseId = 0;
         String url = String.format("/v3/warehouses/%d", warehouseId);
         WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
@@ -688,6 +692,8 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsNotFound_ifWarehouseStatusIsDeleted() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createDeletedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
@@ -730,6 +736,8 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsUnAuthorized_ifTokenNotGiven() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -770,9 +778,14 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifOtherUsersTokenGiven() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Users actualOwner = userEntityFactory.createUserWithOwnerType();
+        Users owner = userEntityFactory.createUserWithOwnerType();
+
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+        String actualOwnerAccessToken = JwtTokenUtil.generateAccessToken(actualOwner);
+
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(actualOwnerAccessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
-        String otherUserAccessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
 
         String url = String.format("/v3/warehouses/%d", warehouseId);
         WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
@@ -804,7 +817,7 @@ public class WarehouseApiTest extends ApiTestContext {
 
         RequestEntity<WarehouseUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
             .contentType(MediaType.APPLICATION_JSON)
-            .header("Authorization", "Bearer" + otherUserAccessToken)
+            .header("Authorization", "Bearer" + accessToken)
             .body(body);
 
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
@@ -813,6 +826,8 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsInProgress() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
@@ -855,6 +870,8 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsRejected() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
