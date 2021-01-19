@@ -60,8 +60,12 @@ public class UserEntityFactory {
         return user;
     }
 
-    public Users createAdmin() {
+    public Users createAdminWithOwnerType() {
         return create(UserRole.ADMIN, UserType.OWNER);
+    }
+
+    public Users createAdminWithShipperType() {
+        return create(UserRole.ADMIN, UserType.SHIPPER);
     }
 
     private Users create(UserRole role, UserType type) {
