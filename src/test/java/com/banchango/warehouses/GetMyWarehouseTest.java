@@ -49,10 +49,12 @@ public class GetMyWarehouseTest extends ApiTestContext {
     private WarehouseEntityFactory warehouseEntityFactory;
 
     @Test
-    public void get_myWarehouses_responseIsOk_IfWarehouseStatusViewable() {
+    public void get_myWarehouses_responseIsOk_IfWarehouseStatusViewable_and_UserIsOwner() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+owner.getUserId()+"/warehouses"))
             .header("Authorization", "Bearer "+accessToken)
             .build();
 
@@ -70,16 +72,31 @@ public class GetMyWarehouseTest extends ApiTestContext {
                 assertEquals(WarehouseStatus.VIEWABLE, myWarehouse.getStatus());
                 assertNotNull(myWarehouse.getMainImageUrl());
             });
-
-        warehouseRepository.delete(warehouse);
     }
 
+    @Test
+    public void get_myWarehouses_responseIsForbidden_IfWarehouseStatusViewable_and_UserIsShipper() {
+        Users owner = userEntityFactory.createUserWithShipperType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+owner.getUserId()+"/warehouses"))
+                .header("Authorization", "Bearer "+accessToken)
+                .build();
+
+        ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
 
     @Test
     public void get_myWarehouses_responseIsOk_IfWarehouseStatusInProgress() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+
         Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+owner.getUserId()+"/warehouses"))
             .header("Authorization", "Bearer "+accessToken)
             .build();
 
@@ -103,9 +120,12 @@ public class GetMyWarehouseTest extends ApiTestContext {
 
     @Test
     public void get_myWarehouses_responseIsOk_IfWarehouseStatusRejected() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+
         Warehouses warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+owner.getUserId()+"/warehouses"))
             .header("Authorization", "Bearer "+accessToken)
             .build();
 
@@ -129,9 +149,12 @@ public class GetMyWarehouseTest extends ApiTestContext {
 
     @Test
     public void get_myWarehouses_responseIsUnauthorized_IfAccessTokenNotGiven() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+owner.getUserId()+"/warehouses"))
             .build();
 
         ResponseEntity<MyWarehousesResponseDto> response = restTemplate.exchange(request, MyWarehousesResponseDto.class);
@@ -143,8 +166,11 @@ public class GetMyWarehouseTest extends ApiTestContext {
 
     @Test
     public void get_myWarehouses_responseIsForbidden_IfGivenOtherUserId() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Users otherUser = userEntityFactory.createUser();
+        Users otherUser = userEntityFactory.createUserWithOwnerType();
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+otherUser.getUserId()+"/warehouses"))
             .header("Authorization", "Bearer "+accessToken)
@@ -161,7 +187,10 @@ public class GetMyWarehouseTest extends ApiTestContext {
     public void get_myWarehouses_responseIsNotFound_IfWarehouseNotExist() {
         warehouseRepository.deleteAll();
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+owner.getUserId()+"/warehouses"))
             .header("Authorization", "Bearer "+accessToken)
             .build();
 
@@ -172,9 +201,12 @@ public class GetMyWarehouseTest extends ApiTestContext {
 
     @Test
     public void get_myWarehouses_responseIsNotFound_IfWarehouseStatusDeleted() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+
         Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
 
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+user.getUserId()+"/warehouses"))
+        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+owner.getUserId()+"/warehouses"))
             .header("Authorization", "Bearer "+accessToken)
             .build();
 
@@ -188,7 +220,7 @@ public class GetMyWarehouseTest extends ApiTestContext {
     @Test
     public void get_myWarehouses_responseIsNotFound_IfUserNotExist() {
         int invalidUserId = 0;
-        String invalidUserAccessToken = JwtTokenUtil.generateAccessToken(invalidUserId, UserRole.USER);
+        String invalidUserAccessToken = JwtTokenUtil.generateAccessToken(invalidUserId, UserRole.USER, UserType.OWNER);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+invalidUserId+"/warehouses"))
             .header("Authorization", "Bearer "+invalidUserAccessToken)
