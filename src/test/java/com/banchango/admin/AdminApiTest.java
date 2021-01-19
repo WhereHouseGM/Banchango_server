@@ -69,47 +69,7 @@ public class AdminApiTest extends ApiTestContext {
     Users admin = null;
     String adminAccessToken = null;
 
-    @Before
-    public void beforeTest() {
-        if(user == null) {
-            user = userEntityFactory.createUser();
-            accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), UserRole.USER);
-        }
-        if(admin == null) {
-            admin = userEntityFactory.createAdmin();
-            adminAccessToken = JwtTokenUtil.generateAccessToken(admin.getUserId(), UserRole.ADMIN);
-        }
-        warehousesRepository.deleteAll();
-    }
 
-    @After
-    public void afterTest() {
-        warehousesRepository.deleteAll();
-        usersRepository.deleteAll();
-    }
-
-
-    @Test
-    public void get_AllInfosOfSpecificWarehouse_responseIsNotFound_IfWarehouseNotExist() {
-        String url = String.format("/v3/admin/warehouses/%d", 0);
-        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
-                .header("Authorization", "Bearer " + adminAccessToken)
-                .build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    public void get_AllInfosOfSpecificWarehouse_responseIsForbidden_IfTokenIsWrong() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
-        Integer warehouseId = warehouse.getId();
-        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
-        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
-                .header("Authorization", "Bearer " + accessToken)
-                .build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
 
     @Test
     public void put_WarehouseInfoIsUpdatedWithoutBlogUrl_ifAllConditionsAreRight() {
