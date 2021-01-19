@@ -31,10 +31,7 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class EstimateItemsApiTest extends ApiTestContext {
+public class GetEstimateItemsTest extends ApiTestContext {
     @Autowired
     private UsersRepository usersRepository;
 
@@ -53,33 +50,19 @@ public class EstimateItemsApiTest extends ApiTestContext {
     @Autowired
     private EstimateEntityFactory estimateEntityFactory;
 
-    String accessToken = null;
-    Users user = null;
-
-    @Before
-    public void beforeTest() {
-        estimatesRepository.deleteAll();
-        usersRepository.deleteAll();
-        warehouseRepository.deleteAll();
-
-        user = userEntityFactory.createUser();
-        accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), user.getRole());
-    }
-
-    @After
-    public void afterTest() {
-        estimatesRepository.deleteAll();
-        usersRepository.deleteAll();
-        warehouseRepository.deleteAll();
-    }
-
     @Test
-    public void get_estimateItemsByestimateId_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+    public void get_estimateItemsByestimateId_responseIsOk_IfUserIsShipper() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
+
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
+
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Estimates estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), shipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
-            .header("Authorization", "Bearer " + accessToken)
+            .header("Authorization", "Bearer " + shipperAccessToken)
             .build();
 
         ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
@@ -103,11 +86,17 @@ public class EstimateItemsApiTest extends ApiTestContext {
 
     @Test
     public void get_estimateItemsByestimateId_responseIsNotFound_IfEstimateNotExist() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
+
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
+
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
         final int estimateId = 0;
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimateId+"/items"))
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", "Bearer " + shipperAccessToken)
                 .build();
 
         ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
@@ -117,11 +106,17 @@ public class EstimateItemsApiTest extends ApiTestContext {
 
     @Test
     public void get_estimateItemsByestimateId_responseIsNotFound_IfWarehouseStatusIsDeleted() {
-        Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
-        Estimates estimate = estimateEntityFactory.createInProgressWithoutEstimateItems(warehouse.getId(), user.getUserId());
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
+
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
+
+        Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(ownerAccessToken);
+        Estimates estimate = estimateEntityFactory.createInProgressWithoutEstimateItems(warehouse.getId(), shipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", "Bearer " + shipperAccessToken)
                 .build();
 
         ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
@@ -131,8 +126,13 @@ public class EstimateItemsApiTest extends ApiTestContext {
 
     @Test
     public void get_estimateItemsByestimateId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
+
+        Users shipper = userEntityFactory.createUserWithShipperType();
+
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Estimates estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), shipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
                 .build();
@@ -144,12 +144,18 @@ public class EstimateItemsApiTest extends ApiTestContext {
 
     @Test
     public void get_estimateItemsByestimateId_responseIsForbidden_IfOtherUsersAccessTokenIsGiven() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), user.getUserId());
-        String otherUsersAccessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
+
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        Users otherShipper = userEntityFactory.createUserWithShipperType();
+        String otherShipperAccessToken = JwtTokenUtil.generateAccessToken(otherShipper);
+
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Estimates estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), shipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
-                .header("Authorization", "Bearer " + otherUsersAccessToken)
+                .header("Authorization", "Bearer " + otherShipperAccessToken)
                 .build();
 
         ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
