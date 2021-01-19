@@ -199,69 +199,6 @@ public class UserApiTest {
     }
 
     @Test
-    public void signUp_responseIsOK() {
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createNewUser();
-
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-up"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(requestBody);
-
-        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
-
-        Users savedUser = usersRepository.findByEmail(requestBody.getEmail()).orElseThrow(UserEmailNotFoundException::new);
-        Integer userId = savedUser.getUserId();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        UserInfoResponseDto responseBody = response.getBody();
-
-        assertEquals(requestBody.getEmail(), responseBody.getEmail());
-        assertEquals(userId, responseBody.getUserId());
-        assertEquals(requestBody.getName(), responseBody.getName());
-        assertEquals(requestBody.getEmail(), responseBody.getEmail());
-        assertEquals(requestBody.getType(), responseBody.getType());
-        assertEquals(requestBody.getPhoneNumber(), responseBody.getPhoneNumber());
-        assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
-        assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
-
-        assertTrue(savedUser.getCreatedAt().isBefore(LocalDateTime.now()));
-        assertTrue(savedUser.getLastModifiedAt().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
-    public void signUp_responseIsConflict_IfEmailExists() {
-
-        UserSignupRequestDto requestBody = UserSignupRequestFactory.createDuplicateUser(user.getEmail());
-
-        RequestEntity<UserSignupRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-up"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(requestBody);
-
-        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
-
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-    }
-
-    @Test
-    public void signUp_responseIsBadRequest_IfRequestBodyIsWrong() {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("name", "TEST_NAME");
-        requestBody.put("email", "TEST_EMAIL_");
-        requestBody.put("password", "1234");
-        requestBody.put("type", "WRONG_TYPE");
-        requestBody.put("phoneNumber", "010234234");
-        requestBody.put("companyName", "companyName");
-
-        RequestEntity<String> request = RequestEntity.post(URI.create("/v3/users/sign-up"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(requestBody.toString());
-
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-    @Test
     public void updateInfo_responseIsOk() {
         UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
