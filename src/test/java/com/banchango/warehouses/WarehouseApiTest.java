@@ -51,37 +51,6 @@ public class WarehouseApiTest extends ApiTestContext {
     @Autowired
     private WarehouseEntityFactory warehouseEntityFactory;
 
-    String accessToken = null;
-    Users user = null;
-
-    @Before
-    public void beforeTest() {
-        if(user == null) {
-            user = Users.builder().name("TEST_NAME")
-                    .email("TEST_EMAIL1")
-                    .password("123")
-                    .type(UserType.OWNER)
-                    .phoneNumber("010123123")
-                    .telephoneNumber("010123123")
-                    .companyName("companyName")
-                    .role(UserRole.USER)
-                    .build();
-            usersRepository.save(user);
-
-            accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), user.getRole());
-        }
-        warehouseRepository.deleteAll();
-    }
-
-    @After
-    public void afterTest() {
-        if(user != null) {
-            user = usersRepository.findByEmail("TEST_EMAIL1").orElseThrow(UserEmailNotFoundException::new);
-            usersRepository.delete(user);
-        }
-        warehouseRepository.deleteAll();
-    }
-
     // POST API에 이메일 전송 기능이 추가되어, 아래 테스트 코드는 일단 주석 처리 하겠습니다.
 //    @Test
 //    public void post_warehouse_responseIsOk_IfAllConditionsAreRight() {
@@ -215,34 +184,6 @@ public class WarehouseApiTest extends ApiTestContext {
         }
 
         warehouseRepository.delete(tempWarehouse);
-    }
-
-    @Test
-    public void get_warehouseByAddress_responseIsNoContent_IfIsViewableIsFalse() {
-        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[] { MainItemType.CLOTH });
-
-        String addressQuery = "addr";
-        String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
-        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
-                .build();
-
-        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        warehouseRepository.delete(tempWarehouse);
-    }
-
-    @Test
-    public void get_warehouseByAddress_responseIsNoContent_IfWarehouseNotExist() {
-        warehouseRepository.deleteAll();
-        String addressQuery = "addr";
-        String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
-        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
-                .build();
-
-        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
