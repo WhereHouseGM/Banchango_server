@@ -2,6 +2,7 @@ package com.banchango.users.controller;
 
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
+import com.banchango.domain.users.UserType;
 import com.banchango.users.dto.*;
 import com.banchango.users.service.UsersService;
 import lombok.RequiredArgsConstructor;

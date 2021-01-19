@@ -22,10 +22,20 @@ public class JwtTokenUtil {
         return extractClaim(token, JwtTokenUtil::getUserRole);
     }
 
+    public static UserType extractUserType(String token) {
+        return extractClaim(token, JwtTokenUtil::getUserType);
+    }
+
     private static UserRole getUserRole(Claims claim) {
         String roleString = claim.get("role", String.class);
         if(roleString == null) throw new AuthenticateException("Jwt Claim에 role이 없습니다.");
         return UserRole.valueOf(roleString);
+    }
+
+    private static UserType getUserType(Claims claim) {
+        String typeString = claim.get("type", String.class);
+        if(typeString == null) throw new AuthenticateException("Jwt Claim에 type이 없습니다.");
+        return UserType.valueOf(typeString);
     }
 
     public static int extractUserId(String token) {
