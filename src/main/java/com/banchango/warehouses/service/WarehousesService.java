@@ -102,9 +102,8 @@ public class WarehousesService {
                 .map(company -> new SecurityCompanies(company, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setSecurityCompanies(securityCompanies);
 
-//        EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchangohub.com");
-//        return emailSender.send(user.getEmail(), emailContent, true);
-        return new BasicMessageResponseDto("창고가 정상적으로 등록되었습니다.");
+        EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 wherehousegm@gmail.com으로 답변 주세요.", "반창고", "dev.banchangohub.com");
+        return emailSender.send(user.getEmail(), emailContent, true);
     }
 
     @Transactional(readOnly = true)
