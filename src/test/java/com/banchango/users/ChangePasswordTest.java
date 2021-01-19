@@ -1,8 +1,10 @@
-package com.banchango;
+package com.banchango.users;
 
+import com.banchango.ApiTestContext;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.UserRole;
+import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.factory.entity.UserEntityFactory;
@@ -25,10 +27,6 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-// TODO: 작업 중인거 다 머지 되면 UserApiTest로 이동
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
 public class ChangePasswordTest extends ApiTestContext {
     @Autowired
     private UsersRepository usersRepository;
@@ -36,31 +34,18 @@ public class ChangePasswordTest extends ApiTestContext {
     @Autowired
     private UserEntityFactory userEntityFactory;
 
-    String accessToken = null;
-    Users user = null;
-
     private final String VALID_PASSWORD = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
     private final String INVALID_PASSWORD = "test";
 
-    @Before
-    public void beforeTest() {
-        usersRepository.deleteAll();
-
-        user = userEntityFactory.createUser();
-        accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), user.getRole());
-    }
-
-    @After
-    public void afterTest() {
-        usersRepository.deleteAll();
-    }
-
     @Test
-    public void patch_passwordChange_responseIsOk_IfAllConditionsAreRight() {
+    public void patch_passwordChange_responseIsOk_IfUserIsOwner() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
         String originalPassword = user.getPassword();
         String newPassword = VALID_PASSWORD;
 
-        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(user.getPassword(), newPassword);
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(originalPassword, newPassword);
 
         RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
             .contentType(MediaType.APPLICATION_JSON)
@@ -74,7 +59,31 @@ public class ChangePasswordTest extends ApiTestContext {
     }
 
     @Test
+    public void patch_passwordChange_responseIsOk_IfUserIsShipper() {
+        Users user = userEntityFactory.createUserWithShipperType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
+        String originalPassword = user.getPassword();
+        String newPassword = VALID_PASSWORD;
+
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(originalPassword, newPassword);
+
+        RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + accessToken)
+                .body(changePasswordRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getMessage());
+    }
+
+    @Test
     public void patch_passwordChange_responseIsForbidden_IfOriginalPasswordNotMatch() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
         String originalPassword = user.getPassword();
         String newPassword = VALID_PASSWORD;
 
@@ -92,6 +101,9 @@ public class ChangePasswordTest extends ApiTestContext {
 
     @Test
     public void patch_passwordChange_responseIsBadRequest_IfNewPasswordLengthIsNot64() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
         String originalPassword = user.getPassword();
         String newPassword = INVALID_PASSWORD;
 
@@ -109,10 +121,13 @@ public class ChangePasswordTest extends ApiTestContext {
 
     @Test
     public void patch_changePassword_responseIsUnauthorized_IfAccessTokenNotGiven() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
         String originalPassword = user.getPassword();
         String newPassword = VALID_PASSWORD;
 
-        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(user.getPassword(), newPassword);
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(originalPassword, newPassword);
 
         RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
             .contentType(MediaType.APPLICATION_JSON)
@@ -125,10 +140,11 @@ public class ChangePasswordTest extends ApiTestContext {
 
     @Test
     public void patch_changePassword_responseNotFound_IfUserIdIsInvalid() {
+        String originalPassword = VALID_PASSWORD;
         String newPassword = VALID_PASSWORD;
-        String accessTokenWithInvalidUserId = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
+        String accessTokenWithInvalidUserId = JwtTokenUtil.generateAccessToken(0, UserRole.USER, UserType.OWNER);
 
-        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(user.getPassword(), newPassword);
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto(originalPassword, newPassword);
 
         RequestEntity<ChangePasswordRequestDto> request = RequestEntity.patch(URI.create("/v3/users/change-password"))
             .contentType(MediaType.APPLICATION_JSON)
