@@ -60,95 +60,9 @@ public class EstimateApiTests extends ApiTestContext {
     String accessToken = null;
     Users user = null;
 
-    @Before
-    public void beforeTest() {
-        estimatesRepository.deleteAll();
-        usersRepository.deleteAll();
-        warehouseRepository.deleteAll();
 
-        user = userEntityFactory.createUser();
-        accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), user.getRole());
-    }
 
-    @After
-    public void afterTest() {
-        estimatesRepository.deleteAll();
-        usersRepository.deleteAll();
-        warehouseRepository.deleteAll();
-    }
 
-// 이메일 보내므로 200 테스트 불가능
-//    @Test
-//    public void post_estimate_responseIsOk_IfAllConditionsAreRight() {
-//        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-//
-//        EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
-//
-//        RequestEntity<EstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
-//            .contentType(MediaType.APPLICATION_JSON)
-//            .header("Authorization", "Bearer " + accessToken)
-//            .body(newEstimateInsertRequestDto);
-//
-//        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertNotNull(response.getBody().getMessage());
-//
-//        warehouseRepository.delete(warehouse);
-//    }
-
-    @Test
-    public void post_estimate_responseIsUnauthorized_IfAccessTokenNotGiven() {
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-
-        EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
-
-        RequestEntity<EstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(newEstimateInsertRequestDto);
-
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertNotNull(response.getBody().getMessage());
-
-        warehouseRepository.delete(warehouse);
-    }
-
-    @Test
-    public void post_estimate_responseIsForbidden_IfWarehouseNotViewable() {
-        Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
-
-        EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
-
-        RequestEntity<EstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("Authorization", "Bearer " + accessToken)
-            .body(newEstimateInsertRequestDto);
-
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertNotNull(response.getBody().getMessage());
-
-        warehouseRepository.delete(warehouse);
-    }
-
-    @Test
-    public void post_estimate_responseIsNotFound_IfWarehouseNotExist() {
-        Integer warehouseId = 0;
-        EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouseId);
-
-        RequestEntity<EstimateInsertRequestDto> request = RequestEntity.post(URI.create("/v3/estimates"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("Authorization", "Bearer " + accessToken)
-            .body(newEstimateInsertRequestDto);
-
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNotNull(response.getBody().getMessage());
-    }
 
     @Test
     public void get_estimateByUserId_responseIsOk_IfAllConditionsAreRight() {
