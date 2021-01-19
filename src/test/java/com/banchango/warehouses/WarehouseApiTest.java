@@ -389,8 +389,10 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_warehouseDetail_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses _warehouse = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
+    public void get_warehouseDetail_responseIsOk_IfUserIsOwner() {
+        Users owner = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
+        Warehouses _warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -435,8 +437,92 @@ public class WarehouseApiTest extends ApiTestContext {
     }
 
     @Test
-    public void get_warehouseDetail_responseIsNotFound_IfIsViewableIsFalse() {
-        Warehouses _warehouse = saveWarehouse(WarehouseStatus.IN_PROGRESS, new MainItemType[]{MainItemType.CLOTH});
+    public void get_warehouseDetail_responseIsOk_IfUserIsShipper() {
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String accessToken = JwtTokenUtil.generateAccessToken(shipper);
+        Warehouses _warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        String url = String.format("/v3/warehouses/%d", _warehouse.getId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+
+        WarehouseDetailResponseDto warehouse = response.getBody();
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertNotNull(warehouse.getWarehouseId());
+        assertNotNull(warehouse.getOwnerId());
+        assertNotNull(warehouse.getName());
+        assertNotNull(warehouse.getSpace());
+        assertNotNull(warehouse.getAddress());
+        assertNotNull(warehouse.getAddressDetail());
+        assertNotNull(warehouse.getDescription());
+        assertNotNull(warehouse.getAvailableWeekdays());
+        assertNotNull(warehouse.getOpenAt());
+        assertNotNull(warehouse.getCloseAt());
+        assertNotNull(warehouse.getAvailableTimeDetail());
+        assertNotNull(warehouse.getCctvExist());
+        assertNotNull(warehouse.getDoorLockExist());
+        assertNotNull(warehouse.getAirConditioningType());
+        assertNotNull(warehouse.getWorkerExist());
+        assertNotNull(warehouse.getCanPark());
+        assertNotNull(warehouse.getMainItemTypes());
+        assertNotNull(warehouse.getWarehouseType());
+        assertNotNull(warehouse.getMinReleasePerMonth());
+        assertNotNull(warehouse.getLatitude());
+        assertNotNull(warehouse.getLongitude());
+        assertNull(warehouse.getBlogUrl());
+        assertNotNull(warehouse.getMainImageUrl());
+        assertNotNull(warehouse.getDeliveryTypes());
+        assertNotNull(warehouse.getWarehouseCondition());
+        assertNotNull(warehouse.getWarehouseFacilityUsages());
+        assertNotNull(warehouse.getWarehouseUsageCautions());
+        assertNotNull(warehouse.getImages());
+
+        warehouseRepository.delete(_warehouse);
+    }
+
+    @Test
+    public void get_warehouseDetail_responseIsNotFound_IfWarehouseStatusIsInProgress() {
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String accessToken = JwtTokenUtil.generateAccessToken(shipper);
+        Warehouses _warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
+        String url = String.format("/v3/warehouses/%d", _warehouse.getId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        warehouseRepository.delete(_warehouse);
+    }
+
+    @Test
+    public void get_warehouseDetail_responseIsNotFound_IfIsViewableIsRejected() {
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String accessToken = JwtTokenUtil.generateAccessToken(shipper);
+        Warehouses _warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
+        String url = String.format("/v3/warehouses/%d", _warehouse.getId());
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+                .header("Authorization", "Bearer " + accessToken)
+                .build();
+
+        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        warehouseRepository.delete(_warehouse);
+    }
+
+    @Test
+    public void get_warehouseDetail_responseIsNotFound_IfWarehouseStatusIsDeleted() {
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String accessToken = JwtTokenUtil.generateAccessToken(shipper);
+        Warehouses _warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -451,6 +537,8 @@ public class WarehouseApiTest extends ApiTestContext {
 
     @Test
     public void get_warehouseDetail_responseIsNotFound_IfWarehouseNotExist() {
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String accessToken = JwtTokenUtil.generateAccessToken(shipper);
         String url = String.format("/v3/warehouses/%d", 0);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -460,41 +548,6 @@ public class WarehouseApiTest extends ApiTestContext {
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    private Warehouses saveWarehouse(WarehouseStatus status, MainItemType[] mainItemTypes) {
-        int userId = JwtTokenUtil.extractUserId(accessToken);
-
-        Warehouses warehouse = Warehouses.builder()
-                .userId(userId)
-                .name("NAME")
-                .space(123)
-                .address("address")
-                .addressDetail("addressDetail")
-                .description("description")
-                .availableWeekdays(1)
-                .openAt("06:00")
-                .closeAt("18:00")
-                .availableTimeDetail("availableTimeDetail")
-                .cctvExist(true)
-                .doorLockExist(true)
-                .airConditioningType(AirConditioningType.HEATING)
-                .workerExist(true)
-                .canPark(true)
-                .warehouseType(WarehouseType.THREEPL)
-                .minReleasePerMonth(2)
-                .latitude(22.2)
-                .longitude(22.2)
-                .status(status)
-                .build();
-
-        List<MainItemTypes> m = Arrays.stream(mainItemTypes)
-            .map(mainItemType -> new MainItemTypes(mainItemType, warehouse))
-            .collect(Collectors.toList());
-
-        warehouse.getMainItemTypes().addAll(m);
-
-        return warehouseRepository.save(warehouse);
     }
 
     @Test
