@@ -113,7 +113,7 @@ public class WarehouseApiTest extends ApiTestContext {
     @Test
     public void post_warehouse_responseIsForbidden_IfUserIsShipper() {
         Users shipper = userEntityFactory.createUserWithShipperType();
-        String accessToken = JwtTokenUtil.generateAccessToken(shipper.getUserId(), UserRole.USER);
+        String accessToken = JwtTokenUtil.generateAccessToken(shipper);
         WarehouseInsertRequestDto warehouseInsertRequestDto = WarehouseInsertRequestFactory.create();
 
         RequestEntity<WarehouseInsertRequestDto> request = RequestEntity.post("/v3/warehouses")
@@ -128,7 +128,7 @@ public class WarehouseApiTest extends ApiTestContext {
     @Test
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsViewable() {
         Users owner = userEntityFactory.createUserWithOwnerType();
-        String accessToken = JwtTokenUtil.generateAccessToken(owner.getUserId(), UserRole.USER, UserType.OWNER);
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
 
@@ -147,7 +147,7 @@ public class WarehouseApiTest extends ApiTestContext {
     @Test
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsInProgress() {
         Users owner = userEntityFactory.createUserWithOwnerType();
-        String accessToken = JwtTokenUtil.generateAccessToken(owner.getUserId(), UserRole.USER, UserType.OWNER);
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
 
@@ -166,7 +166,7 @@ public class WarehouseApiTest extends ApiTestContext {
     @Test
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsRejected() {
         Users owner = userEntityFactory.createUserWithOwnerType();
-        String accessToken = JwtTokenUtil.generateAccessToken(owner.getUserId(), UserRole.USER, UserType.OWNER);
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
 
@@ -198,8 +198,8 @@ public class WarehouseApiTest extends ApiTestContext {
     public void delete_warehouse_responseIsForbidden_IfNotMine() {
         Users actualOwner = userEntityFactory.createUserWithOwnerType();
         Users owner = userEntityFactory.createUserWithOwnerType();
-        String acutalOwnerAccessToken = JwtTokenUtil.generateAccessToken(actualOwner.getUserId(), UserRole.ADMIN, UserType.OWNER);
-        String accessToken = JwtTokenUtil.generateAccessToken(owner.getUserId(), UserRole.ADMIN, UserType.OWNER);
+        String acutalOwnerAccessToken = JwtTokenUtil.generateAccessToken(actualOwner);
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(acutalOwnerAccessToken);
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/"+warehouse.getId()))
@@ -214,7 +214,7 @@ public class WarehouseApiTest extends ApiTestContext {
     @Test
     public void delete_warehouse_responseIsNotFound_IfWarehouseStatusIsDeleted() {
         Users owner = userEntityFactory.createUserWithOwnerType();
-        String accessToken = JwtTokenUtil.generateAccessToken(owner.getUserId(), UserRole.ADMIN, UserType.OWNER)
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/"+warehouse.getId()))
@@ -229,7 +229,7 @@ public class WarehouseApiTest extends ApiTestContext {
     @Test
     public void delete_warehouse_responseIsNotFound_IfWarehouseNotExist() {
         Users owner = userEntityFactory.createUserWithOwnerType();
-        String accessToken = JwtTokenUtil.generateAccessToken(owner.getUserId(), UserRole.ADMIN, UserType.OWNER)
+        String accessToken = JwtTokenUtil.generateAccessToken(owner);
         RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/0"))
                 .header("Authorization", "Bearer "+accessToken)
                 .build();
@@ -239,45 +239,6 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
     
-    @Test
-    public void get_warehouseByAddress_responseIsOk_IfAllConditionsAreRight() {
-        Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH });
-
-        String addressQuery = "addr";
-        String url = String.format("/v3/warehouses?address=%s&page=0&size=4", addressQuery);
-        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
-                .build();
-
-        ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
-
-        List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
-        assertTrue(warehouses.size() > 0);
-
-        WarehouseSearchDto warehouse = warehouses.get(0);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        assertNotNull(warehouse.getAddress());
-        assertNotNull(warehouse.getWarehouseId());
-        assertNotNull(warehouse.getWarehouseCondition());
-        assertNotNull(warehouse.getMinReleasePerMonth());
-        assertNotNull(warehouse.getName());
-        assertNotNull(warehouse.getWarehouseType());
-        assertNotNull(warehouse.getCloseAt());
-        assertNotNull(warehouse.getMainImageUrl());
-        assertNotNull(warehouse.getOpenAt());
-        assertNotNull(warehouse.getSpace());
-        assertNotNull(warehouse.getDeliveryTypes());
-        assertNotNull(warehouse.getMainItemTypes());
-
-        for(WarehouseSearchDto _warehouse : warehouses) {
-            String address = _warehouse.getAddress().toLowerCase();
-            assertTrue(address.contains(addressQuery.toLowerCase()));
-        }
-
-        warehouseRepository.delete(tempWarehouse);
-    }
-
     @Test
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
         Warehouses tempWarehouse = saveWarehouse(WarehouseStatus.VIEWABLE, new MainItemType[] { MainItemType.CLOTH });

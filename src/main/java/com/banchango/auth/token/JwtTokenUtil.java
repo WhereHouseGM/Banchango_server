@@ -4,6 +4,7 @@ package com.banchango.auth.token;
 import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
+import com.banchango.domain.users.Users;
 import io.jsonwebtoken.*;
 
 import java.util.Date;
@@ -64,6 +65,14 @@ public class JwtTokenUtil {
 
     public static boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
+    }
+
+    public static String generateAccessToken(Users user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getUserId());
+        claims.put("role", user.getRole());
+        claims.put("type", user.getType());
+        return createToken(claims, ACCESS_TOKEN_EXPIRATION);
     }
 
     public static String generateAccessToken(Integer userId, UserRole role, UserType type) {
