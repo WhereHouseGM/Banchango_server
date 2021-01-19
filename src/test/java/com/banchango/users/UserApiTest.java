@@ -64,52 +64,6 @@ public class UserApiTest {
         usersRepository.deleteAll();
     }
 
-    @Test
-    public void userInfo_responseIsOk_IfAllConditionsAreRight() {
-        Integer userId = user.getUserId();
-        String accessToken = JwtTokenUtil.generateAccessToken(userId, UserRole.USER);
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId))
-                .header("Authorization", "Bearer " + accessToken).build();
-        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
-
-        UserInfoResponseDto responseBody = response.getBody();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user.getEmail(), responseBody.getEmail());
-        assertEquals(userId, responseBody.getUserId());
-        assertEquals(user.getName(), responseBody.getName());
-        assertEquals(user.getType(), responseBody.getType());
-        assertEquals(user.getPhoneNumber(), responseBody.getPhoneNumber());
-        assertEquals(user.getCompanyName(), responseBody.getCompanyName());
-        assertEquals(user.getTelephoneNumber(), responseBody.getTelephoneNumber());
-    }
-
-    @Test
-    public void userInfo_responseIsUnAuthorized_IfTokenIsAbsent() {
-        Integer userId = user.getUserId();
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }
-
-    @Test
-    public void userInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        Integer userId = user.getUserId();
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }
-
-    @Test
-    public void userInfo_responseIsNotFound_IfUserIdIsWrong() {
-        String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER);
-        RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/0"))
-                .header("Authorization", "Bearer " + accessToken).build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
 
 
 
