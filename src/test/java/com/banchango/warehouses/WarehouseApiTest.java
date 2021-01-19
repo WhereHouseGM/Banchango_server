@@ -13,8 +13,10 @@ import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.*;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
+import com.banchango.factory.request.WarehouseInsertRequestFactory;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.*;
+import com.sun.mail.iap.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,6 +109,21 @@ public class WarehouseApiTest extends ApiTestContext {
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
 //        assertTrue(response.getBody().contains("message"));
 //    }
+
+    @Test
+    public void post_warehouse_responseIsForbidden_IfUserIsShipper() {
+        Users shipper = userEntityFactory.createUserWithShipperType();
+        String accessToken = JwtTokenUtil.generateAccessToken(shipper.getUserId(), UserRole.USER);
+        WarehouseInsertRequestDto warehouseInsertRequestDto = WarehouseInsertRequestFactory.create();
+
+        RequestEntity<WarehouseInsertRequestDto> request = RequestEntity.post("/v3/warehouses")
+                .header("Authorization", "Bearer "+accessToken)
+                .body(warehouseInsertRequestDto);
+
+        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
 
     @Test
     public void delete_warehouse_responseIsOk_IfAllConditionsAreRight() {
