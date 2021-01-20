@@ -25,8 +25,13 @@ public class UsersApiController {
 
     @PostMapping("/v3/users/sign-in")
     @ResponseStatus(HttpStatus.OK)
-    public UserSigninResponseDto signIn(@Valid @RequestBody UserSigninRequestDto requestDto) {
-        return usersService.signIn(requestDto);
+    public UserSigninResponseDto signIn(@Valid @RequestBody UserSigninRequestDto requestDto) throws Exception {
+        if(true) {
+            throw new Exception("TEST EXCEPTION");
+        }
+        else {
+            return usersService.signIn(requestDto);
+        }
     }
 
     @PostMapping("/v3/users/sign-up")

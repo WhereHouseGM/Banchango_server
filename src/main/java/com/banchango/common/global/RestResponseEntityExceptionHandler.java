@@ -15,16 +15,25 @@ import java.util.Date;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
-    @ExceptionHandler(value = ApiException.class)
-    protected ResponseEntity<Object> handleApiException(ApiException exception, WebRequest request) {
-        return handleExceptionInternal(exception, null, new HttpHeaders(), exception.getHttpStatus(), request);
+    @ExceptionHandler(value = Exception.class)
+    protected ResponseEntity<Object> handleApiException(Exception exception, WebRequest request) {
+        if(exception instanceof ApiException) {
+            ApiException apiException = (ApiException) exception;
+            return handleExceptionInternal(exception, null, new HttpHeaders(), apiException.getHttpStatus(), request);
+        } else {
+            return handleExceptionInternal(exception, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        }
     }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorResponseDto errorResponseDto;
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-        errorResponseDto = new ErrorResponseDto(new Date(), status.value(), status.getReasonPhrase(), ex.getMessage(), servletWebRequest.getRequest().getRequestURI());
+        if(status.equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
+            errorResponseDto = new ErrorResponseDto(new Date(), status.value(), status.getReasonPhrase(), "", servletWebRequest.getRequest().getRequestURI());
+        } else {
+            errorResponseDto = new ErrorResponseDto(new Date(), status.value(), status.getReasonPhrase(), ex.getMessage(), servletWebRequest.getRequest().getRequestURI());
+        }
         return new ResponseEntity<>(errorResponseDto, headers, status);
     }
 }
