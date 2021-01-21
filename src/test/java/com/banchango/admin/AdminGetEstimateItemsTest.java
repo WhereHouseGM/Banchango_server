@@ -1,17 +1,13 @@
 package com.banchango.admin;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
-import com.banchango.factory.entity.EstimateEntityFactory;
 import com.banchango.factory.entity.EstimateItemEntityFactory;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +17,7 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class AdminGetEstimateItemsTest extends ApiTestContext {
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
-
-    @Autowired
-    private EstimateEntityFactory estimateEntityFactory;
+public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminEstimateItemsByestimateId_responseIsOk_IfUserIsOwner() {
@@ -105,7 +92,7 @@ public class AdminGetEstimateItemsTest extends ApiTestContext {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createUserWithOwnerType();
+        Users admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -125,7 +112,7 @@ public class AdminGetEstimateItemsTest extends ApiTestContext {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createUserWithOwnerType();
+        Users admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);

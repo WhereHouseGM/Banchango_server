@@ -1,17 +1,13 @@
 package com.banchango.users;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.request.UserSignupRequestFactory;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.exception.UserEmailNotFoundException;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -23,13 +19,7 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SignUpTest extends ApiTestContext {
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private UsersRepository usersRepository;
+public class SignUpTest extends ApiIntegrationTest {
 
     @Test
     public void signUp_responseIsOK() {

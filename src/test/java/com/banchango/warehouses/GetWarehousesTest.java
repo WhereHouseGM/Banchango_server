@@ -1,18 +1,13 @@
 package com.banchango.warehouses;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class GetWarehousesTest extends ApiTestContext {
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehousesRepository warehouseRepository;
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
+public class GetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
@@ -74,13 +61,10 @@ public class GetWarehousesTest extends ApiTestContext {
         ResponseEntity<WarehouseSearchResponseDto> response = restTemplate.exchange(request, WarehouseSearchResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-
-        warehouseRepository.delete(tempWarehouse);
     }
 
     @Test
     public void get_warehouseForMain_responseIsNotFound_IfWarehouseNotExist() {
-        warehouseRepository.deleteAll();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -155,7 +139,7 @@ public class GetWarehousesTest extends ApiTestContext {
 
     @Test
     public void get_warehouseByMainItemType_responseIsNotFound_IfWarehouseNotExist() {
-        warehouseRepository.deleteAll();
+        warehousesRepository.deleteAll();
 
         String mainItemType = MainItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);
@@ -170,7 +154,7 @@ public class GetWarehousesTest extends ApiTestContext {
 
     @Test
     public void get_warehouse_responseIsBadRequest_IfAddressAndMainItemTypeBothGiven() {
-        warehouseRepository.deleteAll();
+        warehousesRepository.deleteAll();
 
         String mainItemType = MainItemType.CLOTH.toString();
         String addressQuery = "addr";

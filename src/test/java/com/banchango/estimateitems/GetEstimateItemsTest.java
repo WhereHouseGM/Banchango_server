@@ -1,54 +1,23 @@
 package com.banchango.estimateitems;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.estimates.Estimates;
-import com.banchango.domain.estimates.EstimatesRepository;
-import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
-import com.banchango.factory.entity.EstimateEntityFactory;
 import com.banchango.factory.entity.EstimateItemEntityFactory;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class GetEstimateItemsTest extends ApiTestContext {
-    @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private WarehousesRepository warehouseRepository;
-
-    @Autowired
-    private EstimatesRepository estimatesRepository;
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
-
-    @Autowired
-    private EstimateEntityFactory estimateEntityFactory;
+public class GetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
     public void get_estimateItemsByestimateId_responseIsOk_IfUserIsShipper() {

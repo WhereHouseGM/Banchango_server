@@ -1,52 +1,23 @@
 package com.banchango.warehouses;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
-import com.banchango.common.dto.BasicMessageResponseDto;
-import com.banchango.domain.mainitemtypes.MainItemType;
-import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.*;
-import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
-import com.banchango.factory.request.WarehouseInsertRequestFactory;
-import com.banchango.users.exception.UserEmailNotFoundException;
 import com.banchango.warehouses.dto.*;
-import com.sun.mail.iap.Response;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-public class GetMyWarehouseTest extends ApiTestContext {
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehousesRepository warehouseRepository;
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
+public class GetMyWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void get_myWarehouses_responseIsOk_IfWarehouseStatusViewable_and_UserIsOwner() {
@@ -115,7 +86,7 @@ public class GetMyWarehouseTest extends ApiTestContext {
                 assertNotNull(myWarehouse.getMainImageUrl());
             });
 
-        warehouseRepository.delete(warehouse);
+        warehousesRepository.delete(warehouse);
     }
 
     @Test
@@ -144,7 +115,7 @@ public class GetMyWarehouseTest extends ApiTestContext {
                 assertNotNull(myWarehouse.getMainImageUrl());
             });
 
-        warehouseRepository.delete(warehouse);
+        warehousesRepository.delete(warehouse);
     }
 
     @Test
@@ -161,7 +132,7 @@ public class GetMyWarehouseTest extends ApiTestContext {
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 
-        warehouseRepository.delete(warehouse);
+        warehousesRepository.delete(warehouse);
     }
 
     @Test
@@ -180,12 +151,12 @@ public class GetMyWarehouseTest extends ApiTestContext {
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
-        warehouseRepository.delete(warehouse);
+        warehousesRepository.delete(warehouse);
     }
 
     @Test
     public void get_myWarehouses_responseIsNotFound_IfWarehouseNotExist() {
-        warehouseRepository.deleteAll();
+        warehousesRepository.deleteAll();
 
         Users owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
@@ -214,7 +185,7 @@ public class GetMyWarehouseTest extends ApiTestContext {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
-        warehouseRepository.delete(warehouse);
+        warehousesRepository.delete(warehouse);
     }
 
     @Test

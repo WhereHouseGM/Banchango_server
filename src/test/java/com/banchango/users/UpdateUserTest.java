@@ -1,16 +1,15 @@
 package com.banchango.users;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.users.UserRole;
+import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
-import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.request.UserUpdateRequestFactory;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSignupRequestDto;
 import com.banchango.users.dto.UserUpdateRequestDto;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -20,10 +19,7 @@ import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 
-public class UpdateUserTest extends ApiTestContext {
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
+public class UpdateUserTest extends ApiIntegrationTest {
 
     @Test
     public void updateInfo_responseIsOk_IfUserIsOwner() {
@@ -139,8 +135,7 @@ public class UpdateUserTest extends ApiTestContext {
 
     @Test
     public void updateInfo_responseIsNotFound_IfUserIdIsWrong() {
-        Users user = userEntityFactory.createUserWithOwnerType();
-        String accessToken = JwtTokenUtil.generateAccessToken(user);
+        String accessToken = JwtTokenUtil.generateAccessToken(0, UserRole.USER, UserType.OWNER);
 
         UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 

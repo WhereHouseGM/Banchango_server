@@ -1,15 +1,11 @@
 package com.banchango.warehouses;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +15,7 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class DeleteWarehouseTest extends ApiTestContext {
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
+public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsViewable() {
@@ -103,7 +94,7 @@ public class DeleteWarehouseTest extends ApiTestContext {
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test

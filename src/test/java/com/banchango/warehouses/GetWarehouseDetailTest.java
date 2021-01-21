@@ -1,16 +1,11 @@
 package com.banchango.warehouses;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +15,7 @@ import java.net.URI;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
-public class GetWarehouseDetailTest extends ApiTestContext {
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehousesRepository warehouseRepository;
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
+public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseDetail_responseIsOk_IfUserIsOwner() {
@@ -75,7 +62,7 @@ public class GetWarehouseDetailTest extends ApiTestContext {
         assertNotNull(warehouse.getWarehouseUsageCautions());
         assertNotNull(warehouse.getImages());
 
-        warehouseRepository.delete(_warehouse);
+        warehousesRepository.delete(_warehouse);
     }
 
     @Test
@@ -123,7 +110,7 @@ public class GetWarehouseDetailTest extends ApiTestContext {
         assertNotNull(warehouse.getWarehouseUsageCautions());
         assertNotNull(warehouse.getImages());
 
-        warehouseRepository.delete(_warehouse);
+        warehousesRepository.delete(_warehouse);
     }
 
     @Test
@@ -140,7 +127,7 @@ public class GetWarehouseDetailTest extends ApiTestContext {
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        warehouseRepository.delete(_warehouse);
+        warehousesRepository.delete(_warehouse);
     }
 
     @Test
@@ -157,7 +144,7 @@ public class GetWarehouseDetailTest extends ApiTestContext {
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        warehouseRepository.delete(_warehouse);
+        warehousesRepository.delete(_warehouse);
     }
 
     @Test
@@ -174,7 +161,7 @@ public class GetWarehouseDetailTest extends ApiTestContext {
         ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        warehouseRepository.delete(_warehouse);
+        warehousesRepository.delete(_warehouse);
     }
 
     @Test

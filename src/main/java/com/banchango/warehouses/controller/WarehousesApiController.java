@@ -21,7 +21,7 @@ public class WarehousesApiController {
 
     private final WarehousesService warehousesService;
 
-    @ValidateRequired
+    @ValidateRequired(types = UserType.OWNER)
     @PostMapping("/v3/warehouses")
     public BasicMessageResponseDto registerAgency(
             @Valid @RequestBody WarehouseInsertRequestDto warehouseInsertRequestDto,

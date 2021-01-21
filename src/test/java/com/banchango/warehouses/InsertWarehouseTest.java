@@ -1,27 +1,21 @@
 package com.banchango.warehouses;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.factory.request.WarehouseInsertRequestFactory;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
+
 import static org.junit.Assert.assertEquals;
 
-public class InsertWarehouseTest extends ApiTestContext {
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
+public class InsertWarehouseTest extends ApiIntegrationTest {
     // POST API에 이메일 전송 기능이 추가되어, 아래 테스트 코드는 일단 주석 처리 하겠습니다.
 //    @Test
 //    public void post_warehouse_responseIsOk_IfAllConditionsAreRight() {
@@ -82,11 +76,11 @@ public class InsertWarehouseTest extends ApiTestContext {
     @Test
     public void post_warehouse_responseIsForbidden_IfUserIsShipper() {
         Users shipper = userEntityFactory.createUserWithShipperType();
-        String accessToken = JwtTokenUtil.generateAccessToken(shipper);
+        String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
         WarehouseInsertRequestDto warehouseInsertRequestDto = WarehouseInsertRequestFactory.create();
 
-        RequestEntity<WarehouseInsertRequestDto> request = RequestEntity.post("/v3/warehouses")
-                .header("Authorization", "Bearer "+accessToken)
+        RequestEntity<WarehouseInsertRequestDto> request = RequestEntity.post(URI.create("/v3/warehouses"))
+                .header("Authorization", "Bearer "+shipperAccessToken)
                 .body(warehouseInsertRequestDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);

@@ -1,15 +1,12 @@
 package com.banchango.admin;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.WarehouseStatus;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +15,7 @@ import java.net.URI;
 
 import static org.junit.Assert.*;
 
-public class AdminGetWarehousesTest extends ApiTestContext {
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
+public class AdminGetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_InProgressWarehouses_ResultIsNotFound_ifNotExist_and_AdminIsOwner() {

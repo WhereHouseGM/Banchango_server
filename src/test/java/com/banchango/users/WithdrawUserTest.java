@@ -1,6 +1,6 @@
 package com.banchango.users;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.UserRole;
@@ -8,11 +8,8 @@ import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.users.dto.UserWithdrawRequestDto;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +20,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class WithdrawUserTest extends ApiTestContext {
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehousesRepository warehousesRepository;
+public class WithdrawUserTest extends ApiIntegrationTest {
 
     @Test
     public void withdrawUser_responseIsOk_IfUserIsOwner() {
@@ -53,7 +44,7 @@ public class WithdrawUserTest extends ApiTestContext {
 
     @Test
     public void withdrawUser_responseIsOk_IfUserIsShipper() {
-        Users userToDelete = userEntityFactory.createDeletedUserWithShipperType();
+        Users userToDelete = userEntityFactory.createUserWithShipperType();
         String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(userToDelete);
         UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
 

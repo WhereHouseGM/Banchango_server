@@ -1,20 +1,14 @@
 package com.banchango.admin;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.auth.token.JwtTokenUtil;
-import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.factory.entity.EstimateEntityFactory;
-import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +18,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class AdminGetWarehouseTest extends ApiTestContext {
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
+public class AdminGetWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void get_AllInfosOfSpecificWarehouse_responseIsOk_ifAdminIsOwner() {

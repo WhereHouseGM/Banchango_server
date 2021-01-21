@@ -1,38 +1,24 @@
 package com.banchango.users;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
-import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.users.dto.ChangePasswordRequestDto;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class ChangePasswordTest extends ApiTestContext {
-    @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
+public class ChangePasswordTest extends ApiIntegrationTest {
 
     private final String VALID_PASSWORD = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
     private final String INVALID_PASSWORD = "test";

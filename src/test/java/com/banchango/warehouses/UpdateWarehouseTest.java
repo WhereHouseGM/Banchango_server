@@ -1,21 +1,16 @@
 package com.banchango.warehouses;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -27,18 +22,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
-public class UpdateWarehouseTest extends ApiTestContext {
-    @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehousesRepository warehouseRepository;
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
+public class UpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoIsUpdated_ifUserIsOwner() {

@@ -1,17 +1,13 @@
 package com.banchango.estimates;
 
-import com.banchango.ApiTestContext;
+import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
-import com.banchango.factory.entity.UserEntityFactory;
-import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.factory.request.EstimatesInsertRequestFactory;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -22,15 +18,7 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class InsertEstimateTest extends ApiTestContext {
-    @Autowired
-    private WarehousesRepository warehouseRepository;
-
-    @Autowired
-    private UserEntityFactory userEntityFactory;
-
-    @Autowired
-    private WarehouseEntityFactory warehouseEntityFactory;
+public class InsertEstimateTest extends ApiIntegrationTest {
 
 // 이메일 보내므로 200 테스트 불가능
 //    @Test
@@ -49,7 +37,7 @@ public class InsertEstimateTest extends ApiTestContext {
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
 //        assertNotNull(response.getBody().getMessage());
 //
-//        warehouseRepository.delete(warehouse);
+//        warehousesRepository.delete(warehouse);
 //    }
 
     @Test
@@ -90,7 +78,7 @@ public class InsertEstimateTest extends ApiTestContext {
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        warehouseRepository.delete(warehouse);
+        warehousesRepository.delete(warehouse);
     }
 
 
@@ -116,7 +104,7 @@ public class InsertEstimateTest extends ApiTestContext {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        warehouseRepository.delete(warehouse);
+        warehousesRepository.delete(warehouse);
     }
 
     @Test
