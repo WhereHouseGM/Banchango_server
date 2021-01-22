@@ -26,6 +26,8 @@ public class UsersApiController {
     @PostMapping("/v3/users/sign-in")
     @ResponseStatus(HttpStatus.OK)
     public UserSigninResponseDto signIn(@Valid @RequestBody UserSigninRequestDto requestDto) throws Exception{
+        // TODO: remove
+        System.out.println("sign in");
         return usersService.signIn(requestDto);
     }
 
