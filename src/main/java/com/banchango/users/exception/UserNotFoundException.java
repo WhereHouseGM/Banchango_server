@@ -11,6 +11,6 @@ public class UserNotFoundException extends NotFoundException {
     }
 
     public UserNotFoundException() {
-        this(MESSAGE);
+        super(MESSAGE);
     }
 }
