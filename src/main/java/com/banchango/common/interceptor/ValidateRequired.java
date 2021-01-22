@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidateRequired {
     UserRole[] roles() default { UserRole.USER };
-    UserType[] types() default {UserType.OWNER, UserType.SHIPPER};
+    UserType[] types() default {};
 }

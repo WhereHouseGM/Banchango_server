@@ -4,7 +4,6 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.BadRequestException;
 import com.banchango.common.interceptor.ValidateRequired;
 import com.banchango.domain.mainitemtypes.MainItemType;
-import com.banchango.domain.users.UserType;
 import com.banchango.warehouses.dto.*;
 import com.banchango.warehouses.service.WarehousesService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class WarehousesApiController {
 
     private final WarehousesService warehousesService;
 
-    @ValidateRequired(types = UserType.OWNER)
+    @ValidateRequired
     @PostMapping("/v3/warehouses")
     public BasicMessageResponseDto registerAgency(
             @Valid @RequestBody WarehouseInsertRequestDto warehouseInsertRequestDto,
@@ -48,7 +47,7 @@ public class WarehousesApiController {
         return new WarehouseSearchResponseDto(warehouses);
     }
 
-    @ValidateRequired(types = UserType.OWNER)
+    @ValidateRequired
     @DeleteMapping("/v3/warehouses/{warehouseId}")
     public BasicMessageResponseDto delete(
             @PathVariable Integer warehouseId,
@@ -66,7 +65,7 @@ public class WarehousesApiController {
         return warehousesService.getSpecificWarehouseInfo(warehouseId);
     }
 
-    @ValidateRequired(types = UserType.OWNER)
+    @ValidateRequired
     @PutMapping("/v3/warehouses/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public WarehouseDetailResponseDto updateWarehouseInfo(
@@ -77,7 +76,7 @@ public class WarehousesApiController {
         return warehousesService.updateWarehouse(accessToken, warehouseId, warehouseUpdateRequestDto);
     }
 
-    @ValidateRequired(types = UserType.OWNER)
+    @ValidateRequired
     @GetMapping("/v3/users/{userId}/warehouses")
     @ResponseStatus(HttpStatus.OK)
     public MyWarehousesResponseDto getMyWarehouses(

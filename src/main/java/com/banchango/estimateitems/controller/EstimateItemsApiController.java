@@ -1,7 +1,6 @@
 package com.banchango.estimateitems.controller;
 
 import com.banchango.common.interceptor.ValidateRequired;
-import com.banchango.domain.users.UserType;
 import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
 import com.banchango.estimateitems.service.EsimateItemsService;
 import com.banchango.estimates.service.EstimatesService;
@@ -17,7 +16,7 @@ public class EstimateItemsApiController {
 
     @GetMapping("/v3/estimates/{estimateId}/items")
     @ResponseStatus(HttpStatus.OK)
-    @ValidateRequired(types = UserType.SHIPPER)
+    @ValidateRequired
     public EstimateItemSearchResponseDto getEstimates(
         @PathVariable Integer estimateId,
         @RequestAttribute(name = "accessToken") String accessToken

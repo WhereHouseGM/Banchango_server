@@ -58,7 +58,7 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @PostMapping("/v3/admin/images/{warehouseId}")
+    @PostMapping("/v3/admin/images/upload/{warehouseId}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ImageInfoResponseDto uploadImage(@RequestPart(name = "file")MultipartFile file,
@@ -68,7 +68,7 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @PostMapping("/v3/admin/images/main/{warehouseId}")
+    @PostMapping("/v3/admin/images/upload/main/{warehouseId}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ImageInfoResponseDto uploadMainImage(@RequestPart(name = "file") MultipartFile file,
@@ -78,7 +78,7 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @DeleteMapping("/v3/admin/images/main/{warehouseId}")
+    @DeleteMapping("/v3/admin/images/delete/main/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public BasicMessageResponseDto deleteMainImage(@RequestAttribute(name = "accessToken") String token,
                                                    @PathVariable Integer warehouseId) {
@@ -86,7 +86,7 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @DeleteMapping("/v3/admin/images/{warehouseId}")
+    @DeleteMapping("/v3/admin/images/delete/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public BasicMessageResponseDto deleteExtraImage(@RequestParam(name = "file") String fileName,
                                                     @RequestAttribute(name = "accessToken") String token,

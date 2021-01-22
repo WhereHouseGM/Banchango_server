@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -126,8 +125,8 @@ public class WarehouseInsertRequestDto {
         this.longitude = longitude;
         this.deliveryTypes = deliveryTypes;
         this.warehouseCondition = warehouseCondition;
-        this.warehouseFacilityUsages = warehouseFacilityUsages != null ? warehouseFacilityUsages : new ArrayList<>();
-        this.warehouseUsageCautions = warehouseUsageCautions != null ? warehouseUsageCautions : new ArrayList<>();
+        this.warehouseFacilityUsages = warehouseFacilityUsages;
+        this.warehouseUsageCautions = warehouseUsageCautions;
         this.insurances = insurances;
         this.securityCompanies = securityCompanies;
     }

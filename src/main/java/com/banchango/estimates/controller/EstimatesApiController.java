@@ -2,7 +2,6 @@ package com.banchango.estimates.controller;
 
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
-import com.banchango.domain.users.UserType;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.estimates.dto.EstimateSearchResponseDto;
 import com.banchango.estimates.service.EstimatesService;
@@ -19,7 +18,7 @@ public class EstimatesApiController {
 
     @PostMapping("/v3/estimates")
     @ResponseStatus(HttpStatus.OK)
-    @ValidateRequired(types = UserType.SHIPPER)
+    @ValidateRequired
     public BasicMessageResponseDto saveEstimate(
         @Valid @RequestBody EstimateInsertRequestDto estimateInsertRequestDto,
         @RequestAttribute(name = "accessToken") String accessToken
@@ -29,7 +28,7 @@ public class EstimatesApiController {
 
     @GetMapping("/v3/users/{userId}/estimates")
     @ResponseStatus(HttpStatus.OK)
-    @ValidateRequired(types = UserType.SHIPPER)
+    @ValidateRequired
     public EstimateSearchResponseDto getEstimates(
         @PathVariable Integer userId,
         @RequestAttribute(name = "accessToken") String accessToken
