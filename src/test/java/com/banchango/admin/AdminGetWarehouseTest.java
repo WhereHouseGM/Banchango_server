@@ -3,6 +3,7 @@ package com.banchango.admin;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.WarehouseStatus;
@@ -118,7 +119,7 @@ public class AdminGetWarehouseTest extends ApiIntegrationTest {
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -133,7 +134,7 @@ public class AdminGetWarehouseTest extends ApiIntegrationTest {
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 }

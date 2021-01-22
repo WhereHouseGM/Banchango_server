@@ -3,6 +3,7 @@ package com.banchango.warehouses;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.factory.request.WarehouseInsertRequestFactory;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
@@ -83,7 +84,7 @@ public class InsertWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer "+shipperAccessToken)
                 .body(warehouseInsertRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }

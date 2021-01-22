@@ -3,6 +3,7 @@ package com.banchango.warehouses;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
 import org.junit.Test;
@@ -73,7 +74,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
         RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/99999"))
                 .build();
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
@@ -92,7 +93,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer "+accessToken)
                 .build();
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
@@ -107,7 +108,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer "+accessToken)
                 .build();
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -120,7 +121,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer "+accessToken)
                 .build();
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }

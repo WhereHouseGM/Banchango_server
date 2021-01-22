@@ -4,6 +4,7 @@ import com.banchango.ApiIntegrationTest;
 import com.banchango.admin.dto.EstimateStatusUpdateRequestDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.users.Users;
@@ -87,7 +88,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimate.getId()+"/status"))
                 .body(estimateStatusUpdatedto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -106,7 +107,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .body(estimateStatusUpdatedto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
@@ -127,7 +128,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .body(estimateStatusUpdatedto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }

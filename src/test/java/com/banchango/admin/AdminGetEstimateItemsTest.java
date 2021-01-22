@@ -2,6 +2,7 @@ package com.banchango.admin;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
@@ -102,7 +103,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -122,7 +123,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -138,7 +139,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates/"+estimate.getId()+"/items"))
                 .build();
 
-        ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -155,7 +156,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
 
-        ResponseEntity<EstimateItemSearchResponseDto> response = restTemplate.exchange(request, EstimateItemSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }

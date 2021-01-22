@@ -1,6 +1,7 @@
 package com.banchango.users;
 
 import com.banchango.ApiIntegrationTest;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.factory.request.UserSignupRequestFactory;
 import com.banchango.users.dto.UserInfoResponseDto;
@@ -61,7 +62,7 @@ public class SignUpTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
 
-        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
@@ -80,7 +81,7 @@ public class SignUpTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody.toString());
 
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }

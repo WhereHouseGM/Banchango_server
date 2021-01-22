@@ -2,6 +2,7 @@ package com.banchango.admin;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.users.Users;
@@ -199,7 +200,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -217,7 +218,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10"))
                 .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -236,7 +237,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }

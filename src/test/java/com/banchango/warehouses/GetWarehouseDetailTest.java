@@ -2,6 +2,7 @@ package com.banchango.warehouses;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
@@ -124,7 +125,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         warehousesRepository.delete(_warehouse);
@@ -141,7 +142,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         warehousesRepository.delete(_warehouse);
@@ -158,7 +159,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         warehousesRepository.delete(_warehouse);
@@ -174,7 +175,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(request, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }

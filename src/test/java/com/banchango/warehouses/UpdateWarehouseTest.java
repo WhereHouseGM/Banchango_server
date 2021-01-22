@@ -2,6 +2,7 @@ package com.banchango.warehouses;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
@@ -160,7 +161,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .body(body);
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -204,7 +205,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .body(body);
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -246,7 +247,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(body);
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
@@ -294,7 +295,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer" + accessToken)
                 .body(body);
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
@@ -338,7 +339,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .body(body);
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
@@ -382,7 +383,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .body(body);
 
-        ResponseEntity<WarehouseDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseDetailResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 }

@@ -3,6 +3,7 @@ package com.banchango.users;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
@@ -80,7 +81,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
             .header("Authorization", "Bearer " + accessToken)
             .body(changePasswordRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
@@ -100,7 +101,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
             .header("Authorization", "Bearer " + accessToken)
             .body(changePasswordRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -119,7 +120,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(changePasswordRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -137,7 +138,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
             .header("Authorization", "Bearer " + accessTokenWithInvalidUserId)
             .body(changePasswordRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }

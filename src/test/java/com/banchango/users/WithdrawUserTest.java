@@ -3,6 +3,7 @@ package com.banchango.users;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
@@ -70,7 +71,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
         RequestEntity<UserWithdrawRequestDto> request = RequestEntity.post(URI.create("/v3/users/"+userToDelete.getUserId()+"/withdraw"))
             .body(userWithdrawRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -86,7 +87,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
             .header("Authorization", "Bearer " + accessTokenForUserToDelete)
             .body(userWithdrawRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
@@ -102,7 +103,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
             .header("Authorization", "Bearer " + accessTokenForUserToDelete)
             .body(userWithdrawRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -117,7 +118,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
             .header("Authorization", "Bearer " + accessTokenForUserToDelete)
             .body(userWithdrawRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }

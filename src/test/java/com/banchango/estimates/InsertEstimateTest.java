@@ -3,6 +3,7 @@ package com.banchango.estimates;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
@@ -54,7 +55,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(newEstimateInsertRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
@@ -73,7 +74,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(newEstimateInsertRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
@@ -99,7 +100,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + shipperAccessToken)
                 .body(newEstimateInsertRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
@@ -120,7 +121,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + shipperAccessToken)
                 .body(newEstimateInsertRequestDto);
 
-        ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());

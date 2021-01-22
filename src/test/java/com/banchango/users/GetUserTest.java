@@ -2,6 +2,7 @@ package com.banchango.users;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
@@ -66,7 +67,7 @@ public class GetUserTest extends ApiIntegrationTest {
         Users user = userEntityFactory.createUserWithOwnerType();
         Integer userId = user.getUserId();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -76,7 +77,7 @@ public class GetUserTest extends ApiIntegrationTest {
         Users user = userEntityFactory.createUserWithOwnerType();
         Integer userId = user.getUserId();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -87,7 +88,7 @@ public class GetUserTest extends ApiIntegrationTest {
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/0"))
                 .header("Authorization", "Bearer " + accessToken).build();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

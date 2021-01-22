@@ -2,6 +2,7 @@ package com.banchango.users;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
@@ -110,7 +111,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + "THIS IS WRONG TOKEN!")
                 .contentType(MediaType.APPLICATION_JSON).body(requestBody);
 
-        ResponseEntity<UserSignupRequestDto> response = restTemplate.exchange(request, UserSignupRequestDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -128,7 +129,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
 
-        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -144,7 +145,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
 
-        ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }

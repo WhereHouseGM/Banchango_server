@@ -1,6 +1,7 @@
 package com.banchango.users;
 
 import com.banchango.ApiIntegrationTest;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
@@ -59,7 +60,7 @@ public class SignInTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
 
-        ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -73,7 +74,7 @@ public class SignInTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
 
-        ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -87,7 +88,7 @@ public class SignInTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody);
 
-        ResponseEntity<UserSigninResponseDto> response = restTemplate.exchange(request, UserSigninResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -104,7 +105,7 @@ public class SignInTest extends ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody.toString());
 
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
