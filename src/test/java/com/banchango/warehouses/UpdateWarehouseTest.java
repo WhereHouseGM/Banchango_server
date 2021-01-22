@@ -90,36 +90,6 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(firstResponse.getBody().getDeliveryTypes().containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
         assertTrue(firstResponse.getBody().getWarehouseCondition().containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
         assertTrue(firstResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
-
-        RequestEntity<Void> getRequest = RequestEntity.get(URI.create(url)).
-                header("Authorization", "Bearer " + accessToken).build();
-        ResponseEntity<WarehouseDetailResponseDto> secondResponse = restTemplate.exchange(getRequest, WarehouseDetailResponseDto.class);
-        assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
-        assertEquals("NEW NAME", secondResponse.getBody().getName());
-        assertEquals(Integer.valueOf(999), secondResponse.getBody().getSpace());
-        assertEquals("NEW ADDRESS", secondResponse.getBody().getAddress());
-        assertEquals("NEW ADDR_DETAIL", secondResponse.getBody().getAddressDetail());
-        assertEquals("NEW DESC", secondResponse.getBody().getDescription());
-        assertEquals(Integer.valueOf(101010), secondResponse.getBody().getAvailableWeekdays());
-        assertEquals("08:00", secondResponse.getBody().getOpenAt());
-        assertEquals("23:30", secondResponse.getBody().getCloseAt());
-        assertEquals("NEW AVAIL_TIME_DETAIL", secondResponse.getBody().getAvailableTimeDetail());
-        assertFalse(secondResponse.getBody().getCctvExist());
-        assertFalse(secondResponse.getBody().getDoorLockExist());
-        assertFalse(secondResponse.getBody().getWorkerExist());
-        assertFalse(secondResponse.getBody().getCanPark());
-        assertEquals(AirConditioningType.NONE, secondResponse.getBody().getAirConditioningType());
-        assertEquals(secondResponse.getBody().getMainItemTypes(), Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}));
-        assertEquals(WarehouseType.FULFILLMENT, secondResponse.getBody().getWarehouseType());
-        assertEquals(Integer.valueOf(101), secondResponse.getBody().getMinReleasePerMonth());
-        assertEquals(Double.valueOf(11.11), secondResponse.getBody().getLatitude());
-        assertEquals(Double.valueOf(33.33), secondResponse.getBody().getLongitude());
-        assertNull(secondResponse.getBody().getBlogUrl());
-        assertTrue(secondResponse.getBody().getInsurances().containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-        assertTrue(secondResponse.getBody().getSecurityCompanies().containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-        assertTrue(secondResponse.getBody().getDeliveryTypes().containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-        assertTrue(secondResponse.getBody().getWarehouseCondition().containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-        assertTrue(secondResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
     }
 
     @Test
