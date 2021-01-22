@@ -62,7 +62,15 @@
         "name": "WH_DEFAULT_IMAGE_URL",
         "valueFrom": "WH_DEFAULT_IMAGE_URL"
       }
-    ]
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group" : "/ecs/BanchangoProduct",
+        "awslogs-region": "ap-northeast-2",
+        "awslogs-stream-prefix": "BanchangoProduct"
+      }
+    }
   }],
   "requiresCompatibilities": [
     "FARGATE"
