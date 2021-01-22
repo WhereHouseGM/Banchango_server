@@ -68,7 +68,7 @@
         "options": {
           "awslogs-group" : "/ecs/BanchangoDev",
           "awslogs-region": "ap-northeast-2",
-          "awslogs-stream-prefix": "ecs:BanchangoDev"
+          "awslogs-stream-prefix": ":ecs:BanchangoDev"
         }
       }
     }],
