@@ -27,7 +27,8 @@ public class UsersApiController {
     @ResponseStatus(HttpStatus.OK)
     public UserSigninResponseDto signIn(@Valid @RequestBody UserSigninRequestDto requestDto) throws Exception{
         // TODO: remove
-        System.out.println("sign in");
+        System.out.println("stdout: sign in");
+        System.out.println("stderr: sign in");
         return usersService.signIn(requestDto);
     }
 
