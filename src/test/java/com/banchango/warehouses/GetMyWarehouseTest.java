@@ -6,9 +6,10 @@ import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
-import com.banchango.domain.warehouses.*;
+import com.banchango.domain.warehouses.WarehouseStatus;
+import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.factory.entity.WarehouseEntityFactory;
-import com.banchango.warehouses.dto.*;
+import com.banchango.warehouses.dto.MyWarehousesResponseDto;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -16,7 +17,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class GetMyWarehouseTest extends ApiIntegrationTest {
 

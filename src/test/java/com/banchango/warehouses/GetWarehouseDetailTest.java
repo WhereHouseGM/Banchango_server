@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import java.net.URI;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class GetWarehouseDetailTest extends ApiIntegrationTest {
 

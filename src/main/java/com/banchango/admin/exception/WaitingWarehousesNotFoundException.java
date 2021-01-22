@@ -1,6 +1,5 @@
 package com.banchango.admin.exception;
 
-import com.banchango.common.exception.NoContentException;
 import com.banchango.common.exception.NotFoundException;
 
 public class WaitingWarehousesNotFoundException extends NotFoundException {

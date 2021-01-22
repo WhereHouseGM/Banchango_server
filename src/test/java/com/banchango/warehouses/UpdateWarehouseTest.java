@@ -21,7 +21,6 @@ import java.net.URI;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class UpdateWarehouseTest extends ApiIntegrationTest {
 
