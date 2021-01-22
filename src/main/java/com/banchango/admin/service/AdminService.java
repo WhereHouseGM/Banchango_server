@@ -6,6 +6,7 @@ import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
+import com.banchango.domain.estimates.EstimateStatusWarehouseIdCreatedAtProjection;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
@@ -17,11 +18,8 @@ import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
-import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.exception.EstimateNotFoundException;
-import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -76,32 +73,36 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    public List<EstimateSearchDto> getEstimates(String acccessToken, EstimateStatus status, PageRequest pageRequest) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(acccessToken));
-        List<Estimates> estimates;
-        if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
-        else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);
+    @Transactional(readOnly = true)
+    public EstimateSummaryListResponseDto getEstimates(String accessToken, EstimateStatus status, PageRequest pageRequest) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        List<EstimateStatusWarehouseIdCreatedAtProjection> estimates;
+        if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusWarehouseIdCreatedAtProjection.class);
+        else estimates = estimatesRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusWarehouseIdCreatedAtProjection.class);
 
         if(estimates.isEmpty()) throw new EstimateNotFoundException();
 
         return estimates.stream()
-            .map(estimate -> {
-                EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
-                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
+                .map(estimate -> {
 
-                if(optionalProjection.isPresent()) {
-                    WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
-                    WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
-                        .warehouseId(projection.getId())
-                        .name(projection.getName())
-                        .address(projection.getAddress())
-                        .build();
+        })
 
-                    estimateSearchResponseDto.updateWarehouse(warehouseSummaryDto);
-                }
-                return estimateSearchResponseDto;
-            })
-            .collect(Collectors.toList());
+//        return estimates.stream()
+//            .map(estimate -> {
+//                EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
+//                Optional<WarehouseNameProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
+//
+//                if(optionalProjection.isPresent()) {
+//                    WarehouseNameProjection projection = optionalProjection.get();
+//                    WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
+//                        .name(projection.getName())
+//                        .build();
+//
+//                    estimateSearchResponseDto.updateWarehouse(warehouseSummaryDto);
+//                }
+//                return estimateSearchResponseDto;
+//            })
+//            .collect(Collectors.toList());
     }
 
     @Transactional
