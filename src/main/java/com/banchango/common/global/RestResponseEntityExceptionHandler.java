@@ -6,6 +6,7 @@ import com.banchango.tools.DateConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@Slf4j
 @RequiredArgsConstructor
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -42,9 +44,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
         ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) servletWebRequest.getRequest();
         if(status.equals(HttpStatus.INTERNAL_SERVER_ERROR)) {
-            System.err.println("TIME : " + DateConverter.convertDateWithTime(LocalDateTime.now()));
-            System.err.println("REQUEST BODY : " + objectMapper.readTree(requestWrapper.getContentAsByteArray()));
-            ex.printStackTrace();
+            logger.error("TIME : " + DateConverter.convertDateWithTime(LocalDateTime.now()));
+            logger.error("REQUEST BODY : " + objectMapper.readTree(requestWrapper.getContentAsByteArray()));
+            logger.error("PATH: " + servletWebRequest.getRequest().getRequestURI());
+            logger.error("REMOTE ADDR: " + servletWebRequest.getRequest().getRemoteAddr());
             errorResponseDto = new ErrorResponseDto(new Date(), status.value(), status.getReasonPhrase(), "", servletWebRequest.getRequest().getRequestURI());
         } else {
             errorResponseDto = new ErrorResponseDto(new Date(), status.value(), status.getReasonPhrase(), ex.getMessage(), servletWebRequest.getRequest().getRequestURI());
