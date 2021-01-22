@@ -17,7 +17,6 @@ import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
-import com.banchango.tools.EmailContent;
 import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.users.exception.UserIdNotFoundException;
 import com.banchango.warehouses.dto.*;
@@ -148,6 +147,7 @@ public class WarehousesService {
 
         int accessTokenUserId = JwtTokenUtil.extractUserId(accessToken);
         if(warehouse.getUserId() != accessTokenUserId) throw new WarehouseInvalidAccessException();
+        if(warehouse.getStatus().equals(WarehouseStatus.DELETED)) throw new WarehouseNotFoundException();
 
         warehousesRepository.deleteById(warehouseId);
     }

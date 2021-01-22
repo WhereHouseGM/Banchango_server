@@ -4,6 +4,7 @@ import com.banchango.auth.exception.AuthenticateException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.exception.ForbiddenException;
 import com.banchango.domain.users.UserRole;
+import com.banchango.domain.users.UserType;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -66,7 +67,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     private void authorizeRequest(HandlerMethod method, String accessToken) {
         ValidateRequired annotation = method.getMethodAnnotation(ValidateRequired.class);
         UserRole accessTokenRole = JwtTokenUtil.extractUserRole(accessToken);
-        boolean isAuthorized = Arrays.stream(annotation.roles()).anyMatch(role -> role == accessTokenRole);
+        UserType accessTokenType = JwtTokenUtil.extractUserType(accessToken);
+
+        boolean isAuthorized = Arrays.stream(annotation.roles()).anyMatch(role -> role == accessTokenRole) &&
+                Arrays.stream(annotation.types()).anyMatch(type -> type.equals(accessTokenType));
 
         if(!isAuthorized) throw new ForbiddenException("해당 요청을 수행할 수 있는 권한이 없습니다");
     }
