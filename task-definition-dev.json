@@ -70,5 +70,13 @@
     "networkMode": "awsvpc",
     "cpu": "512",
     "memory": "1024",
-    "family": "BanchangoDevTask"
+    "family": "BanchangoDevTask",
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group" : "/ecs/BanchangoDev",
+        "awslogs-region": "ap-northeast-2",
+        "awslogs-stream-prefix": "ecs:BanchangoDev"
+      }
+    }
 }
