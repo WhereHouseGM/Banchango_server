@@ -19,9 +19,7 @@ import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
-import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.exception.EstimateNotFoundException;
-import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -98,26 +96,6 @@ public class AdminService {
                 })
                 .filter(dto -> dto.getName() != null && dto.getWarehouseId() != null)
                 .collect(Collectors.toList());
-
-
-//        return estimates.stream()
-//            .map(estimate -> {
-//                EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
-//                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
-//
-//                if(optionalProjection.isPresent()) {
-//                    WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
-//                    WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
-//                        .warehouseId(projection.getId())
-//                        .name(projection.getName())
-//                        .address(projection.getAddress())
-//                        .build();
-//
-//                    estimateSearchResponseDto.updateWarehouse(warehouseSummaryDto);
-//                }
-//                return estimateSearchResponseDto;
-//            })
-//            .collect(Collectors.toList());
     }
 
     @Transactional
@@ -130,13 +108,9 @@ public class AdminService {
     @Transactional(readOnly = true)
     public List<EstimateItemSearchDto> getEstimateItems(String accessToken, Integer estimateId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
-        Integer userId = JwtTokenUtil.extractUserId(accessToken);
-
         Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
-
         List<EstimateItems> estimateItems = estimate.getEstimateItems();
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
-
         return estimate.getEstimateItems().stream()
             .map(estimateItem -> new EstimateItemSearchDto(estimateItem))
             .collect(Collectors.toList());
