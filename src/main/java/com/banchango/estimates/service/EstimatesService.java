@@ -91,7 +91,8 @@ public class EstimatesService {
                 }
                 return estimateSearchResponseDto;
             })
-            .filter(searchDto -> searchDto.getWarehouse().getWarehouseId() != null && searchDto.getWarehouse().getName() != null && searchDto.getWarehouse().getAddress() != null)
+            .filter(searchDto -> searchDto.getWarehouse() != null)
+            //.filter(searchDto -> searchDto.getWarehouse().getWarehouseId() != null && searchDto.getWarehouse().getName() != null && searchDto.getWarehouse().getAddress() != null)
             .collect(Collectors.toList());
         if(estimates.size() == 0) throw new EstimateNotFoundException();
 

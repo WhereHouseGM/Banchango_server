@@ -97,7 +97,7 @@ public class JwtTokenUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("role", role);
-        claims.put("role", type);
+        claims.put("type", type);
         return createToken(claims, REFRESH_TOKEN_EXPIRATION);
     }
 
