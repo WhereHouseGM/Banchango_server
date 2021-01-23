@@ -13,7 +13,6 @@ import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
 import com.banchango.domain.warehouses.WarehouseIdAndNameProjection;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
@@ -78,7 +77,7 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    public List<EstimateSummaryListDto> getEstimates(String accessToken, EstimateStatus status, PageRequest pageRequest) {
+    public List<EstimateSummaryDto> getEstimates(String accessToken, EstimateStatus status, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
         List<EstimateStatusAndCreatedAtAndWarehouseIdProjection> estimates;
         if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndCreatedAtAndWarehouseIdProjection.class);
@@ -92,35 +91,32 @@ public class AdminService {
                     Optional<WarehouseIdAndNameProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameProjection.class);
                     if(optionalProjection.isPresent()) {
                         WarehouseIdAndNameProjection projection = optionalProjection.get();
-                        if (projection.getStatus().equals(WarehouseStatus.VIEWABLE)) {
-                            return EstimateSummaryDto.builder().name(projection.getName())
-                                    .status(estimate.getStatus())
-                                    .warehouseId(estimate.getWarehouseId())
-                                    .createdAt(estimate.getCreatedAt()).build();
-                        }
+                        estimateSummaryDto.updateWarehouseInfo(projection);
                     }
+                    return estimateSummaryDto;
                 })
+                .filter(dto -> dto.getName() != null && dto.getWarehouseId() != null)
                 .collect(Collectors.toList());
 
 
-        return estimates.stream()
-            .map(estimate -> {
-                EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
-                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
-
-                if(optionalProjection.isPresent()) {
-                    WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
-                    WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
-                        .warehouseId(projection.getId())
-                        .name(projection.getName())
-                        .address(projection.getAddress())
-                        .build();
-
-                    estimateSearchResponseDto.updateWarehouse(warehouseSummaryDto);
-                }
-                return estimateSearchResponseDto;
-            })
-            .collect(Collectors.toList());
+//        return estimates.stream()
+//            .map(estimate -> {
+//                EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
+//                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
+//
+//                if(optionalProjection.isPresent()) {
+//                    WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();
+//                    WarehouseSummaryDto warehouseSummaryDto = WarehouseSummaryDto.builder()
+//                        .warehouseId(projection.getId())
+//                        .name(projection.getName())
+//                        .address(projection.getAddress())
+//                        .build();
+//
+//                    estimateSearchResponseDto.updateWarehouse(warehouseSummaryDto);
+//                }
+//                return estimateSearchResponseDto;
+//            })
+//            .collect(Collectors.toList());
     }
 
     @Transactional

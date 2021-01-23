@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -93,7 +94,7 @@ public class AdminApiController {
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/estimates")
     @ResponseStatus(HttpStatus.OK)
-    public EstimateSummaryListDto getEstimates(
+    public List<EstimateSummaryDto> getEstimates(
         @RequestParam(required = false)EstimateStatus status,
         @RequestParam Integer page,
         @RequestParam Integer size,
