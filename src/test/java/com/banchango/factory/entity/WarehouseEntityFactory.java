@@ -41,7 +41,7 @@ public class WarehouseEntityFactory {
     public static final String[] DELIVERY_TYPES = {"DELIVERY_1", "DELIVERY_2", "DELIVERY_3"};
     public static final WarehouseCondition[] WAREHOUSE_CONDITIONS = {WarehouseCondition.ROOM_TEMPERATURE, WarehouseCondition.LOW_TEMPERATURE};
 
-    private WarehousesRepository warehousesRepository;
+    private final WarehousesRepository warehousesRepository;
 
     @Autowired
     public WarehouseEntityFactory(WarehousesRepository warehousesRepository) {

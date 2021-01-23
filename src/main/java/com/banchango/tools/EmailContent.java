@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public class EmailContent {
 
-    private String title;
-    private String topContent;
-    private String middleContent;
-    private String bottomContent;
-    private String buttonContent;
-    private String buttonLink;
+    private final String title;
+    private final String topContent;
+    private final String middleContent;
+    private final String bottomContent;
+    private final String buttonContent;
+    private final String buttonLink;
 
     public static String SimpleTemplate(EmailContent content) {
         return new StringBuffer().append("<!doctype html><html><head><meta name='viewport' content='width=device-width'>")

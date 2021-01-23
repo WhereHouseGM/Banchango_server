@@ -9,10 +9,10 @@ import lombok.Getter;
 @Getter
 public class EstimateSummaryDto {
 
-    private EstimateStatus status;
+    private final EstimateStatus status;
     private Integer warehouseId;
     private String name;
-    private String createdAt;
+    private final String createdAt;
 
     public EstimateSummaryDto(EstimateStatusAndCreatedAtAndWarehouseIdProjection projection) {
         this.status = projection.getStatus();
