@@ -6,6 +6,7 @@ import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
+import com.banchango.domain.estimates.EstimateStatusAndCreatedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
@@ -13,6 +14,7 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
+import com.banchango.domain.warehouses.WarehouseIdAndNameProjection;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
@@ -76,13 +78,29 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    public EstimateSummaryListDto getEstimates(String acccessToken, EstimateStatus status, PageRequest pageRequest) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(acccessToken));
-        List<Estimates> estimates;
-        if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
-        else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);
+    public List<EstimateSummaryListDto> getEstimates(String accessToken, EstimateStatus status, PageRequest pageRequest) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        List<EstimateStatusAndCreatedAtAndWarehouseIdProjection> estimates;
+        if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndCreatedAtAndWarehouseIdProjection.class);
+        else estimates = estimatesRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusAndCreatedAtAndWarehouseIdProjection.class);
 
         if(estimates.isEmpty()) throw new EstimateNotFoundException();
+
+        return estimates.stream()
+                .map(estimate -> {
+                    EstimateSummaryDto estimateSummaryDto = new EstimateSummaryDto(estimate);
+                    Optional<WarehouseIdAndNameProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameProjection.class);
+                    if(optionalProjection.isPresent()) {
+                        WarehouseIdAndNameProjection projection = optionalProjection.get();
+                        if (projection.getStatus().equals(WarehouseStatus.VIEWABLE)) {
+                            return EstimateSummaryDto.builder().name(projection.getName())
+                                    .status(estimate.getStatus())
+                                    .warehouseId(estimate.getWarehouseId())
+                                    .createdAt(estimate.getCreatedAt()).build();
+                        }
+                    }
+                })
+                .collect(Collectors.toList());
 
 
         return estimates.stream()
