@@ -12,6 +12,7 @@ import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
@@ -21,7 +22,6 @@ import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.exception.EstimateNotFoundException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -76,13 +76,14 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    public List<EstimateSearchDto> getEstimates(String acccessToken, EstimateStatus status, PageRequest pageRequest) {
+    public EstimateSummaryListDto getEstimates(String acccessToken, EstimateStatus status, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(acccessToken));
         List<Estimates> estimates;
         if (status == null) estimates = estimatesRepository.findByOrderByIdDesc(pageRequest);
         else estimates = estimatesRepository.findByStatusOrderByIdDesc(status, pageRequest);
 
         if(estimates.isEmpty()) throw new EstimateNotFoundException();
+
 
         return estimates.stream()
             .map(estimate -> {

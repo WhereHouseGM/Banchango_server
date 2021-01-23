@@ -21,7 +21,7 @@ import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
 import com.banchango.warehouses.exception.WarehouseNotFoundException;
-import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
+import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,9 +1,6 @@
 package com.banchango.admin.controller;
 
-import com.banchango.admin.dto.EstimateStatusUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
-import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
+import com.banchango.admin.dto.*;
 import com.banchango.admin.service.AdminService;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
@@ -97,14 +94,14 @@ public class AdminApiController {
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/estimates")
     @ResponseStatus(HttpStatus.OK)
-    public EstimateSearchResponseDto getEstimates(
+    public EstimateSummaryListDto getEstimates(
         @RequestParam(required = false)EstimateStatus status,
         @RequestParam Integer page,
         @RequestParam Integer size,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return new EstimateSearchResponseDto(adminService.getEstimates(accessToken, status, pageRequest));
+        return adminService.getEstimates(accessToken, status, pageRequest);
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
