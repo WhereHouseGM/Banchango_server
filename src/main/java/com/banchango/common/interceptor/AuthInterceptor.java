@@ -49,8 +49,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     private String extractAccessToken(String authorizationHeader) {
         String[] splits = authorizationHeader.split(" ");
         validateAuthorizationHeader(splits);
-        String accessToken = splits[1];
-        return accessToken;
+        return splits[1];
     }
 
     private void validateAuthorizationHeader(String[] authorizationHeaderSplits) {

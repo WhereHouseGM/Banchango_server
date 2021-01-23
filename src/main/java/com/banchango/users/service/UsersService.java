@@ -117,7 +117,7 @@ public class UsersService {
 
     private void deleteWarehousesOwnedByUser(int userId) {
         List<Warehouses> warehouses = warehousesRepository.findByUserId(userId);
-        warehouses.stream()
+        warehouses
             .forEach(warehouse -> warehouse.updateStatus(WarehouseStatus.DELETED));
     }
 }

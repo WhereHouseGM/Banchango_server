@@ -51,7 +51,7 @@ public class GetUserEstimatesTest extends ApiIntegrationTest {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
-                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMonthlyAverageRelease());
             });
     }
 

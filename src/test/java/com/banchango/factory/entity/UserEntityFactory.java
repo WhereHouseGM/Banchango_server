@@ -18,8 +18,8 @@ public class UserEntityFactory {
     private static final String COMPANY_NAME = "COMPANY_NAME";
     private static final String CAUSE = "CAUSE";
 
-    private UsersRepository usersRepository;
-    private WithdrawsRepository withdrawsRepository;
+    private final UsersRepository usersRepository;
+    private final WithdrawsRepository withdrawsRepository;
     private int countUsers = 0;
 
     @Autowired

@@ -40,7 +40,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimateItems());
 
-        response.getBody().getEstimateItems().stream()
+        response.getBody().getEstimateItems()
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertEquals(estimateSearchDto.getName(), EstimateItemEntityFactory.NAME);

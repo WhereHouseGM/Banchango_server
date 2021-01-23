@@ -40,7 +40,7 @@ public class EsimateItemsService {
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
 
         return estimate.getEstimateItems().stream()
-                .map(estimateItem -> new EstimateItemSearchDto(estimateItem))
+                .map(EstimateItemSearchDto::new)
                 .collect(Collectors.toList());
     }
 }
