@@ -94,14 +94,14 @@ public class AdminApiController {
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/estimates")
     @ResponseStatus(HttpStatus.OK)
-    public List<EstimateSummaryDto> getEstimates(
+    public EstimateSummaryListDto getEstimates(
         @RequestParam(required = false)EstimateStatus status,
         @RequestParam Integer page,
         @RequestParam Integer size,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return adminService.getEstimates(accessToken, status, pageRequest);
+        return new EstimateSummaryListDto(adminService.getEstimates(accessToken, status, pageRequest));
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)

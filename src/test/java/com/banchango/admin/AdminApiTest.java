@@ -1,10 +1,7 @@
 package com.banchango.admin;
 
 import com.banchango.ApiTestContext;
-import com.banchango.admin.dto.EstimateStatusUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
-import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
+import com.banchango.admin.dto.*;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
@@ -36,6 +33,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 
 
 import static org.junit.Assert.*;
@@ -404,12 +402,12 @@ public class AdminApiTest extends ApiTestContext {
             .header("Authorization", "Bearer " + adminAccessToken)
             .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<List<EstimateSummaryDto>> response = restTemplate.exchange(request, List<EstimateSummaryDto>);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody().getEstimates());
+        assertNotNull(response.getBody().);
 
-        response.getBody().getEstimates()
+        response.getBody().
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertNotNull(estimateSearchDto.getWarehouse());
