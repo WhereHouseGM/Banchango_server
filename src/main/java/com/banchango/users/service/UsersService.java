@@ -47,8 +47,8 @@ public class UsersService {
         if(optionalWithdraw.isPresent()) throw new UserNotFoundException("탈퇴한 사용자입니다");
 
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user);
-        responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole()));
-        responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId(), userInfoDto.getRole()));
+        responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
+        responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
         responseDto.setTokenType("Bearer");
         responseDto.setUser(userInfoDto);
         return responseDto;

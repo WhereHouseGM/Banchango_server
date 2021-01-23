@@ -15,7 +15,6 @@ public class UserEntityFactory {
     private static final String PASSWORD = "97210bf40747d347dc5664526548bd23c71a869bbdb87045dabb1971ef3ce1df";
     private static final String PHONE_NUMBER = "010-0000-0100";
     private static final String TELEPHONE_NUMBER = "02-0000-0100";
-    private static final UserType TYPE = UserType.OWNER;
     private static final String COMPANY_NAME = "COMPANY_NAME";
     private static final String CAUSE = "CAUSE";
 
@@ -29,12 +28,16 @@ public class UserEntityFactory {
         this.withdrawsRepository = withdrawsRepository;
     }
 
-    public Users createUser() {
-        return create(UserRole.USER);
+    public Users createUserWithOwnerType() {
+        return create(UserRole.USER, UserType.OWNER);
     }
 
-    public Users createDeletedUser() {
-        Users user = create(UserRole.USER);
+    public Users createUserWithShipperType() {
+        return create(UserRole.USER, UserType.SHIPPER);
+    }
+
+    public Users createDeletedUserWithOwnerType() {
+        Users user = create(UserRole.USER, UserType.OWNER);
 
         Withdraws withdraw = Withdraws.builder()
             .userId(user.getUserId())
@@ -45,11 +48,27 @@ public class UserEntityFactory {
         return user;
     }
 
-    public Users createAdmin() {
-        return create(UserRole.ADMIN);
+    public Users createDeletedUserWithShipperType() {
+        Users user = create(UserRole.USER, UserType.SHIPPER);
+
+        Withdraws withdraw = Withdraws.builder()
+                .userId(user.getUserId())
+                .cause(CAUSE)
+                .build();
+        withdrawsRepository.save(withdraw);
+
+        return user;
     }
 
-    private Users create(UserRole role) {
+    public Users createAdminWithOwnerType() {
+        return create(UserRole.ADMIN, UserType.OWNER);
+    }
+
+    public Users createAdminWithShipperType() {
+        return create(UserRole.ADMIN, UserType.SHIPPER);
+    }
+
+    private Users create(UserRole role, UserType type) {
         Users user = Users.builder()
             .companyName(COMPANY_NAME)
             .email(generateEmail())
@@ -57,7 +76,7 @@ public class UserEntityFactory {
             .password(PASSWORD)
             .telephoneNumber(TELEPHONE_NUMBER)
             .phoneNumber(PHONE_NUMBER)
-            .type(TYPE)
+            .type(type)
             .role(role)
             .build();
 
