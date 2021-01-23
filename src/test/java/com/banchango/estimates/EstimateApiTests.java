@@ -12,6 +12,7 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
+import com.banchango.estimates.dto.EstimateSearchResponseDto;
 import com.banchango.factory.entity.EstimateEntityFactory;
 import com.banchango.factory.entity.UserEntityFactory;
 import com.banchango.factory.entity.WarehouseEntityFactory;
@@ -173,7 +174,7 @@ public class EstimateApiTests extends ApiTestContext {
                 assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
                 assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
                 assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
-                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMonthlyAverageRelease());
             });
     }
 
