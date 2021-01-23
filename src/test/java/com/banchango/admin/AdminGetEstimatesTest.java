@@ -1,6 +1,7 @@
 package com.banchango.admin;
 
 import com.banchango.ApiIntegrationTest;
+import com.banchango.admin.dto.EstimateSummaryListDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
@@ -38,20 +39,17 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
         response.getBody().getEstimates()
-                .forEach(estimateSearchDto -> {
-                    assertNotNull(estimateSearchDto.getId());
-                    assertNotNull(estimateSearchDto.getWarehouse());
-                    assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                    assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                    assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                    assertNotNull(estimateSearchDto.getStatus());
-                    assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getStatus());
+                    assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                    assertEquals(summaryDto.getName(), warehouse.getName());
+                    assertNotNull(summaryDto.getCreatedAt());
                 });
     }
 
@@ -72,20 +70,17 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
         response.getBody().getEstimates()
-                .forEach(estimateSearchDto -> {
-                    assertNotNull(estimateSearchDto.getId());
-                    assertNotNull(estimateSearchDto.getWarehouse());
-                    assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                    assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                    assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                    assertNotNull(estimateSearchDto.getStatus());
-                    assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getStatus());
+                    assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                    assertEquals(summaryDto.getName(), warehouse.getName());
+                    assertNotNull(summaryDto.getCreatedAt());
                 });
     }
 
@@ -106,20 +101,17 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
         response.getBody().getEstimates()
-                .forEach(estimateSearchDto -> {
-                    assertNotNull(estimateSearchDto.getId());
-                    assertNotNull(estimateSearchDto.getWarehouse());
-                    assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                    assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                    assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                    assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
-                    assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getStatus());
+                    assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                    assertEquals(summaryDto.getName(), warehouse.getName());
+                    assertNotNull(summaryDto.getCreatedAt());
                 });
     }
 
@@ -140,20 +132,17 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
         response.getBody().getEstimates()
-                .forEach(estimateSearchDto -> {
-                    assertNotNull(estimateSearchDto.getId());
-                    assertNotNull(estimateSearchDto.getWarehouse());
-                    assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                    assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                    assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                    assertEquals(estimateSearchDto.getStatus(), EstimateStatus.IN_PROGRESS);
-                    assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getStatus());
+                    assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                    assertEquals(summaryDto.getName(), warehouse.getName());
+                    assertNotNull(summaryDto.getCreatedAt());
                 });
     }
 
@@ -174,20 +163,17 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
         response.getBody().getEstimates()
-                .forEach(estimateSearchDto -> {
-                    assertNotNull(estimateSearchDto.getId());
-                    assertNotNull(estimateSearchDto.getWarehouse());
-                    assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                    assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                    assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                    assertEquals(estimateSearchDto.getStatus(), EstimateStatus.DONE);
-                    assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+                .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getStatus());
+                    assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                    assertEquals(summaryDto.getName(), warehouse.getName());
+                    assertNotNull(summaryDto.getCreatedAt());
                 });
     }
 
