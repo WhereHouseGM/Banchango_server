@@ -77,6 +77,7 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
+    @Transactional(readOnly = true)
     public List<EstimateSummaryDto> getEstimates(String accessToken, EstimateStatus status, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
         List<EstimateStatusAndCreatedAtAndWarehouseIdProjection> estimates;
@@ -88,7 +89,7 @@ public class AdminService {
         return estimates.stream()
                 .map(estimate -> {
                     EstimateSummaryDto estimateSummaryDto = new EstimateSummaryDto(estimate);
-                    Optional<WarehouseIdAndNameProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameProjection.class);
+                    Optional<WarehouseIdAndNameProjection> optionalProjection = warehousesRepository.findByIdAndStatus(estimate.getWarehouseId(), WarehouseStatus.VIEWABLE, WarehouseIdAndNameProjection.class);
                     if(optionalProjection.isPresent()) {
                         WarehouseIdAndNameProjection projection = optionalProjection.get();
                         estimateSummaryDto.updateWarehouseInfo(projection);
