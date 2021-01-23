@@ -137,8 +137,7 @@ public class S3UploaderService {
         if(images.size() >= 1) {
             WarehouseImages image = images.get(0);
             String[] splitTemp = image.getUrl().split("/");
-            String fileName = splitTemp[splitTemp.length - 1];
-            return fileName;
+            return splitTemp[splitTemp.length - 1];
         } else throw new WarehouseMainImageNotFoundException();
     }
 
