@@ -34,7 +34,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.List;
 
 
 import static org.junit.Assert.*;

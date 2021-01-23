@@ -362,7 +362,7 @@ public class UserApiTest {
         assertNotNull(response.getBody().getMessage());
 
         List<Warehouses> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
-        warehouses.stream()
+        warehouses
             .forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
     }
 

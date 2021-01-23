@@ -1,11 +1,18 @@
 package com.banchango.warehouses.dto;
 
+import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,43 +61,43 @@ public class WarehouseDetailResponseDto {
     public WarehouseDetailResponseDto(Warehouses warehouse, String defaultImageUrl) {
         List<MainItemType> mainItemTypes = warehouse.getMainItemTypes()
             .stream()
-            .map(type -> type.getType())
+            .map(MainItemTypes::getType)
             .collect(Collectors.toList());
 
         List<String> deliveryTypes = warehouse.getDeliveryTypes()
             .stream()
-            .map(deliveryType -> deliveryType.getName())
+            .map(DeliveryTypes::getName)
             .collect(Collectors.toList());
 
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
             .stream()
-            .map(condition -> condition.getCondition())
+            .map(WarehouseConditions::getCondition)
             .collect(Collectors.toList());
 
         List<String> warehouseFacilityUsages = warehouse.getWarehouseFacilityUsages()
             .stream()
-            .map(facilityUsage -> facilityUsage.getContent())
+            .map(WarehouseFacilityUsages::getContent)
             .collect(Collectors.toList());
 
         List<String> warehouseUsageCautions = warehouse.getWarehouseUsageCautions()
             .stream()
-            .map(usageCaution -> usageCaution.getContent())
+            .map(WarehouseUsageCautions::getContent)
             .collect(Collectors.toList());
 
         List<String> images = warehouse.getWarehouseImages()
             .stream()
             .filter(image -> !image.isMain())
-            .map(image -> image.getUrl())
+            .map(WarehouseImages::getUrl)
             .collect(Collectors.toList());
 
         List<String> insurances = warehouse.getInsurances()
                 .stream()
-                .map(insurance -> insurance.getName())
+                .map(Insurances::getName)
                 .collect(Collectors.toList());
 
         List<String> securityCompanies = warehouse.getSecurityCompanies()
                 .stream()
-                .map(company -> company.getName())
+                .map(SecurityCompanies::getName)
                 .collect(Collectors.toList());
 
         WarehouseImages mainImage = warehouse.getMainImage();

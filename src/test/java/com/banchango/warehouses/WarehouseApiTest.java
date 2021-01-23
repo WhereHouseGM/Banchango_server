@@ -861,7 +861,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getWarehouses());
 
-        response.getBody().getWarehouses().stream()
+        response.getBody().getWarehouses()
             .forEach(myWarehouse -> {
                 assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
@@ -888,7 +888,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getWarehouses());
 
-        response.getBody().getWarehouses().stream()
+        response.getBody().getWarehouses()
             .forEach(myWarehouse -> {
                 assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
@@ -914,7 +914,7 @@ public class WarehouseApiTest extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getWarehouses());
 
-        response.getBody().getWarehouses().stream()
+        response.getBody().getWarehouses()
             .forEach(myWarehouse -> {
                 assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());

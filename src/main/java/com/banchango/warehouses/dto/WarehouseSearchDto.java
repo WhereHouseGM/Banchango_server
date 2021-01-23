@@ -2,6 +2,7 @@ package com.banchango.warehouses.dto;
 
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
@@ -45,7 +46,7 @@ public class WarehouseSearchDto {
 
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
             .stream()
-            .map(condition -> condition.getCondition())
+            .map(WarehouseConditions::getCondition)
             .collect(Collectors.toList());
 
         List<String> deliveryTypes = warehouse.getDeliveryTypes()
@@ -70,11 +71,6 @@ public class WarehouseSearchDto {
     }
 
     private void sortMainItemTypeByMatchTrue(List<WarehouseMainItemTypeMatchDto> mainItemTypes) {
-        mainItemTypes.sort(new Comparator<WarehouseMainItemTypeMatchDto>() {
-            @Override
-            public int compare(WarehouseMainItemTypeMatchDto o1, WarehouseMainItemTypeMatchDto o2) {
-                return Boolean.compare(o2.getMatch(), o1.getMatch());
-            }
-        });
+        mainItemTypes.sort((o1, o2) -> Boolean.compare(o2.getMatch(), o1.getMatch()));
     }
 }

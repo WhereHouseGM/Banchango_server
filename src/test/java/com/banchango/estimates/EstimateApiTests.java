@@ -166,7 +166,7 @@ public class EstimateApiTests extends ApiTestContext {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
-        response.getBody().getEstimates().stream()
+        response.getBody().getEstimates()
             .forEach(estimateSearchDto -> {
                 assertNotNull(estimateSearchDto.getId());
                 assertNotNull(estimateSearchDto.getWarehouse());

@@ -9,6 +9,7 @@ import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndCreatedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
@@ -68,7 +69,7 @@ public class AdminService {
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).equals(requestDto.getMainItemTypes())) {
+        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
             mainItemTypesRepository.deleteByWarehouseId(warehouseId);
         }
         warehouse.update(requestDto);
@@ -112,7 +113,7 @@ public class AdminService {
         List<EstimateItems> estimateItems = estimate.getEstimateItems();
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
         return estimate.getEstimateItems().stream()
-            .map(estimateItem -> new EstimateItemSearchDto(estimateItem))
+            .map(EstimateItemSearchDto::new)
             .collect(Collectors.toList());
     }
 }
