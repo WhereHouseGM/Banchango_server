@@ -4,6 +4,7 @@ import com.banchango.ApiTestContext;
 import com.banchango.admin.dto.*;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
@@ -402,20 +403,17 @@ public class AdminApiTest extends ApiTestContext {
             .header("Authorization", "Bearer " + adminAccessToken)
             .build();
 
-        ResponseEntity<List<EstimateSummaryDto>> response = restTemplate.exchange(request, List<EstimateSummaryDto>);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody().);
+        assertNotNull(response.getBody().getEstimates());
 
-        response.getBody().
-            .forEach(estimateSearchDto -> {
-                assertNotNull(estimateSearchDto.getId());
-                assertNotNull(estimateSearchDto.getWarehouse());
-                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                assertNotNull(estimateSearchDto.getStatus());
-                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+        response.getBody().getEstimates()
+            .forEach(summaryDto -> {
+                assertNotNull(summaryDto.getStatus());
+                assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                assertEquals(summaryDto.getName(), warehouse.getName());
+                assertNotNull(summaryDto.getCreatedAt());
             });
     }
 
@@ -430,20 +428,17 @@ public class AdminApiTest extends ApiTestContext {
             .header("Authorization", "Bearer " + adminAccessToken)
             .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
         response.getBody().getEstimates()
-            .forEach(estimateSearchDto -> {
-                assertNotNull(estimateSearchDto.getId());
-                assertNotNull(estimateSearchDto.getWarehouse());
-                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.RECEPTED);
-                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+            .forEach(summaryDto -> {
+                assertNotNull(summaryDto.getStatus());
+                assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                assertEquals(summaryDto.getName(), warehouse.getName());
+                assertNotNull(summaryDto.getCreatedAt());
             });
     }
 
@@ -458,20 +453,17 @@ public class AdminApiTest extends ApiTestContext {
             .header("Authorization", "Bearer " + adminAccessToken)
             .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
         response.getBody().getEstimates()
-            .forEach(estimateSearchDto -> {
-                assertNotNull(estimateSearchDto.getId());
-                assertNotNull(estimateSearchDto.getWarehouse());
-                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.IN_PROGRESS);
-                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+            .forEach(summaryDto -> {
+                assertNotNull(summaryDto.getStatus());
+                assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                assertEquals(summaryDto.getName(), warehouse.getName());
+                assertNotNull(summaryDto.getCreatedAt());
             });
     }
 
@@ -486,20 +478,17 @@ public class AdminApiTest extends ApiTestContext {
             .header("Authorization", "Bearer " + adminAccessToken)
             .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<EstimateSummaryListDto> response = restTemplate.exchange(request, EstimateSummaryListDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getEstimates());
 
         response.getBody().getEstimates()
-            .forEach(estimateSearchDto -> {
-                assertNotNull(estimateSearchDto.getId());
-                assertNotNull(estimateSearchDto.getWarehouse());
-                assertEquals(estimateSearchDto.getWarehouse().getWarehouseId(), warehouse.getId());
-                assertEquals(estimateSearchDto.getWarehouse().getAddress(), warehouse.getAddress());
-                assertEquals(estimateSearchDto.getWarehouse().getName(), warehouse.getName());
-                assertEquals(estimateSearchDto.getStatus(), EstimateStatus.DONE);
-                assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, estimateSearchDto.getMontlyAverageRelease());
+            .forEach(summaryDto -> {
+                assertNotNull(summaryDto.getStatus());
+                assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
+                assertEquals(summaryDto.getName(), warehouse.getName());
+                assertNotNull(summaryDto.getCreatedAt());
             });
     }
 
@@ -509,7 +498,7 @@ public class AdminApiTest extends ApiTestContext {
             .header("Authorization", "Bearer " + adminAccessToken)
             .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -524,7 +513,7 @@ public class AdminApiTest extends ApiTestContext {
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10"))
             .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
@@ -540,7 +529,7 @@ public class AdminApiTest extends ApiTestContext {
             .header("Authorization", "Bearer " + accessToken)
             .build();
 
-        ResponseEntity<EstimateSearchResponseDto> response = restTemplate.exchange(request, EstimateSearchResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
@@ -550,11 +539,11 @@ public class AdminApiTest extends ApiTestContext {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimate.getId()+"/status"))
             .header("Authorization", "Bearer " + adminAccessToken)
-            .body(estimateStatusUpdatedto);
+            .body(estimateStatusUpdateDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
@@ -571,10 +560,10 @@ public class AdminApiTest extends ApiTestContext {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimate.getId()+"/status"))
-            .body(estimateStatusUpdatedto);
+            .body(estimateStatusUpdateDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
@@ -586,11 +575,11 @@ public class AdminApiTest extends ApiTestContext {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimate.getId()+"/status"))
             .header("Authorization", "Bearer " + accessToken)
-            .body(estimateStatusUpdatedto);
+            .body(estimateStatusUpdateDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
@@ -600,12 +589,12 @@ public class AdminApiTest extends ApiTestContext {
     @Test
     public void patch_adminUpdateEstimateStatus_responseIsNotFound_IfEstimateNotFound() {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
         int estimateId = 0;
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimateId+"/status"))
             .header("Authorization", "Bearer " + adminAccessToken)
-            .body(estimateStatusUpdatedto);
+            .body(estimateStatusUpdateDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
