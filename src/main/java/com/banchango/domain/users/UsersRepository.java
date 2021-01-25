@@ -16,4 +16,6 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     @Modifying
     @Query(value = "UPDATE users SET password=sha2(?, '256') WHERE email=?", nativeQuery = true)
     void updatePassword(String password, String email);
+
+    Optional<Users> findByEmailAndPasswordAndRole(String email, String password, UserRole admin);
 }

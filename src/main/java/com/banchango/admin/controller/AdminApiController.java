@@ -10,6 +10,8 @@ import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
+import com.banchango.users.dto.UserSigninRequestDto;
+import com.banchango.users.dto.UserSigninResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -134,5 +136,12 @@ public class AdminApiController {
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         return adminService.getEstimate(accessToken, estimateId);
+
+    @PostMapping("/v3/admin/users/sign-in")
+    @ResponseStatus(HttpStatus.OK)
+    public UserSigninResponseDto adminSignIn(
+        @Valid @RequestBody UserSigninRequestDto userSigninRequestDto
+    ) {
+        return adminService.signIn(userSigninRequestDto);
     }
 }
