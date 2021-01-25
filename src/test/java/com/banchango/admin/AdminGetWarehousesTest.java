@@ -64,7 +64,7 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
         assertTrue(response.getBody().getRequests().size() > 0);
         assertNotNull(response.getBody().getRequests().get(0).getName());
         assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
-        assertNotNull(response.getBody().getRequests().get(0).getCreatedAt());
+        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
         assertTrue(response.getBody().getRequests().size() > 0);
         assertNotNull(response.getBody().getRequests().get(0).getName());
         assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
-        assertNotNull(response.getBody().getRequests().get(0).getCreatedAt());
+        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
         assertTrue(response.getBody().getRequests().size() == 4);
         assertNotNull(response.getBody().getRequests().get(0).getName());
         assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
-        assertNotNull(response.getBody().getRequests().get(0).getCreatedAt());
+        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
     }
 
     @Test
