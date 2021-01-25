@@ -90,7 +90,7 @@ public class AdminSignInTest extends ApiIntegrationTest {
         requestBody.put("email", user.getEmail());
         requestBody.put("pass", user.getPassword());
 
-        RequestEntity<String> request = RequestEntity.post(URI.create("/v3/admin/users/sign-up"))
+        RequestEntity<String> request = RequestEntity.post(URI.create("/v3/admin/users/sign-in"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody.toString());
 
