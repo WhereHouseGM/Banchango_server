@@ -46,6 +46,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
@@ -77,6 +78,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
@@ -108,6 +110,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
@@ -139,6 +142,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
@@ -170,6 +174,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());

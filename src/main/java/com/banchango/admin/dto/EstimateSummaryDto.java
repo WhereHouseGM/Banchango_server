@@ -11,12 +11,14 @@ import lombok.NoArgsConstructor;
 @Getter
 public class EstimateSummaryDto {
 
+    private Integer id;
     private EstimateStatus status;
     private Integer warehouseId;
     private String name;
     private String createdAt;
 
     public EstimateSummaryDto(EstimateStatusAndCreatedAtAndWarehouseIdProjection projection) {
+        this.id = projection.getId();
         this.status = projection.getStatus();
         this.createdAt = DateConverter.convertDateWithTime(projection.getCreatedAt());
     }
