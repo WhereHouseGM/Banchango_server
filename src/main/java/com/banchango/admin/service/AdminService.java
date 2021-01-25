@@ -124,9 +124,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
-        Users user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new);
-
-        if(!user.getRole().equals(UserRole.ADMIN)) throw new UserNotFoundException();
+        Users user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
 
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user);
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
