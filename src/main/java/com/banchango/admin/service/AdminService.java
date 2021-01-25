@@ -15,6 +15,7 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.*;
+import com.banchango.domain.withdraws.WithdrawsRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.exception.EstimateNotFoundException;
@@ -41,6 +42,7 @@ public class AdminService {
     private final UsersRepository usersRepository;
     private final MainItemTypesRepository mainItemTypesRepository;
     private final EstimatesRepository estimatesRepository;
+    private final WithdrawsRepository withdrawRespository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -142,7 +144,9 @@ public class AdminService {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         Users user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
 
-        UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user);
+        boolean isUserDeleted = withdrawRespository.findByUserId(user.getUserId()).isPresent();
+
+        UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user, isUserDeleted);
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
         responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
         responseDto.setTokenType("Bearer");
