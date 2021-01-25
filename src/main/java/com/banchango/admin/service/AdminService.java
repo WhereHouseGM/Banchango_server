@@ -131,6 +131,7 @@ public class AdminService {
         Users user = usersRepository.findById(estimate.getUserId()).get();
         Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
         String warehouseName;
+        boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
 
         if (optionalWarehouseNameProjection.isPresent())
             warehouseName = optionalWarehouseNameProjection.get().getName();
@@ -140,6 +141,7 @@ public class AdminService {
             .estimate(estimate)
             .user(user)
             .warehouseName(warehouseName)
+            .isDeleted(isUserDeleted)
             .build();
     }
 
