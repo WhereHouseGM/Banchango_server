@@ -21,6 +21,10 @@ import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.exception.EstimateNotFoundException;
+import com.banchango.users.dto.UserInfoResponseDto;
+import com.banchango.users.dto.UserSigninRequestDto;
+import com.banchango.users.dto.UserSigninResponseDto;
+import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -115,5 +119,18 @@ public class AdminService {
         return estimate.getEstimateItems().stream()
             .map(EstimateItemSearchDto::new)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
+        UserSigninResponseDto responseDto = new UserSigninResponseDto();
+        Users user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
+
+        UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user);
+        responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
+        responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
+        responseDto.setTokenType("Bearer");
+        responseDto.setUser(userInfoDto);
+        return responseDto;
     }
 }
