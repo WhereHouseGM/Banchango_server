@@ -30,7 +30,7 @@ public class AdminApiController {
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/warehouses")
     @ResponseStatus(HttpStatus.OK)
-    public WarehouseInsertRequestResponseListDto getWaitingWarehouses(
+    public WarehouseInsertRequestResponseListDto getWarehouses(
         @RequestAttribute(name = "accessToken") String token,
         @RequestParam(name = "page") Integer page,
         @RequestParam(name = "size") Integer size,
