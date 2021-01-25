@@ -125,4 +125,14 @@ public class AdminApiController {
     ) {
         return new EstimateItemSearchResponseDto(adminService.getEstimateItems(accessToken, estimateId));
     }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/estimates/{estimateId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EstimateDetailResponseDto getEstimate(
+        @PathVariable Integer estimateId,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        return adminService.getEstimate(accessToken, estimateId);
+    }
 }

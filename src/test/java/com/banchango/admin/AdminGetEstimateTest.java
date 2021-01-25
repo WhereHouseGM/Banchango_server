@@ -1,6 +1,7 @@
 package com.banchango.admin;
 
 import com.banchango.ApiIntegrationTest;
+import com.banchango.admin.dto.EstimateDetailResponseDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
@@ -46,7 +47,7 @@ public class AdminGetEstimateTest extends ApiIntegrationTest {
         assertNotNull(response.getBody().getId());
         assertEquals(EstimateEntityFactory.CONTENT, response.getBody().getContent());
         assertEquals(EstimateStatus.RECEPTED, response.getBody().getStatus());
-        assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, response.getBody().getMontlyAverageRelease());
+        assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, response.getBody().getMonthlyAverageRelease());
 
         assertEquals(userShipper.getUserId(), response.getBody().getUser().getUserId());
         assertEquals(userShipper.getName(), response.getBody().getUser().getName());
@@ -69,7 +70,7 @@ public class AdminGetEstimateTest extends ApiIntegrationTest {
             assertEquals(EstimateItemEntityFactory.KEEPING_TYPE, item.getKeepingType());
         });
 
-        assertEquals(warehouse.getName(), response.getBody().getWarehouse().getName());
+        assertEquals(warehouse.getName(), response.getBody().getWarehouseName());
     }
 
     @Test
@@ -97,7 +98,7 @@ public class AdminGetEstimateTest extends ApiIntegrationTest {
         assertNotNull(response.getBody().getId());
         assertEquals(EstimateEntityFactory.CONTENT, response.getBody().getContent());
         assertEquals(EstimateStatus.RECEPTED, response.getBody().getStatus());
-        assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, response.getBody().getMontlyAverageRelease());
+        assertEquals(EstimateEntityFactory.MONTHLY_AVERAGE_RELEASE, response.getBody().getMonthlyAverageRelease());
 
         assertEquals(userShipper.getUserId(), response.getBody().getUser().getUserId());
         assertEquals(userShipper.getName(), response.getBody().getUser().getName());
@@ -120,7 +121,7 @@ public class AdminGetEstimateTest extends ApiIntegrationTest {
             assertEquals(EstimateItemEntityFactory.KEEPING_TYPE, item.getKeepingType());
         });
 
-        assertEquals(warehouse.getName(), response.getBody().getWarehouse().getName());
+        assertEquals(warehouse.getName(), response.getBody().getWarehouseName());
     }
 
     @Test

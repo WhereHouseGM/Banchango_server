@@ -14,13 +14,11 @@ import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouses.WarehouseIdAndNameProjection;
-import com.banchango.domain.warehouses.WarehouseStatus;
-import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.*;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.exception.EstimateNotFoundException;
+import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -115,5 +113,23 @@ public class AdminService {
         return estimate.getEstimateItems().stream()
             .map(EstimateItemSearchDto::new)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public EstimateDetailResponseDto getEstimate(String accessToken, Integer estimateId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Users user = usersRepository.findById(estimate.getUserId()).get();
+        Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
+        String warehouseName;
+
+        if(optionalWarehouseNameProjection.isPresent()) warehouseName = optionalWarehouseNameProjection.get().getName();
+        else warehouseName = "삭제된 창고";
+
+        return EstimateDetailResponseDto.builder()
+            .estimate(estimate)
+            .user(user)
+            .warehouseName(warehouseName)
+            .build();
     }
 }
