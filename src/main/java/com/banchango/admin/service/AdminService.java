@@ -42,7 +42,7 @@ public class AdminService {
     private final UsersRepository usersRepository;
     private final MainItemTypesRepository mainItemTypesRepository;
     private final EstimatesRepository estimatesRepository;
-    private final WithdrawsRepository withdrawRespository;
+    private final WithdrawsRepository withdrawsRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -148,7 +148,7 @@ public class AdminService {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         Users user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
 
-        boolean isUserDeleted = withdrawRespository.findByUserId(user.getUserId()).isPresent();
+        boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
 
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user, isUserDeleted);
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
