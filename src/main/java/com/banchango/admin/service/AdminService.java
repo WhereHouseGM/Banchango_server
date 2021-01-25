@@ -6,7 +6,7 @@ import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
-import com.banchango.domain.estimates.EstimateStatusAndCreatedAtAndWarehouseIdProjection;
+import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
@@ -18,7 +18,6 @@ import com.banchango.domain.warehouses.*;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.exception.EstimateNotFoundException;
-import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,9 +76,9 @@ public class AdminService {
     @Transactional(readOnly = true)
     public List<EstimateSummaryDto> getEstimates(String accessToken, EstimateStatus status, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
-        List<EstimateStatusAndCreatedAtAndWarehouseIdProjection> estimates;
-        if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndCreatedAtAndWarehouseIdProjection.class);
-        else estimates = estimatesRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusAndCreatedAtAndWarehouseIdProjection.class);
+        List<EstimateStatusAndLastModifiedAtAndWarehouseIdProjection> estimates;
+        if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
+        else estimates = estimatesRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
 
         if(estimates.isEmpty()) throw new EstimateNotFoundException();
 

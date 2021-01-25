@@ -2,9 +2,9 @@ package com.banchango.domain.estimates;
 
 import java.time.LocalDateTime;
 
-public interface EstimateStatusAndCreatedAtAndWarehouseIdProjection {
+public interface EstimateStatusAndLastModifiedAtAndWarehouseIdProjection {
     Integer getId();
     EstimateStatus getStatus();
-    LocalDateTime getCreatedAt();
+    LocalDateTime getLastModifiedAt();
     Integer getWarehouseId();
 }

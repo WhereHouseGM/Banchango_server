@@ -11,11 +11,10 @@ public class DateConverter {
     }
 
     public static String convertDateWithTime(LocalDateTime localDateTime) {
-        return localDateTime.getYear() + "년 " +
-                localDateTime.getMonthValue() + "월 " +
-                localDateTime.getDayOfMonth() + "일 " +
-                localDateTime.getHour() + "시 " +
-                localDateTime.getMinute() + "분 " +
-                localDateTime.getSecond() + "초";
+        return localDateTime.getYear() + "-" +
+            localDateTime.getMonthValue() + "-" +
+            localDateTime.getDayOfMonth() + " " +
+            localDateTime.getHour() + ":" +
+            localDateTime.getMinute();
     }
 }
