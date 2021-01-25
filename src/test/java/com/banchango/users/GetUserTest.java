@@ -38,6 +38,7 @@ public class GetUserTest extends ApiIntegrationTest {
         assertEquals(user.getPhoneNumber(), responseBody.getPhoneNumber());
         assertEquals(user.getCompanyName(), responseBody.getCompanyName());
         assertEquals(user.getTelephoneNumber(), responseBody.getTelephoneNumber());
+        assertEquals(false, responseBody.getIsDeleted());
     }
 
     @Test

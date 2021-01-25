@@ -24,12 +24,12 @@ public class EstimateDetailResponseDto {
     private String warehouseName;
 
     @Builder
-    public EstimateDetailResponseDto(Estimates estimate, Users user, List<EstimateItemSearchDto> items, String warehouseName) {
+    public EstimateDetailResponseDto(Estimates estimate, Users user, String warehouseName, boolean isDeleted) {
         this.id = estimate.getId();
         this.content = estimate.getContent();
         this.status = estimate.getStatus();
         this.monthlyAverageRelease = estimate.getMonthlyAverageRelease();
-        this.user = new UserInfoResponseDto(user);
+        this.user = new UserInfoResponseDto(user, isDeleted);
         this.warehouseName = warehouseName;
         this.items = estimate.getEstimateItems()
             .stream()
