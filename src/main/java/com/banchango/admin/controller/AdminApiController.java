@@ -136,6 +136,7 @@ public class AdminApiController {
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         return adminService.getEstimate(accessToken, estimateId);
+    }
 
     @PostMapping("/v3/admin/users/sign-in")
     @ResponseStatus(HttpStatus.OK)

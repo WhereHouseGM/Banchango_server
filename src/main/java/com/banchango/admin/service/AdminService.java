@@ -126,7 +126,8 @@ public class AdminService {
         Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
         String warehouseName;
 
-        if(optionalWarehouseNameProjection.isPresent()) warehouseName = optionalWarehouseNameProjection.get().getName();
+        if (optionalWarehouseNameProjection.isPresent())
+            warehouseName = optionalWarehouseNameProjection.get().getName();
         else warehouseName = "삭제된 창고";
 
         return EstimateDetailResponseDto.builder()
@@ -134,7 +135,9 @@ public class AdminService {
             .user(user)
             .warehouseName(warehouseName)
             .build();
+    }
 
+    @Transactional(readOnly = true)
     public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         Users user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
