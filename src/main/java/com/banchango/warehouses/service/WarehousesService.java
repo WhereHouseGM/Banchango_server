@@ -148,6 +148,7 @@ public class WarehousesService {
 
         int accessTokenUserId = JwtTokenUtil.extractUserId(accessToken);
         if(warehouse.getUserId() != accessTokenUserId) throw new WarehouseInvalidAccessException();
+        if(warehouse.getStatus().equals(WarehouseStatus.DELETED)) throw new WarehouseNotFoundException();
 
         warehousesRepository.deleteById(warehouseId);
     }
@@ -169,7 +170,7 @@ public class WarehousesService {
 
         if(!warehouse.getUserId().equals(userId)) throw new ForbiddenUserIdException();
 
-        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).equals(requestDto.getMainItemTypes())) {
+        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
             mainItemTypesRepository.deleteByWarehouseId(warehouseId);
         }
 

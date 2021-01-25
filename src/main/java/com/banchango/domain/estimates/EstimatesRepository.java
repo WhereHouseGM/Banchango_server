@@ -12,10 +12,8 @@ import java.util.List;
 @Repository
 public interface EstimatesRepository extends JpaRepository<Estimates, Integer> {
     List<Estimates> findByUserId(Integer userId);
-
-    List<Estimates> findByStatusOrderByIdDesc(EstimateStatus status, Pageable pageable);
-
-    List<Estimates> findByOrderByIdDesc(Pageable pageable);
+    <T> List<T> findByStatusOrderByIdAsc(EstimateStatus status, Pageable pageable, Class<T> clazz);
+    <T> List<T> findByOrderByIdAsc(Pageable pageable, Class<T> clazz);
 
     @Modifying
     @Transactional

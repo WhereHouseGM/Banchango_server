@@ -13,11 +13,11 @@ public class WarehouseInsertRequestResponseDto {
 
     private Integer warehouseId;
     private String name;
-    private String createdAt;
+    private String lastModifiedAt;
 
     public WarehouseInsertRequestResponseDto(Warehouses warehouse) {
         this.warehouseId = warehouse.getId();
         this.name = warehouse.getName();
-        this.createdAt = DateConverter.convertDateWithTime(warehouse.getCreatedAt());
+        this.lastModifiedAt = DateConverter.convertDateWithTime(warehouse.getLastModifiedAt());
     }
 }

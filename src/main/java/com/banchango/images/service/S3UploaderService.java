@@ -23,7 +23,10 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Utilities;
-import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -137,8 +140,7 @@ public class S3UploaderService {
         if(images.size() >= 1) {
             WarehouseImages image = images.get(0);
             String[] splitTemp = image.getUrl().split("/");
-            String fileName = splitTemp[splitTemp.length - 1];
-            return fileName;
+            return splitTemp[splitTemp.length - 1];
         } else throw new WarehouseMainImageNotFoundException();
     }
 

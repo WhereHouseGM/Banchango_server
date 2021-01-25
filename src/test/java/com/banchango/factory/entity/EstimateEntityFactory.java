@@ -19,8 +19,8 @@ public class EstimateEntityFactory {
     public static final String CONTENT = "CONTENT";
     public static final Integer MONTHLY_AVERAGE_RELEASE = 1299;
 
-    private EstimateItemEntityFactory estimateItemEntityFactory;
-    private EstimatesRepository estimatesRepository;
+    private final EstimateItemEntityFactory estimateItemEntityFactory;
+    private final EstimatesRepository estimatesRepository;
 
     @Autowired
     EstimateEntityFactory(EstimatesRepository estimatesRepository, EstimateItemEntityFactory estimateItemEntityFactory) {

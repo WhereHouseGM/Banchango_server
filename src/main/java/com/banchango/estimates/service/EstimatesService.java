@@ -21,7 +21,7 @@ import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
 import com.banchango.warehouses.exception.WarehouseNotFoundException;
-import com.banchango.warehouses.projection.WarehouseIdAndNameAndAddressProjection;
+import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +91,8 @@ public class EstimatesService {
                 }
                 return estimateSearchResponseDto;
             })
-            .filter(estimateSearchDto -> !estimateSearchDto.getWarehouse().equals(null))
+            .filter(searchDto -> searchDto.getWarehouse() != null)
+            //.filter(searchDto -> searchDto.getWarehouse().getWarehouseId() != null && searchDto.getWarehouse().getName() != null && searchDto.getWarehouse().getAddress() != null)
             .collect(Collectors.toList());
         if(estimates.size() == 0) throw new EstimateNotFoundException();
 

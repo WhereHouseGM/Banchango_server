@@ -1,9 +1,6 @@
 package com.banchango.admin.controller;
 
-import com.banchango.admin.dto.EstimateStatusUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseAdminDetailResponseDto;
-import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
-import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
+import com.banchango.admin.dto.*;
 import com.banchango.admin.service.AdminService;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.interceptor.ValidateRequired;
@@ -11,9 +8,10 @@ import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
-import com.banchango.estimates.dto.EstimateSearchResponseDto;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
+import com.banchango.users.dto.UserSigninRequestDto;
+import com.banchango.users.dto.UserSigninResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -32,12 +30,14 @@ public class AdminApiController {
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/warehouses")
     @ResponseStatus(HttpStatus.OK)
-    public WarehouseInsertRequestResponseListDto getWaitingWarehouses(@RequestAttribute(name = "accessToken") String token,
-                                                                      @RequestParam(name = "page") Integer page,
-                                                                      @RequestParam(name = "size") Integer size,
-                                                                      @RequestParam(name = "status")WarehouseStatus status) {
+    public WarehouseInsertRequestResponseListDto getWarehouses(
+        @RequestAttribute(name = "accessToken") String token,
+        @RequestParam(name = "page") Integer page,
+        @RequestParam(name = "size") Integer size,
+        @RequestParam(name = "status", required = false) WarehouseStatus status
+    ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return adminService.findWaitingWarehouses(token, pageRequest, status);
+        return adminService.getWarehouses(token, pageRequest, status);
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
@@ -58,7 +58,7 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @PostMapping("/v3/admin/images/upload/{warehouseId}")
+    @PostMapping("/v3/admin/images/{warehouseId}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ImageInfoResponseDto uploadImage(@RequestPart(name = "file")MultipartFile file,
@@ -68,7 +68,7 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @PostMapping("/v3/admin/images/upload/main/{warehouseId}")
+    @PostMapping("/v3/admin/images/main/{warehouseId}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ImageInfoResponseDto uploadMainImage(@RequestPart(name = "file") MultipartFile file,
@@ -78,7 +78,7 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @DeleteMapping("/v3/admin/images/delete/main/{warehouseId}")
+    @DeleteMapping("/v3/admin/images/main/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public BasicMessageResponseDto deleteMainImage(@RequestAttribute(name = "accessToken") String token,
                                                    @PathVariable Integer warehouseId) {
@@ -86,7 +86,7 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @DeleteMapping("/v3/admin/images/delete/{warehouseId}")
+    @DeleteMapping("/v3/admin/images/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public BasicMessageResponseDto deleteExtraImage(@RequestParam(name = "file") String fileName,
                                                     @RequestAttribute(name = "accessToken") String token,
@@ -97,14 +97,14 @@ public class AdminApiController {
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/estimates")
     @ResponseStatus(HttpStatus.OK)
-    public EstimateSearchResponseDto getEstimates(
+    public EstimateSummaryListDto getEstimates(
         @RequestParam(required = false)EstimateStatus status,
         @RequestParam Integer page,
         @RequestParam Integer size,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return new EstimateSearchResponseDto(adminService.getEstimates(accessToken, status, pageRequest));
+        return new EstimateSummaryListDto(adminService.getEstimates(accessToken, status, pageRequest));
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
@@ -128,5 +128,23 @@ public class AdminApiController {
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         return new EstimateItemSearchResponseDto(adminService.getEstimateItems(accessToken, estimateId));
+    }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/estimates/{estimateId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EstimateDetailResponseDto getEstimate(
+        @PathVariable Integer estimateId,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        return adminService.getEstimate(accessToken, estimateId);
+    }
+
+    @PostMapping("/v3/admin/users/sign-in")
+    @ResponseStatus(HttpStatus.OK)
+    public UserSigninResponseDto adminSignIn(
+        @Valid @RequestBody UserSigninRequestDto userSigninRequestDto
+    ) {
+        return adminService.signIn(userSigninRequestDto);
     }
 }
