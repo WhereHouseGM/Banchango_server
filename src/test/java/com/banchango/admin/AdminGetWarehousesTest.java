@@ -64,7 +64,7 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
         assertTrue(response.getBody().getRequests().size() > 0);
         assertNotNull(response.getBody().getRequests().get(0).getName());
         assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
-        assertNotNull(response.getBody().getRequests().get(0).getCreatedAt());
+        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
     }
 
     @Test
@@ -91,7 +91,34 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
         assertTrue(response.getBody().getRequests().size() > 0);
         assertNotNull(response.getBody().getRequests().get(0).getName());
         assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
-        assertNotNull(response.getBody().getRequests().get(0).getCreatedAt());
+        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
+    }
+
+    @Test
+    public void get_AnyWarehouses_ResultHasItems_ifExist() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
+        Users admin = userEntityFactory.createAdminWithShipperType();
+        String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
+
+        String url = String.format("/v3/admin/warehouses?page=%d&size=%d", 0, 4);
+
+        RequestEntity<Void> request = RequestEntity.get(URI.create(url))
+            .header("Authorization", "Bearer " + adminAccessToken)
+            .build();
+
+        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD});
+        warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.COSMETIC, MainItemType.CLOTH});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.ELECTRONICS, MainItemType.SPORTS});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.GENERAL_MERCHANDISE, MainItemType.BOOK});
+
+        ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().getRequests().size() == 4);
+        assertNotNull(response.getBody().getRequests().get(0).getName());
+        assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
+        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
     }
 
     @Test

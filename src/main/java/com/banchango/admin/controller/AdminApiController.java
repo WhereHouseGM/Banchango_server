@@ -30,12 +30,14 @@ public class AdminApiController {
     @ValidateRequired(roles = UserRole.ADMIN)
     @GetMapping("/v3/admin/warehouses")
     @ResponseStatus(HttpStatus.OK)
-    public WarehouseInsertRequestResponseListDto getWaitingWarehouses(@RequestAttribute(name = "accessToken") String token,
-                                                                      @RequestParam(name = "page") Integer page,
-                                                                      @RequestParam(name = "size") Integer size,
-                                                                      @RequestParam(name = "status")WarehouseStatus status) {
+    public WarehouseInsertRequestResponseListDto getWarehouses(
+        @RequestAttribute(name = "accessToken") String token,
+        @RequestParam(name = "page") Integer page,
+        @RequestParam(name = "size") Integer size,
+        @RequestParam(name = "status", required = false) WarehouseStatus status
+    ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return adminService.findWaitingWarehouses(token, pageRequest, status);
+        return adminService.getWarehouses(token, pageRequest, status);
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
@@ -126,6 +128,16 @@ public class AdminApiController {
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         return new EstimateItemSearchResponseDto(adminService.getEstimateItems(accessToken, estimateId));
+    }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/estimates/{estimateId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EstimateDetailResponseDto getEstimate(
+        @PathVariable Integer estimateId,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        return adminService.getEstimate(accessToken, estimateId);
     }
 
     @PostMapping("/v3/admin/users/sign-in")

@@ -1,6 +1,7 @@
 package com.banchango.domain.warehouses;
 
 import com.banchango.domain.mainitemtypes.MainItemType;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,6 @@ public interface WarehousesRepository extends JpaRepository<Warehouses, Integer>
 
     @Query("select w.status from Warehouses w where w.id=:warehouseId")
     WarehouseStatus findStatusById(Integer warehouseId);
+
+    List<Warehouses> findByOrderByCreatedAtAsc(Pageable pageable);
 }

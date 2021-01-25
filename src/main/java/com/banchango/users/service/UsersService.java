@@ -35,7 +35,9 @@ public class UsersService {
         if(!userId.equals(JwtTokenUtil.extractUserId(token))) {
             throw new UserInvalidAccessException();
         }
-        return new UserInfoResponseDto(usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new));
+        boolean isUserDeleted = withdrawsRespository.findByUserId(userId).isPresent();
+
+        return new UserInfoResponseDto(usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new), isUserDeleted);
     }
 
     @Transactional(readOnly = true)
@@ -43,10 +45,10 @@ public class UsersService {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         Users user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new);
 
-        Optional<Withdraws> optionalWithdraw = withdrawsRespository.findByUserId(user.getUserId());
-        if(optionalWithdraw.isPresent()) throw new UserNotFoundException("탈퇴한 사용자입니다");
+        boolean isUserDeleted = withdrawsRespository.findByUserId(user.getUserId()).isPresent();
+        if(isUserDeleted) throw new UserNotFoundException("탈퇴한 사용자입니다");
 
-        UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user);
+        UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user, false);
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
         responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
         responseDto.setTokenType("Bearer");
@@ -57,7 +59,7 @@ public class UsersService {
     @Transactional
     public UserInfoResponseDto signUp(UserSignupRequestDto requestDto) {
         if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) throw new UserEmailInUseException();
-        return new UserInfoResponseDto(usersRepository.save(requestDto.toEntity()));
+        return new UserInfoResponseDto(usersRepository.save(requestDto.toEntity()), false);
     }
 
     @Transactional
@@ -67,7 +69,7 @@ public class UsersService {
         }
         Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
         user.updateUserInfo(requestDto);
-        return new UserInfoResponseDto(user);
+        return new UserInfoResponseDto(user, false);
     }
 
     @Transactional

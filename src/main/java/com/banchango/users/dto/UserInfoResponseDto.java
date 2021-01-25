@@ -20,8 +20,9 @@ public class UserInfoResponseDto {
     private String telephoneNumber;
     private String companyName;
     private UserRole role;
+    private Boolean isDeleted;
 
-    public UserInfoResponseDto(Users user) {
+    public UserInfoResponseDto(Users user, Boolean isDeleted) {
         this.userId = user.getUserId();
         this.name = user.getName();
         this.email = user.getEmail();
@@ -30,5 +31,6 @@ public class UserInfoResponseDto {
         this.telephoneNumber = user.getTelephoneNumber();
         this.companyName = user.getCompanyName();
         this.role = user.getRole();
+        this.isDeleted = isDeleted;
     }
 }

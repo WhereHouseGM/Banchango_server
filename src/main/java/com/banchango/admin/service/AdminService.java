@@ -6,7 +6,7 @@ import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
-import com.banchango.domain.estimates.EstimateStatusAndCreatedAtAndWarehouseIdProjection;
+import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
@@ -14,10 +14,8 @@ import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouses.WarehouseIdAndNameProjection;
-import com.banchango.domain.warehouses.WarehouseStatus;
-import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.*;
+import com.banchango.domain.withdraws.WithdrawsRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.exception.EstimateNotFoundException;
@@ -44,6 +42,7 @@ public class AdminService {
     private final UsersRepository usersRepository;
     private final MainItemTypesRepository mainItemTypesRepository;
     private final EstimatesRepository estimatesRepository;
+    private final WithdrawsRepository withdrawsRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -54,10 +53,14 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public WarehouseInsertRequestResponseListDto findWaitingWarehouses(String token, PageRequest pageRequest, WarehouseStatus status) {
+    public WarehouseInsertRequestResponseListDto getWarehouses(String token, PageRequest pageRequest, WarehouseStatus status) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
-        List<Warehouses> warehouses = warehousesRepository.findWarehousesByStatusOrderByCreatedAt(status, pageRequest);
-        if(warehouses.size() == 0) throw new WaitingWarehousesNotFoundException();
+        List<Warehouses> warehouses;
+
+        if(status == null) warehouses = warehousesRepository.findByOrderByCreatedAtAsc(pageRequest);
+        else warehouses  = warehousesRepository.findWarehousesByStatusOrderByCreatedAt(status, pageRequest);
+
+        if(warehouses.isEmpty()) throw new WaitingWarehousesNotFoundException();
         return WarehouseInsertRequestResponseListDto.builder()
                 .requests(warehouses.stream().map(WarehouseInsertRequestResponseDto::new).collect(Collectors.toList())).build();
     }
@@ -83,9 +86,9 @@ public class AdminService {
     @Transactional(readOnly = true)
     public List<EstimateSummaryDto> getEstimates(String accessToken, EstimateStatus status, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
-        List<EstimateStatusAndCreatedAtAndWarehouseIdProjection> estimates;
-        if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndCreatedAtAndWarehouseIdProjection.class);
-        else estimates = estimatesRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusAndCreatedAtAndWarehouseIdProjection.class);
+        List<EstimateStatusAndLastModifiedAtAndWarehouseIdProjection> estimates;
+        if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
+        else estimates = estimatesRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
 
         if(estimates.isEmpty()) throw new EstimateNotFoundException();
 
@@ -122,11 +125,34 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
+    public EstimateDetailResponseDto getEstimate(String accessToken, Integer estimateId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Users user = usersRepository.findById(estimate.getUserId()).get();
+        Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
+        String warehouseName;
+        boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
+
+        if (optionalWarehouseNameProjection.isPresent())
+            warehouseName = optionalWarehouseNameProjection.get().getName();
+        else warehouseName = "삭제된 창고";
+
+        return EstimateDetailResponseDto.builder()
+            .estimate(estimate)
+            .user(user)
+            .warehouseName(warehouseName)
+            .isDeleted(isUserDeleted)
+            .build();
+    }
+
+    @Transactional(readOnly = true)
     public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         Users user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
 
-        UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user);
+        boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
+
+        UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user, isUserDeleted);
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
         responseDto.setRefreshToken(JwtTokenUtil.generateRefreshToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
         responseDto.setTokenType("Bearer");

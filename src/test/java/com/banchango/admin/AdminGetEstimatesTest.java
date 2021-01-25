@@ -4,12 +4,9 @@ import com.banchango.ApiIntegrationTest;
 import com.banchango.admin.dto.EstimateSummaryListDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.estimates.dto.EstimateSearchResponseDto;
-import com.banchango.factory.entity.EstimateEntityFactory;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -46,10 +43,11 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
-                    assertNotNull(summaryDto.getCreatedAt());
+                    assertNotNull(summaryDto.getLastModifiedAt());
                 });
     }
 
@@ -77,10 +75,11 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
-                    assertNotNull(summaryDto.getCreatedAt());
+                    assertNotNull(summaryDto.getLastModifiedAt());
                 });
     }
 
@@ -108,10 +107,11 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
-                    assertNotNull(summaryDto.getCreatedAt());
+                    assertNotNull(summaryDto.getLastModifiedAt());
                 });
     }
 
@@ -139,10 +139,11 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
-                    assertNotNull(summaryDto.getCreatedAt());
+                    assertNotNull(summaryDto.getLastModifiedAt());
                 });
     }
 
@@ -170,10 +171,11 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
         response.getBody().getEstimates()
                 .forEach(summaryDto -> {
+                    assertNotNull(summaryDto.getId());
                     assertNotNull(summaryDto.getStatus());
                     assertEquals(summaryDto.getWarehouseId(), warehouse.getId());
                     assertEquals(summaryDto.getName(), warehouse.getName());
-                    assertNotNull(summaryDto.getCreatedAt());
+                    assertNotNull(summaryDto.getLastModifiedAt());
                 });
     }
 
