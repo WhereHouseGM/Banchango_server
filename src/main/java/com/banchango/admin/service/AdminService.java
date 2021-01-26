@@ -19,11 +19,13 @@ import com.banchango.domain.withdraws.WithdrawsRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.exception.EstimateNotFoundException;
+import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
 import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
+import com.banchango.warehouses.exception.WarehouseImageNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -158,5 +160,17 @@ public class AdminService {
         responseDto.setTokenType("Bearer");
         responseDto.setUser(userInfoDto);
         return responseDto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ImageInfoResponseDto> getImages(String accessToken, Integer warehouseId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        List<ImageInfoResponseDto> images = warehouse.getWarehouseImages()
+            .stream().map(ImageInfoResponseDto::new).collect(Collectors.toList());
+
+        if(images.isEmpty()) throw new WarehouseImageNotFoundException();
+
+        return images;
     }
 }
