@@ -48,6 +48,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             logger.error("REQUEST BODY : " + objectMapper.readTree(requestWrapper.getContentAsByteArray()));
             logger.error("PATH: " + servletWebRequest.getRequest().getRequestURI());
             logger.error("REMOTE ADDR: " + servletWebRequest.getRequest().getRemoteAddr());
+            logger.error("MESSAGE: " + ex.getMessage());
             errorResponseDto = new ErrorResponseDto(new Date(), status.value(), status.getReasonPhrase(), "", servletWebRequest.getRequest().getRequestURI());
         } else {
             errorResponseDto = new ErrorResponseDto(new Date(), status.value(), status.getReasonPhrase(), ex.getMessage(), servletWebRequest.getRequest().getRequestURI());
