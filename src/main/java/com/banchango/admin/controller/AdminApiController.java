@@ -147,4 +147,14 @@ public class AdminApiController {
     ) {
         return adminService.signIn(userSigninRequestDto);
     }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/warehouses/{warehouseId}/images")
+    @ResponseStatus(HttpStatus.OK)
+    public ImagesAdminResponseDto getImages(
+        @PathVariable Integer warehouseId,
+        @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        return new ImagesAdminResponseDto(adminService.getImages(accessToken, warehouseId));
+    }
 }
