@@ -62,9 +62,12 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
         ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().getRequests().size() > 0);
-        assertNotNull(response.getBody().getRequests().get(0).getName());
-        assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
-        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
+        response.getBody().getRequests().forEach(requestDto -> {
+            assertNotNull(requestDto.getName());
+            assertNotNull(requestDto.getWarehouseId());
+            assertNotNull(requestDto.getLastModifiedAt());
+            assertNotNull(requestDto.getStatus());
+        });
     }
 
     @Test
@@ -89,9 +92,12 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
         ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().getRequests().size() > 0);
-        assertNotNull(response.getBody().getRequests().get(0).getName());
-        assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
-        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
+        response.getBody().getRequests().forEach(requestDto -> {
+            assertNotNull(requestDto.getName());
+            assertNotNull(requestDto.getWarehouseId());
+            assertNotNull(requestDto.getLastModifiedAt());
+            assertNotNull(requestDto.getStatus());
+        });
     }
 
     @Test
@@ -116,9 +122,12 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
         ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().getRequests().size() == 4);
-        assertNotNull(response.getBody().getRequests().get(0).getName());
-        assertNotNull(response.getBody().getRequests().get(0).getWarehouseId());
-        assertNotNull(response.getBody().getRequests().get(0).getLastModifiedAt());
+        response.getBody().getRequests().forEach(requestDto -> {
+            assertNotNull(requestDto.getName());
+            assertNotNull(requestDto.getWarehouseId());
+            assertNotNull(requestDto.getLastModifiedAt());
+            assertNotNull(requestDto.getStatus());
+        });
     }
 
     @Test
