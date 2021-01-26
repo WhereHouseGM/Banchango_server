@@ -57,9 +57,10 @@ jobs:
         AWS_S3_BUCKET: ${{ secrets.BANCHANGO_AWS_S3_BUCKET }}
         AWS_S3_REGION: ${{ secrets.BANCHANGO_AWS_S3_REGION }}
         WH_DEFAULT_IMAGE_URL: ${{ secrets.WH_DEFAULT_IMAGE_URL }}
-        AWS_EMAIL_ACCESS_KEY: ${{ secrets.AWS_EMAIL_ACCESS_KEY }}
-        AWS_EMAIL_SECRET_ACCESS_KEY: ${{ secrets.AWS_EMAIL_SECRET_ACCESS_KEY }}
-        
+        BANCHANGO_EMAIL: ${{ secrets.BANCHANGO_EMAIL }}
+        BANCHANGO_EMAIL_PASSWORD: ${{ secrets.BANCHANGO_EMAIL_PASSWORD }}
+        BANCHANGO_EMAIL_DEBUG: ${{ secrets.BANCHANGO_EMAIL_DEBUG }}
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
