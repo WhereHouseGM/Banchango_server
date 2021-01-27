@@ -15,20 +15,16 @@
         "valueFrom": "ACCESS_KEY_ID"
       },
       {
-        "name": "BANCHANGO_EMAIL_ID",
-        "valueFrom": "BANCHANGO_EMAIL_ID"
+        "name": "BANCHANGO_EMAIL",
+        "valueFrom": "BANCHANGO_EMAIL"
       },
       {
         "name": "BANCHANGO_EMAIL_PASSWORD",
         "valueFrom": "BANCHANGO_EMAIL_PASSWORD"
       },
       {
-        "name": "AWS_EMAIL_ACCESS_KEY",
-        "valueFrom": "EMAIL_ACCESS_KEY"
-      },
-      {
-        "name": "AWS_EMAIL_SECRET_ACCESS_KEY",
-        "valueFrom": "EMAIL_SECRET_ACCESS_KEY"
+        "name": "BANCHANGO_EMAIL_DEBUG",
+        "valueFrom": "BANCHANGO_EMAIL_DEBUG"
       },
       {
         "name": "PRD_WH_DATASOURCE_URL",
