@@ -63,7 +63,7 @@ public class EstimatesService {
 
         newEstimate.setEstimateItems(newEstimateItems);
 
-        EmailContent emailContent = new EmailContent("[반창고]견적 문의 등록 안내", "안녕하세요, 반창고 입니다!", user.getName() + " 회원님의 " + warehouse.getName() + " 창고에 대한 견적 문의가 정상적으로 등록되었습니다. 추후 영업 팀의 검토 후 연락드리겠습니다.", "문의사항은 wherehousegm@gmail.com 으로 답변주세요.", "반창고", "dev.banchangohub.com");
+        EmailContent emailContent = new EmailContent("[반창고]견적 문의 등록 안내", "안녕하세요, 반창고 입니다!", user.getName() + " 회원님의 " + warehouse.getName() + " 창고에 대한 견적 문의가 정상적으로 등록되었습니다. 추후 영업 팀의 검토 후 연락드리겠습니다.", "문의사항은 이 이메일로 답변주세요.", "반창고 허브", "https://banchangohub.com");
         return emailSender.send(user.getEmail(), emailContent, true);
     }
 
