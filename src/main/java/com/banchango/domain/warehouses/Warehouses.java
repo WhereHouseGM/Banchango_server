@@ -98,33 +98,27 @@ public class Warehouses extends BaseTimeEntity {
     private String blogUrl;
 
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "warehouse_id")
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<DeliveryTypes> deliveryTypes = new ArrayList<>();
 
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "warehouse_id")
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<Insurances> insurances = new ArrayList<>();
 
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "warehouse_id")
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<SecurityCompanies> securityCompanies = new ArrayList<>();
 
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "warehouse_id")
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<WarehouseConditions> warehouseConditions = new ArrayList<>();
 
     @Setter
-    @OneToMany( cascade = CascadeType.ALL)
-    @JoinColumn(name = "warehouse_id")
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<WarehouseFacilityUsages> warehouseFacilityUsages = new ArrayList<>();
 
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "warehouse_id")
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
 
     @Setter

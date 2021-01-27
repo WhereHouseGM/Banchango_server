@@ -4,17 +4,23 @@ import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
+import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.*;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.domain.withdraws.WithdrawsRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
@@ -45,6 +51,12 @@ public class AdminService {
     private final MainItemTypesRepository mainItemTypesRepository;
     private final EstimatesRepository estimatesRepository;
     private final WithdrawsRepository withdrawsRepository;
+    private final DeliveryTypesRepository deliveryTypesRepository;
+    private final SecurityCompaniesRepository securityCompaniesRepository;
+    private final WarehouseUsageCautionsRepository warehouseUsageCautionsRepository;
+    private final WarehouseFacilityUsagesRepository warehouseFacilityUsagesRepository;
+    private final InsurancesRepository insurancesRepository;
+    private final WarehouseConditionsRepository warehouseConditionsRepository;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -78,6 +90,13 @@ public class AdminService {
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
+        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
+        warehouseFacilityUsagesRepository.deleteByWarehouseId(warehouseId);
+        warehouseUsageCautionsRepository.deleteByWarehouseId(warehouseId);
+        insurancesRepository.deleteByWarehouseId(warehouseId);
+        mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+        warehouseConditionsRepository.deleteByWarehouseId(warehouseId);
         if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
             mainItemTypesRepository.deleteByWarehouseId(warehouseId);
         }
