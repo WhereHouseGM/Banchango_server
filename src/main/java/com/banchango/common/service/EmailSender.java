@@ -59,7 +59,7 @@ public class EmailSender {
             message.setFrom(new InternetAddress(senderEmail));
 
             if(isAdminIncluded) {
-                message.setRecipients(Message.RecipientType.TO, new Address[]{new InternetAddress(recipient), new InternetAddress("wherehousegm@gmail.com")});
+                message.setRecipients(Message.RecipientType.TO, new Address[]{new InternetAddress(recipient), new InternetAddress("info@banchangohub.com")});
             } else {
                 message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
             }
