@@ -11,7 +11,6 @@ import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -27,7 +26,6 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
     private void assertWarehouseDetail(Warehouses warehouse) {
         Integer warehouseId = warehouse.getId();
-//        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         assertEquals(WarehouseEntityFactory.NAME, warehouse.getName());
         assertEquals(WarehouseEntityFactory.SPACE, warehouse.getSpace());
         assertEquals(WarehouseEntityFactory.ADDRESS, warehouse.getAddress());
