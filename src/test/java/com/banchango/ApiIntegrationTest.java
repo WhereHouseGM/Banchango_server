@@ -1,7 +1,13 @@
 package com.banchango;
 
+import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.insurances.InsurancesRepository;
+import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
+import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.factory.entity.EstimateEntityFactory;
 import com.banchango.factory.entity.UserEntityFactory;
@@ -40,6 +46,24 @@ public abstract class ApiIntegrationTest {
 
     @Autowired
     protected TestRestTemplate restTemplate;
+
+    @Autowired
+    protected MainItemTypesRepository mainItemTypesRepository;
+
+    @Autowired
+    protected InsurancesRepository insurancesRepository;
+
+    @Autowired
+    protected SecurityCompaniesRepository securityCompaniesRepository;
+
+    @Autowired
+    protected DeliveryTypesRepository deliveryTypesRepository;
+
+    @Autowired
+    protected WarehouseFacilityUsagesRepository warehouseFacilityUsagesRepository;
+
+    @Autowired
+    protected WarehouseConditionsRepository warehouseConditionsRepository;
 
     @Before
     public void setup() {

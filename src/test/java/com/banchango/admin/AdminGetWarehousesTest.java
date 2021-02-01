@@ -121,7 +121,7 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
 
         ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().getRequests().size() == 4);
+        assertEquals(response.getBody().getRequests().size(),4);
         response.getBody().getRequests().forEach(requestDto -> {
             assertNotNull(requestDto.getName());
             assertNotNull(requestDto.getWarehouseId());
