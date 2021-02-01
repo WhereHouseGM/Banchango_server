@@ -64,17 +64,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         }
     }
 
-    @Test
-    public void put_WarehouseInfoIsUpdatedWithoutBlogUrl_responseIsOk_ifAdminIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
-        String accessToken = JwtTokenUtil.generateAccessToken(user);
-
-        Users admin = userEntityFactory.createAdminWithOwnerType();
-        String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
-
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
-        Integer warehouseId = warehouse.getId();
-        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
+    private WarehouseAdminUpdateRequestDto createWarehouseAdminRequestDto(Boolean isBlogUrlNull) {
         WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
                 .name("NEW NAME")
                 .space(999)
@@ -102,6 +92,25 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
                 .status(WarehouseStatus.REJECTED)
                 .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
                 .build();
+        if (!isBlogUrlNull) {
+            body.setBlogUrl("BLOG_URL");
+        }
+        return body;
+    }
+
+    @Test
+    public void put_WarehouseInfoIsUpdatedWithoutBlogUrl_responseIsOk_ifAdminIsOwner() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
+        Users admin = userEntityFactory.createAdminWithOwnerType();
+        String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
+
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Integer warehouseId = warehouse.getId();
+        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
+        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(true);
+
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + adminAccessToken)
@@ -150,33 +159,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
-        WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
-                .name("NEW NAME")
-                .space(999)
-                .address("NEW ADDRESS")
-                .addressDetail("NEW ADDR_DETAIL")
-                .description("NEW DESC")
-                .availableWeekdays(101010)
-                .openAt("08:00")
-                .closeAt("23:30")
-                .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
-                .cctvExist(false)
-                .doorLockExist(false)
-                .airConditioningType(AirConditioningType.NONE)
-                .workerExist(false)
-                .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
-                .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
-                .minReleasePerMonth(101)
-                .latitude(11.11)
-                .longitude(33.33)
-                .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
-                .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
-                .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
-                .status(WarehouseStatus.REJECTED)
-                .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
-                .build();
+        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(true);
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + adminAccessToken)
@@ -226,34 +209,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
 
-        WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
-            .name("NEW NAME")
-            .space(999)
-            .address("NEW ADDRESS")
-            .addressDetail("NEW ADDR_DETAIL")
-            .description("NEW DESC")
-            .availableWeekdays(101010)
-            .openAt("08:00")
-            .closeAt("23:30")
-            .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
-            .cctvExist(false)
-            .doorLockExist(false)
-            .airConditioningType(AirConditioningType.NONE)
-            .workerExist(false)
-            .canPark(false)
-            .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
-            .warehouseType(WarehouseType.FULFILLMENT)
-            .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
-            .minReleasePerMonth(101)
-            .latitude(11.11)
-            .longitude(33.33)
-            .blogUrl("BLOG_URL")
-            .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
-            .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
-            .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
-            .status(WarehouseStatus.REJECTED)
-            .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
-            .build();
+        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(false);
 
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
             .contentType(MediaType.APPLICATION_JSON)
@@ -304,34 +260,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
 
-        WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
-                .name("NEW NAME")
-                .space(999)
-                .address("NEW ADDRESS")
-                .addressDetail("NEW ADDR_DETAIL")
-                .description("NEW DESC")
-                .availableWeekdays(101010)
-                .openAt("08:00")
-                .closeAt("23:30")
-                .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
-                .cctvExist(false)
-                .doorLockExist(false)
-                .airConditioningType(AirConditioningType.NONE)
-                .workerExist(false)
-                .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
-                .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
-                .minReleasePerMonth(101)
-                .latitude(11.11)
-                .longitude(33.33)
-                .blogUrl("BLOG_URL")
-                .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
-                .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
-                .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
-                .status(WarehouseStatus.REJECTED)
-                .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
-                .build();
+        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(false);
 
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -380,34 +309,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
         String BLOG_URL = "BLOG_URL";
 
-        WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
-                .name("NEW NAME")
-                .space(999)
-                .address("NEW ADDRESS")
-                .addressDetail("NEW ADDR_DETAIL")
-                .description("NEW DESC")
-                .availableWeekdays(101010)
-                .openAt("08:00")
-                .closeAt("23:30")
-                .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
-                .cctvExist(false)
-                .doorLockExist(false)
-                .airConditioningType(AirConditioningType.NONE)
-                .workerExist(false)
-                .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
-                .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
-                .minReleasePerMonth(101)
-                .latitude(11.11)
-                .longitude(33.33)
-                .blogUrl(BLOG_URL)
-                .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
-                .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
-                .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
-                .status(WarehouseStatus.REJECTED)
-                .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
-                .build();
+        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(false);
 
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -428,34 +330,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
         String BLOG_URL = "BLOG_URL";
 
-        WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
-                .name("NEW NAME")
-                .space(999)
-                .address("NEW ADDRESS")
-                .addressDetail("NEW ADDR_DETAIL")
-                .description("NEW DESC")
-                .availableWeekdays(101010)
-                .openAt("08:00")
-                .closeAt("23:30")
-                .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
-                .cctvExist(false)
-                .doorLockExist(false)
-                .airConditioningType(AirConditioningType.NONE)
-                .workerExist(false)
-                .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
-                .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
-                .minReleasePerMonth(101)
-                .latitude(11.11)
-                .longitude(33.33)
-                .blogUrl(BLOG_URL)
-                .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
-                .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
-                .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
-                .status(WarehouseStatus.REJECTED)
-                .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
-                .build();
+        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(false);
 
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
                 .header("Authorization", "Bearer "+accessToken)
@@ -477,34 +352,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Integer warehouseId = 0;
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
 
-        WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
-                .name("NEW NAME")
-                .space(999)
-                .address("NEW ADDRESS")
-                .addressDetail("NEW ADDR_DETAIL")
-                .description("NEW DESC")
-                .availableWeekdays(101010)
-                .openAt("08:00")
-                .closeAt("23:30")
-                .availableTimeDetail("NEW AVAIL_TIME_DETAIL")
-                .cctvExist(false)
-                .doorLockExist(false)
-                .airConditioningType(AirConditioningType.NONE)
-                .workerExist(false)
-                .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
-                .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
-                .minReleasePerMonth(101)
-                .latitude(11.11)
-                .longitude(33.33)
-                .blogUrl("BLOG_URL")
-                .insurances(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"}))
-                .securityCompanies(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"}))
-                .deliveryTypes(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"}))
-                .status(WarehouseStatus.REJECTED)
-                .warehouseFacilityUsages(Arrays.asList(new String[]{"WH_FACILITY_USAGE"}))
-                .build();
+        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(false);
 
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
                 .header("Authorization", "Bearer "+adminAccessToken)
