@@ -72,35 +72,6 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         assertWarehouseDetail(warehouse);
-
-//        assertNotNull(warehouse.getWarehouseId());
-//        assertNotNull(warehouse.getOwnerId());
-//        assertNotNull(warehouse.getName());
-//        assertNotNull(warehouse.getSpace());
-//        assertNotNull(warehouse.getAddress());
-//        assertNotNull(warehouse.getAddressDetail());
-//        assertNotNull(warehouse.getDescription());
-//        assertNotNull(warehouse.getAvailableWeekdays());
-//        assertNotNull(warehouse.getOpenAt());
-//        assertNotNull(warehouse.getCloseAt());
-//        assertNotNull(warehouse.getAvailableTimeDetail());
-//        assertNotNull(warehouse.getCctvExist());
-//        assertNotNull(warehouse.getDoorLockExist());
-//        assertNotNull(warehouse.getAirConditioningType());
-//        assertNotNull(warehouse.getWorkerExist());
-//        assertNotNull(warehouse.getCanPark());
-//        assertNotNull(warehouse.getMainItemTypes());
-//        assertNotNull(warehouse.getWarehouseType());
-//        assertNotNull(warehouse.getMinReleasePerMonth());
-//        assertNotNull(warehouse.getLatitude());
-//        assertNotNull(warehouse.getLongitude());
-//        assertNull(warehouse.getBlogUrl());
-//        assertNotNull(warehouse.getMainImageUrl());
-//        assertNotNull(warehouse.getDeliveryTypes());
-//        assertNotNull(warehouse.getWarehouseCondition());
-//        assertNotNull(warehouse.getWarehouseFacilityUsages());
-//        assertNotNull(warehouse.getWarehouseUsageCautions());
-//        assertNotNull(warehouse.getImages());
     }
 
     @Test
@@ -119,35 +90,6 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         assertWarehouseDetail(warehouse);
-
-//        assertNotNull(warehouse.getWarehouseId());
-//        assertNotNull(warehouse.getOwnerId());
-//        assertNotNull(warehouse.getName());
-//        assertNotNull(warehouse.getSpace());
-//        assertNotNull(warehouse.getAddress());
-//        assertNotNull(warehouse.getAddressDetail());
-//        assertNotNull(warehouse.getDescription());
-//        assertNotNull(warehouse.getAvailableWeekdays());
-//        assertNotNull(warehouse.getOpenAt());
-//        assertNotNull(warehouse.getCloseAt());
-//        assertNotNull(warehouse.getAvailableTimeDetail());
-//        assertNotNull(warehouse.getCctvExist());
-//        assertNotNull(warehouse.getDoorLockExist());
-//        assertNotNull(warehouse.getAirConditioningType());
-//        assertNotNull(warehouse.getWorkerExist());
-//        assertNotNull(warehouse.getCanPark());
-//        assertNotNull(warehouse.getMainItemTypes());
-//        assertNotNull(warehouse.getWarehouseType());
-//        assertNotNull(warehouse.getMinReleasePerMonth());
-//        assertNotNull(warehouse.getLatitude());
-//        assertNotNull(warehouse.getLongitude());
-//        assertNull(warehouse.getBlogUrl());
-//        assertNotNull(warehouse.getMainImageUrl());
-//        assertNotNull(warehouse.getDeliveryTypes());
-//        assertNotNull(warehouse.getWarehouseCondition());
-//        assertNotNull(warehouse.getWarehouseFacilityUsages());
-//        assertNotNull(warehouse.getWarehouseUsageCautions());
-//        assertNotNull(warehouse.getImages());
     }
 
     @Test
