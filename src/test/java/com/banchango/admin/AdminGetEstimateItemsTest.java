@@ -129,7 +129,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_adminEstimateItemsByestimateId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
+    public void get_adminEstimateItemsByEstimateId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
