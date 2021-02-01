@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
-    public void get_adminEstimateItemsByestimateId_responseIsOk_IfUserIsOwner() {
+    public void get_adminEstimateItemsByEstimateId_responseIsOk_IfUserIsOwner() {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
@@ -55,7 +55,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_adminEstimateItemsByestimateId_responseIsOk_IfUserIsShipeer() {
+    public void get_adminEstimateItemsByEstimateId_responseIsOk_IfUserIsShipper() {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
@@ -89,7 +89,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_adminEstimateItemsByestimateId_responseIsNotFound_IfEstimateNotExist() {
+    public void get_adminEstimateItemsByEstimateId_responseIsNotFound_IfEstimateNotExist() {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
@@ -109,7 +109,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_get_adminEstimateItemsByestimateId_responseIsNotFound_IfEstimateItemsNotExist() {
+    public void get_adminEstimateItemsByEstimateId_responseIsNotFound_IfEstimateItemsNotExist() {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
@@ -129,7 +129,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_get_adminEstimateItemsByestimateId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
+    public void get_adminEstimateItemsByestimateId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
@@ -145,7 +145,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_adminEstimateItemsByestimateId_responseIsForbidden_IfUserNotAdmin() {
+    public void get_adminEstimateItemsByEstimateId_responseIsForbidden_IfUserNotAdmin() {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
