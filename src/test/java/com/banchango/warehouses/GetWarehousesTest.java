@@ -3,9 +3,15 @@ package com.banchango.warehouses;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
+import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.users.Users;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.factory.entity.WarehouseEntityFactory;
+import com.banchango.warehouses.dto.WarehouseMainItemTypeMatchDto;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
 import org.junit.Test;
@@ -14,11 +20,30 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
 public class GetWarehousesTest extends ApiIntegrationTest {
+
+    private void assertSearchResult(WarehouseSearchDto dto, Boolean isMainItemTypesNull) {
+        assertEquals(WarehouseEntityFactory.NAME, dto.getName());
+        assertEquals(WarehouseEntityFactory.SPACE, dto.getSpace());
+        assertEquals(WarehouseEntityFactory.ADDRESS, dto.getAddress());
+        assertEquals(WarehouseEntityFactory.OPEN_AT, dto.getOpenAt());
+        assertEquals(WarehouseEntityFactory.CLOSE_AT, dto.getCloseAt());
+        assertEquals(WarehouseEntityFactory.WAREHOUSE_TYPE, dto.getWarehouseType());
+        assertEquals(WarehouseEntityFactory.MIN_RELEASE_PER_MONTH, dto.getMinReleasePerMonth());
+        assertNotNull(dto.getMainImageUrl());
+        assertTrue(dto.getDeliveryTypes().containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES)));
+        if(isMainItemTypesNull) {
+            assertTrue(dto.getMainItemTypes().size() == 0);
+        } else {
+            assertTrue(dto.getMainItemTypes().size() != 0);
+        }
+    }
 
     @Test
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
@@ -33,22 +58,22 @@ public class GetWarehousesTest extends ApiIntegrationTest {
         List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
         assertTrue(warehouses.size() > 0);
 
-        WarehouseSearchDto warehouse = warehouses.get(0);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
+        warehouses.forEach(dto -> assertSearchResult(dto, true));
 
-        assertNotNull(warehouse.getAddress());
-        assertNotNull(warehouse.getWarehouseId());
-        assertNotNull(warehouse.getWarehouseCondition());
-        assertNotNull(warehouse.getMinReleasePerMonth());
-        assertNotNull(warehouse.getName());
-        assertNotNull(warehouse.getWarehouseType());
-        assertNotNull(warehouse.getCloseAt());
-        assertNotNull(warehouse.getMainImageUrl());
-        assertNotNull(warehouse.getOpenAt());
-        assertNotNull(warehouse.getSpace());
-        assertNotNull(warehouse.getDeliveryTypes());
-        assertNotNull(warehouse.getMainItemTypes());
+//        assertNotNull(warehouse.getAddress());
+//        assertNotNull(warehouse.getWarehouseId());
+//        assertNotNull(warehouse.getWarehouseCondition());
+//        assertNotNull(warehouse.getMinReleasePerMonth());
+//        assertNotNull(warehouse.getName());
+//        assertNotNull(warehouse.getWarehouseType());
+//        assertNotNull(warehouse.getCloseAt());
+//        assertNotNull(warehouse.getMainImageUrl());
+//        assertNotNull(warehouse.getOpenAt());
+//        assertNotNull(warehouse.getSpace());
+//        assertNotNull(warehouse.getDeliveryTypes());
+//        assertNotNull(warehouse.getMainItemTypes());
     }
 
     @Test
@@ -93,22 +118,23 @@ public class GetWarehousesTest extends ApiIntegrationTest {
         List<WarehouseSearchDto> warehouses = response.getBody().getWarehouses();
         assertTrue(warehouses.size() > 0);
 
-        WarehouseSearchDto warehouseSearchDto = warehouses.get(0);
-
+//        WarehouseSearchDto warehouseSearchDto = warehouses.get(0);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        assertNotNull(warehouseSearchDto.getAddress());
-        assertNotNull(warehouseSearchDto.getWarehouseId());
-        assertNotNull(warehouseSearchDto.getWarehouseCondition());
-        assertNotNull(warehouseSearchDto.getMinReleasePerMonth());
-        assertNotNull(warehouseSearchDto.getName());
-        assertNotNull(warehouseSearchDto.getWarehouseType());
-        assertNotNull(warehouseSearchDto.getCloseAt());
-        assertNotNull(warehouseSearchDto.getMainImageUrl());
-        assertNotNull(warehouseSearchDto.getOpenAt());
-        assertNotNull(warehouseSearchDto.getSpace());
-        assertNotNull(warehouseSearchDto.getDeliveryTypes());
-        assertNotNull(warehouseSearchDto.getMainItemTypes());
+        warehouses.forEach(dto -> assertSearchResult(dto, false));
+
+//        assertNotNull(warehouseSearchDto.getAddress());
+//        assertNotNull(warehouseSearchDto.getWarehouseId());
+//        assertNotNull(warehouseSearchDto.getWarehouseCondition());
+//        assertNotNull(warehouseSearchDto.getMinReleasePerMonth());
+//        assertNotNull(warehouseSearchDto.getName());
+//        assertNotNull(warehouseSearchDto.getWarehouseType());
+//        assertNotNull(warehouseSearchDto.getCloseAt());
+//        assertNotNull(warehouseSearchDto.getMainImageUrl());
+//        assertNotNull(warehouseSearchDto.getOpenAt());
+//        assertNotNull(warehouseSearchDto.getSpace());
+//        assertNotNull(warehouseSearchDto.getDeliveryTypes());
+//        assertNotNull(warehouseSearchDto.getMainItemTypes());
 
         for (WarehouseSearchDto _warehouse : warehouses) {
             _warehouse.getMainItemTypes().stream()
