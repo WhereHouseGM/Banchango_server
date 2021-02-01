@@ -9,6 +9,7 @@ import com.banchango.domain.users.Users;
 import com.banchango.factory.request.UserUpdateRequestFactory;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserUpdateRequestDto;
+import com.banchango.users.exception.UserIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +21,15 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 
 public class UpdateUserTest extends ApiIntegrationTest {
+
+    private void assertUpdatedUserInfo(Integer userId) {
+        Users updatedUser = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        assertEquals(UserRole.USER, updatedUser.getRole());
+        assertEquals(UserUpdateRequestFactory.NEW_NAME, updatedUser.getName());
+        assertEquals(UserUpdateRequestFactory.NEW_TELEPHONE_NUMBER, updatedUser.getTelephoneNumber());
+        assertEquals(UserUpdateRequestFactory.NEW_PHONE_NUMBER, updatedUser.getPhoneNumber());
+        assertEquals(UserUpdateRequestFactory.NEW_COMP_NAME, updatedUser.getCompanyName());
+    }
 
     @Test
     public void updateInfo_responseIsOk_IfUserIsOwner() {
@@ -47,17 +57,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
         assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
         assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
 
-        RequestEntity<Void> secondRequest = RequestEntity.get(URI.create("/v3/users/" + userId))
-                .header("Authorization", "Bearer " + accessToken)
-                .build();
-
-        ResponseEntity<UserInfoResponseDto> secondResponse = restTemplate.exchange(secondRequest, UserInfoResponseDto.class);
-        assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
-        assertEquals(UserUpdateRequestFactory.NEW_NAME, secondResponse.getBody().getName());
-        assertEquals(UserRole.USER, secondResponse.getBody().getRole());
-        assertEquals(UserUpdateRequestFactory.NEW_TELEPHONE_NUMBER, secondResponse.getBody().getTelephoneNumber());
-        assertEquals(UserUpdateRequestFactory.NEW_PHONE_NUMBER, secondResponse.getBody().getPhoneNumber());
-        assertEquals(UserUpdateRequestFactory.NEW_COMP_NAME, secondResponse.getBody().getCompanyName());
+        assertUpdatedUserInfo(userId);
     }
 
     @Test
@@ -86,17 +86,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
         assertEquals(requestBody.getTelephoneNumber(), responseBody.getTelephoneNumber());
         assertEquals(requestBody.getCompanyName(), responseBody.getCompanyName());
 
-        RequestEntity<Void> secondRequest = RequestEntity.get(URI.create("/v3/users/" + userId))
-                .header("Authorization", "Bearer " + accessToken)
-                .build();
-
-        ResponseEntity<UserInfoResponseDto> secondResponse = restTemplate.exchange(secondRequest, UserInfoResponseDto.class);
-        assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
-        assertEquals(UserUpdateRequestFactory.NEW_NAME, secondResponse.getBody().getName());
-        assertEquals(UserRole.USER, secondResponse.getBody().getRole());
-        assertEquals(UserUpdateRequestFactory.NEW_TELEPHONE_NUMBER, secondResponse.getBody().getTelephoneNumber());
-        assertEquals(UserUpdateRequestFactory.NEW_PHONE_NUMBER, secondResponse.getBody().getPhoneNumber());
-        assertEquals(UserUpdateRequestFactory.NEW_COMP_NAME, secondResponse.getBody().getCompanyName());
+        assertUpdatedUserInfo(userId);
     }
 
     @Test
@@ -119,7 +109,6 @@ public class UpdateUserTest extends ApiIntegrationTest {
     public void updateInfo_responseIsUnAuthorized_IfUserIdAndTokenIsWrong() {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
-        Integer userId = user.getUserId();
 
         UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
 
