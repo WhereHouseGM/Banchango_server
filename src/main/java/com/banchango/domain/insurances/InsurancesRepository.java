@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface InsurancesRepository extends JpaRepository<Insurances, Integer> {
     void deleteByWarehouseId(Integer warehouseId);
-    List<String> findByWarehouseId(Integer warehouseId);
+    List<Insurances> findByWarehouseId(Integer warehouseId);
 }

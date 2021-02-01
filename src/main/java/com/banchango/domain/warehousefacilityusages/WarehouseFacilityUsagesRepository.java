@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface WarehouseFacilityUsagesRepository extends JpaRepository<WarehouseFacilityUsages, Integer> {
     void deleteByWarehouseId(Integer warehouseId);
-    List<String> findByWarehouseId(Integer warehouseId);
+    List<WarehouseFacilityUsages> findByWarehouseId(Integer warehouseId);
 }

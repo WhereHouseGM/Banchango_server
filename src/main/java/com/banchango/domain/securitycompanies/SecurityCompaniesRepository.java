@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface SecurityCompaniesRepository extends JpaRepository<SecurityCompanies, Integer> {
     void deleteByWarehouseId(Integer warehouseId);
-    List<String> findByWarehouseId(Integer warehouseId);
+    List<SecurityCompanies> findByWarehouseId(Integer warehouseId);
 }
