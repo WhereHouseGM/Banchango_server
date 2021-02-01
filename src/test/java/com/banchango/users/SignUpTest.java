@@ -50,6 +50,7 @@ public class SignUpTest extends ApiIntegrationTest {
 
         assertTrue(savedUser.getCreatedAt().isBefore(LocalDateTime.now()));
         assertTrue(savedUser.getLastModifiedAt().isBefore(LocalDateTime.now()));
+        assertTrue(usersRepository.findById(savedUser.getUserId()).isPresent());
     }
 
     @Test
