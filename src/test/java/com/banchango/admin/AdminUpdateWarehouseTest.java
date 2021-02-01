@@ -6,7 +6,6 @@ import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
-import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
@@ -25,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -139,31 +137,6 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(firstResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
 
         assertUpdatedWarehouseInfo(warehouseId, true);
-
-//        Warehouses updatedWarehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-//        assertEquals("NEW NAME", updatedWarehouse.getName());
-//        assertEquals(Integer.valueOf(999), updatedWarehouse.getSpace());
-//        assertEquals("NEW ADDRESS", updatedWarehouse.getAddress());
-//        assertEquals("NEW ADDR_DETAIL", updatedWarehouse.getAddressDetail());
-//        assertEquals("NEW DESC", updatedWarehouse.getDescription());
-//        assertEquals(Integer.valueOf(101010), updatedWarehouse.getAvailableWeekdays());
-//        assertEquals("08:00", updatedWarehouse.getOpenAt());
-//        assertEquals("23:30", updatedWarehouse.getCloseAt());
-//        assertEquals("NEW AVAIL_TIME_DETAIL", updatedWarehouse.getAvailableTimeDetail());
-//        assertFalse(updatedWarehouse.getCctvExist());
-//        assertFalse(updatedWarehouse.getDoorLockExist());
-//        assertEquals(AirConditioningType.NONE, updatedWarehouse.getAirConditioningType());
-//        assertFalse(updatedWarehouse.getWorkerExist());
-//        assertFalse(updatedWarehouse.getCanPark());
-//        assertTrue(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).containsAll(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS})));
-//        assertEquals(WarehouseType.FULFILLMENT, updatedWarehouse.getWarehouseType());
-//        assertTrue(insurancesRepository.findByWarehouseId(warehouseId).stream().map(Insurances::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-//        assertTrue(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompanies::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-//        assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryTypes::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-//        assertEquals(WarehouseStatus.REJECTED, updatedWarehouse.getStatus());
-//        assertTrue(warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).containsAll(Arrays.asList(new String[]{"WH_FACILITY_USAGE"})));
-//        assertTrue(warehouseConditionsRepository.findByWarehouseId(warehouseId).containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-//        assertEquals("BLOG_URL", updatedWarehouse.getBlogUrl());
     }
 
     @Test
@@ -239,62 +212,6 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(firstResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
 
         assertUpdatedWarehouseInfo(warehouseId, true);
-
-//        Warehouses updatedWarehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-//        assertEquals("NEW NAME", updatedWarehouse.getName());
-//        assertEquals(Integer.valueOf(999), updatedWarehouse.getSpace());
-//        assertEquals("NEW ADDRESS", updatedWarehouse.getAddress());
-//        assertEquals("NEW ADDR_DETAIL", updatedWarehouse.getAddressDetail());
-//        assertEquals("NEW DESC", updatedWarehouse.getDescription());
-//        assertEquals(Integer.valueOf(101010), updatedWarehouse.getAvailableWeekdays());
-//        assertEquals("08:00", updatedWarehouse.getOpenAt());
-//        assertEquals("23:30", updatedWarehouse.getCloseAt());
-//        assertEquals("NEW AVAIL_TIME_DETAIL", updatedWarehouse.getAvailableTimeDetail());
-//        assertFalse(updatedWarehouse.getCctvExist());
-//        assertFalse(updatedWarehouse.getDoorLockExist());
-//        assertEquals(AirConditioningType.NONE, updatedWarehouse.getAirConditioningType());
-//        assertFalse(updatedWarehouse.getWorkerExist());
-//        assertFalse(updatedWarehouse.getCanPark());
-//        assertTrue(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).containsAll(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS})));
-//        assertEquals(WarehouseType.FULFILLMENT, updatedWarehouse.getWarehouseType());
-//        assertTrue(insurancesRepository.findByWarehouseId(warehouseId).stream().map(Insurances::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-//        assertTrue(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompanies::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-//        assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryTypes::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-//        assertEquals(WarehouseStatus.REJECTED, updatedWarehouse.getStatus());
-//        assertTrue(warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).containsAll(Arrays.asList(new String[]{"WH_FACILITY_USAGE"})));
-//        assertTrue(warehouseConditionsRepository.findByWarehouseId(warehouseId).containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-//        assertEquals("BLOG_URL", updatedWarehouse.getBlogUrl());
-
-//        RequestEntity<Void> getRequest = RequestEntity.get(URI.create(url)).
-//                header("Authorization", "Bearer " + adminAccessToken).build();
-//        ResponseEntity<WarehouseAdminDetailResponseDto> secondResponse = restTemplate.exchange(getRequest, WarehouseAdminDetailResponseDto.class);
-//        assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
-//        assertEquals("NEW NAME", secondResponse.getBody().getName());
-//        assertEquals(Integer.valueOf(999), secondResponse.getBody().getSpace());
-//        assertEquals("NEW ADDRESS", secondResponse.getBody().getAddress());
-//        assertEquals("NEW ADDR_DETAIL", secondResponse.getBody().getAddressDetail());
-//        assertEquals("NEW DESC", secondResponse.getBody().getDescription());
-//        assertEquals(Integer.valueOf(101010), secondResponse.getBody().getAvailableWeekdays());
-//        assertEquals("08:00", secondResponse.getBody().getOpenAt());
-//        assertEquals("23:30", secondResponse.getBody().getCloseAt());
-//        assertEquals("NEW AVAIL_TIME_DETAIL", secondResponse.getBody().getAvailableTimeDetail());
-//        assertFalse(secondResponse.getBody().getCctvExist());
-//        assertFalse(secondResponse.getBody().getDoorLockExist());
-//        assertFalse(secondResponse.getBody().getWorkerExist());
-//        assertFalse(secondResponse.getBody().getCanPark());
-//        assertEquals(AirConditioningType.NONE, secondResponse.getBody().getAirConditioningType());
-//        assertEquals(secondResponse.getBody().getMainItemTypes(), Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}));
-//        assertEquals(WarehouseType.FULFILLMENT, secondResponse.getBody().getWarehouseType());
-//        assertEquals(Integer.valueOf(101), secondResponse.getBody().getMinReleasePerMonth());
-//        assertEquals(Double.valueOf(11.11), secondResponse.getBody().getLatitude());
-//        assertEquals(Double.valueOf(33.33), secondResponse.getBody().getLongitude());
-//        assertNull(secondResponse.getBody().getBlogUrl());
-//        assertTrue(secondResponse.getBody().getInsurances().containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-//        assertTrue(secondResponse.getBody().getSecurityCompanies().containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-//        assertTrue(secondResponse.getBody().getDeliveryTypes().containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-//        assertTrue(secondResponse.getBody().getWarehouseCondition().containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-//        assertTrue(secondResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
-//        assertEquals(WarehouseStatus.REJECTED, secondResponse.getBody().getStatus());
     }
 
     @Test
@@ -373,62 +290,6 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(firstResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
 
         assertUpdatedWarehouseInfo(warehouseId, false);
-
-//        Warehouses updatedWarehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-//        assertEquals("NEW NAME", updatedWarehouse.getName());
-//        assertEquals(Integer.valueOf(999), updatedWarehouse.getSpace());
-//        assertEquals("NEW ADDRESS", updatedWarehouse.getAddress());
-//        assertEquals("NEW ADDR_DETAIL", updatedWarehouse.getAddressDetail());
-//        assertEquals("NEW DESC", updatedWarehouse.getDescription());
-//        assertEquals(Integer.valueOf(101010), updatedWarehouse.getAvailableWeekdays());
-//        assertEquals("08:00", updatedWarehouse.getOpenAt());
-//        assertEquals("23:30", updatedWarehouse.getCloseAt());
-//        assertEquals("NEW AVAIL_TIME_DETAIL", updatedWarehouse.getAvailableTimeDetail());
-//        assertFalse(updatedWarehouse.getCctvExist());
-//        assertFalse(updatedWarehouse.getDoorLockExist());
-//        assertEquals(AirConditioningType.NONE, updatedWarehouse.getAirConditioningType());
-//        assertFalse(updatedWarehouse.getWorkerExist());
-//        assertFalse(updatedWarehouse.getCanPark());
-//        assertTrue(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).containsAll(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS})));
-//        assertEquals(WarehouseType.FULFILLMENT, updatedWarehouse.getWarehouseType());
-//        assertTrue(insurancesRepository.findByWarehouseId(warehouseId).stream().map(Insurances::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-//        assertTrue(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompanies::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-//        assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryTypes::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-//        assertEquals(WarehouseStatus.REJECTED, updatedWarehouse.getStatus());
-//        assertTrue(warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).containsAll(Arrays.asList(new String[]{"WH_FACILITY_USAGE"})));
-//        assertTrue(warehouseConditionsRepository.findByWarehouseId(warehouseId).containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-//        assertEquals("BLOG_URL", updatedWarehouse.getBlogUrl());
-
-//        RequestEntity<Void> getRequest = RequestEntity.get(URI.create(url)).
-//            header("Authorization", "Bearer " + adminAccessToken).build();
-//        ResponseEntity<WarehouseAdminDetailResponseDto> secondResponse = restTemplate.exchange(getRequest, WarehouseAdminDetailResponseDto.class);
-//        assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
-//        assertEquals("NEW NAME", secondResponse.getBody().getName());
-//        assertEquals(Integer.valueOf(999), secondResponse.getBody().getSpace());
-//        assertEquals("NEW ADDRESS", secondResponse.getBody().getAddress());
-//        assertEquals("NEW ADDR_DETAIL", secondResponse.getBody().getAddressDetail());
-//        assertEquals("NEW DESC", secondResponse.getBody().getDescription());
-//        assertEquals(Integer.valueOf(101010), secondResponse.getBody().getAvailableWeekdays());
-//        assertEquals("08:00", secondResponse.getBody().getOpenAt());
-//        assertEquals("23:30", secondResponse.getBody().getCloseAt());
-//        assertEquals("NEW AVAIL_TIME_DETAIL", secondResponse.getBody().getAvailableTimeDetail());
-//        assertFalse(secondResponse.getBody().getCctvExist());
-//        assertFalse(secondResponse.getBody().getDoorLockExist());
-//        assertFalse(secondResponse.getBody().getWorkerExist());
-//        assertFalse(secondResponse.getBody().getCanPark());
-//        assertEquals(AirConditioningType.NONE, secondResponse.getBody().getAirConditioningType());
-//        assertEquals(secondResponse.getBody().getMainItemTypes(), Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}));
-//        assertEquals(WarehouseType.FULFILLMENT, secondResponse.getBody().getWarehouseType());
-//        assertEquals(Integer.valueOf(101), secondResponse.getBody().getMinReleasePerMonth());
-//        assertEquals(Double.valueOf(11.11), secondResponse.getBody().getLatitude());
-//        assertEquals(Double.valueOf(33.33), secondResponse.getBody().getLongitude());
-//        assertEquals(BLOG_URL, secondResponse.getBody().getBlogUrl());
-//        assertTrue(secondResponse.getBody().getInsurances().containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-//        assertTrue(secondResponse.getBody().getSecurityCompanies().containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-//        assertTrue(secondResponse.getBody().getDeliveryTypes().containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-//        assertTrue(secondResponse.getBody().getWarehouseCondition().containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-//        assertTrue(secondResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
-//        assertEquals(WarehouseStatus.REJECTED, secondResponse.getBody().getStatus());
     }
 
     @Test
@@ -507,61 +368,6 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(firstResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
 
         assertUpdatedWarehouseInfo(warehouseId, false);
-//        Warehouses updatedWarehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-//        assertEquals("NEW NAME", updatedWarehouse.getName());
-//        assertEquals(Integer.valueOf(999), updatedWarehouse.getSpace());
-//        assertEquals("NEW ADDRESS", updatedWarehouse.getAddress());
-//        assertEquals("NEW ADDR_DETAIL", updatedWarehouse.getAddressDetail());
-//        assertEquals("NEW DESC", updatedWarehouse.getDescription());
-//        assertEquals(Integer.valueOf(101010), updatedWarehouse.getAvailableWeekdays());
-//        assertEquals("08:00", updatedWarehouse.getOpenAt());
-//        assertEquals("23:30", updatedWarehouse.getCloseAt());
-//        assertEquals("NEW AVAIL_TIME_DETAIL", updatedWarehouse.getAvailableTimeDetail());
-//        assertFalse(updatedWarehouse.getCctvExist());
-//        assertFalse(updatedWarehouse.getDoorLockExist());
-//        assertEquals(AirConditioningType.NONE, updatedWarehouse.getAirConditioningType());
-//        assertFalse(updatedWarehouse.getWorkerExist());
-//        assertFalse(updatedWarehouse.getCanPark());
-//        assertTrue(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).containsAll(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS})));
-//        assertEquals(WarehouseType.FULFILLMENT, updatedWarehouse.getWarehouseType());
-//        assertTrue(insurancesRepository.findByWarehouseId(warehouseId).stream().map(Insurances::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-//        assertTrue(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompanies::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-//        assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryTypes::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-//        assertEquals(WarehouseStatus.REJECTED, updatedWarehouse.getStatus());
-//        assertTrue(warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).containsAll(Arrays.asList(new String[]{"WH_FACILITY_USAGE"})));
-//        assertTrue(warehouseConditionsRepository.findByWarehouseId(warehouseId).containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-//        assertEquals("BLOG_URL", updatedWarehouse.getBlogUrl());
-
-//        RequestEntity<Void> getRequest = RequestEntity.get(URI.create(url)).
-//                header("Authorization", "Bearer " + adminAccessToken).build();
-//        ResponseEntity<WarehouseAdminDetailResponseDto> secondResponse = restTemplate.exchange(getRequest, WarehouseAdminDetailResponseDto.class);
-//        assertEquals(HttpStatus.OK, secondResponse.getStatusCode());
-//        assertEquals("NEW NAME", secondResponse.getBody().getName());
-//        assertEquals(Integer.valueOf(999), secondResponse.getBody().getSpace());
-//        assertEquals("NEW ADDRESS", secondResponse.getBody().getAddress());
-//        assertEquals("NEW ADDR_DETAIL", secondResponse.getBody().getAddressDetail());
-//        assertEquals("NEW DESC", secondResponse.getBody().getDescription());
-//        assertEquals(Integer.valueOf(101010), secondResponse.getBody().getAvailableWeekdays());
-//        assertEquals("08:00", secondResponse.getBody().getOpenAt());
-//        assertEquals("23:30", secondResponse.getBody().getCloseAt());
-//        assertEquals("NEW AVAIL_TIME_DETAIL", secondResponse.getBody().getAvailableTimeDetail());
-//        assertFalse(secondResponse.getBody().getCctvExist());
-//        assertFalse(secondResponse.getBody().getDoorLockExist());
-//        assertFalse(secondResponse.getBody().getWorkerExist());
-//        assertFalse(secondResponse.getBody().getCanPark());
-//        assertEquals(AirConditioningType.NONE, secondResponse.getBody().getAirConditioningType());
-//        assertEquals(secondResponse.getBody().getMainItemTypes(), Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}));
-//        assertEquals(WarehouseType.FULFILLMENT, secondResponse.getBody().getWarehouseType());
-//        assertEquals(Integer.valueOf(101), secondResponse.getBody().getMinReleasePerMonth());
-//        assertEquals(Double.valueOf(11.11), secondResponse.getBody().getLatitude());
-//        assertEquals(Double.valueOf(33.33), secondResponse.getBody().getLongitude());
-//        assertEquals(BLOG_URL, secondResponse.getBody().getBlogUrl());
-//        assertTrue(secondResponse.getBody().getInsurances().containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-//        assertTrue(secondResponse.getBody().getSecurityCompanies().containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-//        assertTrue(secondResponse.getBody().getDeliveryTypes().containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-//        assertTrue(secondResponse.getBody().getWarehouseCondition().containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-//        assertTrue(secondResponse.getBody().getWarehouseFacilityUsages().contains("WH_FACILITY_USAGE"));
-//        assertEquals(WarehouseStatus.REJECTED, secondResponse.getBody().getStatus());
     }
 
     @Test
