@@ -18,8 +18,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URI;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class WithdrawUserTest extends ApiIntegrationTest {
 
@@ -39,8 +38,9 @@ public class WithdrawUserTest extends ApiIntegrationTest {
         assertNotNull(response.getBody().getMessage());
 
         List<Warehouses> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
-        warehouses.stream()
-            .forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
+        warehouses.forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
+        assertTrue(usersRepository.findById(userToDelete.getUserId()).isPresent());
+        assertTrue(withdrawsRepository.findByUserId(userToDelete.getUserId()).isPresent());
     }
 
     @Test
@@ -59,8 +59,9 @@ public class WithdrawUserTest extends ApiIntegrationTest {
         assertNotNull(response.getBody().getMessage());
 
         List<Warehouses> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
-        warehouses.stream()
-                .forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
+        warehouses.forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
+        assertTrue(usersRepository.findById(userToDelete.getUserId()).isPresent());
+        assertTrue(withdrawsRepository.findByUserId(userToDelete.getUserId()).isPresent());
     }
 
     @Test
