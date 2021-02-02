@@ -109,8 +109,6 @@ public class AdminGetWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void get_AllInfosOfSpecificWarehouse_responseIsNotFound_IfWarehouseNotExist() {
-        Users user = userEntityFactory.createUserWithOwnerType();
-        String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Users admin = userEntityFactory.createAdminWithShipperType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);

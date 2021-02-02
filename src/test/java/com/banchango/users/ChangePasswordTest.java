@@ -8,6 +8,7 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.users.dto.ChangePasswordRequestDto;
+import com.banchango.users.exception.UserIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,11 @@ public class ChangePasswordTest extends ApiIntegrationTest {
 
     private final String VALID_PASSWORD = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
     private final String INVALID_PASSWORD = "test";
+
+    private void assertPasswordUpdate(Integer userId) {
+        Users updatedUser = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        assertEquals(VALID_PASSWORD, updatedUser.getPassword());
+    }
 
     @Test
     public void patch_passwordChange_responseIsOk_IfUserIsOwner() {
@@ -43,6 +49,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
+        assertPasswordUpdate(user.getUserId());
     }
 
     @Test
@@ -64,6 +71,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
+        assertPasswordUpdate(user.getUserId());
     }
 
     @Test

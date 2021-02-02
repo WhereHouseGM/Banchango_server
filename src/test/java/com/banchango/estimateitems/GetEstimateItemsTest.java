@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 public class GetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
-    public void get_estimateItemsByestimateId_responseIsOk_IfUserIsShipper() {
+    public void get_estimateItemsByEstimateId_responseIsOk_IfUserIsShipper() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
@@ -55,7 +55,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_estimateItemsByestimateId_responseIsNotFound_IfEstimateNotExist() {
+    public void get_estimateItemsByEstimateId_responseIsNotFound_IfEstimateNotExist() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
@@ -75,7 +75,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_estimateItemsByestimateId_responseIsNotFound_IfWarehouseStatusIsDeleted() {
+    public void get_estimateItemsByEstimateId_responseIsNotFound_IfWarehouseStatusIsDeleted() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
@@ -95,7 +95,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_estimateItemsByestimateId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
+    public void get_estimateItemsByEstimateId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
@@ -113,7 +113,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
     }
 
     @Test
-    public void get_estimateItemsByestimateId_responseIsForbidden_IfOtherUsersAccessTokenIsGiven() {
+    public void get_estimateItemsByEstimateId_responseIsForbidden_IfOtherUsersAccessTokenIsGiven() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 

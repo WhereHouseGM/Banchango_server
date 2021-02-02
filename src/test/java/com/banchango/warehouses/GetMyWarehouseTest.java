@@ -37,7 +37,7 @@ public class GetMyWarehouseTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getWarehouses());
 
-        response.getBody().getWarehouses().stream()
+        response.getBody().getWarehouses()
             .forEach(myWarehouse -> {
                 assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
@@ -79,7 +79,7 @@ public class GetMyWarehouseTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getWarehouses());
 
-        response.getBody().getWarehouses().stream()
+        response.getBody().getWarehouses()
             .forEach(myWarehouse -> {
                 assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
@@ -88,8 +88,6 @@ public class GetMyWarehouseTest extends ApiIntegrationTest {
                 assertEquals(WarehouseStatus.IN_PROGRESS, myWarehouse.getStatus());
                 assertNotNull(myWarehouse.getMainImageUrl());
             });
-
-        warehousesRepository.delete(warehouse);
     }
 
     @Test
@@ -108,7 +106,7 @@ public class GetMyWarehouseTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getWarehouses());
 
-        response.getBody().getWarehouses().stream()
+        response.getBody().getWarehouses()
             .forEach(myWarehouse -> {
                 assertNotNull(myWarehouse.getId());
                 assertEquals(WarehouseEntityFactory.NAME, myWarehouse.getName());
@@ -117,8 +115,6 @@ public class GetMyWarehouseTest extends ApiIntegrationTest {
                 assertEquals(WarehouseStatus.REJECTED, myWarehouse.getStatus());
                 assertNotNull(myWarehouse.getMainImageUrl());
             });
-
-        warehousesRepository.delete(warehouse);
     }
 
     @Test
@@ -134,8 +130,6 @@ public class GetMyWarehouseTest extends ApiIntegrationTest {
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-
-        warehousesRepository.delete(warehouse);
     }
 
     @Test
@@ -153,14 +147,10 @@ public class GetMyWarehouseTest extends ApiIntegrationTest {
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-
-        warehousesRepository.delete(warehouse);
     }
 
     @Test
     public void get_myWarehouses_responseIsNotFound_IfWarehouseNotExist() {
-        warehousesRepository.deleteAll();
-
         Users owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
 
@@ -187,8 +177,6 @@ public class GetMyWarehouseTest extends ApiIntegrationTest {
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-
-        warehousesRepository.delete(warehouse);
     }
 
     @Test
