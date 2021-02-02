@@ -5,7 +5,9 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.Users;
+import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -13,10 +15,14 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class DeleteWarehouseTest extends ApiIntegrationTest {
+
+    private void assertWarehouseDeleted(Integer warehouseId) {
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        assertEquals(WarehouseStatus.DELETED, warehouse.getStatus());
+    }
 
     @Test
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsViewable() {
@@ -33,6 +39,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
+        assertWarehouseDeleted(warehouse.getId());
     }
 
     @Test
@@ -50,6 +57,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
+        assertWarehouseDeleted(warehouse.getId());
     }
 
     @Test
@@ -67,6 +75,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
+        assertWarehouseDeleted(warehouse.getId());
     }
 
     @Test

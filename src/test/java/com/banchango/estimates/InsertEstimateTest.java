@@ -77,8 +77,6 @@ public class InsertEstimateTest extends ApiIntegrationTest {
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
-
-        warehousesRepository.delete(warehouse);
     }
 
 
@@ -103,8 +101,6 @@ public class InsertEstimateTest extends ApiIntegrationTest {
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
-
-        warehousesRepository.delete(warehouse);
     }
 
     @Test

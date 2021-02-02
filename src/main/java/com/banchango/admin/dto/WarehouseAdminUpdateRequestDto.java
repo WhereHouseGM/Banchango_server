@@ -10,12 +10,14 @@ import com.banchango.warehouses.dto.WarehouseUpdateRequestParentDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
+@Setter
 public class WarehouseAdminUpdateRequestDto extends WarehouseUpdateRequestParentDto {
 
     @NotNull(message = "Warehouse status is missing.")

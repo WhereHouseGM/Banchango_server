@@ -150,7 +150,7 @@ public class WarehousesService {
         if(warehouse.getUserId() != accessTokenUserId) throw new WarehouseInvalidAccessException();
         if(warehouse.getStatus().equals(WarehouseStatus.DELETED)) throw new WarehouseNotFoundException();
 
-        warehousesRepository.deleteById(warehouseId);
+        warehouse.updateStatus(WarehouseStatus.DELETED);
     }
 
     @Transactional(readOnly = true)

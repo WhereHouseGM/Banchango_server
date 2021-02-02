@@ -9,6 +9,8 @@ import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.estimates.exception.EstimateNotFoundException;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -21,6 +23,8 @@ import static org.junit.Assert.assertNotNull;
 
 public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
 
+
+
     @Test
     public void patch_adminUpdateEstimateStatus_responseIsOk_IfAdminIsOwner() {
         Users user = userEntityFactory.createUserWithOwnerType();
@@ -32,18 +36,18 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimate.getId()+"/status"))
                 .header("Authorization", "Bearer " + adminAccessToken)
-                .body(estimateStatusUpdatedto);
+                .body(estimateStatusUpdateDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        estimate = estimatesRepository.findById(estimate.getId()).get();
+        estimate = estimatesRepository.findById(estimate.getId()).orElseThrow(EstimateNotFoundException::new);
 
         assertEquals(EstimateStatus.IN_PROGRESS, estimate.getStatus());
     }
@@ -59,18 +63,18 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimate.getId()+"/status"))
                 .header("Authorization", "Bearer " + adminAccessToken)
-                .body(estimateStatusUpdatedto);
+                .body(estimateStatusUpdateDto);
 
         ResponseEntity<BasicMessageResponseDto> response = restTemplate.exchange(request, BasicMessageResponseDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        estimate = estimatesRepository.findById(estimate.getId()).get();
+        estimate = estimatesRepository.findById(estimate.getId()).orElseThrow(EstimateNotFoundException::new);
 
         assertEquals(EstimateStatus.IN_PROGRESS, estimate.getStatus());
     }
@@ -83,10 +87,10 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimate.getId()+"/status"))
-                .body(estimateStatusUpdatedto);
+                .body(estimateStatusUpdateDto);
 
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
@@ -101,11 +105,11 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimate.getId()+"/status"))
                 .header("Authorization", "Bearer " + accessToken)
-                .body(estimateStatusUpdatedto);
+                .body(estimateStatusUpdateDto);
 
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
@@ -121,12 +125,12 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        EstimateStatusUpdateRequestDto estimateStatusUpdatedto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
+        EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
         int estimateId = 0;
 
         RequestEntity<EstimateStatusUpdateRequestDto> request = RequestEntity.patch(URI.create("/v3/admin/estimates/"+estimateId+"/status"))
                 .header("Authorization", "Bearer " + adminAccessToken)
-                .body(estimateStatusUpdatedto);
+                .body(estimateStatusUpdateDto);
 
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
