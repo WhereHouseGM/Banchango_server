@@ -10,7 +10,6 @@ import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.estimates.exception.EstimateNotFoundException;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -22,8 +21,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
-
-
 
     @Test
     public void patch_adminUpdateEstimateStatus_responseIsOk_IfAdminIsOwner() {
