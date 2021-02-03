@@ -43,10 +43,6 @@
             "valueFrom": "SECRET_ACCESS_KEY"
         },
         {
-              "name": "TEST_WH_DATASOURCE_URL",
-              "valueFrom": "TEST_WH_DATASOURCE_URL"
-        },
-        {
               "name": "WH_DATASOURCE_PASSWORD",
               "valueFrom": "WH_DATASOURCE_PASSWORD"
         },

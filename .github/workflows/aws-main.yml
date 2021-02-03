@@ -25,7 +25,6 @@ jobs:
       run: ./gradlew build -x test
       env:
         PRD_WH_DATASOURCE_URL: ${{ secrets.PRD_WH_DATASOURCE_URL }}
-        TEST_WH_DATASOURCE_URL: ${{ secrets.TEST_WH_DATASOURCE_URL }}
         WH_DATASOURCE_USERNAME: ${{ secrets.WH_DATASOURCE_USERNAME }}
         WH_DATASOURCE_PASSWORD: ${{ secrets.WH_DATASOURCE_PASSWORD }}
         AWS_ACCESS_KEY_ID: ${{ secrets.BANCHANGO_AWS_ACCESS_KEY_ID }}
