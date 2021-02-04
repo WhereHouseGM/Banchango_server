@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -372,6 +373,34 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.ELECTRONICS});
         Integer warehouseId = warehouse.getId();
 
+        // Insurances : 개수 동일, 값만 업데이트 체크 => 인덱스 동일해야함
+        List<Integer> beforeInsurancesId = insurancesRepository.findByWarehouseId(warehouseId)
+                .stream().map(Insurances::getId).collect(Collectors.toList());
+
+        // SecurityCompanies : 개수 1개 적음, 값 업데이트 체크, 인덱스 기존 거만 있어야함
+        List<Integer> beforeSecurityCompaniesId = securityCompaniesRepository.findByWarehouseId(warehouseId)
+                .stream().map(SecurityCompanies::getId).collect(Collectors.toList());
+
+        // DeliveryTypes: 개수 1개 많음 => 인덱스 동일 및 1개 추가
+        List<Integer> beforeDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
+                .stream().map(DeliveryTypes::getId).collect(Collectors.toList());
+
+        // WarehouseConditions: 개수 1개 많음
+        List<Integer> beforeWarehouseConditionsId = warehouseConditionsRepository.findByWarehouseId(warehouseId)
+                .stream().map(WarehouseConditions::getId).collect(Collectors.toList());
+
+        // WarehouseFacilityUsages: 개수 2개 많음
+        List<Integer> beforeWarehouseFacilityUsagesId = warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId)
+                .stream().map(WarehouseFacilityUsages::getId).collect(Collectors.toList());
+
+        // WarehouseUsageCautions: 개수 1개 적음
+        List<Integer> beforeWarehouseUsageCautionsId = warehouseUsageCautionsRepository.findByWarehouseId(warehouseId)
+                .stream().map(WarehouseUsageCautions::getId).collect(Collectors.toList());
+
+        // MainItemTypes: 개수 1개 많음
+        List<Integer> beforeMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
+                .stream().map(MainItemTypes::getId).collect(Collectors.toList());
+
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
         WarehouseAdminUpdateRequestDto body = createUpdateDto();
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
@@ -385,13 +414,56 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertResponse(response.getBody());
 
         assertUpdatedWarehouseInfo(warehouseId);
-        // Insurances : 개수 동일, 값만 업데이트 체크 => 인덱스 동일해야함
-        // SecurityCompanies : 개수 1개 적음, 값 업데이트 체크, 인덱스 기존 거만 있어야함
-        // DeliveryTypes: 개수 1개 많음 => 인덱스 동일 및 1개 추가
+
+        List<Integer> updatedInsuranceId = insurancesRepository.findByWarehouseId(warehouseId)
+                .stream().map(Insurances::getId).collect(Collectors.toList());
+
+        List<Integer> updatedSecurityCompaniesId = securityCompaniesRepository.findByWarehouseId(warehouseId)
+                .stream().map(SecurityCompanies::getId).collect(Collectors.toList());
+
+        List<Integer> updatedDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
+                .stream().map(DeliveryTypes::getId).collect(Collectors.toList());
+
+        List<Integer> updatedWarehouseConditionsId = warehouseConditionsRepository.findByWarehouseId(warehouseId)
+                .stream().map(WarehouseConditions::getId).collect(Collectors.toList());
+
+        List<Integer> updatedWarehouseFacilityUsagesId = warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId)
+                .stream().map(WarehouseFacilityUsages::getId).collect(Collectors.toList());
+
+        List<Integer> updatedWarehouseUsageCautionsId = warehouseUsageCautionsRepository.findByWarehouseId(warehouseId)
+                .stream().map(WarehouseUsageCautions::getId).collect(Collectors.toList());
+
+        List<Integer> updatedMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
+                .stream().map(MainItemTypes::getId).collect(Collectors.toList());
+
+        // Assertions
+
+        // Insurances : 인덱스 동일한가 체크
+        assertTrue(beforeInsurancesId.equals(updatedInsuranceId));
+
+        // SecurityCompanies : 개수 1개 적음
+        assertTrue(beforeSecurityCompaniesId.size() - 1 == updatedSecurityCompaniesId.size());
+        assertTrue(beforeSecurityCompaniesId.containsAll(updatedSecurityCompaniesId));
+
+        // DeliveryTypes : 개수 1개 많음
+        assertTrue(beforeDeliveryTypesId.size() + 1 == updatedDeliveryTypesId.size());
+        assertTrue(updatedDeliveryTypesId.containsAll(beforeDeliveryTypesId));
+
         // WarehouseConditions: 개수 1개 많음
+        assertTrue(beforeWarehouseConditionsId.size() + 1 == updatedWarehouseConditionsId.size());
+        assertTrue(updatedWarehouseConditionsId.containsAll(beforeWarehouseConditionsId));
+
         // WarehouseFacilityUsages: 개수 2개 많음
+        assertTrue(beforeWarehouseFacilityUsagesId.size() + 2 == updatedWarehouseFacilityUsagesId.size());
+        assertTrue(updatedWarehouseFacilityUsagesId.containsAll(beforeWarehouseFacilityUsagesId));
+
         // WarehouseUsageCautions: 개수 1개 적음
+        assertTrue(beforeWarehouseUsageCautionsId.size() - 1 == updatedWarehouseUsageCautionsId.size());
+        assertTrue(beforeWarehouseUsageCautionsId.containsAll(updatedWarehouseUsageCautionsId));
+
         // MainItemTypes: 개수 1개 많음
+        assertTrue(beforeMainItemTypesId.size() + 1 == updatedMainItemTypesId.size());
+        assertTrue(updatedMainItemTypesId.containsAll(beforeMainItemTypesId));
 
     }
 
