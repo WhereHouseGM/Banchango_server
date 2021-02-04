@@ -41,6 +41,32 @@ public class WarehouseEntityFactory {
     public static final String[] DELIVERY_TYPES = {"DELIVERY_1", "DELIVERY_2", "DELIVERY_3"};
     public static final WarehouseCondition[] WAREHOUSE_CONDITIONS = {WarehouseCondition.ROOM_TEMPERATURE, WarehouseCondition.LOW_TEMPERATURE};
 
+    public static final String NEW_NAME = "NEW_NAME";
+    public static final Integer NEW_SPACE = 12345;
+    public static final String NEW_ADDRESS = "NEW_ADDRESS";
+    public static final String NEW_ADDRESS_DETAIL = "NEW_ADDRESS_DETAIL";
+    public static final Integer NEW_AVAILABLE_WEEKDAYS = 1001;
+    public static final String NEW_OPEN_AT = "10:00";
+    public static final String NEW_CLOSE_AT = "19:00";
+    public static final String NEW_AVAILABLE_TIME_DETAIL = "NEW_AVAIL_TIME_DETAIL";
+    public static final Boolean NEW_CCTV_EXISTS = false;
+    public static final Boolean NEW_DOOR_LOOK_EXIST = false;
+    public static final AirConditioningType NEW_AIR_CONDITIONING_TYPE = AirConditioningType.NONE;
+    public static final Boolean NEW_WORKER_EXIST = false;
+    public static final Boolean NEW_CAN_PARK = false;
+    public static final WarehouseType NEW_WAREHOUSE_TYPE = WarehouseType.FULFILLMENT;
+    public static final Integer NEW_MIN_RELEASE_PER_MONTH = 1234;
+    public static final Double NEW_LATITUDE = 11.1;
+    public static final Double NEW_LONGITUDE = 33.3;
+    public static final String[] NEW_INSURANCES = {"NEW_INSURANCE_1", "NEW_INSURANCE_2", "NEW_INSURANCE_3"};
+    public static final String[] NEW_SECURITY_COMPANIES = {"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"};
+    public static final String[] NEW_DELIVERY_TYPES = {"NEW_DELIVERY_1", "NEW_DELIVERY_2", "NEW_DELIVERY_3", "NEW_DELIVERY_4"};
+    public static final WarehouseCondition[] NEW_WAREHOUSE_CONDITIONS = {WarehouseCondition.SAVAGE, WarehouseCondition.BONDED, WarehouseCondition.ROOM_TEMPERATURE};
+    public static final String[] NEW_WAREHOUSE_FACILITY_USAGES = {"NEW_WH_FACILITY_USAGE_1", "NEW_WH_FACILITY_USAGE_2", "NEW_WH_FACILITY_USAGE_3"};
+    public static final String[] NEW_WAREHOUSE_USAGE_CAUTIONS = {"NEW_WH_USAGE_CAUTION_1", "NEW_WH_USAGE_CAUTION_2"};
+    public static final MainItemType[] NEW_MAIN_ITEM_TYPES = {MainItemType.FOOD, MainItemType.BOOK, MainItemType.CLOTH};
+
+
     private final WarehousesRepository warehousesRepository;
 
     @Autowired
