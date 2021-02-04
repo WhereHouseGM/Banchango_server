@@ -336,6 +336,24 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 //        assertUpdatedWarehouseInfo(warehouseId, false);
 //    }
 //
+
+    @Test
+    public void put_WarehouseInfoUpdate_responseIdOk_ifAllConditionsAreRightAndAdminIsOwner() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String userAccessToken = JwtTokenUtil.generateAccessToken(user);
+        Users admin = userEntityFactory.createAdminWithOwnerType();
+        Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.BOOK, MainItemType.ELECTRONICS});
+
+    }
+
+    @Test
+    public void put_WarehouseInfoUpdate_responseIsOk_ifAllConditionsAreRightAndAdminIsShipper() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String userAccessToken = JwtTokenUtil.generateAccessToken(user);
+        Users admin = userEntityFactory.createAdminWithOwnerType();
+        Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.BOOK, MainItemType.ELECTRONICS});
+    }
+
     @Test
     public void put_WarehouseInfoUpdate_responseIsUnAuthorized_ifTokenNotGiven() {
         Users user = userEntityFactory.createUserWithOwnerType();

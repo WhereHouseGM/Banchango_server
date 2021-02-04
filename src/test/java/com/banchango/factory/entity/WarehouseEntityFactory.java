@@ -8,7 +8,9 @@ import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.*;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,8 @@ public class WarehouseEntityFactory {
     public static final String[] SECURITY_COMPANIES = {"SEC_COMP_1", "SEC_COMP_2", "SEC_COMP_3"};
     public static final String[] DELIVERY_TYPES = {"DELIVERY_1", "DELIVERY_2", "DELIVERY_3"};
     public static final WarehouseCondition[] WAREHOUSE_CONDITIONS = {WarehouseCondition.ROOM_TEMPERATURE, WarehouseCondition.LOW_TEMPERATURE};
+    public static final String[] WAREHOUSE_FACILITY_USAGES = {"FACILITY_1"};
+    public static final String[] WAREHOUSE_USAGE_CAUTIONS = {"CAUTION_1", "CAUTION_2", "CAUTION_3"};
 
     public static final String NEW_NAME = "NEW_NAME";
     public static final Integer NEW_SPACE = 12345;
@@ -77,38 +81,42 @@ public class WarehouseEntityFactory {
     }
 
     public Warehouses createViewableWithNoMainItemTypes(String accessToken) {
-        return create(accessToken, WarehouseStatus.VIEWABLE, new MainItemType[] {});
+        return create(accessToken, WarehouseStatus.VIEWABLE, new MainItemType[] {}, true);
     }
 
     public Warehouses createViewableWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
-        return create(accessToken, WarehouseStatus.VIEWABLE, mainItemTypes);
+        return create(accessToken, WarehouseStatus.VIEWABLE, mainItemTypes, true);
     }
 
     public Warehouses createInProgressWithNoMainItemTypes(String accessToken) {
-        return create(accessToken, WarehouseStatus.IN_PROGRESS, new MainItemType[] {});
+        return create(accessToken, WarehouseStatus.IN_PROGRESS, new MainItemType[] {}, true);
     }
 
     public Warehouses createInProgressWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
-        return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes);
+        return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes, true);
     }
 
     public Warehouses createdRejectedWithNoMainItemTypes(String accessToken) {
-        return create(accessToken, WarehouseStatus.REJECTED, new MainItemType[] {});
+        return create(accessToken, WarehouseStatus.REJECTED, new MainItemType[] {}, true);
     }
 
     public Warehouses createRejectedWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
-        return create(accessToken, WarehouseStatus.REJECTED, mainItemTypes);
+        return create(accessToken, WarehouseStatus.REJECTED, mainItemTypes, true);
     }
 
     public Warehouses createDeletedWithNoMainItemTypes(String accessToken) {
-        return create(accessToken, WarehouseStatus.DELETED, new MainItemType[] {});
+        return create(accessToken, WarehouseStatus.DELETED, new MainItemType[] {}, true);
     }
 
     public Warehouses createDeletedWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
-        return create(accessToken, WarehouseStatus.DELETED, mainItemTypes);
+        return create(accessToken, WarehouseStatus.DELETED, mainItemTypes, true);
     }
 
-    private Warehouses create(String accessToken, WarehouseStatus status, MainItemType[] mainItemTypes) {
+    public Warehouses createWarehouseForAdminUpdateTest(String accessToken, MainItemType[] mainItemTypes) {
+        return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes, false);
+    }
+
+    private Warehouses create(String accessToken, WarehouseStatus status, MainItemType[] mainItemTypes, boolean isUsageAndCautionNull) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
         Warehouses warehouse = Warehouses.builder()
@@ -156,6 +164,15 @@ public class WarehouseEntityFactory {
                 .map(type -> new DeliveryTypes(type, warehouse)).collect(Collectors.toList());
         warehouse.setDeliveryTypes(deliveryTypes);
 
+       if(!isUsageAndCautionNull) {
+           List<WarehouseFacilityUsages> warehouseFacilityUsages = Arrays.stream(WAREHOUSE_FACILITY_USAGES)
+                   .map(usage -> new WarehouseFacilityUsages(usage, warehouse)).collect(Collectors.toList());
+           warehouse.setWarehouseFacilityUsages(warehouseFacilityUsages);
+
+           List<WarehouseUsageCautions> warehouseUsageCautions = Arrays.stream(WAREHOUSE_USAGE_CAUTIONS)
+                   .map(caution -> new WarehouseUsageCautions(caution, warehouse)).collect(Collectors.toList());
+           warehouse.setWarehouseUsageCautions(warehouseUsageCautions);
+       }
         return warehousesRepository.save(warehouse);
     }
 }
