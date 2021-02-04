@@ -476,6 +476,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.BOOK, MainItemType.ELECTRONICS});
         Integer warehouseId = warehouse.getId();
 
+        // TODO : 아래 부분 모두 위 메소드 복붙해넣기
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
         WarehouseAdminUpdateRequestDto body = createUpdateDto();
         RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))

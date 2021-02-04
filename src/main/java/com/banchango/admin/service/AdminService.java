@@ -90,16 +90,19 @@ public class AdminService {
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
-        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
-        warehouseFacilityUsagesRepository.deleteByWarehouseId(warehouseId);
-        warehouseUsageCautionsRepository.deleteByWarehouseId(warehouseId);
-        insurancesRepository.deleteByWarehouseId(warehouseId);
-        mainItemTypesRepository.deleteByWarehouseId(warehouseId);
-        warehouseConditionsRepository.deleteByWarehouseId(warehouseId);
-        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
-            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
-        }
+        // TODO : 로직 개선
+
+        // TODO : 주석 제거
+//        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
+//        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
+//        warehouseFacilityUsagesRepository.deleteByWarehouseId(warehouseId);
+//        warehouseUsageCautionsRepository.deleteByWarehouseId(warehouseId);
+//        insurancesRepository.deleteByWarehouseId(warehouseId);
+//        mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+//        warehouseConditionsRepository.deleteByWarehouseId(warehouseId);
+//        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
+//            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+//        }
         warehouse.update(requestDto);
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
