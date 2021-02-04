@@ -34,10 +34,6 @@ import static org.junit.Assert.*;
 
 public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 
-    private void assertUpdateWarehouseInfo(Integer warehouseId) {
-
-    }
-
     private WarehouseAdminUpdateRequestDto createUpdateDto() {
         WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
                 .name(WarehouseEntityFactory.NEW_NAME)
@@ -64,43 +60,36 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
                 .securityCompanies(Arrays.asList(WarehouseEntityFactory.NEW_SECURITY_COMPANIES))
                 .deliveryTypes(Arrays.asList(WarehouseEntityFactory.NEW_DELIVERY_TYPES))
                 .status(WarehouseEntityFactory.NEW_WAREHOUSE_STATUS)
+                .blogUrl(WarehouseEntityFactory.NEW_BLOG_URL)
                 .warehouseFacilityUsages(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES))
                 .warehouseUsageCautions(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS))
                 .build();
         return body;
     }
 
-//    private void assertUpdatedWarehouseInfo(Integer warehouseId, Boolean isBlogUrlNull) {
-//        Warehouses updatedWarehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-//        assertEquals("NEW NAME", updatedWarehouse.getName());
-//        assertEquals(Integer.valueOf(999), updatedWarehouse.getSpace());
-//        assertEquals("NEW ADDRESS", updatedWarehouse.getAddress());
-//        assertEquals("NEW ADDR_DETAIL", updatedWarehouse.getAddressDetail());
-//        assertEquals("NEW DESC", updatedWarehouse.getDescription());
-//        assertEquals(Integer.valueOf(101010), updatedWarehouse.getAvailableWeekdays());
-//        assertEquals("08:00", updatedWarehouse.getOpenAt());
-//        assertEquals("23:30", updatedWarehouse.getCloseAt());
-//        assertEquals("NEW AVAIL_TIME_DETAIL", updatedWarehouse.getAvailableTimeDetail());
-//        assertFalse(updatedWarehouse.getCctvExist());
-//        assertFalse(updatedWarehouse.getDoorLockExist());
-//        assertEquals(AirConditioningType.NONE, updatedWarehouse.getAirConditioningType());
-//        assertFalse(updatedWarehouse.getWorkerExist());
-//        assertFalse(updatedWarehouse.getCanPark());
-//        assertTrue(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).containsAll(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS})));
-//        assertEquals(WarehouseType.FULFILLMENT, updatedWarehouse.getWarehouseType());
-//        assertTrue(insurancesRepository.findByWarehouseId(warehouseId).stream().map(Insurances::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_INSURANCE_1", "NEW_INSURANCE_2"})));
-//        assertTrue(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompanies::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"})));
-//        assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryTypes::getName).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"NEW_DELIVERY_1", "NEW_DELIVERY_2"})));
-//        assertEquals(WarehouseStatus.REJECTED, updatedWarehouse.getStatus());
-//        assertTrue(warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsages::getContent).collect(Collectors.toList()).containsAll(Arrays.asList(new String[]{"WH_FACILITY_USAGE"})));
-//        assertTrue(warehouseConditionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseConditions::getCondition).collect(Collectors.toList()).containsAll(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS})));
-//        if(isBlogUrlNull) {
-//            assertNull(updatedWarehouse.getBlogUrl());
-//        } else {
-//            assertEquals("BLOG_URL", updatedWarehouse.getBlogUrl());
-//        }
-//    }
-//
+    private void assertUpdatedWarehouseInfo(Integer warehouseId) {
+        Warehouses updatedWarehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        assertEquals(WarehouseEntityFactory.NEW_NAME, updatedWarehouse.getName());
+        assertEquals(WarehouseEntityFactory.NEW_SPACE, updatedWarehouse.getSpace());
+        assertEquals(WarehouseEntityFactory.NEW_ADDRESS, updatedWarehouse.getAddress());
+        assertEquals(WarehouseEntityFactory.NEW_ADDRESS_DETAIL, updatedWarehouse.getAddressDetail());
+        assertEquals(WarehouseEntityFactory.NEW_DESCRIPTION, updatedWarehouse.getDescription());
+        assertEquals(WarehouseEntityFactory.NEW_AVAILABLE_WEEKDAYS, updatedWarehouse.getAvailableWeekdays());
+        assertEquals(WarehouseEntityFactory.NEW_OPEN_AT, updatedWarehouse.getOpenAt());
+        assertEquals(WarehouseEntityFactory.NEW_CLOSE_AT, updatedWarehouse.getCloseAt());
+        assertEquals(WarehouseEntityFactory.NEW_AVAILABLE_TIME_DETAIL, updatedWarehouse.getAvailableTimeDetail());
+        assertEquals(WarehouseEntityFactory.NEW_CCTV_EXISTS, updatedWarehouse.getCctvExist());
+        assertEquals(WarehouseEntityFactory.NEW_DOOR_LOOK_EXIST, updatedWarehouse.getDoorLockExist());
+        assertEquals(WarehouseEntityFactory.NEW_AIR_CONDITIONING_TYPE, updatedWarehouse.getAirConditioningType());
+        assertEquals(WarehouseEntityFactory.NEW_WORKER_EXIST, updatedWarehouse.getWorkerExist());
+        assertEquals(WarehouseEntityFactory.NEW_CAN_PARK, updatedWarehouse.getCanPark());
+        assertEquals(WarehouseEntityFactory.NEW_WAREHOUSE_TYPE, updatedWarehouse.getWarehouseType());
+        assertEquals(WarehouseEntityFactory.NEW_WAREHOUSE_STATUS, updatedWarehouse.getStatus());
+        assertEquals(WarehouseEntityFactory.NEW_LONGITUDE, updatedWarehouse.getLongitude());
+        assertEquals(WarehouseEntityFactory.NEW_LATITUDE, updatedWarehouse.getLatitude());
+        assertEquals(WarehouseEntityFactory.NEW_BLOG_URL, updatedWarehouse.getBlogUrl());
+    }
+
 //    private WarehouseAdminUpdateRequestDto createWarehouseAdminRequestDto(Boolean isBlogUrlNull) {
 //        WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
 //                .name("NEW NAME")
@@ -342,7 +331,17 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Users user = userEntityFactory.createUserWithOwnerType();
         String userAccessToken = JwtTokenUtil.generateAccessToken(user);
         Users admin = userEntityFactory.createAdminWithOwnerType();
-        Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.BOOK, MainItemType.ELECTRONICS});
+        Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.ELECTRONICS});
+        Integer warehouseId = warehouse.getId();
+
+        assertUpdatedWarehouseInfo(warehouseId);
+        // Insurances : 개수 동일, 값만 업데이트 체크 => 인덱스 동일해야함
+        // SecurityCompanies : 개수 1개 적음, 값 업데이트 체크, 인덱스 기존 거만 있어야함
+        // DeliveryTypes: 개수 1개 많음 => 인덱스 동일 및 1개 추가
+        // WarehouseConditions: 개수 1개 많음
+        // WarehouseFacilityUsages: 개수 2개 많음
+        // WarehouseUsageCautions: 개수 1개 적음
+        // MainItemTypes: 개수 1개 많음
 
     }
 
@@ -352,6 +351,9 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         String userAccessToken = JwtTokenUtil.generateAccessToken(user);
         Users admin = userEntityFactory.createAdminWithOwnerType();
         Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.BOOK, MainItemType.ELECTRONICS});
+        Integer warehouseId = warehouse.getId();
+
+        assertUpdatedWarehouseInfo(warehouseId);
     }
 
     @Test

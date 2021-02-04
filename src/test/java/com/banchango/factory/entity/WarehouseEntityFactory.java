@@ -63,6 +63,7 @@ public class WarehouseEntityFactory {
     public static final Integer NEW_MIN_RELEASE_PER_MONTH = 1234;
     public static final Double NEW_LATITUDE = 11.1;
     public static final Double NEW_LONGITUDE = 33.3;
+    public static final String NEW_BLOG_URL = "NEW_BLOG_URL";
     public static final WarehouseStatus NEW_WAREHOUSE_STATUS = WarehouseStatus.REJECTED;
     public static final String[] NEW_INSURANCES = {"NEW_INSURANCE_1", "NEW_INSURANCE_2", "NEW_INSURANCE_3"};
     public static final String[] NEW_SECURITY_COMPANIES = {"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"};
