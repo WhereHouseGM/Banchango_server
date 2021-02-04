@@ -45,6 +45,7 @@ public class WarehouseEntityFactory {
     public static final Integer NEW_SPACE = 12345;
     public static final String NEW_ADDRESS = "NEW_ADDRESS";
     public static final String NEW_ADDRESS_DETAIL = "NEW_ADDRESS_DETAIL";
+    public static final String NEW_DESCRIPTION = "NEW_DESCRIPTION";
     public static final Integer NEW_AVAILABLE_WEEKDAYS = 1001;
     public static final String NEW_OPEN_AT = "10:00";
     public static final String NEW_CLOSE_AT = "19:00";
@@ -58,6 +59,7 @@ public class WarehouseEntityFactory {
     public static final Integer NEW_MIN_RELEASE_PER_MONTH = 1234;
     public static final Double NEW_LATITUDE = 11.1;
     public static final Double NEW_LONGITUDE = 33.3;
+    public static final WarehouseStatus NEW_WAREHOUSE_STATUS = WarehouseStatus.REJECTED;
     public static final String[] NEW_INSURANCES = {"NEW_INSURANCE_1", "NEW_INSURANCE_2", "NEW_INSURANCE_3"};
     public static final String[] NEW_SECURITY_COMPANIES = {"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"};
     public static final String[] NEW_DELIVERY_TYPES = {"NEW_DELIVERY_1", "NEW_DELIVERY_2", "NEW_DELIVERY_3", "NEW_DELIVERY_4"};

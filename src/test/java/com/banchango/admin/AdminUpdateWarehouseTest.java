@@ -18,6 +18,7 @@ import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,42 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 
 public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
+
+    private void assertUpdateWarehouseInfo(Integer warehouseId) {
+
+    }
+
+    private WarehouseAdminUpdateRequestDto createUpdateDto() {
+        WarehouseAdminUpdateRequestDto body = WarehouseAdminUpdateRequestDto.builder()
+                .name(WarehouseEntityFactory.NEW_NAME)
+                .space(WarehouseEntityFactory.NEW_SPACE)
+                .address(WarehouseEntityFactory.NEW_ADDRESS)
+                .addressDetail(WarehouseEntityFactory.NEW_ADDRESS_DETAIL)
+                .description(WarehouseEntityFactory.NEW_DESCRIPTION)
+                .availableWeekdays(WarehouseEntityFactory.NEW_AVAILABLE_WEEKDAYS)
+                .openAt(WarehouseEntityFactory.NEW_OPEN_AT)
+                .closeAt(WarehouseEntityFactory.NEW_CLOSE_AT)
+                .availableTimeDetail(WarehouseEntityFactory.NEW_AVAILABLE_TIME_DETAIL)
+                .cctvExist(WarehouseEntityFactory.NEW_CCTV_EXISTS)
+                .doorLockExist(WarehouseEntityFactory.NEW_DOOR_LOOK_EXIST)
+                .airConditioningType(WarehouseEntityFactory.NEW_AIR_CONDITIONING_TYPE)
+                .workerExist(WarehouseEntityFactory.NEW_WORKER_EXIST)
+                .canPark(WarehouseEntityFactory.NEW_CAN_PARK)
+                .mainItemTypes(Arrays.asList(WarehouseEntityFactory.NEW_MAIN_ITEM_TYPES))
+                .warehouseType(WarehouseEntityFactory.NEW_WAREHOUSE_TYPE)
+                .warehouseCondition(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_CONDITIONS))
+                .minReleasePerMonth(WarehouseEntityFactory.NEW_MIN_RELEASE_PER_MONTH)
+                .latitude(WarehouseEntityFactory.NEW_LATITUDE)
+                .longitude(WarehouseEntityFactory.NEW_LONGITUDE)
+                .insurances(Arrays.asList(WarehouseEntityFactory.NEW_INSURANCES))
+                .securityCompanies(Arrays.asList(WarehouseEntityFactory.NEW_SECURITY_COMPANIES))
+                .deliveryTypes(Arrays.asList(WarehouseEntityFactory.NEW_DELIVERY_TYPES))
+                .status(WarehouseEntityFactory.NEW_WAREHOUSE_STATUS)
+                .warehouseFacilityUsages(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES))
+                .warehouseUsageCautions(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS))
+                .build();
+        return body;
+    }
 
 //    private void assertUpdatedWarehouseInfo(Integer warehouseId, Boolean isBlogUrlNull) {
 //        Warehouses updatedWarehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
@@ -299,67 +336,63 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 //        assertUpdatedWarehouseInfo(warehouseId, false);
 //    }
 //
-//    @Test
-//    public void put_WarehouseInfoIsUpdatedWithBlogUrl_responseIsUnAuthorized_ifTokenNotGiven() {
-//        Users user = userEntityFactory.createUserWithOwnerType();
-//        String accessToken = JwtTokenUtil.generateAccessToken(user);
-//
-//        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
-//        Integer warehouseId = warehouse.getId();
-//        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
-//        String BLOG_URL = "BLOG_URL";
-//
-//        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(false);
-//
-//        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(body);
-//
-//        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
-//        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-//
-//    }
-//
-//    @Test
-//    public void put_WarehouseInfoIsUpdatedWithBlogUrl_responseIsForbidden_ifNotAdmin() {
-//        Users user = userEntityFactory.createUserWithOwnerType();
-//        String accessToken = JwtTokenUtil.generateAccessToken(user);
-//
-//        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
-//        Integer warehouseId = warehouse.getId();
-//        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
-//        String BLOG_URL = "BLOG_URL";
-//
-//        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(false);
-//
-//        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
-//                .header("Authorization", "Bearer "+accessToken)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(body);
-//
-//        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
-//        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//    }
-//
-//    @Test
-//    public void put_WarehouseInfoIsUpdatedWithBlogUrl_responseIsNotFound_ifWarehouseNotExist() {
-//        Users user = userEntityFactory.createUserWithOwnerType();
-//        String accessToken = JwtTokenUtil.generateAccessToken(user);
-//
-//        Users admin = userEntityFactory.createAdminWithOwnerType();
-//        String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
-//
-//        Integer warehouseId = 0;
-//        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
-//
-//        WarehouseAdminUpdateRequestDto body = createWarehouseAdminRequestDto(false);
-//
-//        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
-//                .header("Authorization", "Bearer "+adminAccessToken)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(body);
-//
-//        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
-//        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-//    }
+    @Test
+    public void put_WarehouseInfoUpdate_responseIsUnAuthorized_ifTokenNotGiven() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Integer warehouseId = warehouse.getId();
+        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
+
+        WarehouseAdminUpdateRequestDto body = createUpdateDto();
+
+        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
+
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+
+    }
+
+    @Test
+    public void put_WarehouseInfoUpdate_responseIsForbidden_ifNotAdmin() {
+        Users user = userEntityFactory.createUserWithOwnerType();
+        String accessToken = JwtTokenUtil.generateAccessToken(user);
+
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Integer warehouseId = warehouse.getId();
+        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
+
+        WarehouseAdminUpdateRequestDto body = createUpdateDto();
+
+        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+                .header("Authorization", "Bearer "+accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
+
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void put_WarehouseInfoUpdate_responseIsNotFound_ifWarehouseNotExist() {
+
+        Users admin = userEntityFactory.createAdminWithOwnerType();
+        String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
+
+        Integer warehouseId = 0;
+        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
+
+        WarehouseAdminUpdateRequestDto body = createUpdateDto();
+
+        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+                .header("Authorization", "Bearer "+ adminAccessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
+
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(putRequest, ErrorResponseDto.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }
