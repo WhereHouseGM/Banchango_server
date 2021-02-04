@@ -88,6 +88,30 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertEquals(WarehouseEntityFactory.NEW_LONGITUDE, updatedWarehouse.getLongitude());
         assertEquals(WarehouseEntityFactory.NEW_LATITUDE, updatedWarehouse.getLatitude());
         assertEquals(WarehouseEntityFactory.NEW_BLOG_URL, updatedWarehouse.getBlogUrl());
+        assertEquals(WarehouseEntityFactory.NEW_MIN_RELEASE_PER_MONTH, updatedWarehouse.getMinReleasePerMonth());
+    }
+
+    private void assertResponse(WarehouseAdminDetailResponseDto dto) {
+        assertEquals(WarehouseEntityFactory.NEW_NAME, dto.getName());
+        assertEquals(WarehouseEntityFactory.NEW_SPACE, dto.getSpace());
+        assertEquals(WarehouseEntityFactory.NEW_ADDRESS, dto.getAddress());
+        assertEquals(WarehouseEntityFactory.NEW_ADDRESS_DETAIL, dto.getAddressDetail());
+        assertEquals(WarehouseEntityFactory.NEW_DESCRIPTION, dto.getDescription());
+        assertEquals(WarehouseEntityFactory.NEW_AVAILABLE_WEEKDAYS, dto.getAvailableWeekdays());
+        assertEquals(WarehouseEntityFactory.NEW_OPEN_AT, dto.getOpenAt());
+        assertEquals(WarehouseEntityFactory.NEW_CLOSE_AT, dto.getCloseAt());
+        assertEquals(WarehouseEntityFactory.NEW_AVAILABLE_TIME_DETAIL, dto.getAvailableTimeDetail());
+        assertEquals(WarehouseEntityFactory.NEW_CCTV_EXISTS, dto.getCctvExist());
+        assertEquals(WarehouseEntityFactory.NEW_DOOR_LOOK_EXIST, dto.getDoorLockExist());
+        assertEquals(WarehouseEntityFactory.NEW_WORKER_EXIST, dto.getWorkerExist());
+        assertEquals(WarehouseEntityFactory.NEW_CAN_PARK, dto.getCanPark());
+        assertEquals(WarehouseEntityFactory.NEW_AIR_CONDITIONING_TYPE, dto.getAirConditioningType());
+        assertEquals(WarehouseEntityFactory.NEW_WAREHOUSE_TYPE, dto.getWarehouseType());
+        assertEquals(WarehouseEntityFactory.NEW_MIN_RELEASE_PER_MONTH, dto.getMinReleasePerMonth());
+        assertEquals(WarehouseEntityFactory.NEW_LATITUDE, dto.getLatitude());
+        assertEquals(WarehouseEntityFactory.NEW_LONGITUDE, dto.getLongitude());
+        assertEquals(WarehouseEntityFactory.NEW_BLOG_URL, dto.getBlogUrl());
+        assertEquals(WarehouseEntityFactory.NEW_WAREHOUSE_STATUS, dto.getStatus());
     }
 
 //    private WarehouseAdminUpdateRequestDto createWarehouseAdminRequestDto(Boolean isBlogUrlNull) {
@@ -331,8 +355,21 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Users user = userEntityFactory.createUserWithOwnerType();
         String userAccessToken = JwtTokenUtil.generateAccessToken(user);
         Users admin = userEntityFactory.createAdminWithOwnerType();
+        String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
         Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.ELECTRONICS});
         Integer warehouseId = warehouse.getId();
+
+        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
+        WarehouseAdminUpdateRequestDto body = createUpdateDto();
+        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + adminAccessToken)
+                .body(body);
+
+        ResponseEntity<WarehouseAdminDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseAdminDetailResponseDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertResponse(response.getBody());
 
         assertUpdatedWarehouseInfo(warehouseId);
         // Insurances : 개수 동일, 값만 업데이트 체크 => 인덱스 동일해야함
@@ -350,10 +387,24 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Users user = userEntityFactory.createUserWithOwnerType();
         String userAccessToken = JwtTokenUtil.generateAccessToken(user);
         Users admin = userEntityFactory.createAdminWithOwnerType();
+        String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
         Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.BOOK, MainItemType.ELECTRONICS});
         Integer warehouseId = warehouse.getId();
 
+        String url = String.format("/v3/admin/warehouses/%d", warehouseId);
+        WarehouseAdminUpdateRequestDto body = createUpdateDto();
+        RequestEntity<WarehouseAdminUpdateRequestDto> putRequest = RequestEntity.put(URI.create(url))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + adminAccessToken)
+                .body(body);
+
+        ResponseEntity<WarehouseAdminDetailResponseDto> response = restTemplate.exchange(putRequest, WarehouseAdminDetailResponseDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertResponse(response.getBody());
+
         assertUpdatedWarehouseInfo(warehouseId);
+
     }
 
     @Test
