@@ -13,6 +13,7 @@ import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
+import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
@@ -273,6 +274,36 @@ public class AdminService {
         }
     }
 
+    private void updateMainItemTypes(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<MainItemTypes> mainItemTypes = mainItemTypesRepository.findByWarehouseId(warehouse.getId());
+        if(mainItemTypes.size() == requestDto.getMainItemTypes().size()) {
+            for(int i = 0; i < mainItemTypes.size(); i++) {
+                mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
+            }
+        }
+        else if(mainItemTypes.size() < requestDto.getMainItemTypes().size()) {
+            for(int i = 0; i < mainItemTypes.size(); i++) {
+                mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
+            }
+            for(int i = mainItemTypes.size(); i < requestDto.getMainItemTypes().size(); i++) {
+                MainItemTypes newType = MainItemTypes.builder()
+                        .warehouse(warehouse).mainItemType(requestDto.getMainItemTypes().get(i))
+                        .build();
+                mainItemTypesRepository.save(newType);
+            }
+        }
+        else if(mainItemTypes.size() > requestDto.getMainItemTypes().size()) {
+            for(int i = 0; i < mainItemTypes.size(); i++) {
+                mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
+            }
+            for(int i = requestDto.getMainItemTypes().size(); i < mainItemTypes.size(); i++) {
+                Integer idOfTypeToRemove = mainItemTypes.get(i).getId();
+                warehouse.getMainItemTypes().removeIf(type -> type.getId().equals(idOfTypeToRemove));
+                mainItemTypesRepository.deleteById(idOfTypeToRemove);
+            }
+        }
+    }
+
     @Transactional
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
@@ -284,6 +315,7 @@ public class AdminService {
         updateWarehouseConditions(warehouse, requestDto);
         updateWarehouseFacilityUsages(warehouse, requestDto);
 //        updateWarehouseUsageCautions(warehouse, requestDto);
+        updateMainItemTypes(warehouse, requestDto);
         // TODO : 주석 제거
 //        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
 //        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
