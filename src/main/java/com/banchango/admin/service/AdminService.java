@@ -13,6 +13,7 @@ import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
+import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
@@ -86,12 +87,8 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    @Transactional
-    public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        // TODO : 로직 개선
-        List<Insurances> insurances = insurancesRepository.findByWarehouseId(warehouseId);
+    private void updateInsurances(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<Insurances> insurances = insurancesRepository.findByWarehouseId(warehouse.getId());
         // 기존 개수와 같다면
         if(insurances.size() == requestDto.getInsurances().size()) {
             for(int i = 0; i < insurances.size(); i++) {
@@ -121,6 +118,43 @@ public class AdminService {
                 insurancesRepository.delete(insurances.get(i));
             }
         }
+    }
+
+    private void updateSecurityCompanies(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<SecurityCompanies> securityCompanies = securityCompaniesRepository.findByWarehouseId(warehouse.getId());
+        if(securityCompanies.size() == requestDto.getSecurityCompanies().size()) {
+            for(int i = 0; i < securityCompanies.size(); i++) {
+                securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
+            }
+        }
+        else if(securityCompanies.size() < requestDto.getSecurityCompanies().size()) {
+            for(int i = 0; i < securityCompanies.size(); i++) {
+                securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
+            }
+            for(int i = securityCompanies.size() + 1; i < requestDto.getSecurityCompanies().size(); i++) {
+                SecurityCompanies newSecurityCompany = SecurityCompanies.builder()
+                        .warehouse(warehouse).name(requestDto.getSecurityCompanies().get(i))
+                        .build();
+                securityCompaniesRepository.save(newSecurityCompany);
+            }
+        }
+        else if(securityCompanies.size() > requestDto.getSecurityCompanies().size()) {
+            for(int i = 0; i < requestDto.getSecurityCompanies().size(); i++) {
+                securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
+            }
+            for(int i = requestDto.getSecurityCompanies().size() + 1; i < securityCompanies.size(); i++) {
+                securityCompaniesRepository.delete(securityCompanies.get(i));
+            }
+        }
+    }
+
+    @Transactional
+    public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        // TODO : 로직 개선
+        updateInsurances(warehouse, requestDto);
+        updateSecurityCompanies(warehouse, requestDto);
 
         // TODO : 주석 제거
 //        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
