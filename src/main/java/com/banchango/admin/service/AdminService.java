@@ -4,6 +4,7 @@ import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
@@ -37,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -139,13 +141,41 @@ public class AdminService {
             }
         }
         else if(securityCompanies.size() > requestDto.getSecurityCompanies().size()) {
-            for(int i = 0; i < requestDto.getSecurityCompanies().size(); i++) {
+            for (int i = 0; i < requestDto.getSecurityCompanies().size(); i++) {
                 securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
             }
-            for(int i = requestDto.getSecurityCompanies().size(); i < securityCompanies.size(); i++) {
+            for (int i = requestDto.getSecurityCompanies().size(); i < securityCompanies.size(); i++) {
+                System.out.println("DELETING NAME : " + securityCompanies.get(i).getName());
                 securityCompaniesRepository.deleteById(securityCompanies.get(i).getId());
             }
-            System.out.println("UPDATED SIZE : " + securityCompaniesRepository.findByWarehouseId(warehouse.getId()).size());
+        }
+    }
+
+    private void updateDeliveryTypes(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<DeliveryTypes> deliveryTypes = deliveryTypesRepository.findByWarehouseId(warehouse.getId());
+        if(deliveryTypes.size() == requestDto.getDeliveryTypes().size()) {
+            for(int i = 0; i < deliveryTypes.size(); i++) {
+                deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
+            }
+        }
+        else if(deliveryTypes.size() < requestDto.getDeliveryTypes().size()) {
+            for(int i = 0; i < deliveryTypes.size(); i++) {
+                deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
+            }
+            for(int i = deliveryTypes.size(); i < requestDto.getDeliveryTypes().size(); i++) {
+                DeliveryTypes newDeliveryType = DeliveryTypes.builder()
+                        .warehouse(warehouse).name(requestDto.getDeliveryTypes().get(i))
+                        .build();
+                deliveryTypesRepository.save(newDeliveryType);
+            }
+        }
+        else if(deliveryTypes.size() > requestDto.getDeliveryTypes().size()) {
+            for(int i = 0; i < requestDto.getDeliveryTypes().size(); i++) {
+                deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
+            }
+            for(int i = requestDto.getDeliveryTypes().size(); i < deliveryTypes.size(); i++) {
+                deliveryTypesRepository.delete(deliveryTypes.get(i));
+            }
         }
     }
 
@@ -156,7 +186,7 @@ public class AdminService {
         // TODO : 로직 개선
         updateInsurances(warehouse, requestDto);
         updateSecurityCompanies(warehouse, requestDto);
-
+        updateDeliveryTypes(warehouse, requestDto);
         // TODO : 주석 제거
 //        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
 //        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
