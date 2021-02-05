@@ -4,6 +4,7 @@ import com.banchango.domain.warehouses.Warehouses;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -18,6 +19,7 @@ public class DeliveryTypes {
     private Integer id;
 
     @Column(length = 30, nullable = false)
+    @Setter
     private String name;
 
     @ManyToOne
