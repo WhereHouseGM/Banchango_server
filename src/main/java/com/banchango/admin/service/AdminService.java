@@ -91,14 +91,11 @@ public class AdminService {
 
     private void updateInsurances(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
         List<Insurances> insurances = insurancesRepository.findByWarehouseId(warehouse.getId());
-        // 기존 개수와 같다면
         if(insurances.size() == requestDto.getInsurances().size()) {
             for(int i = 0; i < insurances.size(); i++) {
                 insurances.get(i).setName(requestDto.getInsurances().get(i));
             }
         }
-
-        // 기존 개수보다 많다면
         else if(insurances.size() < requestDto.getInsurances().size()) {
             for(int i = 0; i < insurances.size(); i++) {
                 insurances.get(i).setName(requestDto.getInsurances().get(i));
@@ -110,14 +107,14 @@ public class AdminService {
                 insurancesRepository.save(newInsurance);
             }
         }
-
-        // 기존 개수보다 적다면
         else if(insurances.size() > requestDto.getInsurances().size()) {
             for(int i = 0; i < requestDto.getInsurances().size(); i++) {
                 insurances.get(i).setName(requestDto.getInsurances().get(i));
             }
             for(int i = requestDto.getInsurances().size(); i < insurances.size(); i++) {
-                insurancesRepository.delete(insurances.get(i));
+                Integer idOfInsuranceToRemove = insurances.get(i).getId();
+                warehouse.getInsurances().removeIf(insurance -> insurance.getId().equals(idOfInsuranceToRemove));
+                insurancesRepository.deleteById(idOfInsuranceToRemove);
             }
         }
     }
@@ -175,7 +172,9 @@ public class AdminService {
                 deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
             }
             for(int i = requestDto.getDeliveryTypes().size(); i < deliveryTypes.size(); i++) {
-                deliveryTypesRepository.delete(deliveryTypes.get(i));
+                Integer idOfDeliveryTypeToRemove = deliveryTypes.get(i).getId();
+                warehouse.getDeliveryTypes().removeIf(type -> type.getId().equals(idOfDeliveryTypeToRemove));
+                deliveryTypesRepository.deleteById(idOfDeliveryTypeToRemove);
             }
         }
     }
