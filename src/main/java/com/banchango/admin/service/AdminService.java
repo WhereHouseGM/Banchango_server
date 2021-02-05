@@ -19,6 +19,8 @@ import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.*;
@@ -179,6 +181,36 @@ public class AdminService {
         }
     }
 
+    private void updateWarehouseConditions(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<WarehouseConditions> warehouseConditions = warehouseConditionsRepository.findByWarehouseId(warehouse.getId());
+        if(warehouseConditions.size() == requestDto.getWarehouseCondition().size()) {
+            for(int i = 0; i < warehouseConditions.size(); i++) {
+                warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
+            }
+        }
+        else if(warehouseConditions.size() < requestDto.getWarehouseCondition().size()) {
+            for(int i = 0; i < warehouseConditions.size(); i++) {
+                warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
+            }
+            for(int i = warehouseConditions.size(); i < requestDto.getWarehouseCondition().size(); i++) {
+                WarehouseConditions newCondition = WarehouseConditions.builder()
+                        .warehouse(warehouse).condition(requestDto.getWarehouseCondition().get(i))
+                        .build();
+                warehouseConditionsRepository.save(newCondition);
+            }
+        }
+        else if(warehouseConditions.size() > requestDto.getWarehouseCondition().size()) {
+            for(int i = 0; i < warehouseConditions.size(); i++) {
+                warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
+            }
+            for(int i = requestDto.getWarehouseCondition().size(); i < warehouseConditions.size(); i++) {
+                Integer idOfConditionToRemove = warehouseConditions.get(i).getId();
+                warehouse.getWarehouseConditions().removeIf(condition -> condition.getId().equals(idOfConditionToRemove));
+                warehouseConditionsRepository.deleteById(idOfConditionToRemove);
+            }
+        }
+    }
+
     @Transactional
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
@@ -187,6 +219,7 @@ public class AdminService {
         updateInsurances(warehouse, requestDto);
         updateSecurityCompanies(warehouse, requestDto);
         updateDeliveryTypes(warehouse, requestDto);
+        updateWarehouseConditions(warehouse, requestDto);
         // TODO : 주석 제거
 //        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
 //        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
