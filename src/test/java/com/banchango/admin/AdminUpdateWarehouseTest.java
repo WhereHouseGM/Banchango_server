@@ -136,8 +136,8 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
                 .stream().map(Insurances::getId).collect(Collectors.toList());
 
         // SecurityCompanies : 개수 1개 적음, 값 업데이트 체크, 인덱스 기존 거만 있어야함
-//        List<Integer> beforeSecurityCompaniesId = securityCompaniesRepository.findByWarehouseId(warehouseId)
-//                .stream().map(SecurityCompanies::getId).collect(Collectors.toList());
+        List<Integer> beforeSecurityCompaniesId = securityCompaniesRepository.findByWarehouseId(warehouseId)
+                .stream().map(SecurityCompanies::getId).collect(Collectors.toList());
 
         // DeliveryTypes: 개수 1개 많음 => 인덱스 동일 및 1개 추가
 //        List<Integer> beforeDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
@@ -201,8 +201,8 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(beforeInsurancesId.equals(updatedInsuranceId));
 
         // SecurityCompanies : 개수 1개 적음
-//        assertTrue(beforeSecurityCompaniesId.size() - 1 == updatedSecurityCompaniesId.size());
-//        assertTrue(beforeSecurityCompaniesId.containsAll(updatedSecurityCompaniesId));
+        assertEquals(beforeSecurityCompaniesId.size() - 1, updatedSecurityCompaniesId.size());
+        assertTrue(beforeSecurityCompaniesId.containsAll(updatedSecurityCompaniesId));
 
         // DeliveryTypes : 개수 1개 많음
 //        assertTrue(beforeDeliveryTypesId.size() + 1 == updatedDeliveryTypesId.size());

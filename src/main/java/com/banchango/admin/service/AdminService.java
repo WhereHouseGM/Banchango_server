@@ -101,7 +101,7 @@ public class AdminService {
             for(int i = 0; i < insurances.size(); i++) {
                 insurances.get(i).setName(requestDto.getInsurances().get(i));
             }
-            for(int i = insurances.size() + 1; i < requestDto.getInsurances().size(); i++) {
+            for(int i = insurances.size(); i < requestDto.getInsurances().size(); i++) {
                 Insurances newInsurance = Insurances.builder()
                         .warehouse(warehouse).name(requestDto.getInsurances().get(i))
                         .build();
@@ -114,7 +114,7 @@ public class AdminService {
             for(int i = 0; i < requestDto.getInsurances().size(); i++) {
                 insurances.get(i).setName(requestDto.getInsurances().get(i));
             }
-            for(int i = requestDto.getInsurances().size() + 1; i < insurances.size(); i++) {
+            for(int i = requestDto.getInsurances().size(); i < insurances.size(); i++) {
                 insurancesRepository.delete(insurances.get(i));
             }
         }
@@ -131,7 +131,7 @@ public class AdminService {
             for(int i = 0; i < securityCompanies.size(); i++) {
                 securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
             }
-            for(int i = securityCompanies.size() + 1; i < requestDto.getSecurityCompanies().size(); i++) {
+            for(int i = securityCompanies.size(); i < requestDto.getSecurityCompanies().size(); i++) {
                 SecurityCompanies newSecurityCompany = SecurityCompanies.builder()
                         .warehouse(warehouse).name(requestDto.getSecurityCompanies().get(i))
                         .build();
@@ -142,9 +142,10 @@ public class AdminService {
             for(int i = 0; i < requestDto.getSecurityCompanies().size(); i++) {
                 securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
             }
-            for(int i = requestDto.getSecurityCompanies().size() + 1; i < securityCompanies.size(); i++) {
-                securityCompaniesRepository.delete(securityCompanies.get(i));
+            for(int i = requestDto.getSecurityCompanies().size(); i < securityCompanies.size(); i++) {
+                securityCompaniesRepository.deleteById(securityCompanies.get(i).getId());
             }
+            System.out.println("UPDATED SIZE : " + securityCompaniesRepository.findByWarehouseId(warehouse.getId()).size());
         }
     }
 
