@@ -9,7 +9,6 @@ import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
