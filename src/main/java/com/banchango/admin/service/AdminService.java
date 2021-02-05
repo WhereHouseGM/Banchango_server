@@ -145,8 +145,9 @@ public class AdminService {
                 securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
             }
             for (int i = requestDto.getSecurityCompanies().size(); i < securityCompanies.size(); i++) {
-                System.out.println("DELETING NAME : " + securityCompanies.get(i).getName());
-                securityCompaniesRepository.deleteById(securityCompanies.get(i).getId());
+                Integer idOfCompanyToRemove = securityCompanies.get(i).getId();
+                warehouse.getSecurityCompanies().removeIf(company -> company.getId().equals(idOfCompanyToRemove));
+                securityCompaniesRepository.deleteById(idOfCompanyToRemove);
             }
         }
     }

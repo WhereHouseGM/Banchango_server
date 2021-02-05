@@ -201,7 +201,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(beforeInsurancesId.equals(updatedInsuranceId));
 
         // SecurityCompanies : 개수 1개 적음
-//        assertEquals(beforeSecurityCompaniesId.size() - 1, updatedSecurityCompaniesId.size());
+        assertEquals(beforeSecurityCompaniesId.size() - 1, updatedSecurityCompaniesId.size());
         assertTrue(beforeSecurityCompaniesId.containsAll(updatedSecurityCompaniesId));
 
         // DeliveryTypes : 개수 1개 많음
