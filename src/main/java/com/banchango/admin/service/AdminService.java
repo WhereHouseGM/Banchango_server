@@ -20,7 +20,6 @@ import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
@@ -43,7 +42,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -308,7 +306,6 @@ public class AdminService {
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        // TODO : 로직 개선
         updateInsurances(warehouse, requestDto);
         updateSecurityCompanies(warehouse, requestDto);
         updateDeliveryTypes(warehouse, requestDto);
@@ -316,17 +313,6 @@ public class AdminService {
         updateWarehouseFacilityUsages(warehouse, requestDto);
         updateWarehouseUsageCautions(warehouse, requestDto);
         updateMainItemTypes(warehouse, requestDto);
-        // TODO : 주석 제거
-//        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
-//        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
-//        warehouseFacilityUsagesRepository.deleteByWarehouseId(warehouseId);
-//        warehouseUsageCautionsRepository.deleteByWarehouseId(warehouseId);
-//        insurancesRepository.deleteByWarehouseId(warehouseId);
-//        mainItemTypesRepository.deleteByWarehouseId(warehouseId);
-//        warehouseConditionsRepository.deleteByWarehouseId(warehouseId);
-//        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
-//            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
-//        }
         warehouse.update(requestDto);
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
