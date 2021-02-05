@@ -22,8 +22,10 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.*;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.domain.withdraws.WithdrawsRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
@@ -211,6 +213,66 @@ public class AdminService {
         }
     }
 
+    private void updateWarehouseFacilityUsages(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseFacilityUsagesRepository.findByWarehouseId(warehouse.getId());
+        if(warehouseFacilityUsages.size() == requestDto.getWarehouseFacilityUsages().size()) {
+            for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
+                warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
+            }
+        }
+        else if(warehouseFacilityUsages.size() < requestDto.getWarehouseFacilityUsages().size()) {
+            for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
+                warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
+            }
+            for(int i = warehouseFacilityUsages.size(); i < requestDto.getWarehouseFacilityUsages().size(); i++) {
+                WarehouseFacilityUsages newUsage = WarehouseFacilityUsages.builder()
+                        .warehouse(warehouse).content(requestDto.getWarehouseFacilityUsages().get(i))
+                        .build();
+                warehouseFacilityUsagesRepository.save(newUsage);
+            }
+        }
+        else if(warehouseFacilityUsages.size() > requestDto.getWarehouseFacilityUsages().size()) {
+            for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
+                warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
+            }
+            for(int i = requestDto.getWarehouseFacilityUsages().size(); i < warehouseFacilityUsages.size(); i++) {
+                Integer idOfUsageToRemove = warehouseFacilityUsages.get(i).getId();
+                warehouse.getWarehouseFacilityUsages().removeIf(usage -> usage.getId().equals(idOfUsageToRemove));
+                warehouseFacilityUsagesRepository.deleteById(idOfUsageToRemove);
+            }
+        }
+    }
+
+    private void updateWarehouseUsageCautions(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<WarehouseUsageCautions> warehouseUsageCautions = warehouseUsageCautionsRepository.findByWarehouseId(warehouse.getId());
+        if(warehouseUsageCautions.size() == requestDto.getWarehouseUsageCautions().size()) {
+            for(int i = 0; i < warehouseUsageCautions.size(); i++) {
+                warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
+            }
+        }
+        else if(warehouseUsageCautions.size() < requestDto.getWarehouseUsageCautions().size()) {
+            for(int i = 0; i < warehouseUsageCautions.size(); i++) {
+                warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
+            }
+            for(int i = warehouseUsageCautions.size(); i < requestDto.getWarehouseUsageCautions().size(); i++) {
+                WarehouseUsageCautions newCaution = WarehouseUsageCautions.builder()
+                        .warehouse(warehouse).content(requestDto.getWarehouseUsageCautions().get(i))
+                        .build();
+                warehouseUsageCautionsRepository.save(newCaution);
+            }
+        }
+        else if(warehouseUsageCautions.size() > requestDto.getWarehouseUsageCautions().size()) {
+            for(int i = 0; i < warehouseUsageCautions.size(); i++) {
+                warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
+            }
+            for(int i = requestDto.getWarehouseUsageCautions().size(); i < warehouseUsageCautions.size(); i++) {
+                Integer idOfCautionToRemove = warehouseUsageCautions.get(i).getId();
+                warehouse.getWarehouseUsageCautions().removeIf(caution -> caution.getId().equals(idOfCautionToRemove));
+                warehouseUsageCautionsRepository.deleteById(idOfCautionToRemove);
+            }
+        }
+    }
+
     @Transactional
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
@@ -220,6 +282,8 @@ public class AdminService {
         updateSecurityCompanies(warehouse, requestDto);
         updateDeliveryTypes(warehouse, requestDto);
         updateWarehouseConditions(warehouse, requestDto);
+        updateWarehouseFacilityUsages(warehouse, requestDto);
+//        updateWarehouseUsageCautions(warehouse, requestDto);
         // TODO : 주석 제거
 //        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
 //        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
