@@ -10,8 +10,8 @@ mysqldump -h $DB_HOST -u wherehouse -p --databases $PRD_DB > $PRD_DB'.sql'
 
 sed -i 's/'$PRD_DB'/'$DEV_DB'/g' $PRD_DB'.sql'
 
-echo "개발용 디비("$DEV_DB") 덤프 중..."
+echo "개발용 디비("$DEV_DB") 임포트 중..."
 echo "USER: wherehouse 비밀번호 입력"
-mysql -h $DB_HOST -u root -p $DEV_DB < $PRD_DB'.sql'
+mysql -h $DB_HOST -u wherehouse -p $DEV_DB < $PRD_DB'.sql'
 
 rm $PRD_DB'.sql'
