@@ -4,6 +4,7 @@ import com.banchango.domain.warehouses.Warehouses;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -20,6 +21,7 @@ public class WarehouseConditions {
 
     @Column(nullable = false, name = "name")
     @Enumerated(EnumType.STRING)
+    @Setter
     private WarehouseCondition condition;
 
     @ManyToOne

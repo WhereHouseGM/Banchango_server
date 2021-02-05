@@ -4,22 +4,28 @@ import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
+import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.*;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.domain.withdraws.WithdrawsRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
@@ -86,20 +92,227 @@ public class AdminService {
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
+    private void updateInsurances(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<Insurances> insurances = insurancesRepository.findByWarehouseId(warehouse.getId());
+        if(insurances.size() == requestDto.getInsurances().size()) {
+            for(int i = 0; i < insurances.size(); i++) {
+                insurances.get(i).setName(requestDto.getInsurances().get(i));
+            }
+        }
+        else if(insurances.size() < requestDto.getInsurances().size()) {
+            for(int i = 0; i < insurances.size(); i++) {
+                insurances.get(i).setName(requestDto.getInsurances().get(i));
+            }
+            for(int i = insurances.size(); i < requestDto.getInsurances().size(); i++) {
+                Insurances newInsurance = Insurances.builder()
+                        .warehouse(warehouse).name(requestDto.getInsurances().get(i))
+                        .build();
+                insurancesRepository.save(newInsurance);
+            }
+        }
+        else if(insurances.size() > requestDto.getInsurances().size()) {
+            for(int i = 0; i < requestDto.getInsurances().size(); i++) {
+                insurances.get(i).setName(requestDto.getInsurances().get(i));
+            }
+            for(int i = requestDto.getInsurances().size(); i < insurances.size(); i++) {
+                Integer idOfInsuranceToRemove = insurances.get(i).getId();
+                warehouse.getInsurances().removeIf(insurance -> insurance.getId().equals(idOfInsuranceToRemove));
+                insurancesRepository.deleteById(idOfInsuranceToRemove);
+            }
+        }
+    }
+
+    private void updateSecurityCompanies(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<SecurityCompanies> securityCompanies = securityCompaniesRepository.findByWarehouseId(warehouse.getId());
+        if(securityCompanies.size() == requestDto.getSecurityCompanies().size()) {
+            for(int i = 0; i < securityCompanies.size(); i++) {
+                securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
+            }
+        }
+        else if(securityCompanies.size() < requestDto.getSecurityCompanies().size()) {
+            for(int i = 0; i < securityCompanies.size(); i++) {
+                securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
+            }
+            for(int i = securityCompanies.size(); i < requestDto.getSecurityCompanies().size(); i++) {
+                SecurityCompanies newSecurityCompany = SecurityCompanies.builder()
+                        .warehouse(warehouse).name(requestDto.getSecurityCompanies().get(i))
+                        .build();
+                securityCompaniesRepository.save(newSecurityCompany);
+            }
+        }
+        else if(securityCompanies.size() > requestDto.getSecurityCompanies().size()) {
+            for (int i = 0; i < requestDto.getSecurityCompanies().size(); i++) {
+                securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
+            }
+            for (int i = requestDto.getSecurityCompanies().size(); i < securityCompanies.size(); i++) {
+                Integer idOfCompanyToRemove = securityCompanies.get(i).getId();
+                warehouse.getSecurityCompanies().removeIf(company -> company.getId().equals(idOfCompanyToRemove));
+                securityCompaniesRepository.deleteById(idOfCompanyToRemove);
+            }
+        }
+    }
+
+    private void updateDeliveryTypes(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<DeliveryTypes> deliveryTypes = deliveryTypesRepository.findByWarehouseId(warehouse.getId());
+        if(deliveryTypes.size() == requestDto.getDeliveryTypes().size()) {
+            for(int i = 0; i < deliveryTypes.size(); i++) {
+                deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
+            }
+        }
+        else if(deliveryTypes.size() < requestDto.getDeliveryTypes().size()) {
+            for(int i = 0; i < deliveryTypes.size(); i++) {
+                deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
+            }
+            for(int i = deliveryTypes.size(); i < requestDto.getDeliveryTypes().size(); i++) {
+                DeliveryTypes newDeliveryType = DeliveryTypes.builder()
+                        .warehouse(warehouse).name(requestDto.getDeliveryTypes().get(i))
+                        .build();
+                deliveryTypesRepository.save(newDeliveryType);
+            }
+        }
+        else if(deliveryTypes.size() > requestDto.getDeliveryTypes().size()) {
+            for(int i = 0; i < requestDto.getDeliveryTypes().size(); i++) {
+                deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
+            }
+            for(int i = requestDto.getDeliveryTypes().size(); i < deliveryTypes.size(); i++) {
+                Integer idOfDeliveryTypeToRemove = deliveryTypes.get(i).getId();
+                warehouse.getDeliveryTypes().removeIf(type -> type.getId().equals(idOfDeliveryTypeToRemove));
+                deliveryTypesRepository.deleteById(idOfDeliveryTypeToRemove);
+            }
+        }
+    }
+
+    private void updateWarehouseConditions(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<WarehouseConditions> warehouseConditions = warehouseConditionsRepository.findByWarehouseId(warehouse.getId());
+        if(warehouseConditions.size() == requestDto.getWarehouseCondition().size()) {
+            for(int i = 0; i < warehouseConditions.size(); i++) {
+                warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
+            }
+        }
+        else if(warehouseConditions.size() < requestDto.getWarehouseCondition().size()) {
+            for(int i = 0; i < warehouseConditions.size(); i++) {
+                warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
+            }
+            for(int i = warehouseConditions.size(); i < requestDto.getWarehouseCondition().size(); i++) {
+                WarehouseConditions newCondition = WarehouseConditions.builder()
+                        .warehouse(warehouse).condition(requestDto.getWarehouseCondition().get(i))
+                        .build();
+                warehouseConditionsRepository.save(newCondition);
+            }
+        }
+        else if(warehouseConditions.size() > requestDto.getWarehouseCondition().size()) {
+            for(int i = 0; i < requestDto.getWarehouseCondition().size(); i++) {
+                warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
+            }
+            for(int i = requestDto.getWarehouseCondition().size(); i < warehouseConditions.size(); i++) {
+                Integer idOfConditionToRemove = warehouseConditions.get(i).getId();
+                warehouse.getWarehouseConditions().removeIf(condition -> condition.getId().equals(idOfConditionToRemove));
+                warehouseConditionsRepository.deleteById(idOfConditionToRemove);
+            }
+        }
+    }
+
+    private void updateWarehouseFacilityUsages(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseFacilityUsagesRepository.findByWarehouseId(warehouse.getId());
+        if(warehouseFacilityUsages.size() == requestDto.getWarehouseFacilityUsages().size()) {
+            for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
+                warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
+            }
+        }
+        else if(warehouseFacilityUsages.size() < requestDto.getWarehouseFacilityUsages().size()) {
+            for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
+                warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
+            }
+            for(int i = warehouseFacilityUsages.size(); i < requestDto.getWarehouseFacilityUsages().size(); i++) {
+                WarehouseFacilityUsages newUsage = WarehouseFacilityUsages.builder()
+                        .warehouse(warehouse).content(requestDto.getWarehouseFacilityUsages().get(i))
+                        .build();
+                warehouseFacilityUsagesRepository.save(newUsage);
+            }
+        }
+        else if(warehouseFacilityUsages.size() > requestDto.getWarehouseFacilityUsages().size()) {
+            for(int i = 0; i < requestDto.getWarehouseFacilityUsages().size(); i++) {
+                warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
+            }
+            for(int i = requestDto.getWarehouseFacilityUsages().size(); i < warehouseFacilityUsages.size(); i++) {
+                Integer idOfUsageToRemove = warehouseFacilityUsages.get(i).getId();
+                warehouse.getWarehouseFacilityUsages().removeIf(usage -> usage.getId().equals(idOfUsageToRemove));
+                warehouseFacilityUsagesRepository.deleteById(idOfUsageToRemove);
+            }
+        }
+    }
+
+    private void updateWarehouseUsageCautions(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<WarehouseUsageCautions> warehouseUsageCautions = warehouseUsageCautionsRepository.findByWarehouseId(warehouse.getId());
+        if(warehouseUsageCautions.size() == requestDto.getWarehouseUsageCautions().size()) {
+            for(int i = 0; i < warehouseUsageCautions.size(); i++) {
+                warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
+            }
+        }
+        else if(warehouseUsageCautions.size() < requestDto.getWarehouseUsageCautions().size()) {
+            for(int i = 0; i < warehouseUsageCautions.size(); i++) {
+                warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
+            }
+            for(int i = warehouseUsageCautions.size(); i < requestDto.getWarehouseUsageCautions().size(); i++) {
+                WarehouseUsageCautions newCaution = WarehouseUsageCautions.builder()
+                        .warehouse(warehouse).content(requestDto.getWarehouseUsageCautions().get(i))
+                        .build();
+                warehouseUsageCautionsRepository.save(newCaution);
+            }
+        }
+        else if(warehouseUsageCautions.size() > requestDto.getWarehouseUsageCautions().size()) {
+            for(int i = 0; i < requestDto.getWarehouseUsageCautions().size(); i++) {
+                warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
+            }
+            for(int i = requestDto.getWarehouseUsageCautions().size(); i < warehouseUsageCautions.size(); i++) {
+                Integer idOfCautionToRemove = warehouseUsageCautions.get(i).getId();
+                warehouse.getWarehouseUsageCautions().removeIf(caution -> caution.getId().equals(idOfCautionToRemove));
+                warehouseUsageCautionsRepository.deleteById(idOfCautionToRemove);
+            }
+        }
+    }
+
+    private void updateMainItemTypes(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+        List<MainItemTypes> mainItemTypes = mainItemTypesRepository.findByWarehouseId(warehouse.getId());
+        if(mainItemTypes.size() == requestDto.getMainItemTypes().size()) {
+            for(int i = 0; i < mainItemTypes.size(); i++) {
+                mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
+            }
+        }
+        else if(mainItemTypes.size() < requestDto.getMainItemTypes().size()) {
+            for(int i = 0; i < mainItemTypes.size(); i++) {
+                mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
+            }
+            for(int i = mainItemTypes.size(); i < requestDto.getMainItemTypes().size(); i++) {
+                MainItemTypes newType = MainItemTypes.builder()
+                        .warehouse(warehouse).mainItemType(requestDto.getMainItemTypes().get(i))
+                        .build();
+                mainItemTypesRepository.save(newType);
+            }
+        }
+        else if(mainItemTypes.size() > requestDto.getMainItemTypes().size()) {
+            for(int i = 0; i < requestDto.getMainItemTypes().size(); i++) {
+                mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
+            }
+            for(int i = requestDto.getMainItemTypes().size(); i < mainItemTypes.size(); i++) {
+                Integer idOfTypeToRemove = mainItemTypes.get(i).getId();
+                warehouse.getMainItemTypes().removeIf(type -> type.getId().equals(idOfTypeToRemove));
+                mainItemTypesRepository.deleteById(idOfTypeToRemove);
+            }
+        }
+    }
+
     @Transactional
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
-        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
-        securityCompaniesRepository.deleteByWarehouseId(warehouseId);
-        warehouseFacilityUsagesRepository.deleteByWarehouseId(warehouseId);
-        warehouseUsageCautionsRepository.deleteByWarehouseId(warehouseId);
-        insurancesRepository.deleteByWarehouseId(warehouseId);
-        mainItemTypesRepository.deleteByWarehouseId(warehouseId);
-        warehouseConditionsRepository.deleteByWarehouseId(warehouseId);
-        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
-            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
-        }
+        updateInsurances(warehouse, requestDto);
+        updateSecurityCompanies(warehouse, requestDto);
+        updateDeliveryTypes(warehouse, requestDto);
+        updateWarehouseConditions(warehouse, requestDto);
+        updateWarehouseFacilityUsages(warehouse, requestDto);
+        updateWarehouseUsageCautions(warehouse, requestDto);
+        updateMainItemTypes(warehouse, requestDto);
         warehouse.update(requestDto);
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
