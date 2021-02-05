@@ -91,7 +91,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompanies::getName).collect(Collectors.toList()).equals(Arrays.asList(WarehouseEntityFactory.NEW_SECURITY_COMPANIES)));
         assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryTypes::getName).collect(Collectors.toList()).equals(Arrays.asList(WarehouseEntityFactory.NEW_DELIVERY_TYPES)));
         assertTrue(warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsages::getContent).collect(Collectors.toList()).equals(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES)));
-//        assertTrue(warehouseUsageCautionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseUsageCautions::getContent).collect(Collectors.toList()).equals(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS)));
+        assertTrue(warehouseUsageCautionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseUsageCautions::getContent).collect(Collectors.toList()).equals(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS)));
         assertTrue(warehouseConditionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseConditions::getCondition).collect(Collectors.toList()).equals(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_CONDITIONS)));
         assertTrue(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(Arrays.asList(WarehouseEntityFactory.NEW_MAIN_ITEM_TYPES)));
     }
@@ -121,7 +121,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(dto.getSecurityCompanies().equals(Arrays.asList(WarehouseEntityFactory.NEW_SECURITY_COMPANIES)));
         assertTrue(dto.getDeliveryTypes().equals(Arrays.asList(WarehouseEntityFactory.NEW_DELIVERY_TYPES)));
         assertTrue(dto.getWarehouseFacilityUsages().equals(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES)));
-//        assertTrue(dto.getWarehouseUsageCautions().equals(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS)));
+        assertTrue(dto.getWarehouseUsageCautions().equals(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS)));
         assertTrue(dto.getWarehouseCondition().equals(Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_CONDITIONS)));
         assertTrue(dto.getMainItemTypes().equals(Arrays.asList(WarehouseEntityFactory.NEW_MAIN_ITEM_TYPES)));
     }
@@ -221,8 +221,8 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertTrue(updatedWarehouseFacilityUsagesId.containsAll(beforeWarehouseFacilityUsagesId));
 
         // WarehouseUsageCautions: 개수 1개 적음
-//        assertTrue(beforeWarehouseUsageCautionsId.size() - 1 == updatedWarehouseUsageCautionsId.size());
-//        assertTrue(beforeWarehouseUsageCautionsId.containsAll(updatedWarehouseUsageCautionsId));
+        assertTrue(beforeWarehouseUsageCautionsId.size() - 1 == updatedWarehouseUsageCautionsId.size());
+        assertTrue(beforeWarehouseUsageCautionsId.containsAll(updatedWarehouseUsageCautionsId));
 
         // MainItemTypes: 개수 1개 많음
         assertTrue(beforeMainItemTypesId.size() + 1 == updatedMainItemTypesId.size());

@@ -203,7 +203,7 @@ public class AdminService {
             }
         }
         else if(warehouseConditions.size() > requestDto.getWarehouseCondition().size()) {
-            for(int i = 0; i < warehouseConditions.size(); i++) {
+            for(int i = 0; i < requestDto.getWarehouseCondition().size(); i++) {
                 warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
             }
             for(int i = requestDto.getWarehouseCondition().size(); i < warehouseConditions.size(); i++) {
@@ -233,7 +233,7 @@ public class AdminService {
             }
         }
         else if(warehouseFacilityUsages.size() > requestDto.getWarehouseFacilityUsages().size()) {
-            for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
+            for(int i = 0; i < requestDto.getWarehouseFacilityUsages().size(); i++) {
                 warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
             }
             for(int i = requestDto.getWarehouseFacilityUsages().size(); i < warehouseFacilityUsages.size(); i++) {
@@ -263,7 +263,7 @@ public class AdminService {
             }
         }
         else if(warehouseUsageCautions.size() > requestDto.getWarehouseUsageCautions().size()) {
-            for(int i = 0; i < warehouseUsageCautions.size(); i++) {
+            for(int i = 0; i < requestDto.getWarehouseUsageCautions().size(); i++) {
                 warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
             }
             for(int i = requestDto.getWarehouseUsageCautions().size(); i < warehouseUsageCautions.size(); i++) {
@@ -293,7 +293,7 @@ public class AdminService {
             }
         }
         else if(mainItemTypes.size() > requestDto.getMainItemTypes().size()) {
-            for(int i = 0; i < mainItemTypes.size(); i++) {
+            for(int i = 0; i < requestDto.getMainItemTypes().size(); i++) {
                 mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
             }
             for(int i = requestDto.getMainItemTypes().size(); i < mainItemTypes.size(); i++) {
@@ -314,7 +314,7 @@ public class AdminService {
         updateDeliveryTypes(warehouse, requestDto);
         updateWarehouseConditions(warehouse, requestDto);
         updateWarehouseFacilityUsages(warehouse, requestDto);
-//        updateWarehouseUsageCautions(warehouse, requestDto);
+        updateWarehouseUsageCautions(warehouse, requestDto);
         updateMainItemTypes(warehouse, requestDto);
         // TODO : 주석 제거
 //        deliveryTypesRepository.deleteByWarehouseId(warehouseId);
