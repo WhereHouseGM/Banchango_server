@@ -10,6 +10,7 @@ import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
@@ -90,6 +91,36 @@ public class AdminService {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         // TODO : 로직 개선
+        List<Insurances> insurances = insurancesRepository.findByWarehouseId(warehouseId);
+        // 기존 개수와 같다면
+        if(insurances.size() == requestDto.getInsurances().size()) {
+            for(int i = 0; i < insurances.size(); i++) {
+                insurances.get(i).setName(requestDto.getInsurances().get(i));
+            }
+        }
+
+        // 기존 개수보다 많다면
+        else if(insurances.size() < requestDto.getInsurances().size()) {
+            for(int i = 0; i < insurances.size(); i++) {
+                insurances.get(i).setName(requestDto.getInsurances().get(i));
+            }
+            for(int i = insurances.size() + 1; i < requestDto.getInsurances().size(); i++) {
+                Insurances newInsurance = Insurances.builder()
+                        .warehouse(warehouse).name(requestDto.getInsurances().get(i))
+                        .build();
+                insurancesRepository.save(newInsurance);
+            }
+        }
+
+        // 기존 개수보다 적다면
+        else if(insurances.size() > requestDto.getInsurances().size()) {
+            for(int i = 0; i < requestDto.getInsurances().size(); i++) {
+                insurances.get(i).setName(requestDto.getInsurances().get(i));
+            }
+            for(int i = requestDto.getInsurances().size() + 1; i < insurances.size(); i++) {
+                insurancesRepository.delete(insurances.get(i));
+            }
+        }
 
         // TODO : 주석 제거
 //        deliveryTypesRepository.deleteByWarehouseId(warehouseId);

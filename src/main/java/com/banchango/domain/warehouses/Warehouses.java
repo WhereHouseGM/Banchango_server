@@ -190,27 +190,27 @@ public class Warehouses extends BaseTimeEntity {
         this.longitude = dto.getLongitude();
         this.warehouseType = dto.getWarehouseType();
         this.minReleasePerMonth = dto.getMinReleasePerMonth();
-        this.deliveryTypes = dto.getDeliveryTypes().stream()
-                .map(type -> new DeliveryTypes(type, this)).collect(Collectors.toList());
-        this.insurances = dto.getInsurances().stream()
-                .map(insurance -> new Insurances(insurance, this)).collect(Collectors.toList());
-        this.securityCompanies = dto.getSecurityCompanies().stream()
-                .map(company -> new SecurityCompanies(company, this)).collect(Collectors.toList());
-        this.warehouseConditions = dto.getWarehouseCondition().stream()
-                .map(condition -> new WarehouseConditions(condition, this)).collect(Collectors.toList());
-        if(dto.getWarehouseFacilityUsages() != null) {
-            this.warehouseFacilityUsages = dto.getWarehouseFacilityUsages().stream()
-                    .map(usage -> new WarehouseFacilityUsages(usage, this)).collect(Collectors.toList());
-        }
-        if(dto.getWarehouseUsageCautions() != null) {
-            this.warehouseUsageCautions = dto.getWarehouseUsageCautions().stream()
-                    .map(caution -> new WarehouseUsageCautions(caution, this)).collect(Collectors.toList());
-        }
-        this.mainItemTypes = dto.getMainItemTypes().stream()
-                .map(type -> new MainItemTypes(type, this)).collect(Collectors.toList());
-        if(dto instanceof WarehouseAdminUpdateRequestDto) {
-            this.status = ((WarehouseAdminUpdateRequestDto) dto).getStatus();
-        }
+//        this.deliveryTypes = dto.getDeliveryTypes().stream()
+//                .map(type -> new DeliveryTypes(type, this)).collect(Collectors.toList());
+//        this.insurances = dto.getInsurances().stream()
+//                .map(insurance -> new Insurances(insurance, this)).collect(Collectors.toList());
+//        this.securityCompanies = dto.getSecurityCompanies().stream()
+//                .map(company -> new SecurityCompanies(company, this)).collect(Collectors.toList());
+//        this.warehouseConditions = dto.getWarehouseCondition().stream()
+//                .map(condition -> new WarehouseConditions(condition, this)).collect(Collectors.toList());
+//        if(dto.getWarehouseFacilityUsages() != null) {
+//            this.warehouseFacilityUsages = dto.getWarehouseFacilityUsages().stream()
+//                    .map(usage -> new WarehouseFacilityUsages(usage, this)).collect(Collectors.toList());
+//        }
+//        if(dto.getWarehouseUsageCautions() != null) {
+//            this.warehouseUsageCautions = dto.getWarehouseUsageCautions().stream()
+//                    .map(caution -> new WarehouseUsageCautions(caution, this)).collect(Collectors.toList());
+//        }
+//        this.mainItemTypes = dto.getMainItemTypes().stream()
+//                .map(type -> new MainItemTypes(type, this)).collect(Collectors.toList());
+//        if(dto instanceof WarehouseAdminUpdateRequestDto) {
+//            this.status = ((WarehouseAdminUpdateRequestDto) dto).getStatus();
+//        }
 
     }
 
