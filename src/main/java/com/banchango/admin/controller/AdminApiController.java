@@ -155,6 +155,6 @@ public class AdminApiController {
         @PathVariable Integer warehouseId,
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
-        return new ImagesAdminResponseDto(adminService.getImages(accessToken, warehouseId));
+        return adminService.getImages(accessToken, warehouseId);
     }
 }
