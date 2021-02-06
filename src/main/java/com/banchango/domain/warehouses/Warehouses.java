@@ -121,7 +121,7 @@ public class Warehouses extends BaseTimeEntity {
     private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
 
     @Setter
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WarehouseImages> warehouseImages = new ArrayList<>();
 
     @Setter
