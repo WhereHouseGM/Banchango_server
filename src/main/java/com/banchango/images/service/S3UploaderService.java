@@ -9,6 +9,7 @@ import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouseimages.WarehouseImagesRepository;
+import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.images.dto.ImageInfoResponseDto;
@@ -109,12 +110,32 @@ public class S3UploaderService {
         if(!user.getRole().equals(UserRole.ADMIN)) throw new AdminInvalidAccessException();
     }
 
+    private void checkWarehouseStatus(Warehouses warehouse) {
+        WarehouseStatus status = warehouse.getStatus();
+        if(status.equals(WarehouseStatus.REJECTED) || status.equals(WarehouseStatus.DELETED)) {
+            throw new WarehouseImageNotUpdatableException();
+        }
+    }
+
     private ImageInfoResponseDto saveImage(Integer warehouseId, MultipartFile file, Boolean isMain) {
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        checkWarehouseStatus(warehouse);
         String url = uploadFile(file);
         WarehouseImages image = WarehouseImages.builder().url(url).isMain(isMain).warehouse(warehouse).build();
         WarehouseImages savedImage = warehouseImagesRepository.save(image);
         return new ImageInfoResponseDto(savedImage);
+    }
+
+    private BasicMessageResponseDto deleteImage(Integer warehouseId, String fileName, Boolean isMain) {
+        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        checkWarehouseStatus(warehouse);
+        if (!isMain) {
+            checkIfFileToRemoveExists(warehouseId, fileName);
+        }
+        if(warehouse.getWarehouseImages().removeIf(image -> image.getIsMain() == isMain && image.getUrl().contains(fileName))) {
+            deleteFile(fileName);
+            return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        } else throw new WarehouseImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
     }
 
     private void checkCountOfExtraImage(Integer warehouseId) {
@@ -179,10 +200,7 @@ public class S3UploaderService {
     @Transactional
     public BasicMessageResponseDto deleteExtraImageByAdmin(String fileName, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
-        checkIfFileToRemoveExists(warehouseId, fileName);
-        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
-        deleteFile(fileName);
-        return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        return deleteImage(warehouseId, fileName, false);
     }
 
     @Transactional
@@ -190,19 +208,14 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
-        checkIfFileToRemoveExists(warehouseId, fileName);
-        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
-        deleteFile(fileName);
-        return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        return deleteImage(warehouseId, fileName, false);
     }
 
     @Transactional
     public BasicMessageResponseDto deleteMainImageByAdmin(String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         String fileName = checkIfMainImageToDeleteExists(warehouseId);
-        deleteFile(fileName);
-        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
-        return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        return deleteImage(warehouseId, fileName, true);
     }
 
     @Transactional
@@ -211,8 +224,6 @@ public class S3UploaderService {
             throw new WarehouseInvalidAccessException();
         }
         String fileName = checkIfMainImageToDeleteExists(warehouseId);
-        deleteFile(fileName);
-        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
-        return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        return deleteImage(warehouseId, fileName, true);
     }
 }
