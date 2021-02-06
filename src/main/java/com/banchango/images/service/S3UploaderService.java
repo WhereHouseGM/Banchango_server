@@ -126,10 +126,12 @@ public class S3UploaderService {
         return new ImageInfoResponseDto(savedImage);
     }
 
-    private BasicMessageResponseDto deleteImage(Integer warehouseId, String fileName) {
+    private BasicMessageResponseDto deleteImage(Integer warehouseId, String fileName, Boolean isMain) {
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         checkWarehouseStatus(warehouse);
-        checkIfFileToRemoveExists(warehouseId, fileName);
+        if (!isMain) {
+            checkIfFileToRemoveExists(warehouseId, fileName);
+        }
         warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
         deleteFile(fileName);
         return new BasicMessageResponseDto("삭제에 성공했습니다.");
@@ -197,7 +199,7 @@ public class S3UploaderService {
     @Transactional
     public BasicMessageResponseDto deleteExtraImageByAdmin(String fileName, String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
-        return deleteImage(warehouseId, fileName);
+        return deleteImage(warehouseId, fileName, false);
     }
 
     @Transactional
@@ -205,14 +207,14 @@ public class S3UploaderService {
         if(!isUserAuthenticatedToModifyWarehouseInfo(JwtTokenUtil.extractUserId(token), warehouseId)) {
             throw new WarehouseInvalidAccessException();
         }
-        return deleteImage(warehouseId, fileName);
+        return deleteImage(warehouseId, fileName, false);
     }
 
     @Transactional
     public BasicMessageResponseDto deleteMainImageByAdmin(String token, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
         String fileName = checkIfMainImageToDeleteExists(warehouseId);
-        return deleteImage(warehouseId, fileName);
+        return deleteImage(warehouseId, fileName, true);
     }
 
     @Transactional
@@ -221,6 +223,6 @@ public class S3UploaderService {
             throw new WarehouseInvalidAccessException();
         }
         String fileName = checkIfMainImageToDeleteExists(warehouseId);
-        return deleteImage(warehouseId, fileName);
+        return deleteImage(warehouseId, fileName, true);
     }
 }
