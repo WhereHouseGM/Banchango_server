@@ -395,14 +395,14 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public List<ImageInfoResponseDto> getImages(String accessToken, Integer warehouseId) {
+    public ImagesAdminResponseDto getImages(String accessToken, Integer warehouseId) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         List<ImageInfoResponseDto> images = warehouse.getWarehouseImages()
             .stream().map(ImageInfoResponseDto::new).collect(Collectors.toList());
-
-        if(images.isEmpty()) throw new WarehouseImageNotFoundException();
-
-        return images;
+        ImagesAdminResponseDto responseDto = new ImagesAdminResponseDto();
+        responseDto.setImages(images);
+        responseDto.setWarehouseName(warehouse.getName());
+        return responseDto;
     }
 }
