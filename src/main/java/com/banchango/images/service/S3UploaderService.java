@@ -132,9 +132,10 @@ public class S3UploaderService {
         if (!isMain) {
             checkIfFileToRemoveExists(warehouseId, fileName);
         }
-        warehouseImagesRepository.deleteByWarehouseIdAndUrlContaining(warehouseId, fileName);
-        deleteFile(fileName);
-        return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        if(warehouse.getWarehouseImages().removeIf(image -> image.getIsMain() == isMain && image.getUrl().contains(fileName))) {
+            deleteFile(fileName);
+            return new BasicMessageResponseDto("삭제에 성공했습니다.");
+        } else throw new WarehouseImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
     }
 
     private void checkCountOfExtraImage(Integer warehouseId) {
