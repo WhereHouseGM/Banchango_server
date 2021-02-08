@@ -12,7 +12,7 @@ import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouse;
-import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -81,7 +81,7 @@ public class WarehouseDetailResponseDto {
 
         List<String> warehouseUsageCautions = warehouse.getWarehouseUsageCautions()
             .stream()
-            .map(WarehouseUsageCautions::getContent)
+            .map(WarehouseUsageCaution::getContent)
             .collect(Collectors.toList());
 
         List<String> images = warehouse.getWarehouseImages()

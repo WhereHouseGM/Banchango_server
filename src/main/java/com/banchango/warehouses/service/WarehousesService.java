@@ -18,7 +18,7 @@ import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
 import com.banchango.tools.EmailContent;
 import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.warehouses.dto.*;
@@ -93,8 +93,8 @@ public class WarehousesService {
                 .map(usage -> new WarehouseFacilityUsage(usage, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseFacilityUsages(warehouseFacilityUsages);
 
-        List<WarehouseUsageCautions> warehouseUsageCautions = warehouseInsertRequestDto.getWarehouseUsageCautions().stream()
-                .map(caution -> new WarehouseUsageCautions(caution, savedWarehouse)).collect(Collectors.toList());
+        List<WarehouseUsageCaution> warehouseUsageCautions = warehouseInsertRequestDto.getWarehouseUsageCautions().stream()
+                .map(caution -> new WarehouseUsageCaution(caution, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseUsageCautions(warehouseUsageCautions);
 
         List<Insurance> insurances = warehouseInsertRequestDto.getInsurances().stream()

@@ -10,7 +10,7 @@ import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouses.*;
-import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -170,8 +170,8 @@ public class WarehouseEntityFactory {
                    .map(usage -> new WarehouseFacilityUsage(usage, warehouse)).collect(Collectors.toList());
            warehouse.setWarehouseFacilityUsages(warehouseFacilityUsages);
 
-           List<WarehouseUsageCautions> warehouseUsageCautions = Arrays.stream(WAREHOUSE_USAGE_CAUTIONS)
-                   .map(caution -> new WarehouseUsageCautions(caution, warehouse)).collect(Collectors.toList());
+           List<WarehouseUsageCaution> warehouseUsageCautions = Arrays.stream(WAREHOUSE_USAGE_CAUTIONS)
+                   .map(caution -> new WarehouseUsageCaution(caution, warehouse)).collect(Collectors.toList());
            warehouse.setWarehouseUsageCautions(warehouseUsageCautions);
        }
         return warehousesRepository.save(warehouse);

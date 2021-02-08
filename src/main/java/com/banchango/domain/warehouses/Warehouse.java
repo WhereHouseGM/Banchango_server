@@ -9,7 +9,7 @@ import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouseimages.WarehouseImage;
-import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
 import com.banchango.warehouses.dto.WarehouseUpdateRequestParentDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -118,7 +118,7 @@ public class Warehouse extends BaseTimeEntity {
 
     @Setter
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
-    private List<WarehouseUsageCautions> warehouseUsageCautions = new ArrayList<>();
+    private List<WarehouseUsageCaution> warehouseUsageCautions = new ArrayList<>();
 
     @Setter
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -27,7 +27,7 @@ import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.*;
-import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
 import com.banchango.domain.withdraws.WithdrawsRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
@@ -242,7 +242,7 @@ public class AdminService {
     }
 
     private void updateWarehouseUsageCautions(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<WarehouseUsageCautions> warehouseUsageCautions = warehouseUsageCautionsRepository.findByWarehouseId(warehouse.getId());
+        List<WarehouseUsageCaution> warehouseUsageCautions = warehouseUsageCautionsRepository.findByWarehouseId(warehouse.getId());
         if(warehouseUsageCautions.size() == requestDto.getWarehouseUsageCautions().size()) {
             for(int i = 0; i < warehouseUsageCautions.size(); i++) {
                 warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
@@ -253,7 +253,7 @@ public class AdminService {
                 warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
             }
             for(int i = warehouseUsageCautions.size(); i < requestDto.getWarehouseUsageCautions().size(); i++) {
-                WarehouseUsageCautions newCaution = WarehouseUsageCautions.builder()
+                WarehouseUsageCaution newCaution = WarehouseUsageCaution.builder()
                         .warehouse(warehouse).content(requestDto.getWarehouseUsageCautions().get(i))
                         .build();
                 warehouseUsageCautionsRepository.save(newCaution);
