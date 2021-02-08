@@ -3,7 +3,7 @@ package com.banchango.estimates.dto;
 import com.banchango.domain.estimateitems.EstimateBarcode;
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimateitems.EstimateKeepingType;
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +33,7 @@ public class EstimateItemInsertRequestDto {
     }
 
 
-    public EstimateItem toEntity(Estimates estimate) {
+    public EstimateItem toEntity(Estimate estimate) {
         return EstimateItem.builder()
             .name(name)
             .keepingNumber(keepingNumber)

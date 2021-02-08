@@ -1,7 +1,7 @@
 package com.banchango.estimates.dto;
 
 import com.banchango.domain.estimates.EstimateStatus;
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ public class EstimateSearchDto {
     private EstimateStatus status;
     private Integer monthlyAverageRelease;
 
-    public EstimateSearchDto(Estimates estimate) {
+    public EstimateSearchDto(Estimate estimate) {
         this.id = estimate.getId();
         this.warehouse = null;
         this.status = estimate.getStatus();

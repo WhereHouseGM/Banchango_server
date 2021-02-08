@@ -2,7 +2,7 @@ package com.banchango.factory.entity;
 
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.estimates.EstimatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,8 +29,8 @@ public class EstimateEntityFactory {
     }
 
     @Transactional
-    public Estimates createInProgressWithEstimateItems(Integer warehouseId, Integer userId) {
-        Estimates estimate = create(warehouseId, userId, EstimateStatus.IN_PROGRESS);
+    public Estimate createInProgressWithEstimateItems(Integer warehouseId, Integer userId) {
+        Estimate estimate = create(warehouseId, userId, EstimateStatus.IN_PROGRESS);
 
         List<EstimateItem> estimateItems = IntStream.range(0, 3)
             .mapToObj(number -> estimateItemEntityFactory.create(estimate))
@@ -41,13 +41,13 @@ public class EstimateEntityFactory {
         return estimate;
     }
 
-    public Estimates createInProgressWithoutEstimateItems(Integer warehouseId, Integer userId) {
+    public Estimate createInProgressWithoutEstimateItems(Integer warehouseId, Integer userId) {
         return create(warehouseId, userId, EstimateStatus.IN_PROGRESS);
     }
 
     @Transactional
-    public Estimates createReceptedWithEstimateItems(Integer warehouseId, Integer userId) {
-        Estimates estimate = create(warehouseId, userId, EstimateStatus.RECEPTED);
+    public Estimate createReceptedWithEstimateItems(Integer warehouseId, Integer userId) {
+        Estimate estimate = create(warehouseId, userId, EstimateStatus.RECEPTED);
 
         List<EstimateItem> estimateItems = IntStream.range(0, 3)
             .mapToObj(number -> estimateItemEntityFactory.create(estimate))
@@ -58,13 +58,13 @@ public class EstimateEntityFactory {
         return estimate;
     }
 
-    public Estimates createReceptedWithoutEstimateItems(Integer warehouseId, Integer userId) {
+    public Estimate createReceptedWithoutEstimateItems(Integer warehouseId, Integer userId) {
         return create(warehouseId, userId, EstimateStatus.RECEPTED);
     }
 
     @Transactional
-    public Estimates createDoneWithEstimateItems(Integer warehouseId, Integer userId) {
-        Estimates estimate = create(warehouseId, userId, EstimateStatus.DONE);
+    public Estimate createDoneWithEstimateItems(Integer warehouseId, Integer userId) {
+        Estimate estimate = create(warehouseId, userId, EstimateStatus.DONE);
 
         List<EstimateItem> estimateItems = IntStream.range(0, 3)
             .mapToObj(number -> estimateItemEntityFactory.create(estimate))
@@ -75,12 +75,12 @@ public class EstimateEntityFactory {
         return estimate;
     }
 
-    public Estimates createDoneWithoutEstimateItems(Integer warehouseId, Integer userId) {
+    public Estimate createDoneWithoutEstimateItems(Integer warehouseId, Integer userId) {
         return create(warehouseId, userId, EstimateStatus.DONE);
     }
 
-    private Estimates create(Integer warehouseId, Integer userId, EstimateStatus status) {
-        Estimates estimate = Estimates.builder()
+    private Estimate create(Integer warehouseId, Integer userId, EstimateStatus status) {
+        Estimate estimate = Estimate.builder()
             .warehouseId(warehouseId)
             .userId(userId)
             .content(CONTENT)

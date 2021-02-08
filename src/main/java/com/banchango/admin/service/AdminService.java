@@ -11,7 +11,7 @@ import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.insurances.InsurancesRepository;
@@ -342,14 +342,14 @@ public class AdminService {
     @Transactional
     public void updateEstimateStatus(String token, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         estimate.updateStatus(estimateStatusUpdateRequestDto.getStatus());
     }
 
     @Transactional(readOnly = true)
     public List<EstimateItemSearchDto> getEstimateItems(String token, Integer estimateId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         List<EstimateItem> estimateItems = estimate.getEstimateItems();
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
         return estimate.getEstimateItems().stream()
@@ -360,7 +360,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public EstimateDetailResponseDto getEstimate(String token, Integer estimateId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         Users user = findUserById.apply(estimate.getUserId());
         Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
         String warehouseName;

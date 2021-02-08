@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Getter
-public class Estimates extends BaseTimeEntity {
+public class Estimate extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +42,7 @@ public class Estimates extends BaseTimeEntity {
     private List<EstimateItem> estimateItems = new ArrayList<>();
 
     @Builder
-    public Estimates(String content, Integer userId, Integer warehouseId, EstimateStatus status, Integer monthlyAverageRelease, List<EstimateItem> estimateItems) {
+    public Estimate(String content, Integer userId, Integer warehouseId, EstimateStatus status, Integer monthlyAverageRelease, List<EstimateItem> estimateItems) {
         this.content = content;
         this.userId = userId;
         this.warehouseId = warehouseId;

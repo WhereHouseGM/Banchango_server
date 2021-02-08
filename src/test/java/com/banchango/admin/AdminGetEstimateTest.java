@@ -5,7 +5,7 @@ import com.banchango.admin.dto.EstimateDetailResponseDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.factory.entity.EstimateEntityFactory;
@@ -32,9 +32,9 @@ public class AdminGetEstimateTest extends ApiIntegrationTest {
         String userOwnerAccessToken = JwtTokenUtil.generateAccessToken(userOwner);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(userOwnerAccessToken);
-        Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
-        Estimates estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
-        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates/"+estimate1.getId()))
             .header("Authorization", "Bearer " + adminOwnerAccessToken)
@@ -83,9 +83,9 @@ public class AdminGetEstimateTest extends ApiIntegrationTest {
         String userOwnerAccessToken = JwtTokenUtil.generateAccessToken(userOwner);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(userOwnerAccessToken);
-        Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
-        Estimates estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
-        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates/"+estimate1.getId()))
             .header("Authorization", "Bearer " + adminShipperAccessToken)
@@ -131,9 +131,9 @@ public class AdminGetEstimateTest extends ApiIntegrationTest {
         String userOwnerAccessToken = JwtTokenUtil.generateAccessToken(userOwner);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(userOwnerAccessToken);
-        Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
-        Estimates estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
-        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates/"+estimate1.getId()))
             .build();
@@ -150,9 +150,9 @@ public class AdminGetEstimateTest extends ApiIntegrationTest {
         String userOwnerAccessToken = JwtTokenUtil.generateAccessToken(userOwner);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(userOwnerAccessToken);
-        Estimates estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
-        Estimates estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
-        Estimates estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate2 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
+        Estimate estimate3 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), userShipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates/"+estimate1.getId()))
             .header("Authorization", "Bearer " + userOwnerAccessToken)

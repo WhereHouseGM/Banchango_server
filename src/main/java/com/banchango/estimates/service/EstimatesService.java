@@ -7,7 +7,7 @@ import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -48,7 +48,7 @@ public class EstimatesService {
         Warehouses warehouse = findWarehouseById.apply(estimateInsertRequestDto.getWarehouseId());
         if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
 
-        Estimates newEstimate = Estimates.builder()
+        Estimate newEstimate = Estimate.builder()
             .content(estimateInsertRequestDto.getContent())
             .userId(userId)
             .warehouseId(estimateInsertRequestDto.getWarehouseId())

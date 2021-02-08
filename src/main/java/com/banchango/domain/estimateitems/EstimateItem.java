@@ -1,6 +1,6 @@
 package com.banchango.domain.estimateitems;
 
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,10 +44,10 @@ public class EstimateItem {
 
     @ManyToOne
     @JoinColumn(name = "estimate_id")
-    private Estimates estimate;
+    private Estimate estimate;
 
     @Builder
-    public EstimateItem(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Estimates estimate) {
+    public EstimateItem(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Estimate estimate) {
         this.name = name;
         this.keepingNumber = keepingNumber;
         this.perimeter = perimeter;

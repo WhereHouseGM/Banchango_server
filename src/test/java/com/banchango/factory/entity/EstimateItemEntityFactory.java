@@ -3,7 +3,7 @@ package com.banchango.factory.entity;
 import com.banchango.domain.estimateitems.EstimateBarcode;
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimateitems.EstimateKeepingType;
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +18,7 @@ public class EstimateItemEntityFactory {
     public static final String URL = "https://www.google.com";
     public static final Double WEIGHT = 33.3;
 
-    public EstimateItem create(Estimates estimate) {
+    public EstimateItem create(Estimate estimate) {
         return EstimateItem.builder()
             .barcode(BARCODE)
             .keepingNumber(KEEPING_NUMBER)

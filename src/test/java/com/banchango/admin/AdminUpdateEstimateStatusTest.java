@@ -6,7 +6,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
-import com.banchango.domain.estimates.Estimates;
+import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.estimates.exception.EstimateNotFoundException;
@@ -31,7 +31,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimate estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
@@ -58,7 +58,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimate estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
@@ -82,7 +82,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimate estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
@@ -100,7 +100,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
-        Estimates estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
+        Estimate estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
 
