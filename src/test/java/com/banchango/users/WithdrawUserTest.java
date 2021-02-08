@@ -40,7 +40,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
         List<Warehouse> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
         warehouses.forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
         assertNotNull(findUserById.apply(userToDelete.getUserId()));
-        assertTrue(withdrawsRepository.findByUserId(userToDelete.getUserId()).isPresent());
+        assertTrue(withdrawRepository.findByUserId(userToDelete.getUserId()).isPresent());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
         List<Warehouse> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
         warehouses.forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
         assertNotNull(findUserById.apply(userToDelete.getUserId()));
-        assertTrue(withdrawsRepository.findByUserId(userToDelete.getUserId()).isPresent());
+        assertTrue(withdrawRepository.findByUserId(userToDelete.getUserId()).isPresent());
     }
 
     @Test

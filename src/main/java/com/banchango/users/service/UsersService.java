@@ -10,7 +10,7 @@ import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.withdraws.Withdraw;
-import com.banchango.domain.withdraws.WithdrawsRepository;
+import com.banchango.domain.withdraws.WithdrawRepository;
 import com.banchango.tools.EmailContent;
 import com.banchango.tools.PasswordGenerator;
 import com.banchango.users.dto.*;
@@ -28,7 +28,7 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final EmailSender emailSender;
-    private final WithdrawsRepository withdrawsRepository;
+    private final WithdrawRepository withdrawRepository;
     private final WarehousesRepository warehousesRepository;
     private final FindUserById findByUserId;
 
@@ -37,7 +37,7 @@ public class UsersService {
         if(!userId.equals(JwtTokenUtil.extractUserId(token))) {
             throw new UserInvalidAccessException();
         }
-        boolean isUserDeleted = withdrawsRepository.findByUserId(userId).isPresent();
+        boolean isUserDeleted = withdrawRepository.findByUserId(userId).isPresent();
 
         return new UserInfoResponseDto(findByUserId.apply(userId), isUserDeleted);
     }
@@ -47,7 +47,7 @@ public class UsersService {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         User user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new);
 
-        boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
+        boolean isUserDeleted = withdrawRepository.findByUserId(user.getUserId()).isPresent();
         if(isUserDeleted) throw new UserNotFoundException("탈퇴한 사용자입니다");
 
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user, false);
@@ -108,7 +108,7 @@ public class UsersService {
     private void deleteUser(int userId, UserWithdrawRequestDto userWithdrawRequestDto) {
         User user = findByUserId.apply(userId);
 
-        Optional<Withdraw> optionalWithdraws = withdrawsRepository.findByUserId(userId);
+        Optional<Withdraw> optionalWithdraws = withdrawRepository.findByUserId(userId);
         if(optionalWithdraws.isPresent()) throw new UserAlreayWithdrawnException();
 
         Withdraw withdraw = Withdraw.builder()
@@ -116,7 +116,7 @@ public class UsersService {
             .cause(userWithdrawRequestDto.getCause())
             .build();
 
-        withdrawsRepository.save(withdraw);
+        withdrawRepository.save(withdraw);
     }
 
     private void deleteWarehousesOwnedByUser(int userId) {

@@ -5,7 +5,7 @@ import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.withdraws.Withdraw;
-import com.banchango.domain.withdraws.WithdrawsRepository;
+import com.banchango.domain.withdraws.WithdrawRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,13 +19,13 @@ public class UserEntityFactory {
     private static final String CAUSE = "CAUSE";
 
     private final UsersRepository usersRepository;
-    private final WithdrawsRepository withdrawsRepository;
+    private final WithdrawRepository withdrawRepository;
     private int countUsers = 0;
 
     @Autowired
-    public UserEntityFactory(UsersRepository usersRepository, WithdrawsRepository withdrawsRepository) {
+    public UserEntityFactory(UsersRepository usersRepository, WithdrawRepository withdrawRepository) {
         this.usersRepository = usersRepository;
-        this.withdrawsRepository = withdrawsRepository;
+        this.withdrawRepository = withdrawRepository;
     }
 
     public User createUserWithOwnerType() {
@@ -43,7 +43,7 @@ public class UserEntityFactory {
             .userId(user.getUserId())
             .cause(CAUSE)
             .build();
-        withdrawsRepository.save(withdraw);
+        withdrawRepository.save(withdraw);
 
         return user;
     }
@@ -55,7 +55,7 @@ public class UserEntityFactory {
                 .userId(user.getUserId())
                 .cause(CAUSE)
                 .build();
-        withdrawsRepository.save(withdraw);
+        withdrawRepository.save(withdraw);
 
         return user;
     }

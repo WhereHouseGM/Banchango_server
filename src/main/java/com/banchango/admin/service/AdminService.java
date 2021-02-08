@@ -29,7 +29,7 @@ import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepos
 import com.banchango.domain.warehouses.*;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
-import com.banchango.domain.withdraws.WithdrawsRepository;
+import com.banchango.domain.withdraws.WithdrawRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
 import com.banchango.estimates.exception.EstimateNotFoundException;
@@ -56,7 +56,7 @@ public class AdminService {
     private final UsersRepository usersRepository;
     private final MainItemTypesRepository mainItemTypesRepository;
     private final EstimatesRepository estimatesRepository;
-    private final WithdrawsRepository withdrawsRepository;
+    private final WithdrawRepository withdrawRepository;
     private final DeliveryTypesRepository deliveryTypesRepository;
     private final SecurityCompaniesRepository securityCompaniesRepository;
     private final WarehouseUsageCautionsRepository warehouseUsageCautionsRepository;
@@ -364,7 +364,7 @@ public class AdminService {
         User user = findUserById.apply(estimate.getUserId());
         Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
         String warehouseName;
-        boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
+        boolean isUserDeleted = withdrawRepository.findByUserId(user.getUserId()).isPresent();
 
         if (optionalWarehouseNameProjection.isPresent())
             warehouseName = optionalWarehouseNameProjection.get().getName();
@@ -383,7 +383,7 @@ public class AdminService {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         User user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
 
-        boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
+        boolean isUserDeleted = withdrawRepository.findByUserId(user.getUserId()).isPresent();
 
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user, isUserDeleted);
         responseDto.setAccessToken(JwtTokenUtil.generateAccessToken(userInfoDto.getUserId(), userInfoDto.getRole(), userInfoDto.getType()));
