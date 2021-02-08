@@ -1,5 +1,6 @@
 package com.banchango;
 
+import com.banchango.common.functions.estimates.FindEstimateById;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
@@ -80,6 +81,9 @@ public abstract class ApiIntegrationTest {
 
     @Autowired
     protected FindUserById findUserById;
+
+    @Autowired
+    protected FindEstimateById findEstimateById;
 
     @Before
     public void setup() {

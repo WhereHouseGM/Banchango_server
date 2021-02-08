@@ -9,7 +9,6 @@ import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.estimates.exception.EstimateNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -44,7 +43,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        estimate = estimatesRepository.findById(estimate.getId()).orElseThrow(EstimateNotFoundException::new);
+        estimate = findEstimateById.apply(estimate.getId());
 
         assertEquals(EstimateStatus.IN_PROGRESS, estimate.getStatus());
     }
@@ -71,7 +70,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        estimate = estimatesRepository.findById(estimate.getId()).orElseThrow(EstimateNotFoundException::new);
+        estimate = findEstimateById.apply(estimate.getId());
 
         assertEquals(EstimateStatus.IN_PROGRESS, estimate.getStatus());
     }

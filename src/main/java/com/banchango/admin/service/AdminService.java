@@ -4,6 +4,7 @@ import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
+import com.banchango.common.functions.estimates.FindEstimateById;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
@@ -67,6 +68,7 @@ public class AdminService {
     private final DoubleCheckAdminAccess doubleCheckAdminAccess;
     private final FindWarehouseById findWarehouseById;
     private final FindUserById findUserById;
+    private final FindEstimateById findEstimateById;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -342,14 +344,14 @@ public class AdminService {
     @Transactional
     public void updateEstimateStatus(String token, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimates estimate = findEstimateById.apply(estimateId);
         estimate.updateStatus(estimateStatusUpdateRequestDto.getStatus());
     }
 
     @Transactional(readOnly = true)
     public List<EstimateItemSearchDto> getEstimateItems(String token, Integer estimateId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimates estimate = findEstimateById.apply(estimateId);
         List<EstimateItems> estimateItems = estimate.getEstimateItems();
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
         return estimate.getEstimateItems().stream()
@@ -360,7 +362,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public EstimateDetailResponseDto getEstimate(String token, Integer estimateId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimates estimate = findEstimateById.apply(estimateId);
         Users user = findUserById.apply(estimate.getUserId());
         Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
         String warehouseName;
