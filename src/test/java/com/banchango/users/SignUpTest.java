@@ -17,8 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URI;
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SignUpTest extends ApiIntegrationTest {
 
@@ -50,7 +49,7 @@ public class SignUpTest extends ApiIntegrationTest {
 
         assertTrue(savedUser.getCreatedAt().isBefore(LocalDateTime.now()));
         assertTrue(savedUser.getLastModifiedAt().isBefore(LocalDateTime.now()));
-        assertTrue(usersRepository.findById(savedUser.getUserId()).isPresent());
+        assertNotNull(findUserById.apply(savedUser.getUserId()));
     }
 
     @Test

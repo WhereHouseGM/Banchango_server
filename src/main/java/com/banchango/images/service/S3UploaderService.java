@@ -4,6 +4,7 @@ import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.InternalServerErrorException;
+import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
@@ -43,6 +44,7 @@ public class S3UploaderService {
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
     private final FindWarehouseById findWarehouseById;
+    private final DoubleCheckAdminAccess doubleCheckAdminAccess;
 
     @Value("${aws.s3.bucket}")
     private String bucket;
@@ -107,11 +109,6 @@ public class S3UploaderService {
         return false;
     }
 
-    private void doubleCheckAdminAccess(Integer userId) {
-        Users user = usersRepository.findById(userId).orElseThrow(AdminInvalidAccessException::new);
-        if(!user.getRole().equals(UserRole.ADMIN)) throw new AdminInvalidAccessException();
-    }
-
     private void checkWarehouseStatus(Warehouses warehouse) {
         WarehouseStatus status = warehouse.getStatus();
         if(status.equals(WarehouseStatus.REJECTED) || status.equals(WarehouseStatus.DELETED)) {
@@ -169,7 +166,7 @@ public class S3UploaderService {
 
     @Transactional
     public ImageInfoResponseDto uploadExtraImageByAdmin(MultipartFile file, String token, Integer warehouseId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         checkCountOfExtraImage(warehouseId);
         return saveImage(warehouseId, file, false);
     }
@@ -185,7 +182,7 @@ public class S3UploaderService {
 
     @Transactional
     public ImageInfoResponseDto uploadMainImageByAdmin(MultipartFile file, String token, Integer warehouseId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         checkCountOfMainImage(warehouseId);
         return saveImage(warehouseId, file, true);
     }
@@ -201,7 +198,7 @@ public class S3UploaderService {
 
     @Transactional
     public BasicMessageResponseDto deleteExtraImageByAdmin(String fileName, String token, Integer warehouseId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         return deleteImage(warehouseId, fileName, false);
     }
 
@@ -215,7 +212,7 @@ public class S3UploaderService {
 
     @Transactional
     public BasicMessageResponseDto deleteMainImageByAdmin(String token, Integer warehouseId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         String fileName = checkIfMainImageToDeleteExists(warehouseId);
         return deleteImage(warehouseId, fileName, true);
     }

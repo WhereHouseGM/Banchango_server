@@ -2,6 +2,7 @@ package com.banchango.estimates.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.estimateitems.EstimateItems;
@@ -38,11 +39,12 @@ public class EstimatesService {
     private final EmailSender emailSender;
     private final UsersRepository usersRepository;
     private final FindWarehouseById findWarehouseById;
+    private final FindUserById findUserById;
 
     @Transactional
     public BasicMessageResponseDto saveEstimate(String accessToken, EstimateInsertRequestDto estimateInsertRequestDto) {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
-        Users user = usersRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Users user = findUserById.apply(userId);
 
         Warehouses warehouse = findWarehouseById.apply(estimateInsertRequestDto.getWarehouseId());
         if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();

@@ -2,6 +2,7 @@ package com.banchango.users.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -27,17 +28,18 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final EmailSender emailSender;
-    private final WithdrawsRepository withdrawsRespository;
+    private final WithdrawsRepository withdrawsRepository;
     private final WarehousesRepository warehousesRepository;
+    private final FindUserById findByUserId;
 
     @Transactional(readOnly = true)
     public UserInfoResponseDto getUserInfo(Integer userId, String token) {
         if(!userId.equals(JwtTokenUtil.extractUserId(token))) {
             throw new UserInvalidAccessException();
         }
-        boolean isUserDeleted = withdrawsRespository.findByUserId(userId).isPresent();
+        boolean isUserDeleted = withdrawsRepository.findByUserId(userId).isPresent();
 
-        return new UserInfoResponseDto(usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new), isUserDeleted);
+        return new UserInfoResponseDto(findByUserId(userId), isUserDeleted);
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +69,7 @@ public class UsersService {
         if(!userId.equals(JwtTokenUtil.extractUserId(token))) {
             throw new UserInvalidAccessException();
         }
-        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        Users user = findByUserId.apply(userId);
         user.updateUserInfo(requestDto);
         return new UserInfoResponseDto(user, false);
     }
@@ -85,7 +87,7 @@ public class UsersService {
     public void changePassword(String accessToken, ChangePasswordRequestDto changePasswordRequestDto) {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
 
-        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        Users user = findByUserId.apply(userId);
 
         String originalPasswordFromTable = user.getPassword();
         String originalPasswordFromRequest = changePasswordRequestDto.getOriginalPassword();
@@ -104,7 +106,7 @@ public class UsersService {
     }
 
     private void deleteUser(int userId, UserWithdrawRequestDto userWithdrawRequestDto) {
-        Users user = usersRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Users user = findByUserId.apply(userId);
 
         Optional<Withdraws> optionalWithdraws = withdrawsRespository.findByUserId(userId);
         if(optionalWithdraws.isPresent()) throw new UserAlreayWithdrawnException();

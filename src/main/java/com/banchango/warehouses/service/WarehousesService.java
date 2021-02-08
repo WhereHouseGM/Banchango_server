@@ -2,6 +2,7 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
@@ -41,6 +42,7 @@ public class WarehousesService {
     private final EmailSender emailSender;
     private final MainItemTypesRepository mainItemTypesRepository;
     private final FindWarehouseById findWarehouseById;
+    private final FindUserById findUserById;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -48,7 +50,7 @@ public class WarehousesService {
     @Transactional
     public BasicMessageResponseDto saveAgencyWarehouse(WarehouseInsertRequestDto warehouseInsertRequestDto, String accessToken) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
-        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        Users user = findUserById.apply(userId);
 
 
         Warehouses warehouse = Warehouses.builder()
@@ -184,7 +186,7 @@ public class WarehousesService {
     public List<MyWarehouseDto> getMyWarehouses(String accessToken, Integer userId) {
         int userIdFromAccessToken = JwtTokenUtil.extractUserId(accessToken);
         if(!userId.equals(userIdFromAccessToken)) throw new ForbiddenUserIdException("해당 사용자의 창고 목록을 볼 수 있는 권한이 없습니다");
-        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        Users user = findUserById.apply(userId);
 
         List<MyWarehouseDto> warehouses = warehousesRepository.findByUserId(userId).stream()
             .filter(warehouse -> !warehouse.getStatus().equals(WarehouseStatus.DELETED))

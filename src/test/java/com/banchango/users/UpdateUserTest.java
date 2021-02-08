@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class UpdateUserTest extends ApiIntegrationTest {
 
     private void assertUpdatedUserInfo(Integer userId) {
-        Users updatedUser = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        Users updatedUser = findUserById.apply(userId);
         assertEquals(UserRole.USER, updatedUser.getRole());
         assertEquals(UserUpdateRequestFactory.NEW_NAME, updatedUser.getName());
         assertEquals(UserUpdateRequestFactory.NEW_TELEPHONE_NUMBER, updatedUser.getTelephoneNumber());

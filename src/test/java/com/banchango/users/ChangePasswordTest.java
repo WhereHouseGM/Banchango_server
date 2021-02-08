@@ -26,7 +26,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
     private final String INVALID_PASSWORD = "test";
 
     private void assertPasswordUpdate(Integer userId) {
-        Users updatedUser = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        Users updatedUser = findUserById.apply(userId);
         assertEquals(VALID_PASSWORD, updatedUser.getPassword());
     }
 
