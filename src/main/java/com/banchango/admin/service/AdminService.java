@@ -1,9 +1,9 @@
 package com.banchango.admin.service;
 
 import com.banchango.admin.dto.*;
-import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
+import com.banchango.common.functions.DoubleCheckAdminAccess;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimateitems.EstimateItems;
@@ -37,7 +37,6 @@ import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
 import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseImageNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -64,17 +63,14 @@ public class AdminService {
     private final InsurancesRepository insurancesRepository;
     private final WarehouseConditionsRepository warehouseConditionsRepository;
 
+    private final DoubleCheckAdminAccess doubleCheckAdminAccess;
+
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
 
-    private void doubleCheckAdminAccess(Integer userId) {
-        Users user = usersRepository.findById(userId).orElseThrow(AdminInvalidAccessException::new);
-        if(!user.getRole().equals(UserRole.ADMIN)) throw new AdminInvalidAccessException();
-    }
-
     @Transactional(readOnly = true)
     public WarehouseInsertRequestResponseListDto getWarehouses(String token, PageRequest pageRequest, WarehouseStatus status) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         List<Warehouses> warehouses;
 
         if(status == null) warehouses = warehousesRepository.findByOrderByCreatedAtAsc(pageRequest);
@@ -87,7 +83,7 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public WarehouseAdminDetailResponseDto getSpecificWarehouseInfo(String token, Integer warehouseId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
@@ -304,7 +300,7 @@ public class AdminService {
 
     @Transactional
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(token));
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         updateInsurances(warehouse, requestDto);
         updateSecurityCompanies(warehouse, requestDto);
@@ -318,8 +314,8 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public List<EstimateSummaryDto> getEstimates(String accessToken, EstimateStatus status, PageRequest pageRequest) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+    public List<EstimateSummaryDto> getEstimates(String token, EstimateStatus status, PageRequest pageRequest) {
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         List<EstimateStatusAndLastModifiedAtAndWarehouseIdProjection> estimates;
         if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
         else estimates = estimatesRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
@@ -341,15 +337,15 @@ public class AdminService {
     }
 
     @Transactional
-    public void updateEstimateStatus(String accessToken, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+    public void updateEstimateStatus(String token, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         estimate.updateStatus(estimateStatusUpdateRequestDto.getStatus());
     }
 
     @Transactional(readOnly = true)
-    public List<EstimateItemSearchDto> getEstimateItems(String accessToken, Integer estimateId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+    public List<EstimateItemSearchDto> getEstimateItems(String token, Integer estimateId) {
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         List<EstimateItems> estimateItems = estimate.getEstimateItems();
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
@@ -359,8 +355,8 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public EstimateDetailResponseDto getEstimate(String accessToken, Integer estimateId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+    public EstimateDetailResponseDto getEstimate(String token, Integer estimateId) {
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         Users user = usersRepository.findById(estimate.getUserId()).get();
         Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
@@ -395,8 +391,8 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public ImagesAdminResponseDto getImages(String accessToken, Integer warehouseId) {
-        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+    public ImagesAdminResponseDto getImages(String token, Integer warehouseId) {
+        doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
         List<ImageInfoResponseDto> images = warehouse.getWarehouseImages()
             .stream().map(ImageInfoResponseDto::new).collect(Collectors.toList());
