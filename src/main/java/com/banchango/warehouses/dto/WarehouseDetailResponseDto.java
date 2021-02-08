@@ -1,7 +1,7 @@
 package com.banchango.warehouses.dto;
 
 import com.banchango.domain.deliverytypes.DeliveryType;
-import com.banchango.domain.insurances.Insurances;
+import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
@@ -92,7 +92,7 @@ public class WarehouseDetailResponseDto {
 
         List<String> insurances = warehouse.getInsurances()
                 .stream()
-                .map(Insurances::getName)
+                .map(Insurance::getName)
                 .collect(Collectors.toList());
 
         List<String> securityCompanies = warehouse.getSecurityCompanies()

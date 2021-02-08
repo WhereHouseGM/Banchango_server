@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Insurances {
+public class Insurance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Insurances {
     private Warehouses warehouse;
 
     @Builder
-    public Insurances(String name, Warehouses warehouse) {
+    public Insurance(String name, Warehouses warehouse) {
         this.name = name;
         this.warehouse = warehouse;
     }

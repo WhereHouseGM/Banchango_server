@@ -6,7 +6,7 @@ import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.deliverytypes.DeliveryType;
-import com.banchango.domain.insurances.Insurances;
+import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
@@ -97,8 +97,8 @@ public class WarehousesService {
                 .map(caution -> new WarehouseUsageCautions(caution, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseUsageCautions(warehouseUsageCautions);
 
-        List<Insurances> insurances = warehouseInsertRequestDto.getInsurances().stream()
-                .map(insurance -> new Insurances(insurance, savedWarehouse)).collect(Collectors.toList());
+        List<Insurance> insurances = warehouseInsertRequestDto.getInsurances().stream()
+                .map(insurance -> new Insurance(insurance, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setInsurances(insurances);
 
         List<SecurityCompanies> securityCompanies = warehouseInsertRequestDto.getSecurityCompanies().stream()

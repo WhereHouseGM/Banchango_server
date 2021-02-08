@@ -2,7 +2,7 @@ package com.banchango.factory.entity;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryType;
-import com.banchango.domain.insurances.Insurances;
+import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
@@ -153,8 +153,8 @@ public class WarehouseEntityFactory {
                 .collect(Collectors.toList());
         warehouse.setWarehouseConditions(warehouseConditions);
 
-        List<Insurances> insurances = Arrays.stream(INSURANCES)
-                .map(insurance -> new Insurances(insurance, warehouse)).collect(Collectors.toList());
+        List<Insurance> insurances = Arrays.stream(INSURANCES)
+                .map(insurance -> new Insurance(insurance, warehouse)).collect(Collectors.toList());
         warehouse.setInsurances(insurances);
 
         List<SecurityCompanies> securityCompanies = Arrays.stream(SECURITY_COMPANIES)

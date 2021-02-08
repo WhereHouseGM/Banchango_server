@@ -3,7 +3,7 @@ package com.banchango.domain.warehouses;
 import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.domain.BaseTimeEntity;
 import com.banchango.domain.deliverytypes.DeliveryType;
-import com.banchango.domain.insurances.Insurances;
+import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
@@ -102,7 +102,7 @@ public class Warehouses extends BaseTimeEntity {
 
     @Setter
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
-    private List<Insurances> insurances = new ArrayList<>();
+    private List<Insurance> insurances = new ArrayList<>();
 
     @Setter
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)

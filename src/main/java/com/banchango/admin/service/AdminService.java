@@ -13,7 +13,7 @@ import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.estimates.EstimatesRepository;
-import com.banchango.domain.insurances.Insurances;
+import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
@@ -92,7 +92,7 @@ public class AdminService {
     }
 
     private void updateInsurances(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<Insurances> insurances = insurancesRepository.findByWarehouseId(warehouse.getId());
+        List<Insurance> insurances = insurancesRepository.findByWarehouseId(warehouse.getId());
         if(insurances.size() == requestDto.getInsurances().size()) {
             for(int i = 0; i < insurances.size(); i++) {
                 insurances.get(i).setName(requestDto.getInsurances().get(i));
@@ -103,7 +103,7 @@ public class AdminService {
                 insurances.get(i).setName(requestDto.getInsurances().get(i));
             }
             for(int i = insurances.size(); i < requestDto.getInsurances().size(); i++) {
-                Insurances newInsurance = Insurances.builder()
+                Insurance newInsurance = Insurance.builder()
                         .warehouse(warehouse).name(requestDto.getInsurances().get(i))
                         .build();
                 insurancesRepository.save(newInsurance);
