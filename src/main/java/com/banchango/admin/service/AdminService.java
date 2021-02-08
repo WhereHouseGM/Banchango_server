@@ -18,7 +18,7 @@ import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompany;
-import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
+import com.banchango.domain.securitycompanies.SecurityCompanyRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.User;
 import com.banchango.domain.users.UserRepository;
@@ -58,7 +58,7 @@ public class AdminService {
     private final EstimatesRepository estimatesRepository;
     private final WithdrawRepository withdrawRepository;
     private final DeliveryTypesRepository deliveryTypesRepository;
-    private final SecurityCompaniesRepository securityCompaniesRepository;
+    private final SecurityCompanyRepository securityCompanyRepository;
     private final WarehouseUsageCautionRepository warehouseUsageCautionRepository;
     private final WarehouseFacilityUsageRepository warehouseFacilityUsageRepository;
     private final InsurancesRepository insurancesRepository;
@@ -122,7 +122,7 @@ public class AdminService {
     }
 
     private void updateSecurityCompanies(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<SecurityCompany> securityCompanies = securityCompaniesRepository.findByWarehouseId(warehouse.getId());
+        List<SecurityCompany> securityCompanies = securityCompanyRepository.findByWarehouseId(warehouse.getId());
         if(securityCompanies.size() == requestDto.getSecurityCompanies().size()) {
             for(int i = 0; i < securityCompanies.size(); i++) {
                 securityCompanies.get(i).setName(requestDto.getSecurityCompanies().get(i));
@@ -136,7 +136,7 @@ public class AdminService {
                 SecurityCompany newSecurityCompany = SecurityCompany.builder()
                         .warehouse(warehouse).name(requestDto.getSecurityCompanies().get(i))
                         .build();
-                securityCompaniesRepository.save(newSecurityCompany);
+                securityCompanyRepository.save(newSecurityCompany);
             }
         }
         else if(securityCompanies.size() > requestDto.getSecurityCompanies().size()) {
@@ -146,7 +146,7 @@ public class AdminService {
             for (int i = requestDto.getSecurityCompanies().size(); i < securityCompanies.size(); i++) {
                 Integer idOfCompanyToRemove = securityCompanies.get(i).getId();
                 warehouse.getSecurityCompanies().removeIf(company -> company.getId().equals(idOfCompanyToRemove));
-                securityCompaniesRepository.deleteById(idOfCompanyToRemove);
+                securityCompanyRepository.deleteById(idOfCompanyToRemove);
             }
         }
     }
