@@ -8,7 +8,7 @@ import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
-import com.banchango.domain.estimateitems.EstimateItems;
+import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimates;
@@ -350,7 +350,7 @@ public class AdminService {
     public List<EstimateItemSearchDto> getEstimateItems(String token, Integer estimateId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Estimates estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
-        List<EstimateItems> estimateItems = estimate.getEstimateItems();
+        List<EstimateItem> estimateItems = estimate.getEstimateItems();
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
         return estimate.getEstimateItems().stream()
             .map(EstimateItemSearchDto::new)

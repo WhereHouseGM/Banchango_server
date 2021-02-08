@@ -1,7 +1,7 @@
 package com.banchango.estimateitems.dto;
 
 import com.banchango.domain.estimateitems.EstimateBarcode;
-import com.banchango.domain.estimateitems.EstimateItems;
+import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimateitems.EstimateKeepingType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class EstimateItemSearchDto {
     private Double perimeter;
     private EstimateKeepingType keepingType;
 
-    public EstimateItemSearchDto(EstimateItems estimateItem) {
+    public EstimateItemSearchDto(EstimateItem estimateItem) {
         id = estimateItem.getId();
         name = estimateItem.getName();
         keepingNumber = estimateItem.getKeepingNumber();

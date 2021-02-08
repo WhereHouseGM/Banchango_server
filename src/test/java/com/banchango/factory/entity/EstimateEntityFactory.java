@@ -1,6 +1,6 @@
 package com.banchango.factory.entity;
 
-import com.banchango.domain.estimateitems.EstimateItems;
+import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
@@ -32,7 +32,7 @@ public class EstimateEntityFactory {
     public Estimates createInProgressWithEstimateItems(Integer warehouseId, Integer userId) {
         Estimates estimate = create(warehouseId, userId, EstimateStatus.IN_PROGRESS);
 
-        List<EstimateItems> estimateItems = IntStream.range(0, 3)
+        List<EstimateItem> estimateItems = IntStream.range(0, 3)
             .mapToObj(number -> estimateItemEntityFactory.create(estimate))
             .collect(Collectors.toList());
 
@@ -49,7 +49,7 @@ public class EstimateEntityFactory {
     public Estimates createReceptedWithEstimateItems(Integer warehouseId, Integer userId) {
         Estimates estimate = create(warehouseId, userId, EstimateStatus.RECEPTED);
 
-        List<EstimateItems> estimateItems = IntStream.range(0, 3)
+        List<EstimateItem> estimateItems = IntStream.range(0, 3)
             .mapToObj(number -> estimateItemEntityFactory.create(estimate))
             .collect(Collectors.toList());
 
@@ -66,7 +66,7 @@ public class EstimateEntityFactory {
     public Estimates createDoneWithEstimateItems(Integer warehouseId, Integer userId) {
         Estimates estimate = create(warehouseId, userId, EstimateStatus.DONE);
 
-        List<EstimateItems> estimateItems = IntStream.range(0, 3)
+        List<EstimateItem> estimateItems = IntStream.range(0, 3)
             .mapToObj(number -> estimateItemEntityFactory.create(estimate))
             .collect(Collectors.toList());
 

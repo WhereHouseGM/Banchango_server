@@ -3,7 +3,7 @@ package com.banchango.estimateitems.service;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.exception.ForbiddenException;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
-import com.banchango.domain.estimateitems.EstimateItems;
+import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
@@ -36,7 +36,7 @@ public class EstimateItemsService {
 
         if(!estimate.getUserId().equals(userId)) throw new ForbiddenException();
 
-        List<EstimateItems> estimateItems = estimate.getEstimateItems();
+        List<EstimateItem> estimateItems = estimate.getEstimateItems();
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
 
         return estimate.getEstimateItems().stream()

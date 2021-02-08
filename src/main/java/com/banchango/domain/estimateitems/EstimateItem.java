@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Getter
-public class EstimateItems {
+public class EstimateItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +47,7 @@ public class EstimateItems {
     private Estimates estimate;
 
     @Builder
-    public EstimateItems(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Estimates estimate) {
+    public EstimateItem(String name, Integer keepingNumber, Double perimeter, EstimateKeepingType keepingType, Double weight, EstimateBarcode barcode, Integer sku, String url, Estimates estimate) {
         this.name = name;
         this.keepingNumber = keepingNumber;
         this.perimeter = perimeter;

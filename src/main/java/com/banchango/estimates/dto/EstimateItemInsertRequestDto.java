@@ -1,7 +1,7 @@
 package com.banchango.estimates.dto;
 
 import com.banchango.domain.estimateitems.EstimateBarcode;
-import com.banchango.domain.estimateitems.EstimateItems;
+import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimateitems.EstimateKeepingType;
 import com.banchango.domain.estimates.Estimates;
 import lombok.Builder;
@@ -33,8 +33,8 @@ public class EstimateItemInsertRequestDto {
     }
 
 
-    public EstimateItems toEntity(Estimates estimate) {
-        return EstimateItems.builder()
+    public EstimateItem toEntity(Estimates estimate) {
+        return EstimateItem.builder()
             .name(name)
             .keepingNumber(keepingNumber)
             .perimeter(perimeter)

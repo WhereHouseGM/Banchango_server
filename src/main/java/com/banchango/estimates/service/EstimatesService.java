@@ -5,7 +5,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
-import com.banchango.domain.estimateitems.EstimateItems;
+import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimates;
 import com.banchango.domain.estimates.EstimatesRepository;
@@ -58,7 +58,7 @@ public class EstimatesService {
 
         estimatesRepository.save(newEstimate);
 
-        List<EstimateItems> newEstimateItems = estimateInsertRequestDto.getEstimateItems()
+        List<EstimateItem> newEstimateItems = estimateInsertRequestDto.getEstimateItems()
             .stream()
             .map(estimateItemDto -> estimateItemDto.toEntity(newEstimate))
             .collect(Collectors.toList());
