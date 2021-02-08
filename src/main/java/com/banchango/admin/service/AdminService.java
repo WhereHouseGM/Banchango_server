@@ -7,7 +7,7 @@ import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.deliverytypes.DeliveryType;
-import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
+import com.banchango.domain.deliverytypes.DeliveryTypeRepository;
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
@@ -57,7 +57,7 @@ public class AdminService {
     private final MainItemTypeRepository mainItemTypeRepository;
     private final EstimateRepository estimateRepository;
     private final WithdrawRepository withdrawRepository;
-    private final DeliveryTypesRepository deliveryTypesRepository;
+    private final DeliveryTypeRepository deliveryTypeRepository;
     private final SecurityCompanyRepository securityCompanyRepository;
     private final WarehouseUsageCautionRepository warehouseUsageCautionRepository;
     private final WarehouseFacilityUsageRepository warehouseFacilityUsageRepository;
@@ -152,7 +152,7 @@ public class AdminService {
     }
 
     private void updateDeliveryTypes(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<DeliveryType> deliveryTypes = deliveryTypesRepository.findByWarehouseId(warehouse.getId());
+        List<DeliveryType> deliveryTypes = deliveryTypeRepository.findByWarehouseId(warehouse.getId());
         if(deliveryTypes.size() == requestDto.getDeliveryTypes().size()) {
             for(int i = 0; i < deliveryTypes.size(); i++) {
                 deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
@@ -166,7 +166,7 @@ public class AdminService {
                 DeliveryType newDeliveryType = DeliveryType.builder()
                         .warehouse(warehouse).name(requestDto.getDeliveryTypes().get(i))
                         .build();
-                deliveryTypesRepository.save(newDeliveryType);
+                deliveryTypeRepository.save(newDeliveryType);
             }
         }
         else if(deliveryTypes.size() > requestDto.getDeliveryTypes().size()) {
@@ -176,7 +176,7 @@ public class AdminService {
             for(int i = requestDto.getDeliveryTypes().size(); i < deliveryTypes.size(); i++) {
                 Integer idOfDeliveryTypeToRemove = deliveryTypes.get(i).getId();
                 warehouse.getDeliveryTypes().removeIf(type -> type.getId().equals(idOfDeliveryTypeToRemove));
-                deliveryTypesRepository.deleteById(idOfDeliveryTypeToRemove);
+                deliveryTypeRepository.deleteById(idOfDeliveryTypeToRemove);
             }
         }
     }

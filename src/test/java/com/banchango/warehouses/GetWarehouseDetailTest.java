@@ -46,7 +46,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
         assertEquals(WarehouseEntityFactory.LONGITUDE, warehouse.getLongitude());
         assertTrue(insuranceRepository.findByWarehouseId(warehouseId).stream().map(Insurance::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.INSURANCES)));
         assertTrue(securityCompanyRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompany::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.SECURITY_COMPANIES)));
-        assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryType::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES)));
+        assertTrue(deliveryTypeRepository.findByWarehouseId(warehouseId).stream().map(DeliveryType::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES)));
         assertTrue(warehouseConditionRepository.findByWarehouseId(warehouseId).stream().map(WarehouseCondition::getCondition).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.WAREHOUSE_CONDITIONS)));
         assertEquals(0, mainItemTypeRepository.findByWarehouseId(warehouseId).size());
         assertNull(warehouse.getBlogUrl());
