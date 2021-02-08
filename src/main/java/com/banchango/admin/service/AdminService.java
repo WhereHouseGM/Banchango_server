@@ -25,7 +25,7 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
-import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsageRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionRepository;
@@ -60,7 +60,7 @@ public class AdminService {
     private final DeliveryTypesRepository deliveryTypesRepository;
     private final SecurityCompaniesRepository securityCompaniesRepository;
     private final WarehouseUsageCautionRepository warehouseUsageCautionRepository;
-    private final WarehouseFacilityUsagesRepository warehouseFacilityUsagesRepository;
+    private final WarehouseFacilityUsageRepository warehouseFacilityUsageRepository;
     private final InsurancesRepository insurancesRepository;
     private final WarehouseConditionsRepository warehouseConditionsRepository;
 
@@ -212,7 +212,7 @@ public class AdminService {
     }
 
     private void updateWarehouseFacilityUsages(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<WarehouseFacilityUsage> warehouseFacilityUsages = warehouseFacilityUsagesRepository.findByWarehouseId(warehouse.getId());
+        List<WarehouseFacilityUsage> warehouseFacilityUsages = warehouseFacilityUsageRepository.findByWarehouseId(warehouse.getId());
         if(warehouseFacilityUsages.size() == requestDto.getWarehouseFacilityUsages().size()) {
             for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
                 warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
@@ -226,7 +226,7 @@ public class AdminService {
                 WarehouseFacilityUsage newUsage = WarehouseFacilityUsage.builder()
                         .warehouse(warehouse).content(requestDto.getWarehouseFacilityUsages().get(i))
                         .build();
-                warehouseFacilityUsagesRepository.save(newUsage);
+                warehouseFacilityUsageRepository.save(newUsage);
             }
         }
         else if(warehouseFacilityUsages.size() > requestDto.getWarehouseFacilityUsages().size()) {
@@ -236,7 +236,7 @@ public class AdminService {
             for(int i = requestDto.getWarehouseFacilityUsages().size(); i < warehouseFacilityUsages.size(); i++) {
                 Integer idOfUsageToRemove = warehouseFacilityUsages.get(i).getId();
                 warehouse.getWarehouseFacilityUsages().removeIf(usage -> usage.getId().equals(idOfUsageToRemove));
-                warehouseFacilityUsagesRepository.deleteById(idOfUsageToRemove);
+                warehouseFacilityUsageRepository.deleteById(idOfUsageToRemove);
             }
         }
     }
