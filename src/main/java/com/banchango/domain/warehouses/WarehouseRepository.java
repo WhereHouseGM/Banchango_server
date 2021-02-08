@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface WarehousesRepository extends JpaRepository<Warehouse, Integer> {
+public interface WarehouseRepository extends JpaRepository<Warehouse, Integer> {
 
     List<Warehouse> findAllByStatus(WarehouseStatus status, Pageable pageable);
     List<Warehouse> findByAddressContainingAndStatus(String address, WarehouseStatus status, Pageable pageable);

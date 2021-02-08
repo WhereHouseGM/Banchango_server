@@ -74,11 +74,11 @@ public class WarehouseEntityFactory {
     public static final ItemType[] NEW_MAIN_ITEM_TYPES = {ItemType.FOOD, ItemType.BOOK, ItemType.CLOTH};
 
 
-    private final WarehousesRepository warehousesRepository;
+    private final WarehouseRepository warehouseRepository;
 
     @Autowired
-    public WarehouseEntityFactory(WarehousesRepository warehousesRepository) {
-        this.warehousesRepository = warehousesRepository;
+    public WarehouseEntityFactory(WarehouseRepository warehouseRepository) {
+        this.warehouseRepository = warehouseRepository;
     }
 
     public Warehouse createViewableWithNoMainItemTypes(String accessToken) {
@@ -174,6 +174,6 @@ public class WarehouseEntityFactory {
                    .map(caution -> new WarehouseUsageCaution(caution, warehouse)).collect(Collectors.toList());
            warehouse.setWarehouseUsageCautions(warehouseUsageCautions);
        }
-        return warehousesRepository.save(warehouse);
+        return warehouseRepository.save(warehouse);
     }
 }

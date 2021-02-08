@@ -14,7 +14,7 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.WarehouseRepository;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.exception.EstimateNotFoundException;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Service
 public class EstimatesService {
     private final EstimatesRepository estimatesRepository;
-    private final WarehousesRepository warehousesRepository;
+    private final WarehouseRepository warehouseRepository;
     private final EmailSender emailSender;
     private final UsersRepository usersRepository;
     private final FindWarehouseById findWarehouseById;
@@ -79,7 +79,7 @@ public class EstimatesService {
             .stream()
             .map(estimate -> {
                 EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);
-                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
+                Optional<WarehouseIdAndNameAndAddressProjection> optionalProjection = warehouseRepository.findById(estimate.getWarehouseId(), WarehouseIdAndNameAndAddressProjection.class);
 
                 if(optionalProjection.isPresent()) {
                     WarehouseIdAndNameAndAddressProjection projection = optionalProjection.get();

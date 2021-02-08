@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 @Service
 public class AdminService {
 
-    private final WarehousesRepository warehousesRepository;
+    private final WarehouseRepository warehouseRepository;
     private final UsersRepository usersRepository;
     private final MainItemTypesRepository mainItemTypesRepository;
     private final EstimatesRepository estimatesRepository;
@@ -76,8 +76,8 @@ public class AdminService {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         List<Warehouse> warehouses;
 
-        if(status == null) warehouses = warehousesRepository.findByOrderByCreatedAtAsc(pageRequest);
-        else warehouses  = warehousesRepository.findWarehousesByStatusOrderByCreatedAt(status, pageRequest);
+        if(status == null) warehouses = warehouseRepository.findByOrderByCreatedAtAsc(pageRequest);
+        else warehouses  = warehouseRepository.findWarehousesByStatusOrderByCreatedAt(status, pageRequest);
 
         if(warehouses.isEmpty()) throw new WaitingWarehousesNotFoundException();
         return WarehouseInsertRequestResponseListDto.builder()
@@ -328,7 +328,7 @@ public class AdminService {
         return estimates.stream()
                 .map(estimate -> {
                     EstimateSummaryDto estimateSummaryDto = new EstimateSummaryDto(estimate);
-                    Optional<WarehouseIdAndNameProjection> optionalProjection = warehousesRepository.findByIdAndStatus(estimate.getWarehouseId(), WarehouseStatus.VIEWABLE, WarehouseIdAndNameProjection.class);
+                    Optional<WarehouseIdAndNameProjection> optionalProjection = warehouseRepository.findByIdAndStatus(estimate.getWarehouseId(), WarehouseStatus.VIEWABLE, WarehouseIdAndNameProjection.class);
                     if(optionalProjection.isPresent()) {
                         WarehouseIdAndNameProjection projection = optionalProjection.get();
                         estimateSummaryDto.updateWarehouseInfo(projection);
@@ -362,7 +362,7 @@ public class AdminService {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         User user = findUserById.apply(estimate.getUserId());
-        Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
+        Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehouseRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
         String warehouseName;
         boolean isUserDeleted = withdrawRepository.findByUserId(user.getUserId()).isPresent();
 

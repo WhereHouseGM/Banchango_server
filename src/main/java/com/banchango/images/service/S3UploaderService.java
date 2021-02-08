@@ -10,7 +10,7 @@ import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouseimages.WarehouseImagesRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.WarehouseRepository;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.warehouses.exception.*;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class S3UploaderService {
 
     private S3Client s3Client;
     private final WarehouseImagesRepository warehouseImagesRepository;
-    private final WarehousesRepository warehousesRepository;
+    private final WarehouseRepository warehouseRepository;
     private final UsersRepository usersRepository;
     private final FindWarehouseById findWarehouseById;
     private final DoubleCheckAdminAccess doubleCheckAdminAccess;
@@ -95,7 +95,7 @@ public class S3UploaderService {
     }
 
     private boolean isUserAuthenticatedToModifyWarehouseInfo(Integer userId, Integer warehouseId) {
-        List<Warehouse> warehouses = warehousesRepository.findByUserId(userId);
+        List<Warehouse> warehouses = warehouseRepository.findByUserId(userId);
         for(Warehouse warehouse : warehouses) {
             if(warehouse.getId().equals(warehouseId)) {
                 if(warehouse.getUserId().equals(userId)) {

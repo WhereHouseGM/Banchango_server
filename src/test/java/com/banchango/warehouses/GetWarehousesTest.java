@@ -133,7 +133,7 @@ public class GetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseByMainItemType_responseIsNotFound_IfWarehouseNotExist() {
-        warehousesRepository.deleteAll();
+        warehouseRepository.deleteAll();
 
         String mainItemType = ItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);
@@ -148,7 +148,7 @@ public class GetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouse_responseIsBadRequest_IfAddressAndMainItemTypeBothGiven() {
-        warehousesRepository.deleteAll();
+        warehouseRepository.deleteAll();
 
         String mainItemType = ItemType.CLOTH.toString();
         String addressQuery = "addr";

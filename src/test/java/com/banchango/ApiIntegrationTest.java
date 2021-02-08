@@ -10,7 +10,7 @@ import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.WarehouseRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionRepository;
 import com.banchango.domain.withdraws.WithdrawRepository;
 import com.banchango.factory.entity.EstimateEntityFactory;
@@ -34,7 +34,7 @@ public abstract class ApiIntegrationTest {
     protected UsersRepository usersRepository;
 
     @Autowired
-    protected WarehousesRepository warehousesRepository;
+    protected WarehouseRepository warehouseRepository;
 
     @Autowired
     protected EstimatesRepository estimatesRepository;
@@ -84,14 +84,14 @@ public abstract class ApiIntegrationTest {
     @Before
     public void setup() {
         usersRepository.deleteAll();
-        warehousesRepository.deleteAll();
+        warehouseRepository.deleteAll();
         estimatesRepository.deleteAll();
     }
 
     @After
     public void release() {
         usersRepository.deleteAll();
-        warehousesRepository.deleteAll();
+        warehouseRepository.deleteAll();
         estimatesRepository.deleteAll();
     }
 }

@@ -17,7 +17,7 @@ import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.WarehouseRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
 import com.banchango.tools.EmailContent;
 import com.banchango.users.exception.ForbiddenUserIdException;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Service
 public class WarehousesService {
 
-    private final WarehousesRepository warehousesRepository;
+    private final WarehouseRepository warehouseRepository;
     private final UsersRepository usersRepository;
     private final EmailSender emailSender;
     private final MainItemTypesRepository mainItemTypesRepository;
@@ -75,7 +75,7 @@ public class WarehousesService {
                 .status(WarehouseStatus.IN_PROGRESS)
                 .build();
 
-        final Warehouse savedWarehouse = warehousesRepository.save(warehouse);
+        final Warehouse savedWarehouse = warehouseRepository.save(warehouse);
 
         List<MainItemType> mainItemTypes = warehouseInsertRequestDto.getMainItemTypes().stream()
             .map(type -> new MainItemType(type, savedWarehouse)).collect(Collectors.toList());
@@ -111,7 +111,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByAddress(String address, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findByAddressContainingAndStatus(address, WarehouseStatus.VIEWABLE, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehouseRepository.findByAddressContainingAndStatus(address, WarehouseStatus.VIEWABLE, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -123,7 +123,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehousesByMainItemTypes(List<ItemType> mainItemTypes, PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findViewableWarehouseByMainItemTypes(mainItemTypes, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehouseRepository.findViewableWarehouseByMainItemTypes(mainItemTypes, pageRequest)
             .stream()
             .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl, mainItemTypes))
             .collect(Collectors.toList());
@@ -135,7 +135,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public List<WarehouseSearchDto> getWarehouses(PageRequest pageRequest) {
-        List<WarehouseSearchDto> warehouses = warehousesRepository.findAllByStatus(WarehouseStatus.VIEWABLE, pageRequest)
+        List<WarehouseSearchDto> warehouses = warehouseRepository.findAllByStatus(WarehouseStatus.VIEWABLE, pageRequest)
                 .stream()
                 .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl))
                 .collect(Collectors.toList());
@@ -158,7 +158,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
-        Warehouse warehouse = warehousesRepository.findByIdAndStatus(warehouseId, WarehouseStatus.VIEWABLE).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouse warehouse = warehouseRepository.findByIdAndStatus(warehouseId, WarehouseStatus.VIEWABLE).orElseThrow(WarehouseIdNotFoundException::new);
 
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
@@ -187,7 +187,7 @@ public class WarehousesService {
         if(!userId.equals(userIdFromAccessToken)) throw new ForbiddenUserIdException("해당 사용자의 창고 목록을 볼 수 있는 권한이 없습니다");
         User user = findUserById.apply(userId);
 
-        List<MyWarehouseDto> warehouses = warehousesRepository.findByUserId(userId).stream()
+        List<MyWarehouseDto> warehouses = warehouseRepository.findByUserId(userId).stream()
             .filter(warehouse -> !warehouse.getStatus().equals(WarehouseStatus.DELETED))
             .map(warehouse -> new MyWarehouseDto(warehouse, noImageUrl))
             .collect(Collectors.toList());

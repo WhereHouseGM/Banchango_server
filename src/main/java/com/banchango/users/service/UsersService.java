@@ -8,7 +8,7 @@ import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
-import com.banchango.domain.warehouses.WarehousesRepository;
+import com.banchango.domain.warehouses.WarehouseRepository;
 import com.banchango.domain.withdraws.Withdraw;
 import com.banchango.domain.withdraws.WithdrawRepository;
 import com.banchango.tools.EmailContent;
@@ -29,7 +29,7 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final EmailSender emailSender;
     private final WithdrawRepository withdrawRepository;
-    private final WarehousesRepository warehousesRepository;
+    private final WarehouseRepository warehouseRepository;
     private final FindUserById findByUserId;
 
     @Transactional(readOnly = true)
@@ -120,7 +120,7 @@ public class UsersService {
     }
 
     private void deleteWarehousesOwnedByUser(int userId) {
-        List<Warehouse> warehouses = warehousesRepository.findByUserId(userId);
+        List<Warehouse> warehouses = warehouseRepository.findByUserId(userId);
         warehouses
             .forEach(warehouse -> warehouse.updateStatus(WarehouseStatus.DELETED));
     }
