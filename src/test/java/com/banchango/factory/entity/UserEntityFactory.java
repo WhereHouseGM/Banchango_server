@@ -3,7 +3,7 @@ package com.banchango.factory.entity;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.User;
-import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.withdraws.Withdraw;
 import com.banchango.domain.withdraws.WithdrawRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ public class UserEntityFactory {
     private static final String COMPANY_NAME = "COMPANY_NAME";
     private static final String CAUSE = "CAUSE";
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final WithdrawRepository withdrawRepository;
     private int countUsers = 0;
 
     @Autowired
-    public UserEntityFactory(UsersRepository usersRepository, WithdrawRepository withdrawRepository) {
-        this.usersRepository = usersRepository;
+    public UserEntityFactory(UserRepository userRepository, WithdrawRepository withdrawRepository) {
+        this.userRepository = userRepository;
         this.withdrawRepository = withdrawRepository;
     }
 
@@ -80,7 +80,7 @@ public class UserEntityFactory {
             .role(role)
             .build();
 
-        usersRepository.save(user);
+        userRepository.save(user);
         return user;
     }
 

@@ -21,7 +21,7 @@ import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.User;
-import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditionRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 public class AdminService {
 
     private final WarehouseRepository warehouseRepository;
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final MainItemTypesRepository mainItemTypesRepository;
     private final EstimatesRepository estimatesRepository;
     private final WithdrawRepository withdrawRepository;
@@ -381,7 +381,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
-        User user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
 
         boolean isUserDeleted = withdrawRepository.findByUserId(user.getUserId()).isPresent();
 

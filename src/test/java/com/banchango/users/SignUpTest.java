@@ -31,7 +31,7 @@ public class SignUpTest extends ApiIntegrationTest {
 
         ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
-        User savedUser = usersRepository.findByEmail(requestBody.getEmail()).orElseThrow(UserEmailNotFoundException::new);
+        User savedUser = userRepository.findByEmail(requestBody.getEmail()).orElseThrow(UserEmailNotFoundException::new);
         Integer userId = savedUser.getUserId();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());

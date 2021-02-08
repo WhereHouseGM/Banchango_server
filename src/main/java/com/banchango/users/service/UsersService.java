@@ -5,7 +5,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.users.User;
-import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouses.WarehouseRepository;
@@ -26,7 +26,7 @@ import java.util.Optional;
 @Service
 public class UsersService {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final EmailSender emailSender;
     private final WithdrawRepository withdrawRepository;
     private final WarehouseRepository warehouseRepository;
@@ -45,7 +45,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
-        User user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new);
 
         boolean isUserDeleted = withdrawRepository.findByUserId(user.getUserId()).isPresent();
         if(isUserDeleted) throw new UserNotFoundException("탈퇴한 사용자입니다");
@@ -60,8 +60,8 @@ public class UsersService {
 
     @Transactional
     public UserInfoResponseDto signUp(UserSignupRequestDto requestDto) {
-        if (usersRepository.findByEmail(requestDto.getEmail()).isPresent()) throw new UserEmailInUseException();
-        return new UserInfoResponseDto(usersRepository.save(requestDto.toEntity()), false);
+        if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) throw new UserEmailInUseException();
+        return new UserInfoResponseDto(userRepository.save(requestDto.toEntity()), false);
     }
 
     @Transactional
@@ -77,8 +77,8 @@ public class UsersService {
     @Transactional
     public BasicMessageResponseDto sendTemporaryPasswordEmail(String recipient) {
         String temporaryPassword = PasswordGenerator.generate();
-        User user = usersRepository.findByEmail(recipient).orElseThrow(UserEmailNotFoundException::new);
-        usersRepository.updatePassword(temporaryPassword, recipient);
+        User user = userRepository.findByEmail(recipient).orElseThrow(UserEmailNotFoundException::new);
+        userRepository.updatePassword(temporaryPassword, recipient);
         EmailContent emailContent = new EmailContent("[반창고] 임시 비밀번호 발급", "안녕하세요, 반창고 입니다!", "발급해드린 임시 비밀번호는 <span style='font-size: 20px'>" + temporaryPassword + "</span> 입니다.", "이 임시 비밀번호로 로그인 해주세요.", "로그인 하기", "https://banchangohub.com/login");
         return emailSender.send(user.getEmail(), emailContent, false);
     }

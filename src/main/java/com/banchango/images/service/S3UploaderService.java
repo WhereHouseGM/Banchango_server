@@ -5,7 +5,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.InternalServerErrorException;
 import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
-import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouseimages.WarehouseImageRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
@@ -39,7 +39,7 @@ public class S3UploaderService {
     private S3Client s3Client;
     private final WarehouseImageRepository warehouseImageRepository;
     private final WarehouseRepository warehouseRepository;
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final FindWarehouseById findWarehouseById;
     private final DoubleCheckAdminAccess doubleCheckAdminAccess;
 

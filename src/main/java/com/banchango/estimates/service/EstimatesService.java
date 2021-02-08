@@ -10,7 +10,7 @@ import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.users.User;
-import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
@@ -36,7 +36,7 @@ public class EstimatesService {
     private final EstimatesRepository estimatesRepository;
     private final WarehouseRepository warehouseRepository;
     private final EmailSender emailSender;
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final FindWarehouseById findWarehouseById;
     private final FindUserById findUserById;
 

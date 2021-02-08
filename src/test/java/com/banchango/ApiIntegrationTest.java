@@ -7,7 +7,7 @@ import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
-import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditionRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsageRepository;
 import com.banchango.domain.warehouses.WarehouseRepository;
@@ -31,7 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public abstract class ApiIntegrationTest {
 
     @Autowired
-    protected UsersRepository usersRepository;
+    protected UserRepository userRepository;
 
     @Autowired
     protected WarehouseRepository warehouseRepository;
@@ -83,14 +83,14 @@ public abstract class ApiIntegrationTest {
 
     @Before
     public void setup() {
-        usersRepository.deleteAll();
+        userRepository.deleteAll();
         warehouseRepository.deleteAll();
         estimatesRepository.deleteAll();
     }
 
     @After
     public void release() {
-        usersRepository.deleteAll();
+        userRepository.deleteAll();
         warehouseRepository.deleteAll();
         estimatesRepository.deleteAll();
     }

@@ -12,7 +12,7 @@ import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.users.User;
-import com.banchango.domain.users.UsersRepository;
+import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouses.WarehouseStatus;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class WarehousesService {
 
     private final WarehouseRepository warehouseRepository;
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final EmailSender emailSender;
     private final MainItemTypesRepository mainItemTypesRepository;
     private final FindWarehouseById findWarehouseById;
