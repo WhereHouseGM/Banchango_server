@@ -8,7 +8,7 @@ import com.banchango.common.service.EmailSender;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
-import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.users.Users;
@@ -77,8 +77,8 @@ public class WarehousesService {
 
         final Warehouses savedWarehouse = warehousesRepository.save(warehouse);
 
-        List<MainItemTypes> mainItemTypes = warehouseInsertRequestDto.getMainItemTypes().stream()
-            .map(type -> new MainItemTypes(type, savedWarehouse)).collect(Collectors.toList());
+        List<MainItemType> mainItemTypes = warehouseInsertRequestDto.getMainItemTypes().stream()
+            .map(type -> new MainItemType(type, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setMainItemTypes(mainItemTypes);
 
         List<DeliveryType> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
@@ -173,7 +173,7 @@ public class WarehousesService {
 
         if(!warehouse.getUserId().equals(userId)) throw new ForbiddenUserIdException();
 
-        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemTypes::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
+        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemType::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
             mainItemTypesRepository.deleteByWarehouseId(warehouseId);
         }
 

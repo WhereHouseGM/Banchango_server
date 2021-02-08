@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "main_item_types")
-public class MainItemTypes {
+public class MainItemType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class MainItemTypes {
     private Warehouses warehouse;
 
     @Builder
-    public MainItemTypes(ItemType mainItemType, Warehouses warehouse) {
+    public MainItemType(ItemType mainItemType, Warehouses warehouse) {
         this.type = mainItemType;
         this.warehouse = warehouse;
     }

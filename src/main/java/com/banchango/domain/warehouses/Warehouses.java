@@ -4,7 +4,7 @@ import com.banchango.admin.dto.WarehouseAdminUpdateRequestDto;
 import com.banchango.domain.BaseTimeEntity;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
-import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
@@ -126,7 +126,7 @@ public class Warehouses extends BaseTimeEntity {
 
     @Setter
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
-    private List<MainItemTypes> mainItemTypes = new ArrayList<>();
+    private List<MainItemType> mainItemTypes = new ArrayList<>();
 
     @Builder
     public Warehouses(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, WarehouseStatus status, String blogUrl) {

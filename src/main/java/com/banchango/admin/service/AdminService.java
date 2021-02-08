@@ -15,7 +15,7 @@ import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.insurances.InsurancesRepository;
-import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
@@ -272,7 +272,7 @@ public class AdminService {
     }
 
     private void updateMainItemTypes(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<MainItemTypes> mainItemTypes = mainItemTypesRepository.findByWarehouseId(warehouse.getId());
+        List<MainItemType> mainItemTypes = mainItemTypesRepository.findByWarehouseId(warehouse.getId());
         if(mainItemTypes.size() == requestDto.getMainItemTypes().size()) {
             for(int i = 0; i < mainItemTypes.size(); i++) {
                 mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
@@ -283,7 +283,7 @@ public class AdminService {
                 mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
             }
             for(int i = mainItemTypes.size(); i < requestDto.getMainItemTypes().size(); i++) {
-                MainItemTypes newType = MainItemTypes.builder()
+                MainItemType newType = MainItemType.builder()
                         .warehouse(warehouse).mainItemType(requestDto.getMainItemTypes().get(i))
                         .build();
                 mainItemTypesRepository.save(newType);

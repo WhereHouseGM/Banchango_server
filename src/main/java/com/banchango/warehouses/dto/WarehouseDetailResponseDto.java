@@ -3,7 +3,7 @@ package com.banchango.warehouses.dto;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
-import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
@@ -61,7 +61,7 @@ public class WarehouseDetailResponseDto {
     public WarehouseDetailResponseDto(Warehouses warehouse, String defaultImageUrl) {
         List<ItemType> mainItemTypes = warehouse.getMainItemTypes()
             .stream()
-            .map(MainItemTypes::getType)
+            .map(MainItemType::getType)
             .collect(Collectors.toList());
 
         List<String> deliveryTypes = warehouse.getDeliveryTypes()

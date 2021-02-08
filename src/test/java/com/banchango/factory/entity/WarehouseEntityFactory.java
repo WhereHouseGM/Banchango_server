@@ -4,7 +4,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
-import com.banchango.domain.mainitemtypes.MainItemTypes;
+import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
@@ -143,8 +143,8 @@ public class WarehouseEntityFactory {
             .status(status)
             .build();
 
-        List<MainItemTypes> mainItemTypesList = Arrays.stream(mainItemTypes)
-            .map(mainItemType -> new MainItemTypes(mainItemType, warehouse))
+        List<MainItemType> mainItemTypesList = Arrays.stream(mainItemTypes)
+            .map(mainItemType -> new MainItemType(mainItemType, warehouse))
             .collect(Collectors.toList());
         warehouse.setMainItemTypes(mainItemTypesList);
 
