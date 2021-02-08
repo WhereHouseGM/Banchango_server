@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "warehouse_conditions")
-public class WarehouseConditions {
+public class WarehouseCondition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class WarehouseConditions {
     private Warehouses warehouse;
 
     @Builder
-    public WarehouseConditions(WarehouseConditionType condition, Warehouses warehouse) {
+    public WarehouseCondition(WarehouseConditionType condition, Warehouses warehouse) {
         this.condition=condition;
         this.warehouse = warehouse;
     }

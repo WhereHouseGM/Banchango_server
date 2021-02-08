@@ -7,7 +7,7 @@ import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.warehouseconditions.WarehouseConditionType;
-import com.banchango.domain.warehouseconditions.WarehouseConditions;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.*;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
@@ -148,8 +148,8 @@ public class WarehouseEntityFactory {
             .collect(Collectors.toList());
         warehouse.setMainItemTypes(mainItemTypesList);
 
-        List<WarehouseConditions> warehouseConditions = Arrays.stream(WAREHOUSE_CONDITIONS)
-                .map(condition -> new WarehouseConditions(condition, warehouse))
+        List<WarehouseCondition> warehouseConditions = Arrays.stream(WAREHOUSE_CONDITIONS)
+                .map(condition -> new WarehouseCondition(condition, warehouse))
                 .collect(Collectors.toList());
         warehouse.setWarehouseConditions(warehouseConditions);
 

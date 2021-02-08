@@ -22,7 +22,7 @@ import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouseconditions.WarehouseConditions;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
@@ -182,7 +182,7 @@ public class AdminService {
     }
 
     private void updateWarehouseConditions(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<WarehouseConditions> warehouseConditions = warehouseConditionsRepository.findByWarehouseId(warehouse.getId());
+        List<WarehouseCondition> warehouseConditions = warehouseConditionsRepository.findByWarehouseId(warehouse.getId());
         if(warehouseConditions.size() == requestDto.getWarehouseCondition().size()) {
             for(int i = 0; i < warehouseConditions.size(); i++) {
                 warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
@@ -193,7 +193,7 @@ public class AdminService {
                 warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
             }
             for(int i = warehouseConditions.size(); i < requestDto.getWarehouseCondition().size(); i++) {
-                WarehouseConditions newCondition = WarehouseConditions.builder()
+                WarehouseCondition newCondition = WarehouseCondition.builder()
                         .warehouse(warehouse).condition(requestDto.getWarehouseCondition().get(i))
                         .build();
                 warehouseConditionsRepository.save(newCondition);

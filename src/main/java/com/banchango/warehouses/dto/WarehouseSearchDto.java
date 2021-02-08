@@ -2,7 +2,7 @@ package com.banchango.warehouses.dto;
 
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.warehouseconditions.WarehouseConditionType;
-import com.banchango.domain.warehouseconditions.WarehouseConditions;
+import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
@@ -45,7 +45,7 @@ public class WarehouseSearchDto {
 
         List<WarehouseConditionType> warehouseConditionNames = warehouse.getWarehouseConditions()
             .stream()
-            .map(WarehouseConditions::getCondition)
+            .map(WarehouseCondition::getCondition)
             .collect(Collectors.toList());
 
         List<String> deliveryTypes = warehouse.getDeliveryTypes()
