@@ -1,7 +1,7 @@
 package com.banchango.factory.entity;
 
 import com.banchango.auth.token.JwtTokenUtil;
-import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
@@ -161,8 +161,8 @@ public class WarehouseEntityFactory {
                 .map(company -> new SecurityCompanies(company, warehouse)).collect(Collectors.toList());
         warehouse.setSecurityCompanies(securityCompanies);
 
-        List<DeliveryTypes> deliveryTypes = Arrays.stream(DELIVERY_TYPES)
-                .map(type -> new DeliveryTypes(type, warehouse)).collect(Collectors.toList());
+        List<DeliveryType> deliveryTypes = Arrays.stream(DELIVERY_TYPES)
+                .map(type -> new DeliveryType(type, warehouse)).collect(Collectors.toList());
         warehouse.setDeliveryTypes(deliveryTypes);
 
        if(!isUsageAndCautionNull) {

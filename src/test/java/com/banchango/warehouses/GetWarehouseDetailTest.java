@@ -3,7 +3,7 @@ package com.banchango.warehouses;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.users.Users;
@@ -46,7 +46,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
         assertEquals(WarehouseEntityFactory.LONGITUDE, warehouse.getLongitude());
         assertTrue(insurancesRepository.findByWarehouseId(warehouseId).stream().map(Insurances::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.INSURANCES)));
         assertTrue(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompanies::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.SECURITY_COMPANIES)));
-        assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryTypes::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES)));
+        assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryType::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES)));
         assertTrue(warehouseConditionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseConditions::getCondition).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.WAREHOUSE_CONDITIONS)));
         assertEquals(0, mainItemTypesRepository.findByWarehouseId(warehouseId).size());
         assertNull(warehouse.getBlogUrl());

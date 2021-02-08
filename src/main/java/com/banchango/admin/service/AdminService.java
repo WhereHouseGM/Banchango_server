@@ -6,7 +6,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
-import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
@@ -152,7 +152,7 @@ public class AdminService {
     }
 
     private void updateDeliveryTypes(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<DeliveryTypes> deliveryTypes = deliveryTypesRepository.findByWarehouseId(warehouse.getId());
+        List<DeliveryType> deliveryTypes = deliveryTypesRepository.findByWarehouseId(warehouse.getId());
         if(deliveryTypes.size() == requestDto.getDeliveryTypes().size()) {
             for(int i = 0; i < deliveryTypes.size(); i++) {
                 deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
@@ -163,7 +163,7 @@ public class AdminService {
                 deliveryTypes.get(i).setName(requestDto.getDeliveryTypes().get(i));
             }
             for(int i = deliveryTypes.size(); i < requestDto.getDeliveryTypes().size(); i++) {
-                DeliveryTypes newDeliveryType = DeliveryTypes.builder()
+                DeliveryType newDeliveryType = DeliveryType.builder()
                         .warehouse(warehouse).name(requestDto.getDeliveryTypes().get(i))
                         .build();
                 deliveryTypesRepository.save(newDeliveryType);

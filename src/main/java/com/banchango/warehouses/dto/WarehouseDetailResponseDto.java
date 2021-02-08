@@ -1,6 +1,6 @@
 package com.banchango.warehouses.dto;
 
-import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
@@ -66,7 +66,7 @@ public class WarehouseDetailResponseDto {
 
         List<String> deliveryTypes = warehouse.getDeliveryTypes()
             .stream()
-            .map(DeliveryTypes::getName)
+            .map(DeliveryType::getName)
             .collect(Collectors.toList());
 
         List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()

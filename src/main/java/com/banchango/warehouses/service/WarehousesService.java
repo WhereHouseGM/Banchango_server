@@ -5,7 +5,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
-import com.banchango.domain.deliverytypes.DeliveryTypes;
+import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurances;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
@@ -81,8 +81,8 @@ public class WarehousesService {
             .map(type -> new MainItemTypes(type, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setMainItemTypes(mainItemTypes);
 
-        List<DeliveryTypes> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
-                .map(type -> new DeliveryTypes(type, savedWarehouse)).collect(Collectors.toList());
+        List<DeliveryType> deliveryTypes = warehouseInsertRequestDto.getDeliveryTypes().stream()
+                .map(type -> new DeliveryType(type, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setDeliveryTypes(deliveryTypes);
 
         List<WarehouseConditions> warehouseConditions = warehouseInsertRequestDto.getWarehouseCondition().stream()
