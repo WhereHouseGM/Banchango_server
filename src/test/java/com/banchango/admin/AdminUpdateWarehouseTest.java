@@ -86,7 +86,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertEquals(WarehouseEntityFactory.NEW_LATITUDE, updatedWarehouse.getLatitude());
         assertEquals(WarehouseEntityFactory.NEW_BLOG_URL, updatedWarehouse.getBlogUrl());
         assertEquals(WarehouseEntityFactory.NEW_MIN_RELEASE_PER_MONTH, updatedWarehouse.getMinReleasePerMonth());
-        assertEquals(insurancesRepository.findByWarehouseId(warehouseId).stream().map(Insurance::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_INSURANCES));
+        assertEquals(insuranceRepository.findByWarehouseId(warehouseId).stream().map(Insurance::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_INSURANCES));
         assertEquals(securityCompanyRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompany::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_SECURITY_COMPANIES));
         assertEquals(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryType::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_DELIVERY_TYPES));
         assertEquals(warehouseFacilityUsageRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsage::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES));
@@ -134,7 +134,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Warehouse warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new ItemType[]{ItemType.FOOD, ItemType.ELECTRONICS});
         Integer warehouseId = warehouse.getId();
 
-        List<Integer> beforeInsurancesId = insurancesRepository.findByWarehouseId(warehouseId)
+        List<Integer> beforeInsurancesId = insuranceRepository.findByWarehouseId(warehouseId)
                 .stream().map(Insurance::getId).collect(Collectors.toList());
 
         List<Integer> beforeSecurityCompaniesId = securityCompanyRepository.findByWarehouseId(warehouseId)
@@ -169,7 +169,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 
         assertUpdatedWarehouseInfo(warehouseId);
 
-        List<Integer> updatedInsuranceId = insurancesRepository.findByWarehouseId(warehouseId)
+        List<Integer> updatedInsuranceId = insuranceRepository.findByWarehouseId(warehouseId)
                 .stream().map(Insurance::getId).collect(Collectors.toList());
 
         List<Integer> updatedSecurityCompaniesId = securityCompanyRepository.findByWarehouseId(warehouseId)
@@ -231,7 +231,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Warehouse warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new ItemType[]{ItemType.FOOD, ItemType.BOOK});
         Integer warehouseId = warehouse.getId();
 
-        List<Integer> beforeInsurancesId = insurancesRepository.findByWarehouseId(warehouseId)
+        List<Integer> beforeInsurancesId = insuranceRepository.findByWarehouseId(warehouseId)
                 .stream().map(Insurance::getId).collect(Collectors.toList());
 
         List<Integer> beforeSecurityCompaniesId = securityCompanyRepository.findByWarehouseId(warehouseId)
@@ -266,7 +266,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 
         assertUpdatedWarehouseInfo(warehouseId);
 
-        List<Integer> updatedInsuranceId = insurancesRepository.findByWarehouseId(warehouseId)
+        List<Integer> updatedInsuranceId = insuranceRepository.findByWarehouseId(warehouseId)
                 .stream().map(Insurance::getId).collect(Collectors.toList());
 
         List<Integer> updatedSecurityCompaniesId = securityCompanyRepository.findByWarehouseId(warehouseId)

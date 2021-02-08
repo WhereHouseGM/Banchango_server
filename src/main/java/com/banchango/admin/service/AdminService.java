@@ -14,7 +14,7 @@ import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehous
 import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.insurances.Insurance;
-import com.banchango.domain.insurances.InsurancesRepository;
+import com.banchango.domain.insurances.InsuranceRepository;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypeRepository;
 import com.banchango.domain.securitycompanies.SecurityCompany;
@@ -61,7 +61,7 @@ public class AdminService {
     private final SecurityCompanyRepository securityCompanyRepository;
     private final WarehouseUsageCautionRepository warehouseUsageCautionRepository;
     private final WarehouseFacilityUsageRepository warehouseFacilityUsageRepository;
-    private final InsurancesRepository insurancesRepository;
+    private final InsuranceRepository insuranceRepository;
     private final WarehouseConditionRepository warehouseConditionRepository;
 
     private final DoubleCheckAdminAccess doubleCheckAdminAccess;
@@ -92,7 +92,7 @@ public class AdminService {
     }
 
     private void updateInsurances(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<Insurance> insurances = insurancesRepository.findByWarehouseId(warehouse.getId());
+        List<Insurance> insurances = insuranceRepository.findByWarehouseId(warehouse.getId());
         if(insurances.size() == requestDto.getInsurances().size()) {
             for(int i = 0; i < insurances.size(); i++) {
                 insurances.get(i).setName(requestDto.getInsurances().get(i));
@@ -106,7 +106,7 @@ public class AdminService {
                 Insurance newInsurance = Insurance.builder()
                         .warehouse(warehouse).name(requestDto.getInsurances().get(i))
                         .build();
-                insurancesRepository.save(newInsurance);
+                insuranceRepository.save(newInsurance);
             }
         }
         else if(insurances.size() > requestDto.getInsurances().size()) {
@@ -116,7 +116,7 @@ public class AdminService {
             for(int i = requestDto.getInsurances().size(); i < insurances.size(); i++) {
                 Integer idOfInsuranceToRemove = insurances.get(i).getId();
                 warehouse.getInsurances().removeIf(insurance -> insurance.getId().equals(idOfInsuranceToRemove));
-                insurancesRepository.deleteById(idOfInsuranceToRemove);
+                insuranceRepository.deleteById(idOfInsuranceToRemove);
             }
         }
     }

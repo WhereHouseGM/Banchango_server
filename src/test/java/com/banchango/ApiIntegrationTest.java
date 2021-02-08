@@ -4,7 +4,7 @@ import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimates.EstimatesRepository;
-import com.banchango.domain.insurances.InsurancesRepository;
+import com.banchango.domain.insurances.InsuranceRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypeRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanyRepository;
 import com.banchango.domain.users.UserRepository;
@@ -55,7 +55,7 @@ public abstract class ApiIntegrationTest {
     protected MainItemTypeRepository mainItemTypeRepository;
 
     @Autowired
-    protected InsurancesRepository insurancesRepository;
+    protected InsuranceRepository insuranceRepository;
 
     @Autowired
     protected SecurityCompanyRepository securityCompanyRepository;
