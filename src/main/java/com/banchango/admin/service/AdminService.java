@@ -3,7 +3,7 @@ package com.banchango.admin.service;
 import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
-import com.banchango.common.functions.DoubleCheckAdminAccess;
+import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimateitems.EstimateItems;

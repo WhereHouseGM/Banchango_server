@@ -1,4 +1,4 @@
-package com.banchango.common.functions;
+package com.banchango.common.functions.admin;
 
 import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.domain.users.UserRole;
