@@ -7,7 +7,7 @@ import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseimages.WarehouseImage;
-import com.banchango.domain.warehouseimages.WarehouseImagesRepository;
+import com.banchango.domain.warehouseimages.WarehouseImageRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouses.WarehouseRepository;
@@ -37,7 +37,7 @@ import java.util.List;
 public class S3UploaderService {
 
     private S3Client s3Client;
-    private final WarehouseImagesRepository warehouseImagesRepository;
+    private final WarehouseImageRepository warehouseImageRepository;
     private final WarehouseRepository warehouseRepository;
     private final UsersRepository usersRepository;
     private final FindWarehouseById findWarehouseById;
@@ -118,7 +118,7 @@ public class S3UploaderService {
         checkWarehouseStatus(warehouse);
         String url = uploadFile(file);
         WarehouseImage image = WarehouseImage.builder().url(url).isMain(isMain).warehouse(warehouse).build();
-        WarehouseImage savedImage = warehouseImagesRepository.save(image);
+        WarehouseImage savedImage = warehouseImageRepository.save(image);
         return new ImageInfoResponseDto(savedImage);
     }
 
@@ -135,25 +135,25 @@ public class S3UploaderService {
     }
 
     private void checkCountOfExtraImage(Integer warehouseId) {
-        if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, false).size() >= 5) {
+        if(warehouseImageRepository.findByWarehouseIdAndIsMain(warehouseId, false).size() >= 5) {
             throw new WarehouseExtraImageLimitException();
         }
     }
 
     private void checkCountOfMainImage(Integer warehouseId) {
-        if(warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, true).size() > 1) {
+        if(warehouseImageRepository.findByWarehouseIdAndIsMain(warehouseId, true).size() > 1) {
             throw new WarehouseMainImageAlreadyRegisteredException();
         }
     }
 
     private void checkIfFileToRemoveExists(Integer warehouseId, String fileName) {
-        if(!warehouseImagesRepository.findByWarehouseIdAndUrlContaining(warehouseId, fileName).isPresent()) {
+        if(!warehouseImageRepository.findByWarehouseIdAndUrlContaining(warehouseId, fileName).isPresent()) {
             throw new WarehouseExtraImageNotFoundException(fileName + "은(는) 저장되어 있지 않은 사진입니다.");
         }
     }
 
     private String checkIfMainImageToDeleteExists(Integer warehouseId) {
-        List<WarehouseImage> images = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, true);
+        List<WarehouseImage> images = warehouseImageRepository.findByWarehouseIdAndIsMain(warehouseId, true);
         if(images.size() >= 1) {
             WarehouseImage image = images.get(0);
             String[] splitTemp = image.getUrl().split("/");
