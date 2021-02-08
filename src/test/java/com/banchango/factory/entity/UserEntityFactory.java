@@ -4,7 +4,7 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.withdraws.Withdraws;
+import com.banchango.domain.withdraws.Withdraw;
 import com.banchango.domain.withdraws.WithdrawsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,7 @@ public class UserEntityFactory {
     public User createDeletedUserWithOwnerType() {
         User user = create(UserRole.USER, UserType.OWNER);
 
-        Withdraws withdraw = Withdraws.builder()
+        Withdraw withdraw = Withdraw.builder()
             .userId(user.getUserId())
             .cause(CAUSE)
             .build();
@@ -51,7 +51,7 @@ public class UserEntityFactory {
     public User createDeletedUserWithShipperType() {
         User user = create(UserRole.USER, UserType.SHIPPER);
 
-        Withdraws withdraw = Withdraws.builder()
+        Withdraw withdraw = Withdraw.builder()
                 .userId(user.getUserId())
                 .cause(CAUSE)
                 .build();

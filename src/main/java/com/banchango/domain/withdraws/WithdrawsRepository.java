@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface WithdrawsRepository extends JpaRepository<Withdraws, Integer> {
-    Optional<Withdraws> findByUserId(Integer userId);
+public interface WithdrawsRepository extends JpaRepository<Withdraw, Integer> {
+    Optional<Withdraw> findByUserId(Integer userId);
 }

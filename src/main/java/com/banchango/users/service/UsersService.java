@@ -9,7 +9,7 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.domain.withdraws.Withdraws;
+import com.banchango.domain.withdraws.Withdraw;
 import com.banchango.domain.withdraws.WithdrawsRepository;
 import com.banchango.tools.EmailContent;
 import com.banchango.tools.PasswordGenerator;
@@ -108,10 +108,10 @@ public class UsersService {
     private void deleteUser(int userId, UserWithdrawRequestDto userWithdrawRequestDto) {
         User user = findByUserId.apply(userId);
 
-        Optional<Withdraws> optionalWithdraws = withdrawsRepository.findByUserId(userId);
+        Optional<Withdraw> optionalWithdraws = withdrawsRepository.findByUserId(userId);
         if(optionalWithdraws.isPresent()) throw new UserAlreayWithdrawnException();
 
-        Withdraws withdraw = Withdraws.builder()
+        Withdraw withdraw = Withdraw.builder()
             .userId(userId)
             .cause(userWithdrawRequestDto.getCause())
             .build();

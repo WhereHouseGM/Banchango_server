@@ -9,7 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Getter
-public class Withdraws {
+public class Withdraw {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Withdraws {
     private String cause;
 
     @Builder
-    public Withdraws(Integer userId, String cause) {
+    public Withdraw(Integer userId, String cause) {
         this.userId = userId;
         this.cause = cause;
     }
