@@ -4,7 +4,7 @@ import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsViewable() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
@@ -43,7 +43,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsInProgress() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
@@ -61,7 +61,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsRejected() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
@@ -91,8 +91,8 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void delete_warehouse_responseIsForbidden_IfNotMine() {
-        Users actualOwner = userEntityFactory.createUserWithOwnerType();
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User actualOwner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String acutalOwnerAccessToken = JwtTokenUtil.generateAccessToken(actualOwner);
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(acutalOwnerAccessToken);
@@ -108,7 +108,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void delete_warehouse_responseIsNotFound_IfWarehouseStatusIsDeleted() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
 
@@ -123,7 +123,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void delete_warehouse_responseIsNotFound_IfWarehouseNotExist() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/0"))
                 .header("Authorization", "Bearer "+accessToken)

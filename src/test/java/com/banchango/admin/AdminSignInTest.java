@@ -2,7 +2,7 @@ package com.banchango.admin;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ public class AdminSignInTest extends ApiIntegrationTest {
 
     @Test
     public void signIn_responseIsOk_IfUserIsAdminAndOwner() {
-        Users adminOwner = userEntityFactory.createAdminWithOwnerType();
+        User adminOwner = userEntityFactory.createAdminWithOwnerType();
 
         UserSigninRequestDto requestBody = new UserSigninRequestDto(adminOwner.getEmail(), adminOwner.getPassword());
 
@@ -54,7 +54,7 @@ public class AdminSignInTest extends ApiIntegrationTest {
 
     @Test
     public void signIn_responseIsOk_IfUserIsAdminAndShipper() {
-        Users adminShipper = userEntityFactory.createAdminWithShipperType();
+        User adminShipper = userEntityFactory.createAdminWithShipperType();
 
         UserSigninRequestDto requestBody = new UserSigninRequestDto(adminShipper.getEmail(), adminShipper.getPassword());
 
@@ -84,7 +84,7 @@ public class AdminSignInTest extends ApiIntegrationTest {
 
     @Test
     public void signIn_responseIsBadRequest_IfRequestBodyIsWrong() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", user.getEmail());
@@ -101,7 +101,7 @@ public class AdminSignInTest extends ApiIntegrationTest {
 
     @Test
     public void signIn_responseIsNotFound_IfUserIsNotAdmin() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
 
         UserSigninRequestDto requestBody = new UserSigninRequestDto(user.getEmail(), user.getPassword());
 

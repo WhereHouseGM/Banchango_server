@@ -6,7 +6,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.users.dto.UserWithdrawRequestDto;
@@ -24,7 +24,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
 
     @Test
     public void withdrawUser_responseIsOk_IfUserIsOwner() {
-        Users userToDelete = userEntityFactory.createUserWithOwnerType();
+        User userToDelete = userEntityFactory.createUserWithOwnerType();
         String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(userToDelete);
         UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
 
@@ -45,7 +45,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
 
     @Test
     public void withdrawUser_responseIsOk_IfUserIsShipper() {
-        Users userToDelete = userEntityFactory.createUserWithShipperType();
+        User userToDelete = userEntityFactory.createUserWithShipperType();
         String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(userToDelete);
         UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
 
@@ -66,7 +66,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
 
     @Test
     public void withdrawUser_responseIsUnAuthorized_IfAccessTokenNotGiven() {
-        Users userToDelete = userEntityFactory.createUserWithOwnerType();
+        User userToDelete = userEntityFactory.createUserWithOwnerType();
         UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
 
         RequestEntity<UserWithdrawRequestDto> request = RequestEntity.post(URI.create("/v3/users/"+userToDelete.getUserId()+"/withdraw"))
@@ -79,8 +79,8 @@ public class WithdrawUserTest extends ApiIntegrationTest {
 
     @Test
     public void withdrawUser_responseIsForbidden_IfGivenOtherUserId() {
-        Users userToDelete = userEntityFactory.createUserWithOwnerType();
-        Users otherUserToDelete = userEntityFactory.createUserWithOwnerType();
+        User userToDelete = userEntityFactory.createUserWithOwnerType();
+        User otherUserToDelete = userEntityFactory.createUserWithOwnerType();
         String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(userToDelete);
         UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
 
@@ -111,7 +111,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
 
     @Test
     public void withdrawUser_responseIsConflict_IfUserAlreadyDeleted() {
-        Users deletedUser = userEntityFactory.createDeletedUserWithOwnerType();
+        User deletedUser = userEntityFactory.createDeletedUserWithOwnerType();
         String accessTokenForUserToDelete = JwtTokenUtil.generateAccessToken(deletedUser);
         UserWithdrawRequestDto userWithdrawRequestDto = new UserWithdrawRequestDto("탈퇴 사유");
 

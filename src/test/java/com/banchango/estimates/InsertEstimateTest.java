@@ -3,7 +3,7 @@ package com.banchango.estimates;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.factory.request.EstimatesInsertRequestFactory;
@@ -42,7 +42,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
 
     @Test
     public void post_estimate_responseIsForbidden_IfUserIsOwner() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
@@ -62,7 +62,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
 
     @Test
     public void post_estimate_responseIsUnauthorized_IfAccessTokenNotGiven() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
@@ -82,10 +82,10 @@ public class InsertEstimateTest extends ApiIntegrationTest {
 
     @Test
     public void post_estimate_responseIsForbidden_IfWarehouseNotViewable() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
         Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(ownerAccessToken);
@@ -105,7 +105,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
 
     @Test
     public void post_estimate_responseIsNotFound_IfWarehouseNotExist() {
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
         Integer warehouseId = 0;

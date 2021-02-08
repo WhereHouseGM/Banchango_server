@@ -5,7 +5,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.users.dto.UserInfoResponseDto;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class GetUserTest extends ApiIntegrationTest {
 
     @Test
     public void userInfo_responseIsOk_IfUserIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
@@ -43,7 +43,7 @@ public class GetUserTest extends ApiIntegrationTest {
 
     @Test
     public void userInfo_responseIsOk_IfUserIsShipper() {
-        Users user = userEntityFactory.createUserWithShipperType();
+        User user = userEntityFactory.createUserWithShipperType();
         Integer userId = user.getUserId();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
@@ -65,7 +65,7 @@ public class GetUserTest extends ApiIntegrationTest {
 
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsAbsent() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         Integer userId = user.getUserId();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
@@ -75,7 +75,7 @@ public class GetUserTest extends ApiIntegrationTest {
 
     @Test
     public void userInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         Integer userId = user.getUserId();
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/" + userId)).build();
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);

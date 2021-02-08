@@ -6,7 +6,7 @@ import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
@@ -85,7 +85,7 @@ public class InsertWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void post_warehouse_responseIsForbidden_IfUserIsShipper() {
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
         WarehouseInsertRequestDto warehouseInsertRequestDto = WarehouseInsertRequestFactory.create();
 
@@ -101,7 +101,7 @@ public class InsertWarehouseTest extends ApiIntegrationTest {
     @Test
     public void post_warehouse_responseIsBadRequest_IfRequestBodyIsWrong() {
 
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), UserRole.USER, UserType.OWNER);
         List<ItemType> mainItemTypes = new ArrayList<>();
         mainItemTypes.add(ItemType.CLOTH);

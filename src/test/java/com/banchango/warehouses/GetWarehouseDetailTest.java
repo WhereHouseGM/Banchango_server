@@ -6,7 +6,7 @@ import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.securitycompanies.SecurityCompany;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.factory.entity.WarehouseEntityFactory;
@@ -56,7 +56,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseDetail_responseIsOk_IfUserIsOwner() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", warehouse.getId());
@@ -74,7 +74,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseDetail_responseIsOk_IfUserIsShipper() {
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", warehouse.getId());
@@ -92,7 +92,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseDetail_responseIsNotFound_IfWarehouseStatusIsInProgress() {
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
         Warehouses _warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
@@ -108,7 +108,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseDetail_responseIsNotFound_IfIsViewableIsRejected() {
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
         Warehouses _warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
@@ -124,7 +124,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseDetail_responseIsNotFound_IfWarehouseStatusIsDeleted() {
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
         Warehouses _warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
@@ -140,7 +140,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
     @Test
     public void get_warehouseDetail_responseIsNotFound_IfWarehouseNotExist() {
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
         String url = String.format("/v3/warehouses/%d", 0);
 

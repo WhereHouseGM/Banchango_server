@@ -2,7 +2,7 @@ package com.banchango.admin.dto;
 
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.users.dto.UserInfoResponseDto;
 import lombok.Builder;
@@ -24,7 +24,7 @@ public class EstimateDetailResponseDto {
     private String warehouseName;
 
     @Builder
-    public EstimateDetailResponseDto(Estimate estimate, Users user, String warehouseName, boolean isDeleted) {
+    public EstimateDetailResponseDto(Estimate estimate, User user, String warehouseName, boolean isDeleted) {
         this.id = estimate.getId();
         this.content = estimate.getContent();
         this.status = estimate.getStatus();

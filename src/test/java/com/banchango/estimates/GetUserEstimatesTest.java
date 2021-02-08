@@ -5,7 +5,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.estimates.dto.EstimateSearchResponseDto;
 import com.banchango.factory.entity.EstimateEntityFactory;
@@ -23,10 +23,10 @@ public class GetUserEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_estimateByUserId_responseIsOk_IfUserIsShipper() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
@@ -57,7 +57,7 @@ public class GetUserEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_estimateByUserId_responseIsForbidden_IfUserIsOwner() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
@@ -76,7 +76,7 @@ public class GetUserEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_estimateByUserId_responseIsNotFound_IfEstimatesNotExist() {
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/users/"+shipper.getUserId()+"/estimates"))
@@ -90,10 +90,10 @@ public class GetUserEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_estimateByUserId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
         Estimate estimate1 = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), shipper.getUserId());
@@ -111,13 +111,13 @@ public class GetUserEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_estimateByUserId_responseIsForbidden_IfOtherUserId() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
-        Users shipper = userEntityFactory.createUserWithShipperType();
+        User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
-        Users otherShipper = userEntityFactory.createUserWithShipperType();
+        User otherShipper = userEntityFactory.createUserWithShipperType();
         String otherShipperAccessToken = JwtTokenUtil.generateAccessToken(otherShipper);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);

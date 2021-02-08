@@ -2,7 +2,7 @@ package com.banchango.factory.entity;
 
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.withdraws.Withdraws;
 import com.banchango.domain.withdraws.WithdrawsRepository;
@@ -28,16 +28,16 @@ public class UserEntityFactory {
         this.withdrawsRepository = withdrawsRepository;
     }
 
-    public Users createUserWithOwnerType() {
+    public User createUserWithOwnerType() {
         return create(UserRole.USER, UserType.OWNER);
     }
 
-    public Users createUserWithShipperType() {
+    public User createUserWithShipperType() {
         return create(UserRole.USER, UserType.SHIPPER);
     }
 
-    public Users createDeletedUserWithOwnerType() {
-        Users user = create(UserRole.USER, UserType.OWNER);
+    public User createDeletedUserWithOwnerType() {
+        User user = create(UserRole.USER, UserType.OWNER);
 
         Withdraws withdraw = Withdraws.builder()
             .userId(user.getUserId())
@@ -48,8 +48,8 @@ public class UserEntityFactory {
         return user;
     }
 
-    public Users createDeletedUserWithShipperType() {
-        Users user = create(UserRole.USER, UserType.SHIPPER);
+    public User createDeletedUserWithShipperType() {
+        User user = create(UserRole.USER, UserType.SHIPPER);
 
         Withdraws withdraw = Withdraws.builder()
                 .userId(user.getUserId())
@@ -60,16 +60,16 @@ public class UserEntityFactory {
         return user;
     }
 
-    public Users createAdminWithOwnerType() {
+    public User createAdminWithOwnerType() {
         return create(UserRole.ADMIN, UserType.OWNER);
     }
 
-    public Users createAdminWithShipperType() {
+    public User createAdminWithShipperType() {
         return create(UserRole.ADMIN, UserType.SHIPPER);
     }
 
-    private Users create(UserRole role, UserType type) {
-        Users user = Users.builder()
+    private User create(UserRole role, UserType type) {
+        User user = User.builder()
             .companyName(COMPANY_NAME)
             .email(generateEmail())
             .name(NAME)

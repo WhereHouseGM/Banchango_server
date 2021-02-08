@@ -7,7 +7,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.estimates.exception.EstimateNotFoundException;
 import org.junit.Test;
@@ -24,10 +24,10 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
 
     @Test
     public void patch_adminUpdateEstimateStatus_responseIsOk_IfAdminIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -51,10 +51,10 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
 
     @Test
     public void patch_adminUpdateEstimateStatus_responseIsOk_IfAdminIsShipper() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithShipperType();
+        User admin = userEntityFactory.createAdminWithShipperType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -78,7 +78,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
 
     @Test
     public void patch_adminUpdateEstimateStatus_responseIsUnAuthorized_IfTokenNotGiven() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -96,7 +96,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
 
     @Test
     public void patch_adminUpdateEstimateStatus_responseIsForbidden_IfAccessTokenNotAdmin() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -115,10 +115,10 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
 
     @Test
     public void patch_adminUpdateEstimateStatus_responseIsNotFound_IfEstimateNotFound() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);

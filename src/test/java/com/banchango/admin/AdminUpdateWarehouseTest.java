@@ -10,7 +10,7 @@ import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompany;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.Warehouses;
@@ -127,9 +127,9 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoUpdate_responseIdOk_ifAllConditionsAreRightAndAdminIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String userAccessToken = JwtTokenUtil.generateAccessToken(user);
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
         Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new ItemType[]{ItemType.FOOD, ItemType.ELECTRONICS});
         Integer warehouseId = warehouse.getId();
@@ -224,9 +224,9 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoUpdate_responseIsOk_ifAllConditionsAreRightAndAdminIsShipper() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String userAccessToken = JwtTokenUtil.generateAccessToken(user);
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
         Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new ItemType[]{ItemType.FOOD, ItemType.BOOK});
         Integer warehouseId = warehouse.getId();
@@ -320,7 +320,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoUpdate_responseIsUnAuthorized_ifTokenNotGiven() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
@@ -340,7 +340,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoUpdate_responseIsForbidden_ifNotAdmin() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
@@ -361,7 +361,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
     @Test
     public void put_WarehouseInfoUpdate_responseIsNotFound_ifWarehouseNotExist() {
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Integer warehouseId = 0;

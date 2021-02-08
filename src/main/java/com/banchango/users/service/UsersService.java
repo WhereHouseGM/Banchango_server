@@ -4,7 +4,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.service.EmailSender;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
@@ -45,7 +45,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
-        Users user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new);
+        User user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new);
 
         boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
         if(isUserDeleted) throw new UserNotFoundException("탈퇴한 사용자입니다");
@@ -69,7 +69,7 @@ public class UsersService {
         if(!userId.equals(JwtTokenUtil.extractUserId(token))) {
             throw new UserInvalidAccessException();
         }
-        Users user = findByUserId.apply(userId);
+        User user = findByUserId.apply(userId);
         user.updateUserInfo(requestDto);
         return new UserInfoResponseDto(user, false);
     }
@@ -77,7 +77,7 @@ public class UsersService {
     @Transactional
     public BasicMessageResponseDto sendTemporaryPasswordEmail(String recipient) {
         String temporaryPassword = PasswordGenerator.generate();
-        Users user = usersRepository.findByEmail(recipient).orElseThrow(UserEmailNotFoundException::new);
+        User user = usersRepository.findByEmail(recipient).orElseThrow(UserEmailNotFoundException::new);
         usersRepository.updatePassword(temporaryPassword, recipient);
         EmailContent emailContent = new EmailContent("[반창고] 임시 비밀번호 발급", "안녕하세요, 반창고 입니다!", "발급해드린 임시 비밀번호는 <span style='font-size: 20px'>" + temporaryPassword + "</span> 입니다.", "이 임시 비밀번호로 로그인 해주세요.", "로그인 하기", "https://banchangohub.com/login");
         return emailSender.send(user.getEmail(), emailContent, false);
@@ -87,7 +87,7 @@ public class UsersService {
     public void changePassword(String accessToken, ChangePasswordRequestDto changePasswordRequestDto) {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
 
-        Users user = findByUserId.apply(userId);
+        User user = findByUserId.apply(userId);
 
         String originalPasswordFromTable = user.getPassword();
         String originalPasswordFromRequest = changePasswordRequestDto.getOriginalPassword();
@@ -106,7 +106,7 @@ public class UsersService {
     }
 
     private void deleteUser(int userId, UserWithdrawRequestDto userWithdrawRequestDto) {
-        Users user = findByUserId.apply(userId);
+        User user = findByUserId.apply(userId);
 
         Optional<Withdraws> optionalWithdraws = withdrawsRepository.findByUserId(userId);
         if(optionalWithdraws.isPresent()) throw new UserAlreayWithdrawnException();

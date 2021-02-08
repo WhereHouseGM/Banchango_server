@@ -5,7 +5,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.factory.request.UserUpdateRequestFactory;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserUpdateRequestDto;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class UpdateUserTest extends ApiIntegrationTest {
 
     private void assertUpdatedUserInfo(Integer userId) {
-        Users updatedUser = findUserById.apply(userId);
+        User updatedUser = findUserById.apply(userId);
         assertEquals(UserRole.USER, updatedUser.getRole());
         assertEquals(UserUpdateRequestFactory.NEW_NAME, updatedUser.getName());
         assertEquals(UserUpdateRequestFactory.NEW_TELEPHONE_NUMBER, updatedUser.getTelephoneNumber());
@@ -32,7 +32,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
 
     @Test
     public void updateInfo_responseIsOk_IfUserIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
         Integer userId = user.getUserId();
 
@@ -61,7 +61,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
 
     @Test
     public void updateInfo_responseIsOk_IfUserIsShipper() {
-        Users user = userEntityFactory.createUserWithShipperType();
+        User user = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
         Integer userId = user.getUserId();
 
@@ -90,7 +90,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
 
     @Test
     public void updateInfo_responseIsUnAuthorized_IfTokenIsMalformed() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         Integer userId = user.getUserId();
 
         UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();
@@ -106,7 +106,7 @@ public class UpdateUserTest extends ApiIntegrationTest {
 
     @Test
     public void updateInfo_responseIsUnAuthorized_IfUserIdAndTokenIsWrong() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         UserUpdateRequestDto requestBody = UserUpdateRequestFactory.create();

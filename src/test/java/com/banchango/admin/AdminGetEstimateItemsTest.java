@@ -4,7 +4,7 @@ import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
 import com.banchango.factory.entity.EstimateItemEntityFactory;
@@ -22,10 +22,10 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminEstimateItemsByEstimateId_responseIsOk_IfUserIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -56,10 +56,10 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminEstimateItemsByEstimateId_responseIsOk_IfUserIsShipper() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithShipperType();
+        User admin = userEntityFactory.createAdminWithShipperType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -90,10 +90,10 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminEstimateItemsByEstimateId_responseIsNotFound_IfEstimateNotExist() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -110,10 +110,10 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminEstimateItemsByEstimateId_responseIsNotFound_IfEstimateItemsNotExist() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -130,7 +130,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminEstimateItemsByEstimateId_responseIsUnAuthorized_IfAccessTokenNotGiven() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -146,7 +146,7 @@ public class AdminGetEstimateItemsTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminEstimateItemsByEstimateId_responseIsForbidden_IfUserNotAdmin() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);

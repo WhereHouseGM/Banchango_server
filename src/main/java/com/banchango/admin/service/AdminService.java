@@ -20,7 +20,7 @@ import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UserRole;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
@@ -361,7 +361,7 @@ public class AdminService {
     public EstimateDetailResponseDto getEstimate(String token, Integer estimateId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
-        Users user = findUserById.apply(estimate.getUserId());
+        User user = findUserById.apply(estimate.getUserId());
         Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehousesRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
         String warehouseName;
         boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
@@ -381,7 +381,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public UserSigninResponseDto signIn(UserSigninRequestDto requestDto) {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
-        Users user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
+        User user = usersRepository.findByEmailAndPasswordAndRole(requestDto.getEmail(), requestDto.getPassword(), UserRole.ADMIN).orElseThrow(UserNotFoundException::new);
 
         boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
 

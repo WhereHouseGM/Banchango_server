@@ -2,7 +2,7 @@ package com.banchango.users.dto;
 
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class UserInfoResponseDto {
     private UserRole role;
     private Boolean isDeleted;
 
-    public UserInfoResponseDto(Users user, Boolean isDeleted) {
+    public UserInfoResponseDto(User user, Boolean isDeleted) {
         this.userId = user.getUserId();
         this.name = user.getName();
         this.email = user.getEmail();

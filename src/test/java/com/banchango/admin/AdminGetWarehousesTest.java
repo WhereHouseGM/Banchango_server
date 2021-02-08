@@ -5,7 +5,7 @@ import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.mainitemtypes.ItemType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -20,10 +20,10 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_InProgressWarehouses_ResultIsNotFound_ifNotExist_and_AdminIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         String url = String.format("/v3/admin/warehouses?page=%d&size=%d&status=%s", 0, 4, WarehouseStatus.IN_PROGRESS.name());
@@ -42,10 +42,10 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_InProgressWarehouses_ResultHasItems_ifExist_and_AdminIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         String url = String.format("/v3/admin/warehouses?page=%d&size=%d&status=%s", 0, 4, WarehouseStatus.IN_PROGRESS.name());
@@ -72,10 +72,10 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_InProgressWarehouses_ResultHasItems_ifExist_and_AdminIsShipper() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithShipperType();
+        User admin = userEntityFactory.createAdminWithShipperType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         String url = String.format("/v3/admin/warehouses?page=%d&size=%d&status=%s", 0, 4, WarehouseStatus.IN_PROGRESS.name());
@@ -102,10 +102,10 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_AnyWarehouses_ResultHasItems_ifExist() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithShipperType();
+        User admin = userEntityFactory.createAdminWithShipperType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         String url = String.format("/v3/admin/warehouses?page=%d&size=%d", 0, 4);
@@ -132,7 +132,7 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
 
     @Test
     public void get_InProgressWarehouses_responseIsForbidden_IfTokenIsBad() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         String url = String.format("/v3/admin/warehouses?page=%d&size=%d&status=%s", 0, 4, WarehouseStatus.IN_PROGRESS.name());

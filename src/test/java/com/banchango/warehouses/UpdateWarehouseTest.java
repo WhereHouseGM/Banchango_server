@@ -4,7 +4,7 @@ import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.mainitemtypes.ItemType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
@@ -98,7 +98,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsNotFound_ifWarehouseNotExist() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Integer warehouseId = 0;
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -140,7 +140,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsNotFound_ifWarehouseStatusIsDeleted() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createDeletedWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
@@ -184,7 +184,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsUnAuthorized_ifTokenNotGiven() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
@@ -226,8 +226,8 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifOtherUsersTokenGiven() {
-        Users actualOwner = userEntityFactory.createUserWithOwnerType();
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User actualOwner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
 
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         String actualOwnerAccessToken = JwtTokenUtil.generateAccessToken(actualOwner);
@@ -274,7 +274,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsInProgress() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
@@ -318,7 +318,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
 
     @Test
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsRejected() {
-        Users owner = userEntityFactory.createUserWithOwnerType();
+        User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         Warehouses warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();

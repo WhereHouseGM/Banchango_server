@@ -3,7 +3,7 @@ package com.banchango.users.dto;
 import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,8 +39,8 @@ public class UserSignupRequestDto {
     @NotBlank(message = "Phone Number is required.")
     private String phoneNumber;
 
-    public Users toEntity() {
-        return Users.builder()
+    public User toEntity() {
+        return User.builder()
                 .name(name).email(email)
                 .password(password).type(type)
                 .telephoneNumber(telephoneNumber)

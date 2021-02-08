@@ -2,7 +2,7 @@ package com.banchango.users;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.factory.request.UserSignupRequestFactory;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSignupRequestDto;
@@ -31,7 +31,7 @@ public class SignUpTest extends ApiIntegrationTest {
 
         ResponseEntity<UserInfoResponseDto> response = restTemplate.exchange(request, UserInfoResponseDto.class);
 
-        Users savedUser = usersRepository.findByEmail(requestBody.getEmail()).orElseThrow(UserEmailNotFoundException::new);
+        User savedUser = usersRepository.findByEmail(requestBody.getEmail()).orElseThrow(UserEmailNotFoundException::new);
         Integer userId = savedUser.getUserId();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -54,7 +54,7 @@ public class SignUpTest extends ApiIntegrationTest {
 
     @Test
     public void signUp_responseIsConflict_IfEmailExists() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
 
         UserSignupRequestDto requestBody = UserSignupRequestFactory.createDuplicateUser(user.getEmail());
 

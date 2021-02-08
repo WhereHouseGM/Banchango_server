@@ -11,7 +11,7 @@ import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompany;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
@@ -49,7 +49,7 @@ public class WarehousesService {
     @Transactional
     public BasicMessageResponseDto saveAgencyWarehouse(WarehouseInsertRequestDto warehouseInsertRequestDto, String accessToken) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
-        Users user = findUserById.apply(userId);
+        User user = findUserById.apply(userId);
 
 
         Warehouses warehouse = Warehouses.builder()
@@ -185,7 +185,7 @@ public class WarehousesService {
     public List<MyWarehouseDto> getMyWarehouses(String accessToken, Integer userId) {
         int userIdFromAccessToken = JwtTokenUtil.extractUserId(accessToken);
         if(!userId.equals(userIdFromAccessToken)) throw new ForbiddenUserIdException("해당 사용자의 창고 목록을 볼 수 있는 권한이 없습니다");
-        Users user = findUserById.apply(userId);
+        User user = findUserById.apply(userId);
 
         List<MyWarehouseDto> warehouses = warehousesRepository.findByUserId(userId).stream()
             .filter(warehouse -> !warehouse.getStatus().equals(WarehouseStatus.DELETED))

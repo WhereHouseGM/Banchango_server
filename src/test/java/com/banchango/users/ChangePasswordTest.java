@@ -6,7 +6,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.users.dto.ChangePasswordRequestDto;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -25,13 +25,13 @@ public class ChangePasswordTest extends ApiIntegrationTest {
     private final String INVALID_PASSWORD = "test";
 
     private void assertPasswordUpdate(Integer userId) {
-        Users updatedUser = findUserById.apply(userId);
+        User updatedUser = findUserById.apply(userId);
         assertEquals(VALID_PASSWORD, updatedUser.getPassword());
     }
 
     @Test
     public void patch_passwordChange_responseIsOk_IfUserIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         String originalPassword = user.getPassword();
@@ -53,7 +53,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
 
     @Test
     public void patch_passwordChange_responseIsOk_IfUserIsShipper() {
-        Users user = userEntityFactory.createUserWithShipperType();
+        User user = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         String originalPassword = user.getPassword();
@@ -75,7 +75,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
 
     @Test
     public void patch_passwordChange_responseIsForbidden_IfOriginalPasswordNotMatch() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         String originalPassword = user.getPassword();
@@ -95,7 +95,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
 
     @Test
     public void patch_passwordChange_responseIsBadRequest_IfNewPasswordLengthIsNot64() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         String originalPassword = user.getPassword();
@@ -115,7 +115,7 @@ public class ChangePasswordTest extends ApiIntegrationTest {
 
     @Test
     public void patch_changePassword_responseIsUnauthorized_IfAccessTokenNotGiven() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         String originalPassword = user.getPassword();

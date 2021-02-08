@@ -5,7 +5,7 @@ import com.banchango.admin.dto.EstimateSummaryListDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.Warehouses;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -21,10 +21,10 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminAllEstimates_responseIsOk_IfAdminIsOwner() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -53,10 +53,10 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminAllEstimates_responseIsOk_IfAdminIsShipper() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithShipperType();
+        User admin = userEntityFactory.createAdminWithShipperType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -85,10 +85,10 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminReceptedEstimates_responseIsOk_IfAllConditionsAreRight() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -117,10 +117,10 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminInProgressEstimates_responseIsOk_IfAllConditionsAreRight() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -149,10 +149,10 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminDoneEstimates_responseIsOk_IfAllConditionsAreRight() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -181,7 +181,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminAllEstimates_responseIsNotFound_IfEstimatesNotExist() {
-        Users admin = userEntityFactory.createAdminWithOwnerType();
+        User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/admin/estimates?page=0&size=10"))
@@ -195,7 +195,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminAllEstimates_responseIsUnAuthorized_IfAccessTokenNotGiven() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
@@ -213,7 +213,7 @@ public class AdminGetEstimatesTest extends ApiIntegrationTest {
 
     @Test
     public void get_adminAllEstimates_responseIsForbidden_IfNotAdmin() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
         Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);

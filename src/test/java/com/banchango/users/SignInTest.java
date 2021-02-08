@@ -2,7 +2,7 @@ package com.banchango.users;
 
 import com.banchango.ApiIntegrationTest;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ public class SignInTest extends ApiIntegrationTest {
 
     @Test
     public void signIn_responseIsOK_IfUserExists() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
 
         UserSigninRequestDto requestBody = new UserSigninRequestDto(user.getEmail(), user.getPassword());
 
@@ -67,7 +67,7 @@ public class SignInTest extends ApiIntegrationTest {
 
     @Test
     public void signIn_responseIsNotFound_IfUserPasswordIsWrong() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
         UserSigninRequestDto requestBody = new UserSigninRequestDto(user.getEmail(), WRONG_PASSWORD);
 
         RequestEntity<UserSigninRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-in"))
@@ -81,7 +81,7 @@ public class SignInTest extends ApiIntegrationTest {
 
     @Test
     public void signIn_responseIsNotFound_IfUserIsWithdrawn(){
-        Users deletedUser = userEntityFactory.createDeletedUserWithOwnerType();
+        User deletedUser = userEntityFactory.createDeletedUserWithOwnerType();
         UserSigninRequestDto requestBody = new UserSigninRequestDto(deletedUser.getEmail(), deletedUser.getPassword());
 
         RequestEntity<UserSigninRequestDto> request = RequestEntity.post(URI.create("/v3/users/sign-in"))
@@ -95,7 +95,7 @@ public class SignInTest extends ApiIntegrationTest {
 
     @Test
     public void signIn_responseIsBadRequest_IfRequestBodyIsWrong() {
-        Users user = userEntityFactory.createUserWithOwnerType();
+        User user = userEntityFactory.createUserWithOwnerType();
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", user.getEmail());

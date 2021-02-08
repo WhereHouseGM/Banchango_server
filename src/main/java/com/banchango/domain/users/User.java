@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Users extends BaseTimeEntity {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +51,7 @@ public class Users extends BaseTimeEntity {
     }
 
     @Builder
-    public Users(String name, String email, String password, UserType type, String companyName, String telephoneNumber, String phoneNumber, UserRole role) {
+    public User(String name, String email, String password, UserType type, String companyName, String telephoneNumber, String phoneNumber, UserRole role) {
         this.name = name;
         this.email = email;
         this.password = password;

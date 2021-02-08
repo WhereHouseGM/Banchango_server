@@ -9,7 +9,7 @@ import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.estimates.EstimatesRepository;
-import com.banchango.domain.users.Users;
+import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
 import com.banchango.domain.warehouses.WarehouseStatus;
@@ -43,7 +43,7 @@ public class EstimatesService {
     @Transactional
     public BasicMessageResponseDto saveEstimate(String accessToken, EstimateInsertRequestDto estimateInsertRequestDto) {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
-        Users user = findUserById.apply(userId);
+        User user = findUserById.apply(userId);
 
         Warehouses warehouse = findWarehouseById.apply(estimateInsertRequestDto.getWarehouseId());
         if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
