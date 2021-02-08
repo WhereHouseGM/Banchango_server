@@ -3,7 +3,7 @@ package com.banchango.warehouses;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.factory.entity.WarehouseEntityFactory;
@@ -85,9 +85,9 @@ public class GetWarehousesTest extends ApiIntegrationTest {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
 
-        Warehouses warehouse1 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[] { MainItemType.CLOTH, MainItemType.COSMETIC });
-        Warehouses warehouse2 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[] { MainItemType.CLOTH, MainItemType.ACCESSORY });
-        Warehouses warehouse3 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[] { MainItemType.CLOTH, MainItemType.BOOK });
+        Warehouses warehouse1 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.COSMETIC });
+        Warehouses warehouse2 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.ACCESSORY });
+        Warehouses warehouse3 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.BOOK });
 
         String url = "/v3/warehouses?page=0&size=5&mainItemTypes=CLOTH,COSMETIC";
 
@@ -105,11 +105,11 @@ public class GetWarehousesTest extends ApiIntegrationTest {
 
         for (WarehouseSearchDto _warehouse : warehouses) {
             _warehouse.getMainItemTypes().stream()
-                    .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getName() == MainItemType.CLOTH || mainItemTypeMatchDto.getName() == MainItemType.COSMETIC)
+                    .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getName() == ItemType.CLOTH || mainItemTypeMatchDto.getName() == ItemType.COSMETIC)
                     .forEach(mainItemTypeMatchDto -> assertTrue(mainItemTypeMatchDto.getMatch()));
 
             _warehouse.getMainItemTypes().stream()
-                    .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getName() != MainItemType.CLOTH && mainItemTypeMatchDto.getName() != MainItemType.COSMETIC)
+                    .filter(mainItemTypeMatchDto -> mainItemTypeMatchDto.getName() != ItemType.CLOTH && mainItemTypeMatchDto.getName() != ItemType.COSMETIC)
                     .forEach(mainItemTypeMatchDto -> assertFalse(mainItemTypeMatchDto.getMatch()));
         }
     }
@@ -118,9 +118,9 @@ public class GetWarehousesTest extends ApiIntegrationTest {
     public void get_warehouseByMainItemType_responseIsNotFound_IfWarehouseStatusIsInProgress() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[] { MainItemType.CLOTH });
+        Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH });
 
-        String mainItemType = MainItemType.CLOTH.toString();
+        String mainItemType = ItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -135,7 +135,7 @@ public class GetWarehousesTest extends ApiIntegrationTest {
     public void get_warehouseByMainItemType_responseIsNotFound_IfWarehouseNotExist() {
         warehousesRepository.deleteAll();
 
-        String mainItemType = MainItemType.CLOTH.toString();
+        String mainItemType = ItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -150,7 +150,7 @@ public class GetWarehousesTest extends ApiIntegrationTest {
     public void get_warehouse_responseIsBadRequest_IfAddressAndMainItemTypeBothGiven() {
         warehousesRepository.deleteAll();
 
-        String mainItemType = MainItemType.CLOTH.toString();
+        String mainItemType = ItemType.CLOTH.toString();
         String addressQuery = "addr";
         String url = String.format("/v3/warehouses?mainItemTypes=%s&address=%s&page=0&offset=5", mainItemType, addressQuery);
 

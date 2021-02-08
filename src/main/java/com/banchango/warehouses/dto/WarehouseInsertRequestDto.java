@@ -1,7 +1,7 @@
 package com.banchango.warehouses.dto;
 
 import com.banchango.common.validator.ValueOfEnum;
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
@@ -69,9 +69,9 @@ public class WarehouseInsertRequestDto {
     @NotNull(message = "canPark이 없습니다.")
     Boolean canPark;
 
-    @ValueOfEnum(enumClass = MainItemType.class)
+    @ValueOfEnum(enumClass = ItemType.class)
     @NotNull(message = "mainItemTypes가 없습니다.")
-    List<MainItemType> mainItemTypes;
+    List<ItemType> mainItemTypes;
 
     @ValueOfEnum(enumClass = WarehouseType.class)
     @NotNull(message = "warehouseType이 없습니다.")
@@ -104,7 +104,7 @@ public class WarehouseInsertRequestDto {
     List<String> securityCompanies;
 
     @Builder
-    public WarehouseInsertRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<MainItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies) {
+    public WarehouseInsertRequestDto(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, List<ItemType> mainItemTypes, WarehouseType warehouseType, Integer minReleasePerMonth, Double latitude, Double longitude, List<String> deliveryTypes, List<WarehouseCondition> warehouseCondition, List<String> warehouseFacilityUsages, List<String> warehouseUsageCautions, List<String> insurances, List<String> securityCompanies) {
         this.name = name;
         this.space = space;
         this.address = address;

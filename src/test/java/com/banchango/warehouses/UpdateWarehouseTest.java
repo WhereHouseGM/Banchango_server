@@ -3,7 +3,7 @@ package com.banchango.warehouses;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
@@ -117,7 +117,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .airConditioningType(AirConditioningType.NONE)
                 .workerExist(false)
                 .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+                .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
                 .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
                 .minReleasePerMonth(101)
@@ -142,7 +142,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
     public void put_WarehouseInfoIsUpdated_responseIsNotFound_ifWarehouseStatusIsDeleted() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createDeletedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Warehouses warehouse = warehouseEntityFactory.createDeletedWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -161,7 +161,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .airConditioningType(AirConditioningType.NONE)
                 .workerExist(false)
                 .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+                .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
                 .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
                 .minReleasePerMonth(101)
@@ -186,7 +186,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
     public void put_WarehouseInfoIsUpdated_responseIsUnAuthorized_ifTokenNotGiven() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/warehouses/%d", warehouseId);
         WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
@@ -204,7 +204,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .airConditioningType(AirConditioningType.NONE)
                 .workerExist(false)
                 .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+                .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
                 .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
                 .minReleasePerMonth(101)
@@ -232,7 +232,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         String actualOwnerAccessToken = JwtTokenUtil.generateAccessToken(actualOwner);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(actualOwnerAccessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(actualOwnerAccessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -251,7 +251,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .airConditioningType(AirConditioningType.NONE)
                 .workerExist(false)
                 .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+                .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
                 .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
                 .minReleasePerMonth(101)
@@ -276,7 +276,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsInProgress() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -295,7 +295,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .airConditioningType(AirConditioningType.NONE)
                 .workerExist(false)
                 .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+                .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
                 .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
                 .minReleasePerMonth(101)
@@ -320,7 +320,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsRejected() {
         Users owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Warehouses warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -339,7 +339,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .airConditioningType(AirConditioningType.NONE)
                 .workerExist(false)
                 .canPark(false)
-                .mainItemTypes(Arrays.asList(new MainItemType[]{MainItemType.COSMETIC, MainItemType.COLD_STORAGE, MainItemType.ELECTRONICS}))
+                .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
                 .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
                 .minReleasePerMonth(101)

@@ -1,6 +1,6 @@
 package com.banchango.warehouses.dto;
 
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseimages.WarehouseImages;
@@ -34,7 +34,7 @@ public class WarehouseSearchDto {
         this(warehouse, defaultImageUrl, new ArrayList<>());
     }
 
-    public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl, List<MainItemType> queriedMainItemTypes) {
+    public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl, List<ItemType> queriedMainItemTypes) {
         List<WarehouseMainItemTypeMatchDto> mainItemTypes = warehouse.getMainItemTypes()
             .stream()
             .map(mainItemType -> new WarehouseMainItemTypeMatchDto(mainItemType.getType(), queriedMainItemTypes))

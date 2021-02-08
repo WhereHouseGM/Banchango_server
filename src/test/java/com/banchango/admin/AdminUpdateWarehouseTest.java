@@ -7,7 +7,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.users.Users;
@@ -131,7 +131,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         String userAccessToken = JwtTokenUtil.generateAccessToken(user);
         Users admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
-        Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.ELECTRONICS});
+        Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new ItemType[]{ItemType.FOOD, ItemType.ELECTRONICS});
         Integer warehouseId = warehouse.getId();
 
         List<Integer> beforeInsurancesId = insurancesRepository.findByWarehouseId(warehouseId)
@@ -228,7 +228,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         String userAccessToken = JwtTokenUtil.generateAccessToken(user);
         Users admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
-        Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new MainItemType[]{MainItemType.FOOD, MainItemType.BOOK});
+        Warehouses warehouse = warehouseEntityFactory.createWarehouseForAdminUpdateTest(userAccessToken, new ItemType[]{ItemType.FOOD, ItemType.BOOK});
         Integer warehouseId = warehouse.getId();
 
         List<Integer> beforeInsurancesId = insurancesRepository.findByWarehouseId(warehouseId)
@@ -323,7 +323,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
 
@@ -343,7 +343,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD, MainItemType.CLOTH});
+        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
 

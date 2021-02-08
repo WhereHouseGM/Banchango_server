@@ -21,14 +21,14 @@ public class MainItemTypes {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Setter
-    private MainItemType type;
+    private ItemType type;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouses warehouse;
 
     @Builder
-    public MainItemTypes(MainItemType mainItemType, Warehouses warehouse) {
+    public MainItemTypes(ItemType mainItemType, Warehouses warehouse) {
         this.type = mainItemType;
         this.warehouse = warehouse;
     }

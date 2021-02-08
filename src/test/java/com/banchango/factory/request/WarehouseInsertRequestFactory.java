@@ -1,6 +1,6 @@
 package com.banchango.factory.request;
 
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
@@ -24,7 +24,7 @@ public class WarehouseInsertRequestFactory {
     private static final AirConditioningType AIR_CONDITIONING_TYPE = AirConditioningType.BOTH;
     private static final Boolean WORKER_EXIST = true;
     private static final Boolean CAN_PARK = true;
-    private static final List<MainItemType> MAIN_ITEM_TYPES = new ArrayList<>();
+    private static final List<ItemType> MAIN_ITEM_TYPES = new ArrayList<>();
     private static final WarehouseType WAREHOUSE_TYPE = WarehouseType.THREEPL;
     private static final Integer MIN_RELEASE_PER_MONTH = 1;
     private static final Double LATITUDE = 22.2;

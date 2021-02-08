@@ -3,7 +3,7 @@ package com.banchango.factory.entity;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
@@ -71,7 +71,7 @@ public class WarehouseEntityFactory {
     public static final WarehouseCondition[] NEW_WAREHOUSE_CONDITIONS = {WarehouseCondition.SAVAGE, WarehouseCondition.BONDED, WarehouseCondition.ROOM_TEMPERATURE};
     public static final String[] NEW_WAREHOUSE_FACILITY_USAGES = {"NEW_WH_FACILITY_USAGE_1", "NEW_WH_FACILITY_USAGE_2", "NEW_WH_FACILITY_USAGE_3"};
     public static final String[] NEW_WAREHOUSE_USAGE_CAUTIONS = {"NEW_WH_USAGE_CAUTION_1", "NEW_WH_USAGE_CAUTION_2"};
-    public static final MainItemType[] NEW_MAIN_ITEM_TYPES = {MainItemType.FOOD, MainItemType.BOOK, MainItemType.CLOTH};
+    public static final ItemType[] NEW_MAIN_ITEM_TYPES = {ItemType.FOOD, ItemType.BOOK, ItemType.CLOTH};
 
 
     private final WarehousesRepository warehousesRepository;
@@ -82,42 +82,42 @@ public class WarehouseEntityFactory {
     }
 
     public Warehouses createViewableWithNoMainItemTypes(String accessToken) {
-        return create(accessToken, WarehouseStatus.VIEWABLE, new MainItemType[] {}, true);
+        return create(accessToken, WarehouseStatus.VIEWABLE, new ItemType[] {}, true);
     }
 
-    public Warehouses createViewableWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+    public Warehouses createViewableWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.VIEWABLE, mainItemTypes, true);
     }
 
     public Warehouses createInProgressWithNoMainItemTypes(String accessToken) {
-        return create(accessToken, WarehouseStatus.IN_PROGRESS, new MainItemType[] {}, true);
+        return create(accessToken, WarehouseStatus.IN_PROGRESS, new ItemType[] {}, true);
     }
 
-    public Warehouses createInProgressWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+    public Warehouses createInProgressWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes, true);
     }
 
     public Warehouses createdRejectedWithNoMainItemTypes(String accessToken) {
-        return create(accessToken, WarehouseStatus.REJECTED, new MainItemType[] {}, true);
+        return create(accessToken, WarehouseStatus.REJECTED, new ItemType[] {}, true);
     }
 
-    public Warehouses createRejectedWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+    public Warehouses createRejectedWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.REJECTED, mainItemTypes, true);
     }
 
     public Warehouses createDeletedWithNoMainItemTypes(String accessToken) {
-        return create(accessToken, WarehouseStatus.DELETED, new MainItemType[] {}, true);
+        return create(accessToken, WarehouseStatus.DELETED, new ItemType[] {}, true);
     }
 
-    public Warehouses createDeletedWithMainItemTypes(String accessToken, MainItemType[] mainItemTypes) {
+    public Warehouses createDeletedWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.DELETED, mainItemTypes, true);
     }
 
-    public Warehouses createWarehouseForAdminUpdateTest(String accessToken, MainItemType[] mainItemTypes) {
+    public Warehouses createWarehouseForAdminUpdateTest(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes, false);
     }
 
-    private Warehouses create(String accessToken, WarehouseStatus status, MainItemType[] mainItemTypes, boolean isUsageAndCautionNull) {
+    private Warehouses create(String accessToken, WarehouseStatus status, ItemType[] mainItemTypes, boolean isUsageAndCautionNull) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
         Warehouses warehouse = Warehouses.builder()

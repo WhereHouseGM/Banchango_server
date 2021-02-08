@@ -3,7 +3,7 @@ package com.banchango.warehouses;
 import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
@@ -103,9 +103,9 @@ public class InsertWarehouseTest extends ApiIntegrationTest {
 
         Users user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user.getUserId(), UserRole.USER, UserType.OWNER);
-        List<MainItemType> mainItemTypes = new ArrayList<>();
-        mainItemTypes.add(MainItemType.CLOTH);
-        mainItemTypes.add(MainItemType.BOOK);
+        List<ItemType> mainItemTypes = new ArrayList<>();
+        mainItemTypes.add(ItemType.CLOTH);
+        mainItemTypes.add(ItemType.BOOK);
 
         List<WarehouseCondition> warehouseConditions = new ArrayList<>();
         warehouseConditions.add(WarehouseCondition.LOW_TEMPERATURE);

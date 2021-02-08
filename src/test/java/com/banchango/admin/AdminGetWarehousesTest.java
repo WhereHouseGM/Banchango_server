@@ -4,7 +4,7 @@ import com.banchango.ApiIntegrationTest;
 import com.banchango.admin.dto.WarehouseInsertRequestResponseListDto;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import org.junit.Test;
@@ -31,9 +31,9 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD});
-        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.COSMETIC, MainItemType.CLOTH});
-        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.ELECTRONICS, MainItemType.SPORTS});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.COSMETIC, ItemType.CLOTH});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.ELECTRONICS, ItemType.SPORTS});
 
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(request, ErrorResponseDto.class);
 
@@ -54,10 +54,10 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD});
-        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.COSMETIC, MainItemType.CLOTH});
-        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.ELECTRONICS, MainItemType.SPORTS});
-        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.GENERAL_MERCHANDISE, MainItemType.BOOK});
+        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD});
+        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.COSMETIC, ItemType.CLOTH});
+        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.ELECTRONICS, ItemType.SPORTS});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.GENERAL_MERCHANDISE, ItemType.BOOK});
 
         ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -84,10 +84,10 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
                 .header("Authorization", "Bearer " + adminAccessToken)
                 .build();
 
-        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD});
-        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.COSMETIC, MainItemType.CLOTH});
-        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.ELECTRONICS, MainItemType.SPORTS});
-        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.GENERAL_MERCHANDISE, MainItemType.BOOK});
+        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD});
+        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.COSMETIC, ItemType.CLOTH});
+        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.ELECTRONICS, ItemType.SPORTS});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.GENERAL_MERCHANDISE, ItemType.BOOK});
 
         ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -114,10 +114,10 @@ public class AdminGetWarehousesTest extends ApiIntegrationTest {
             .header("Authorization", "Bearer " + adminAccessToken)
             .build();
 
-        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.BOOK, MainItemType.FOOD});
-        warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.COSMETIC, MainItemType.CLOTH});
-        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.ELECTRONICS, MainItemType.SPORTS});
-        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new MainItemType[]{MainItemType.GENERAL_MERCHANDISE, MainItemType.BOOK});
+        warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD});
+        warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new ItemType[]{ItemType.COSMETIC, ItemType.CLOTH});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.ELECTRONICS, ItemType.SPORTS});
+        warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.GENERAL_MERCHANDISE, ItemType.BOOK});
 
         ResponseEntity<WarehouseInsertRequestResponseListDto> response = restTemplate.exchange(request, WarehouseInsertRequestResponseListDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());

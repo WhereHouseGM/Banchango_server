@@ -7,7 +7,7 @@ import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
-import com.banchango.domain.mainitemtypes.MainItemType;
+import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypes;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanies;
@@ -122,7 +122,7 @@ public class WarehousesService {
     }
 
     @Transactional(readOnly = true)
-    public List<WarehouseSearchDto> getWarehousesByMainItemTypes(List<MainItemType> mainItemTypes, PageRequest pageRequest) {
+    public List<WarehouseSearchDto> getWarehousesByMainItemTypes(List<ItemType> mainItemTypes, PageRequest pageRequest) {
         List<WarehouseSearchDto> warehouses = warehousesRepository.findViewableWarehouseByMainItemTypes(mainItemTypes, pageRequest)
             .stream()
             .map(warehouse -> new WarehouseSearchDto(warehouse, noImageUrl, mainItemTypes))
