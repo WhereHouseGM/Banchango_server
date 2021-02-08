@@ -8,7 +8,7 @@ import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
-import com.banchango.domain.warehouseimages.WarehouseImages;
+import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
@@ -87,7 +87,7 @@ public class WarehouseDetailResponseDto {
         List<String> images = warehouse.getWarehouseImages()
             .stream()
             .filter(image -> !image.isMain())
-            .map(WarehouseImages::getUrl)
+            .map(WarehouseImage::getUrl)
             .collect(Collectors.toList());
 
         List<String> insurances = warehouse.getInsurances()
@@ -100,7 +100,7 @@ public class WarehouseDetailResponseDto {
                 .map(SecurityCompany::getName)
                 .collect(Collectors.toList());
 
-        WarehouseImages mainImage = warehouse.getMainImage();
+        WarehouseImage mainImage = warehouse.getMainImage();
 
         this.warehouseId = warehouse.getId();
         this.ownerId = warehouse.getUserId();

@@ -8,7 +8,7 @@ import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
-import com.banchango.domain.warehouseimages.WarehouseImages;
+import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.warehouses.dto.WarehouseUpdateRequestParentDto;
 import lombok.Builder;
@@ -122,7 +122,7 @@ public class Warehouses extends BaseTimeEntity {
 
     @Setter
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WarehouseImages> warehouseImages = new ArrayList<>();
+    private List<WarehouseImage> warehouseImages = new ArrayList<>();
 
     @Setter
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
@@ -153,8 +153,8 @@ public class Warehouses extends BaseTimeEntity {
         this.blogUrl = blogUrl;
     }
 
-    public WarehouseImages getMainImage() {
-        for(WarehouseImages image : warehouseImages) {
+    public WarehouseImage getMainImage() {
+        for(WarehouseImage image : warehouseImages) {
             if(image.isMain()) return image;
         }
         return null;

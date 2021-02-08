@@ -1,6 +1,6 @@
 package com.banchango.warehouses.dto;
 
-import com.banchango.domain.warehouseimages.WarehouseImages;
+import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class MyWarehouseDto {
     private String mainImageUrl;
 
     public MyWarehouseDto(Warehouses warehouse, String defaultImageUrl) {
-        WarehouseImages mainImage = warehouse.getMainImage();
+        WarehouseImage mainImage = warehouse.getMainImage();
 
         this.id = warehouse.getId();
         this.name = warehouse.getName();

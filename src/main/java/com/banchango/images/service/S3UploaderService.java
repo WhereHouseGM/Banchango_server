@@ -6,7 +6,7 @@ import com.banchango.common.exception.InternalServerErrorException;
 import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouseimages.WarehouseImages;
+import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouseimages.WarehouseImagesRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
@@ -117,8 +117,8 @@ public class S3UploaderService {
         Warehouses warehouse = findWarehouseById.apply(warehouseId);
         checkWarehouseStatus(warehouse);
         String url = uploadFile(file);
-        WarehouseImages image = WarehouseImages.builder().url(url).isMain(isMain).warehouse(warehouse).build();
-        WarehouseImages savedImage = warehouseImagesRepository.save(image);
+        WarehouseImage image = WarehouseImage.builder().url(url).isMain(isMain).warehouse(warehouse).build();
+        WarehouseImage savedImage = warehouseImagesRepository.save(image);
         return new ImageInfoResponseDto(savedImage);
     }
 
@@ -153,9 +153,9 @@ public class S3UploaderService {
     }
 
     private String checkIfMainImageToDeleteExists(Integer warehouseId) {
-        List<WarehouseImages> images = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, true);
+        List<WarehouseImage> images = warehouseImagesRepository.findByWarehouseIdAndIsMain(warehouseId, true);
         if(images.size() >= 1) {
-            WarehouseImages image = images.get(0);
+            WarehouseImage image = images.get(0);
             String[] splitTemp = image.getUrl().split("/");
             return splitTemp[splitTemp.length - 1];
         } else throw new WarehouseMainImageNotFoundException();

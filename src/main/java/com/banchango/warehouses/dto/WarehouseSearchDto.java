@@ -3,7 +3,7 @@ package com.banchango.warehouses.dto;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
-import com.banchango.domain.warehouseimages.WarehouseImages;
+import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
 import lombok.Getter;
@@ -53,7 +53,7 @@ public class WarehouseSearchDto {
             .map(deliveryType -> deliveryType.getName())
             .collect(Collectors.toList());
 
-        WarehouseImages mainImage = warehouse.getMainImage();
+        WarehouseImage mainImage = warehouse.getMainImage();
 
         this.address = warehouse.getAddress();
         this.warehouseId = warehouse.getId();

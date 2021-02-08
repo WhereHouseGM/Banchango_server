@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Table(name = "warehouse_images")
-public class WarehouseImages {
+public class WarehouseImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class WarehouseImages {
     private Warehouses warehouse;
 
     @Builder
-    public WarehouseImages(String url, Boolean isMain, Warehouses warehouse) {
+    public WarehouseImage(String url, Boolean isMain, Warehouses warehouse) {
         this.url = url;
         this.isMain = isMain;
         this.warehouse = warehouse;
