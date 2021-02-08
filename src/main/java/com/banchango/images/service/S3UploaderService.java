@@ -4,6 +4,7 @@ import com.banchango.admin.exception.AdminInvalidAccessException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.exception.InternalServerErrorException;
+import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
@@ -41,6 +42,7 @@ public class S3UploaderService {
     private final WarehouseImagesRepository warehouseImagesRepository;
     private final WarehousesRepository warehousesRepository;
     private final UsersRepository usersRepository;
+    private final FindWarehouseById findWarehouseById;
 
     @Value("${aws.s3.bucket}")
     private String bucket;
@@ -118,7 +120,7 @@ public class S3UploaderService {
     }
 
     private ImageInfoResponseDto saveImage(Integer warehouseId, MultipartFile file, Boolean isMain) {
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(warehouseId);
         checkWarehouseStatus(warehouse);
         String url = uploadFile(file);
         WarehouseImages image = WarehouseImages.builder().url(url).isMain(isMain).warehouse(warehouse).build();
@@ -127,7 +129,7 @@ public class S3UploaderService {
     }
 
     private BasicMessageResponseDto deleteImage(Integer warehouseId, String fileName, Boolean isMain) {
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(warehouseId);
         checkWarehouseStatus(warehouse);
         if (!isMain) {
             checkIfFileToRemoveExists(warehouseId, fileName);

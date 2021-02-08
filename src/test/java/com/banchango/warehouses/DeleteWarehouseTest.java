@@ -7,7 +7,6 @@ import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -20,7 +19,7 @@ import static org.junit.Assert.*;
 public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     private void assertWarehouseDeleted(Integer warehouseId) {
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(warehouseId);
         assertEquals(WarehouseStatus.DELETED, warehouse.getStatus());
     }
 

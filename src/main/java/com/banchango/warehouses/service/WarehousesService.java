@@ -2,6 +2,7 @@ package com.banchango.warehouses.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.insurances.Insurances;
@@ -39,6 +40,7 @@ public class WarehousesService {
     private final UsersRepository usersRepository;
     private final EmailSender emailSender;
     private final MainItemTypesRepository mainItemTypesRepository;
+    private final FindWarehouseById findWarehouseById;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -144,7 +146,7 @@ public class WarehousesService {
 
     @Transactional
     public void delete(Integer warehouseId, String accessToken) {
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(warehouseId);
 
         int accessTokenUserId = JwtTokenUtil.extractUserId(accessToken);
         if(warehouse.getUserId() != accessTokenUserId) throw new WarehouseInvalidAccessException();
@@ -164,7 +166,7 @@ public class WarehousesService {
     public WarehouseDetailResponseDto updateWarehouse(String accessToken, Integer warehouseId, WarehouseUpdateRequestDto requestDto) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(warehouseId);
         if(warehouse.getStatus().equals(WarehouseStatus.DELETED)) throw new WarehouseNotFoundException();
         if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
 

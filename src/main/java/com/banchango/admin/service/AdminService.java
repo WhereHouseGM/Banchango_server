@@ -4,6 +4,7 @@ import com.banchango.admin.dto.*;
 import com.banchango.admin.exception.WaitingWarehousesNotFoundException;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.functions.admin.DoubleCheckAdminAccess;
+import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.deliverytypes.DeliveryTypes;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimateitems.EstimateItems;
@@ -36,7 +37,6 @@ import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
 import com.banchango.users.exception.UserNotFoundException;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -64,6 +64,7 @@ public class AdminService {
     private final WarehouseConditionsRepository warehouseConditionsRepository;
 
     private final DoubleCheckAdminAccess doubleCheckAdminAccess;
+    private final FindWarehouseById findWarehouseById;
 
     @Value("${banchango.no_image.url}")
     private String noImageUrl;
@@ -84,7 +85,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public WarehouseAdminDetailResponseDto getSpecificWarehouseInfo(String token, Integer warehouseId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(warehouseId);
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
@@ -301,7 +302,7 @@ public class AdminService {
     @Transactional
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(warehouseId);
         updateInsurances(warehouse, requestDto);
         updateSecurityCompanies(warehouse, requestDto);
         updateDeliveryTypes(warehouse, requestDto);
@@ -393,7 +394,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public ImagesAdminResponseDto getImages(String token, Integer warehouseId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Warehouses warehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(warehouseId);
         List<ImageInfoResponseDto> images = warehouse.getWarehouseImages()
             .stream().map(ImageInfoResponseDto::new).collect(Collectors.toList());
         ImagesAdminResponseDto responseDto = new ImagesAdminResponseDto();

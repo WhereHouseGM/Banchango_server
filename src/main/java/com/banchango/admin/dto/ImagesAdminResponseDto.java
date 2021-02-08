@@ -1,7 +1,6 @@
 package com.banchango.admin.dto;
 
 import com.banchango.images.dto.ImageInfoResponseDto;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

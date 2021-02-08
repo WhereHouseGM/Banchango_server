@@ -16,7 +16,6 @@ import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.factory.entity.WarehouseEntityFactory;
-import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -66,7 +65,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
     }
 
     private void assertUpdatedWarehouseInfo(Integer warehouseId) {
-        Warehouses updatedWarehouse = warehousesRepository.findById(warehouseId).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouses updatedWarehouse = findWarehouseById.apply(warehouseId);
         assertEquals(WarehouseEntityFactory.NEW_NAME, updatedWarehouse.getName());
         assertEquals(WarehouseEntityFactory.NEW_SPACE, updatedWarehouse.getSpace());
         assertEquals(WarehouseEntityFactory.NEW_ADDRESS, updatedWarehouse.getAddress());

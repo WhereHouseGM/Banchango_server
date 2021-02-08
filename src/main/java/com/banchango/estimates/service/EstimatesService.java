@@ -2,6 +2,7 @@ package com.banchango.estimates.service;
 
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.BasicMessageResponseDto;
+import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.common.service.EmailSender;
 import com.banchango.domain.estimateitems.EstimateItems;
 import com.banchango.domain.estimates.EstimateStatus;
@@ -21,7 +22,6 @@ import com.banchango.users.exception.ForbiddenUserIdException;
 import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
-import com.banchango.warehouses.exception.WarehouseNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,13 +37,14 @@ public class EstimatesService {
     private final WarehousesRepository warehousesRepository;
     private final EmailSender emailSender;
     private final UsersRepository usersRepository;
+    private final FindWarehouseById findWarehouseById;
 
     @Transactional
     public BasicMessageResponseDto saveEstimate(String accessToken, EstimateInsertRequestDto estimateInsertRequestDto) {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
         Users user = usersRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        Warehouses warehouse = warehousesRepository.findById(estimateInsertRequestDto.getWarehouseId()).orElseThrow(WarehouseNotFoundException::new);
+        Warehouses warehouse = findWarehouseById.apply(estimateInsertRequestDto.getWarehouseId());
         if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
 
         Estimates newEstimate = Estimates.builder()
