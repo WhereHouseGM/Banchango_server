@@ -44,7 +44,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        estimate = estimatesRepository.findById(estimate.getId()).orElseThrow(EstimateNotFoundException::new);
+        estimate = estimateRepository.findById(estimate.getId()).orElseThrow(EstimateNotFoundException::new);
 
         assertEquals(EstimateStatus.IN_PROGRESS, estimate.getStatus());
     }
@@ -71,7 +71,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        estimate = estimatesRepository.findById(estimate.getId()).orElseThrow(EstimateNotFoundException::new);
+        estimate = estimateRepository.findById(estimate.getId()).orElseThrow(EstimateNotFoundException::new);
 
         assertEquals(EstimateStatus.IN_PROGRESS, estimate.getStatus());
     }

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface EstimatesRepository extends JpaRepository<Estimate, Integer> {
+public interface EstimateRepository extends JpaRepository<Estimate, Integer> {
     List<Estimate> findByUserId(Integer userId);
     <T> List<T> findByStatusOrderByIdAsc(EstimateStatus status, Pageable pageable, Class<T> clazz);
     <T> List<T> findByOrderByIdAsc(Pageable pageable, Class<T> clazz);

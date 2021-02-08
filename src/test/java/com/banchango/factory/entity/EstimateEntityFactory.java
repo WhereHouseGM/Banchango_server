@@ -3,7 +3,7 @@ package com.banchango.factory.entity;
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.estimates.EstimateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +20,11 @@ public class EstimateEntityFactory {
     public static final Integer MONTHLY_AVERAGE_RELEASE = 1299;
 
     private final EstimateItemEntityFactory estimateItemEntityFactory;
-    private final EstimatesRepository estimatesRepository;
+    private final EstimateRepository estimateRepository;
 
     @Autowired
-    EstimateEntityFactory(EstimatesRepository estimatesRepository, EstimateItemEntityFactory estimateItemEntityFactory) {
-        this.estimatesRepository = estimatesRepository;
+    EstimateEntityFactory(EstimateRepository estimateRepository, EstimateItemEntityFactory estimateItemEntityFactory) {
+        this.estimateRepository = estimateRepository;
         this.estimateItemEntityFactory = estimateItemEntityFactory;
     }
 
@@ -89,6 +89,6 @@ public class EstimateEntityFactory {
             .estimateItems(new ArrayList<>())
             .build();
 
-        return estimatesRepository.save(estimate);
+        return estimateRepository.save(estimate);
     }
 }

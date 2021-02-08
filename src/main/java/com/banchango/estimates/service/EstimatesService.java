@@ -8,7 +8,7 @@ import com.banchango.common.service.EmailSender;
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.estimates.EstimateRepository;
 import com.banchango.domain.users.User;
 import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class EstimatesService {
-    private final EstimatesRepository estimatesRepository;
+    private final EstimateRepository estimateRepository;
     private final WarehouseRepository warehouseRepository;
     private final EmailSender emailSender;
     private final UserRepository userRepository;
@@ -56,7 +56,7 @@ public class EstimatesService {
             .monthlyAverageRelease(estimateInsertRequestDto.getMonthlyAverageRelease())
             .build();
 
-        estimatesRepository.save(newEstimate);
+        estimateRepository.save(newEstimate);
 
         List<EstimateItem> newEstimateItems = estimateInsertRequestDto.getEstimateItems()
             .stream()
@@ -75,7 +75,7 @@ public class EstimatesService {
 
         if(!userIdFromAccessToken.equals(userId)) throw new ForbiddenUserIdException();
 
-        List<EstimateSearchDto> estimates = estimatesRepository.findByUserId(userId)
+        List<EstimateSearchDto> estimates = estimateRepository.findByUserId(userId)
             .stream()
             .map(estimate -> {
                 EstimateSearchDto estimateSearchResponseDto = new EstimateSearchDto(estimate);

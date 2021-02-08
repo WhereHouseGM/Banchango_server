@@ -12,7 +12,7 @@ import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.EstimateStatusAndLastModifiedAtAndWarehouseIdProjection;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.estimates.EstimateRepository;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.insurances.InsuranceRepository;
 import com.banchango.domain.mainitemtypes.MainItemType;
@@ -55,7 +55,7 @@ public class AdminService {
     private final WarehouseRepository warehouseRepository;
     private final UserRepository userRepository;
     private final MainItemTypeRepository mainItemTypeRepository;
-    private final EstimatesRepository estimatesRepository;
+    private final EstimateRepository estimateRepository;
     private final WithdrawRepository withdrawRepository;
     private final DeliveryTypesRepository deliveryTypesRepository;
     private final SecurityCompanyRepository securityCompanyRepository;
@@ -320,8 +320,8 @@ public class AdminService {
     public List<EstimateSummaryDto> getEstimates(String token, EstimateStatus status, PageRequest pageRequest) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
         List<EstimateStatusAndLastModifiedAtAndWarehouseIdProjection> estimates;
-        if (status == null) estimates = estimatesRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
-        else estimates = estimatesRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
+        if (status == null) estimates = estimateRepository.findByOrderByIdAsc(pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
+        else estimates = estimateRepository.findByStatusOrderByIdAsc(status, pageRequest, EstimateStatusAndLastModifiedAtAndWarehouseIdProjection.class);
 
         if(estimates.isEmpty()) throw new EstimateNotFoundException();
 
@@ -342,14 +342,14 @@ public class AdminService {
     @Transactional
     public void updateEstimateStatus(String token, Integer estimateId, EstimateStatusUpdateRequestDto estimateStatusUpdateRequestDto) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimate estimate = estimateRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         estimate.updateStatus(estimateStatusUpdateRequestDto.getStatus());
     }
 
     @Transactional(readOnly = true)
     public List<EstimateItemSearchDto> getEstimateItems(String token, Integer estimateId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimate estimate = estimateRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         List<EstimateItem> estimateItems = estimate.getEstimateItems();
         if(estimateItems.size() == 0) throw new EstimateItemNotFoundException();
         return estimate.getEstimateItems().stream()
@@ -360,7 +360,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public EstimateDetailResponseDto getEstimate(String token, Integer estimateId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimate estimate = estimateRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         User user = findUserById.apply(estimate.getUserId());
         Optional<WarehouseNameProjection> optionalWarehouseNameProjection = warehouseRepository.findById(estimate.getWarehouseId(), WarehouseNameProjection.class);
         String warehouseName;

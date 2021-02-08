@@ -3,7 +3,7 @@ package com.banchango;
 import com.banchango.common.functions.users.FindUserById;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
-import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.estimates.EstimateRepository;
 import com.banchango.domain.insurances.InsuranceRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypeRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanyRepository;
@@ -37,7 +37,7 @@ public abstract class ApiIntegrationTest {
     protected WarehouseRepository warehouseRepository;
 
     @Autowired
-    protected EstimatesRepository estimatesRepository;
+    protected EstimateRepository estimateRepository;
 
     @Autowired
     protected UserEntityFactory userEntityFactory;
@@ -85,13 +85,13 @@ public abstract class ApiIntegrationTest {
     public void setup() {
         userRepository.deleteAll();
         warehouseRepository.deleteAll();
-        estimatesRepository.deleteAll();
+        estimateRepository.deleteAll();
     }
 
     @After
     public void release() {
         userRepository.deleteAll();
         warehouseRepository.deleteAll();
-        estimatesRepository.deleteAll();
+        estimateRepository.deleteAll();
     }
 }

@@ -5,7 +5,7 @@ import com.banchango.common.exception.ForbiddenException;
 import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.estimateitems.EstimateItem;
 import com.banchango.domain.estimates.Estimate;
-import com.banchango.domain.estimates.EstimatesRepository;
+import com.banchango.domain.estimates.EstimateRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class EstimateItemsService {
-    private final EstimatesRepository estimatesRepository;
+    private final EstimateRepository estimateRepository;
     private final FindWarehouseById findWarehouseById;
 
     @Transactional(readOnly = true)
     public List<EstimateItemSearchDto> getEstimateItemsByEstimateId(String accessToken, Integer estimateId) {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
 
-        Estimate estimate = estimatesRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
+        Estimate estimate = estimateRepository.findById(estimateId).orElseThrow(EstimateNotFoundException::new);
         Warehouse warehouse = findWarehouseById.apply(estimate.getWarehouseId());
 
         if(warehouse.getStatus().equals(WarehouseStatus.DELETED)) throw new WarehouseNotFoundException("창고가 삭제됐습니다");
