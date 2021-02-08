@@ -14,7 +14,7 @@ import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
-import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.domain.warehouses.Warehouses;
 import com.banchango.domain.warehouses.WarehousesRepository;
@@ -89,8 +89,8 @@ public class WarehousesService {
                 .map(type -> new WarehouseCondition(type, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseConditions(warehouseConditions);
 
-        List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseInsertRequestDto.getWarehouseFacilityUsages().stream()
-                .map(usage -> new WarehouseFacilityUsages(usage, savedWarehouse)).collect(Collectors.toList());
+        List<WarehouseFacilityUsage> warehouseFacilityUsages = warehouseInsertRequestDto.getWarehouseFacilityUsages().stream()
+                .map(usage -> new WarehouseFacilityUsage(usage, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setWarehouseFacilityUsages(warehouseFacilityUsages);
 
         List<WarehouseUsageCautions> warehouseUsageCautions = warehouseInsertRequestDto.getWarehouseUsageCautions().stream()

@@ -7,7 +7,7 @@ import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
-import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
@@ -76,7 +76,7 @@ public class WarehouseDetailResponseDto {
 
         List<String> warehouseFacilityUsages = warehouse.getWarehouseFacilityUsages()
             .stream()
-            .map(WarehouseFacilityUsages::getContent)
+            .map(WarehouseFacilityUsage::getContent)
             .collect(Collectors.toList());
 
         List<String> warehouseUsageCautions = warehouse.getWarehouseUsageCautions()

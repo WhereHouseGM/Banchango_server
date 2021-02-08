@@ -24,7 +24,7 @@ import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
-import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
+import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
@@ -212,7 +212,7 @@ public class AdminService {
     }
 
     private void updateWarehouseFacilityUsages(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<WarehouseFacilityUsages> warehouseFacilityUsages = warehouseFacilityUsagesRepository.findByWarehouseId(warehouse.getId());
+        List<WarehouseFacilityUsage> warehouseFacilityUsages = warehouseFacilityUsagesRepository.findByWarehouseId(warehouse.getId());
         if(warehouseFacilityUsages.size() == requestDto.getWarehouseFacilityUsages().size()) {
             for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
                 warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
@@ -223,7 +223,7 @@ public class AdminService {
                 warehouseFacilityUsages.get(i).setContent(requestDto.getWarehouseFacilityUsages().get(i));
             }
             for(int i = warehouseFacilityUsages.size(); i < requestDto.getWarehouseFacilityUsages().size(); i++) {
-                WarehouseFacilityUsages newUsage = WarehouseFacilityUsages.builder()
+                WarehouseFacilityUsage newUsage = WarehouseFacilityUsage.builder()
                         .warehouse(warehouse).content(requestDto.getWarehouseFacilityUsages().get(i))
                         .build();
                 warehouseFacilityUsagesRepository.save(newUsage);
