@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "security_companies")
-public class SecurityCompanies {
+public class SecurityCompany {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class SecurityCompanies {
     private Warehouses warehouse;
 
     @Builder
-    public SecurityCompanies(String name, Warehouses warehouse) {
+    public SecurityCompany(String name, Warehouses warehouse) {
         this.name = name;
         this.warehouse = warehouse;
     }

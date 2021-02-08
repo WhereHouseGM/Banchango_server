@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SecurityCompaniesRepository extends JpaRepository<SecurityCompanies, Integer> {
+public interface SecurityCompaniesRepository extends JpaRepository<SecurityCompany, Integer> {
     void deleteByWarehouseId(Integer warehouseId);
-    List<SecurityCompanies> findByWarehouseId(Integer warehouseId);
+    List<SecurityCompany> findByWarehouseId(Integer warehouseId);
 }

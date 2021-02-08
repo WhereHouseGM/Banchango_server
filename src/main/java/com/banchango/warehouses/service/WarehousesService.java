@@ -10,7 +10,7 @@ import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
-import com.banchango.domain.securitycompanies.SecurityCompanies;
+import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
@@ -101,8 +101,8 @@ public class WarehousesService {
                 .map(insurance -> new Insurance(insurance, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setInsurances(insurances);
 
-        List<SecurityCompanies> securityCompanies = warehouseInsertRequestDto.getSecurityCompanies().stream()
-                .map(company -> new SecurityCompanies(company, savedWarehouse)).collect(Collectors.toList());
+        List<SecurityCompany> securityCompanies = warehouseInsertRequestDto.getSecurityCompanies().stream()
+                .map(company -> new SecurityCompany(company, savedWarehouse)).collect(Collectors.toList());
         savedWarehouse.setSecurityCompanies(securityCompanies);
 
         EmailContent emailContent = new EmailContent("[반창고] 창고 등록 요청 안내", "안녕하세요, 반창고 입니다!", "<span style='font-size: 20px'>" + warehouseInsertRequestDto.getName() + "</span>에 대한 창고 등록 요청이 완료되었으며, 영업 팀의 인증 절차 후 등록이 완료될 예정입니다.", "문의사항은 이 이메일로 답변헤 주세요.", "반창고 허브", "https://banchangohub.com");

@@ -9,7 +9,7 @@ import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
-import com.banchango.domain.securitycompanies.SecurityCompanies;
+import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.users.Users;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
@@ -87,7 +87,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertEquals(WarehouseEntityFactory.NEW_BLOG_URL, updatedWarehouse.getBlogUrl());
         assertEquals(WarehouseEntityFactory.NEW_MIN_RELEASE_PER_MONTH, updatedWarehouse.getMinReleasePerMonth());
         assertEquals(insurancesRepository.findByWarehouseId(warehouseId).stream().map(Insurance::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_INSURANCES));
-        assertEquals(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompanies::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_SECURITY_COMPANIES));
+        assertEquals(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompany::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_SECURITY_COMPANIES));
         assertEquals(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryType::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_DELIVERY_TYPES));
         assertEquals(warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsages::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES));
         assertEquals(warehouseUsageCautionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseUsageCautions::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS));
@@ -138,7 +138,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
                 .stream().map(Insurance::getId).collect(Collectors.toList());
 
         List<Integer> beforeSecurityCompaniesId = securityCompaniesRepository.findByWarehouseId(warehouseId)
-                .stream().map(SecurityCompanies::getId).collect(Collectors.toList());
+                .stream().map(SecurityCompany::getId).collect(Collectors.toList());
 
         List<Integer> beforeDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
                 .stream().map(DeliveryType::getId).collect(Collectors.toList());
@@ -173,7 +173,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
                 .stream().map(Insurance::getId).collect(Collectors.toList());
 
         List<Integer> updatedSecurityCompaniesId = securityCompaniesRepository.findByWarehouseId(warehouseId)
-                .stream().map(SecurityCompanies::getId).collect(Collectors.toList());
+                .stream().map(SecurityCompany::getId).collect(Collectors.toList());
 
         List<Integer> updatedDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
                 .stream().map(DeliveryType::getId).collect(Collectors.toList());
@@ -235,7 +235,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
                 .stream().map(Insurance::getId).collect(Collectors.toList());
 
         List<Integer> beforeSecurityCompaniesId = securityCompaniesRepository.findByWarehouseId(warehouseId)
-                .stream().map(SecurityCompanies::getId).collect(Collectors.toList());
+                .stream().map(SecurityCompany::getId).collect(Collectors.toList());
 
         List<Integer> beforeDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
                 .stream().map(DeliveryType::getId).collect(Collectors.toList());
@@ -270,7 +270,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
                 .stream().map(Insurance::getId).collect(Collectors.toList());
 
         List<Integer> updatedSecurityCompaniesId = securityCompaniesRepository.findByWarehouseId(warehouseId)
-                .stream().map(SecurityCompanies::getId).collect(Collectors.toList());
+                .stream().map(SecurityCompany::getId).collect(Collectors.toList());
 
         List<Integer> updatedDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
                 .stream().map(DeliveryType::getId).collect(Collectors.toList());

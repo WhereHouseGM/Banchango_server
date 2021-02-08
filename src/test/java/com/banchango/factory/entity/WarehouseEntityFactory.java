@@ -5,7 +5,7 @@ import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
-import com.banchango.domain.securitycompanies.SecurityCompanies;
+import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
@@ -157,8 +157,8 @@ public class WarehouseEntityFactory {
                 .map(insurance -> new Insurance(insurance, warehouse)).collect(Collectors.toList());
         warehouse.setInsurances(insurances);
 
-        List<SecurityCompanies> securityCompanies = Arrays.stream(SECURITY_COMPANIES)
-                .map(company -> new SecurityCompanies(company, warehouse)).collect(Collectors.toList());
+        List<SecurityCompany> securityCompanies = Arrays.stream(SECURITY_COMPANIES)
+                .map(company -> new SecurityCompany(company, warehouse)).collect(Collectors.toList());
         warehouse.setSecurityCompanies(securityCompanies);
 
         List<DeliveryType> deliveryTypes = Arrays.stream(DELIVERY_TYPES)
