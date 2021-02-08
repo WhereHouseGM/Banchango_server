@@ -28,7 +28,7 @@ import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.*;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCaution;
-import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionRepository;
 import com.banchango.domain.withdraws.WithdrawRepository;
 import com.banchango.estimateitems.dto.EstimateItemSearchDto;
 import com.banchango.estimateitems.exception.EstimateItemNotFoundException;
@@ -59,7 +59,7 @@ public class AdminService {
     private final WithdrawRepository withdrawRepository;
     private final DeliveryTypesRepository deliveryTypesRepository;
     private final SecurityCompaniesRepository securityCompaniesRepository;
-    private final WarehouseUsageCautionsRepository warehouseUsageCautionsRepository;
+    private final WarehouseUsageCautionRepository warehouseUsageCautionRepository;
     private final WarehouseFacilityUsagesRepository warehouseFacilityUsagesRepository;
     private final InsurancesRepository insurancesRepository;
     private final WarehouseConditionsRepository warehouseConditionsRepository;
@@ -242,7 +242,7 @@ public class AdminService {
     }
 
     private void updateWarehouseUsageCautions(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<WarehouseUsageCaution> warehouseUsageCautions = warehouseUsageCautionsRepository.findByWarehouseId(warehouse.getId());
+        List<WarehouseUsageCaution> warehouseUsageCautions = warehouseUsageCautionRepository.findByWarehouseId(warehouse.getId());
         if(warehouseUsageCautions.size() == requestDto.getWarehouseUsageCautions().size()) {
             for(int i = 0; i < warehouseUsageCautions.size(); i++) {
                 warehouseUsageCautions.get(i).setContent(requestDto.getWarehouseUsageCautions().get(i));
@@ -256,7 +256,7 @@ public class AdminService {
                 WarehouseUsageCaution newCaution = WarehouseUsageCaution.builder()
                         .warehouse(warehouse).content(requestDto.getWarehouseUsageCautions().get(i))
                         .build();
-                warehouseUsageCautionsRepository.save(newCaution);
+                warehouseUsageCautionRepository.save(newCaution);
             }
         }
         else if(warehouseUsageCautions.size() > requestDto.getWarehouseUsageCautions().size()) {
@@ -266,7 +266,7 @@ public class AdminService {
             for(int i = requestDto.getWarehouseUsageCautions().size(); i < warehouseUsageCautions.size(); i++) {
                 Integer idOfCautionToRemove = warehouseUsageCautions.get(i).getId();
                 warehouse.getWarehouseUsageCautions().removeIf(caution -> caution.getId().equals(idOfCautionToRemove));
-                warehouseUsageCautionsRepository.deleteById(idOfCautionToRemove);
+                warehouseUsageCautionRepository.deleteById(idOfCautionToRemove);
             }
         }
     }

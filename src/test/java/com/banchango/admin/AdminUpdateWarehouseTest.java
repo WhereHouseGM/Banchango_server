@@ -90,7 +90,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertEquals(securityCompaniesRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompany::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_SECURITY_COMPANIES));
         assertEquals(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryType::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_DELIVERY_TYPES));
         assertEquals(warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsage::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES));
-        assertEquals(warehouseUsageCautionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseUsageCaution::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS));
+        assertEquals(warehouseUsageCautionRepository.findByWarehouseId(warehouseId).stream().map(WarehouseUsageCaution::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS));
         assertEquals(warehouseConditionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseCondition::getCondition).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_CONDITIONS));
         assertEquals(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemType::getType).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_MAIN_ITEM_TYPES));
     }
@@ -149,7 +149,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> beforeWarehouseFacilityUsagesId = warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseFacilityUsage::getId).collect(Collectors.toList());
 
-        List<Integer> beforeWarehouseUsageCautionsId = warehouseUsageCautionsRepository.findByWarehouseId(warehouseId)
+        List<Integer> beforeWarehouseUsageCautionsId = warehouseUsageCautionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseUsageCaution::getId).collect(Collectors.toList());
 
         List<Integer> beforeMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
@@ -184,7 +184,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> updatedWarehouseFacilityUsagesId = warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseFacilityUsage::getId).collect(Collectors.toList());
 
-        List<Integer> updatedWarehouseUsageCautionsId = warehouseUsageCautionsRepository.findByWarehouseId(warehouseId)
+        List<Integer> updatedWarehouseUsageCautionsId = warehouseUsageCautionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseUsageCaution::getId).collect(Collectors.toList());
 
         List<Integer> updatedMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
@@ -246,7 +246,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> beforeWarehouseFacilityUsagesId = warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseFacilityUsage::getId).collect(Collectors.toList());
 
-        List<Integer> beforeWarehouseUsageCautionsId = warehouseUsageCautionsRepository.findByWarehouseId(warehouseId)
+        List<Integer> beforeWarehouseUsageCautionsId = warehouseUsageCautionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseUsageCaution::getId).collect(Collectors.toList());
 
         List<Integer> beforeMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
@@ -281,7 +281,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> updatedWarehouseFacilityUsagesId = warehouseFacilityUsagesRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseFacilityUsage::getId).collect(Collectors.toList());
 
-        List<Integer> updatedWarehouseUsageCautionsId = warehouseUsageCautionsRepository.findByWarehouseId(warehouseId)
+        List<Integer> updatedWarehouseUsageCautionsId = warehouseUsageCautionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseUsageCaution::getId).collect(Collectors.toList());
 
         List<Integer> updatedMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)

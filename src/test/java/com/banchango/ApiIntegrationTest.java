@@ -11,7 +11,7 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsagesRepository;
 import com.banchango.domain.warehouses.WarehousesRepository;
-import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionsRepository;
+import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionRepository;
 import com.banchango.domain.withdraws.WithdrawRepository;
 import com.banchango.factory.entity.EstimateEntityFactory;
 import com.banchango.factory.entity.UserEntityFactory;
@@ -73,7 +73,7 @@ public abstract class ApiIntegrationTest {
     protected WithdrawRepository withdrawRepository;
 
     @Autowired
-    protected WarehouseUsageCautionsRepository warehouseUsageCautionsRepository;
+    protected WarehouseUsageCautionRepository warehouseUsageCautionRepository;
 
     @Autowired
     protected FindWarehouseById findWarehouseById;
