@@ -92,7 +92,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertEquals(warehouseFacilityUsageRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsage::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES));
         assertEquals(warehouseUsageCautionRepository.findByWarehouseId(warehouseId).stream().map(WarehouseUsageCaution::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS));
         assertEquals(warehouseConditionRepository.findByWarehouseId(warehouseId).stream().map(WarehouseCondition::getCondition).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_CONDITIONS));
-        assertEquals(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemType::getType).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_MAIN_ITEM_TYPES));
+        assertEquals(mainItemTypeRepository.findByWarehouseId(warehouseId).stream().map(MainItemType::getType).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_MAIN_ITEM_TYPES));
     }
 
     private void assertResponse(WarehouseAdminDetailResponseDto dto) {
@@ -152,7 +152,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> beforeWarehouseUsageCautionsId = warehouseUsageCautionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseUsageCaution::getId).collect(Collectors.toList());
 
-        List<Integer> beforeMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
+        List<Integer> beforeMainItemTypesId = mainItemTypeRepository.findByWarehouseId(warehouseId)
                 .stream().map(MainItemType::getId).collect(Collectors.toList());
 
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
@@ -187,7 +187,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> updatedWarehouseUsageCautionsId = warehouseUsageCautionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseUsageCaution::getId).collect(Collectors.toList());
 
-        List<Integer> updatedMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
+        List<Integer> updatedMainItemTypesId = mainItemTypeRepository.findByWarehouseId(warehouseId)
                 .stream().map(MainItemType::getId).collect(Collectors.toList());
 
         // Index, size Assertions
@@ -249,7 +249,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> beforeWarehouseUsageCautionsId = warehouseUsageCautionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseUsageCaution::getId).collect(Collectors.toList());
 
-        List<Integer> beforeMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
+        List<Integer> beforeMainItemTypesId = mainItemTypeRepository.findByWarehouseId(warehouseId)
                 .stream().map(MainItemType::getId).collect(Collectors.toList());
 
         String url = String.format("/v3/admin/warehouses/%d", warehouseId);
@@ -284,7 +284,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> updatedWarehouseUsageCautionsId = warehouseUsageCautionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseUsageCaution::getId).collect(Collectors.toList());
 
-        List<Integer> updatedMainItemTypesId = mainItemTypesRepository.findByWarehouseId(warehouseId)
+        List<Integer> updatedMainItemTypesId = mainItemTypeRepository.findByWarehouseId(warehouseId)
                 .stream().map(MainItemType::getId).collect(Collectors.toList());
 
         // Index, size Assertions

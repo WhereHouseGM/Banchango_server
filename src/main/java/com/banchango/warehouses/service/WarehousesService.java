@@ -9,7 +9,7 @@ import com.banchango.domain.deliverytypes.DeliveryType;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
-import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
+import com.banchango.domain.mainitemtypes.MainItemTypeRepository;
 import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.users.User;
 import com.banchango.domain.users.UserRepository;
@@ -39,7 +39,7 @@ public class WarehousesService {
     private final WarehouseRepository warehouseRepository;
     private final UserRepository userRepository;
     private final EmailSender emailSender;
-    private final MainItemTypesRepository mainItemTypesRepository;
+    private final MainItemTypeRepository mainItemTypeRepository;
     private final FindWarehouseById findWarehouseById;
     private final FindUserById findUserById;
 
@@ -173,8 +173,8 @@ public class WarehousesService {
 
         if(!warehouse.getUserId().equals(userId)) throw new ForbiddenUserIdException();
 
-        if(!mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemType::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
-            mainItemTypesRepository.deleteByWarehouseId(warehouseId);
+        if(!mainItemTypeRepository.findByWarehouseId(warehouseId).stream().map(MainItemType::getType).collect(Collectors.toList()).equals(requestDto.getMainItemTypes())) {
+            mainItemTypeRepository.deleteByWarehouseId(warehouseId);
         }
 
         warehouse.update(requestDto);

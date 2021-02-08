@@ -16,7 +16,7 @@ import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemType;
-import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
+import com.banchango.domain.mainitemtypes.MainItemTypeRepository;
 import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.securitycompanies.SecurityCompanyRepository;
 import com.banchango.domain.users.UserRole;
@@ -54,7 +54,7 @@ public class AdminService {
 
     private final WarehouseRepository warehouseRepository;
     private final UserRepository userRepository;
-    private final MainItemTypesRepository mainItemTypesRepository;
+    private final MainItemTypeRepository mainItemTypeRepository;
     private final EstimatesRepository estimatesRepository;
     private final WithdrawRepository withdrawRepository;
     private final DeliveryTypesRepository deliveryTypesRepository;
@@ -272,7 +272,7 @@ public class AdminService {
     }
 
     private void updateMainItemTypes(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<MainItemType> mainItemTypes = mainItemTypesRepository.findByWarehouseId(warehouse.getId());
+        List<MainItemType> mainItemTypes = mainItemTypeRepository.findByWarehouseId(warehouse.getId());
         if(mainItemTypes.size() == requestDto.getMainItemTypes().size()) {
             for(int i = 0; i < mainItemTypes.size(); i++) {
                 mainItemTypes.get(i).setType(requestDto.getMainItemTypes().get(i));
@@ -286,7 +286,7 @@ public class AdminService {
                 MainItemType newType = MainItemType.builder()
                         .warehouse(warehouse).mainItemType(requestDto.getMainItemTypes().get(i))
                         .build();
-                mainItemTypesRepository.save(newType);
+                mainItemTypeRepository.save(newType);
             }
         }
         else if(mainItemTypes.size() > requestDto.getMainItemTypes().size()) {
@@ -296,7 +296,7 @@ public class AdminService {
             for(int i = requestDto.getMainItemTypes().size(); i < mainItemTypes.size(); i++) {
                 Integer idOfTypeToRemove = mainItemTypes.get(i).getId();
                 warehouse.getMainItemTypes().removeIf(type -> type.getId().equals(idOfTypeToRemove));
-                mainItemTypesRepository.deleteById(idOfTypeToRemove);
+                mainItemTypeRepository.deleteById(idOfTypeToRemove);
             }
         }
     }

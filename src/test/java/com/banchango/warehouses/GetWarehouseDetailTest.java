@@ -48,7 +48,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
         assertTrue(securityCompanyRepository.findByWarehouseId(warehouseId).stream().map(SecurityCompany::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.SECURITY_COMPANIES)));
         assertTrue(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryType::getName).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.DELIVERY_TYPES)));
         assertTrue(warehouseConditionRepository.findByWarehouseId(warehouseId).stream().map(WarehouseCondition::getCondition).collect(Collectors.toList()).containsAll(Arrays.asList(WarehouseEntityFactory.WAREHOUSE_CONDITIONS)));
-        assertEquals(0, mainItemTypesRepository.findByWarehouseId(warehouseId).size());
+        assertEquals(0, mainItemTypeRepository.findByWarehouseId(warehouseId).size());
         assertNull(warehouse.getBlogUrl());
         assertNull(warehouse.getMainImage());
         assertEquals(0, warehouse.getWarehouseImages().size());

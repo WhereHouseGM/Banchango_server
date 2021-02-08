@@ -5,7 +5,7 @@ import com.banchango.common.functions.warehouses.FindWarehouseById;
 import com.banchango.domain.deliverytypes.DeliveryTypesRepository;
 import com.banchango.domain.estimates.EstimatesRepository;
 import com.banchango.domain.insurances.InsurancesRepository;
-import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
+import com.banchango.domain.mainitemtypes.MainItemTypeRepository;
 import com.banchango.domain.securitycompanies.SecurityCompanyRepository;
 import com.banchango.domain.users.UserRepository;
 import com.banchango.domain.warehouseconditions.WarehouseConditionRepository;
@@ -52,7 +52,7 @@ public abstract class ApiIntegrationTest {
     protected TestRestTemplate restTemplate;
 
     @Autowired
-    protected MainItemTypesRepository mainItemTypesRepository;
+    protected MainItemTypeRepository mainItemTypeRepository;
 
     @Autowired
     protected InsurancesRepository insurancesRepository;
