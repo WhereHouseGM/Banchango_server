@@ -1,6 +1,6 @@
 package com.banchango.domain.mainitemtypes;
 
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +25,10 @@ public class MainItemType {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
+    private Warehouse warehouse;
 
     @Builder
-    public MainItemType(ItemType mainItemType, Warehouses warehouse) {
+    public MainItemType(ItemType mainItemType, Warehouse warehouse) {
         this.type = mainItemType;
         this.warehouse = warehouse;
     }

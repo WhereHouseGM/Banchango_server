@@ -1,6 +1,6 @@
 package com.banchango.domain.deliverytypes;
 
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,10 +24,10 @@ public class DeliveryType {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
+    private Warehouse warehouse;
 
     @Builder
-    public DeliveryType(String name, Warehouses warehouse) {
+    public DeliveryType(String name, Warehouse warehouse) {
         this.name = name;
         this.warehouse = warehouse;
     }

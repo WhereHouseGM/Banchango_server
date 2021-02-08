@@ -5,7 +5,7 @@ import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouses.WarehouseType;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,11 +30,11 @@ public class WarehouseSearchDto {
     private List<String> deliveryTypes;
     private List<WarehouseMainItemTypeMatchDto> mainItemTypes;
 
-    public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl) {
+    public WarehouseSearchDto(Warehouse warehouse, String defaultImageUrl) {
         this(warehouse, defaultImageUrl, new ArrayList<>());
     }
 
-    public WarehouseSearchDto(Warehouses warehouse, String defaultImageUrl, List<ItemType> queriedMainItemTypes) {
+    public WarehouseSearchDto(Warehouse warehouse, String defaultImageUrl, List<ItemType> queriedMainItemTypes) {
         List<WarehouseMainItemTypeMatchDto> mainItemTypes = warehouse.getMainItemTypes()
             .stream()
             .map(mainItemType -> new WarehouseMainItemTypeMatchDto(mainItemType.getType(), queriedMainItemTypes))

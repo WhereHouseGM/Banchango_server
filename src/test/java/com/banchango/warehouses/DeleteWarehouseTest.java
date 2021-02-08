@@ -6,7 +6,7 @@ import com.banchango.common.dto.BasicMessageResponseDto;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.WarehouseStatus;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 public class DeleteWarehouseTest extends ApiIntegrationTest {
 
     private void assertWarehouseDeleted(Integer warehouseId) {
-        Warehouses warehouse = findWarehouseById.apply(warehouseId);
+        Warehouse warehouse = findWarehouseById.apply(warehouseId);
         assertEquals(WarehouseStatus.DELETED, warehouse.getStatus());
     }
 
@@ -27,7 +27,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsViewable() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
@@ -45,7 +45,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsInProgress() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
@@ -63,7 +63,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
     public void delete_warehouse_responseIsOk_IfWarehouseStatusIsRejected() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
         String url = "/v3/warehouses/"+warehouse.getId();
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create(url))
@@ -95,7 +95,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
         User owner = userEntityFactory.createUserWithOwnerType();
         String acutalOwnerAccessToken = JwtTokenUtil.generateAccessToken(actualOwner);
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(acutalOwnerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(acutalOwnerAccessToken);
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/"+warehouse.getId()))
                 .header("Authorization", "Bearer "+accessToken)
@@ -110,7 +110,7 @@ public class DeleteWarehouseTest extends ApiIntegrationTest {
     public void delete_warehouse_responseIsNotFound_IfWarehouseStatusIsDeleted() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
 
         RequestEntity<Void> request = RequestEntity.delete(URI.create("/v3/warehouses/"+warehouse.getId()))
                 .header("Authorization", "Bearer "+accessToken)

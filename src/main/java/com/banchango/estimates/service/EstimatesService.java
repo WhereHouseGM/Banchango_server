@@ -13,7 +13,7 @@ import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouses.WarehouseIdAndNameAndAddressProjection;
 import com.banchango.domain.warehouses.WarehouseStatus;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.estimates.dto.EstimateSearchDto;
@@ -45,7 +45,7 @@ public class EstimatesService {
         Integer userId = JwtTokenUtil.extractUserId(accessToken);
         User user = findUserById.apply(userId);
 
-        Warehouses warehouse = findWarehouseById.apply(estimateInsertRequestDto.getWarehouseId());
+        Warehouse warehouse = findWarehouseById.apply(estimateInsertRequestDto.getWarehouseId());
         if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
 
         Estimate newEstimate = Estimate.builder()

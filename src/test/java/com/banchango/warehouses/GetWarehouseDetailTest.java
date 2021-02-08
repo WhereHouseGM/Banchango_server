@@ -8,7 +8,7 @@ import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.securitycompanies.SecurityCompany;
 import com.banchango.domain.users.User;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.warehouses.dto.WarehouseDetailResponseDto;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 
 public class GetWarehouseDetailTest extends ApiIntegrationTest {
 
-    private void assertWarehouseDetail(Warehouses warehouse) {
+    private void assertWarehouseDetail(Warehouse warehouse) {
         Integer warehouseId = warehouse.getId();
         assertEquals(WarehouseEntityFactory.NAME, warehouse.getName());
         assertEquals(WarehouseEntityFactory.SPACE, warehouse.getSpace());
@@ -58,7 +58,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
     public void get_warehouseDetail_responseIsOk_IfUserIsOwner() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -76,7 +76,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
     public void get_warehouseDetail_responseIsOk_IfUserIsShipper() {
         User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -94,7 +94,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
     public void get_warehouseDetail_responseIsNotFound_IfWarehouseStatusIsInProgress() {
         User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
-        Warehouses _warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
+        Warehouse _warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -110,7 +110,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
     public void get_warehouseDetail_responseIsNotFound_IfIsViewableIsRejected() {
         User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
-        Warehouses _warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
+        Warehouse _warehouse = warehouseEntityFactory.createdRejectedWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))
@@ -126,7 +126,7 @@ public class GetWarehouseDetailTest extends ApiIntegrationTest {
     public void get_warehouseDetail_responseIsNotFound_IfWarehouseStatusIsDeleted() {
         User shipper = userEntityFactory.createUserWithShipperType();
         String accessToken = JwtTokenUtil.generateAccessToken(shipper);
-        Warehouses _warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
+        Warehouse _warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(accessToken);
         String url = String.format("/v3/warehouses/%d", _warehouse.getId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create(url))

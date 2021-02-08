@@ -4,7 +4,7 @@ import com.banchango.ApiIntegrationTest;
 import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.users.User;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.estimates.dto.EstimateInsertRequestDto;
 import com.banchango.factory.request.EstimatesInsertRequestFactory;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
         User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
 
         EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
 
@@ -65,7 +65,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
         User owner = userEntityFactory.createUserWithOwnerType();
         String ownerAccessToken = JwtTokenUtil.generateAccessToken(owner);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
 
         EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
 
@@ -88,7 +88,7 @@ public class InsertEstimateTest extends ApiIntegrationTest {
         User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
-        Warehouses warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(ownerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(ownerAccessToken);
 
         EstimateInsertRequestDto newEstimateInsertRequestDto = EstimatesInsertRequestFactory.create(warehouse.getId());
 

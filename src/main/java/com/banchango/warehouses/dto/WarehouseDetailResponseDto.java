@@ -11,7 +11,7 @@ import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -58,7 +58,7 @@ public class WarehouseDetailResponseDto {
     private List<String> insurances = new ArrayList<>();
     private List<String> securityCompanies = new ArrayList<>();
 
-    public WarehouseDetailResponseDto(Warehouses warehouse, String defaultImageUrl) {
+    public WarehouseDetailResponseDto(Warehouse warehouse, String defaultImageUrl) {
         List<ItemType> mainItemTypes = warehouse.getMainItemTypes()
             .stream()
             .map(MainItemType::getType)

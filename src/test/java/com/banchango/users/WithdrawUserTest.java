@@ -8,7 +8,7 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.User;
 import com.banchango.domain.warehouses.WarehouseStatus;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.users.dto.UserWithdrawRequestDto;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        List<Warehouses> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
+        List<Warehouse> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
         warehouses.forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
         assertNotNull(findUserById.apply(userToDelete.getUserId()));
         assertTrue(withdrawsRepository.findByUserId(userToDelete.getUserId()).isPresent());
@@ -58,7 +58,7 @@ public class WithdrawUserTest extends ApiIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody().getMessage());
 
-        List<Warehouses> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
+        List<Warehouse> warehouses = warehousesRepository.findByUserId(userToDelete.getUserId());
         warehouses.forEach(warehouse -> assertEquals(WarehouseStatus.DELETED, warehouse.getStatus()));
         assertNotNull(findUserById.apply(userToDelete.getUserId()));
         assertTrue(withdrawsRepository.findByUserId(userToDelete.getUserId()).isPresent());

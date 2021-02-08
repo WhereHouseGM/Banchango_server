@@ -1,6 +1,6 @@
 package com.banchango.domain.warehouseconditions;
 
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +26,10 @@ public class WarehouseCondition {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
+    private Warehouse warehouse;
 
     @Builder
-    public WarehouseCondition(WarehouseConditionType condition, Warehouses warehouse) {
+    public WarehouseCondition(WarehouseConditionType condition, Warehouse warehouse) {
         this.condition=condition;
         this.warehouse = warehouse;
     }

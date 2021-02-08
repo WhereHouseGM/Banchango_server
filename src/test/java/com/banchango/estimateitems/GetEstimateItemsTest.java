@@ -5,7 +5,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.users.User;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
 import com.banchango.factory.entity.EstimateItemEntityFactory;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
         User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
         Estimate estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), shipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
@@ -62,7 +62,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
         User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
         final int estimateId = 0;
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimateId+"/items"))
@@ -82,7 +82,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
         User shipper = userEntityFactory.createUserWithShipperType();
         String shipperAccessToken = JwtTokenUtil.generateAccessToken(shipper);
 
-        Warehouses warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(ownerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createDeletedWithNoMainItemTypes(ownerAccessToken);
         Estimate estimate = estimateEntityFactory.createInProgressWithoutEstimateItems(warehouse.getId(), shipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
@@ -101,7 +101,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
 
         User shipper = userEntityFactory.createUserWithShipperType();
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
         Estimate estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), shipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))
@@ -121,7 +121,7 @@ public class GetEstimateItemsTest extends ApiIntegrationTest {
         User otherShipper = userEntityFactory.createUserWithShipperType();
         String otherShipperAccessToken = JwtTokenUtil.generateAccessToken(otherShipper);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(ownerAccessToken);
         Estimate estimate = estimateEntityFactory.createInProgressWithEstimateItems(warehouse.getId(), shipper.getUserId());
 
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/estimates/"+estimate.getId()+"/items"))

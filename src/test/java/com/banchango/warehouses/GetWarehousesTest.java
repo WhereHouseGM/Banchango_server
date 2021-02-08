@@ -5,7 +5,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.users.User;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.factory.entity.WarehouseEntityFactory;
 import com.banchango.warehouses.dto.WarehouseSearchDto;
 import com.banchango.warehouses.dto.WarehouseSearchResponseDto;
@@ -43,7 +43,7 @@ public class GetWarehousesTest extends ApiIntegrationTest {
     public void get_warehouseForMain_responseIsOk_IfAllConditionsAreRight() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses tempWarehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse tempWarehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -61,7 +61,7 @@ public class GetWarehousesTest extends ApiIntegrationTest {
     public void get_warehouseForMain_responseIsNotFound_IfWarehouseStatusIsInProgress() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses tempWarehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
+        Warehouse tempWarehouse = warehouseEntityFactory.createInProgressWithNoMainItemTypes(accessToken);
         RequestEntity<Void> request = RequestEntity.get(URI.create("/v3/warehouses?page=0&size=4"))
                 .build();
 
@@ -85,9 +85,9 @@ public class GetWarehousesTest extends ApiIntegrationTest {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
 
-        Warehouses warehouse1 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.COSMETIC });
-        Warehouses warehouse2 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.ACCESSORY });
-        Warehouses warehouse3 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.BOOK });
+        Warehouse warehouse1 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.COSMETIC });
+        Warehouse warehouse2 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.ACCESSORY });
+        Warehouse warehouse3 = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH, ItemType.BOOK });
 
         String url = "/v3/warehouses?page=0&size=5&mainItemTypes=CLOTH,COSMETIC";
 
@@ -118,7 +118,7 @@ public class GetWarehousesTest extends ApiIntegrationTest {
     public void get_warehouseByMainItemType_responseIsNotFound_IfWarehouseStatusIsInProgress() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH });
+        Warehouse warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[] { ItemType.CLOTH });
 
         String mainItemType = ItemType.CLOTH.toString();
         String url = String.format("/v3/warehouses?mainItemTypes=%s&page=0&size=5", mainItemType);

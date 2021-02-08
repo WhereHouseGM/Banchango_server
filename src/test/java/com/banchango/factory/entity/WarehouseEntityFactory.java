@@ -81,46 +81,46 @@ public class WarehouseEntityFactory {
         this.warehousesRepository = warehousesRepository;
     }
 
-    public Warehouses createViewableWithNoMainItemTypes(String accessToken) {
+    public Warehouse createViewableWithNoMainItemTypes(String accessToken) {
         return create(accessToken, WarehouseStatus.VIEWABLE, new ItemType[] {}, true);
     }
 
-    public Warehouses createViewableWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
+    public Warehouse createViewableWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.VIEWABLE, mainItemTypes, true);
     }
 
-    public Warehouses createInProgressWithNoMainItemTypes(String accessToken) {
+    public Warehouse createInProgressWithNoMainItemTypes(String accessToken) {
         return create(accessToken, WarehouseStatus.IN_PROGRESS, new ItemType[] {}, true);
     }
 
-    public Warehouses createInProgressWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
+    public Warehouse createInProgressWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes, true);
     }
 
-    public Warehouses createdRejectedWithNoMainItemTypes(String accessToken) {
+    public Warehouse createdRejectedWithNoMainItemTypes(String accessToken) {
         return create(accessToken, WarehouseStatus.REJECTED, new ItemType[] {}, true);
     }
 
-    public Warehouses createRejectedWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
+    public Warehouse createRejectedWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.REJECTED, mainItemTypes, true);
     }
 
-    public Warehouses createDeletedWithNoMainItemTypes(String accessToken) {
+    public Warehouse createDeletedWithNoMainItemTypes(String accessToken) {
         return create(accessToken, WarehouseStatus.DELETED, new ItemType[] {}, true);
     }
 
-    public Warehouses createDeletedWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
+    public Warehouse createDeletedWithMainItemTypes(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.DELETED, mainItemTypes, true);
     }
 
-    public Warehouses createWarehouseForAdminUpdateTest(String accessToken, ItemType[] mainItemTypes) {
+    public Warehouse createWarehouseForAdminUpdateTest(String accessToken, ItemType[] mainItemTypes) {
         return create(accessToken, WarehouseStatus.IN_PROGRESS, mainItemTypes, false);
     }
 
-    private Warehouses create(String accessToken, WarehouseStatus status, ItemType[] mainItemTypes, boolean isUsageAndCautionNull) {
+    private Warehouse create(String accessToken, WarehouseStatus status, ItemType[] mainItemTypes, boolean isUsageAndCautionNull) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
-        Warehouses warehouse = Warehouses.builder()
+        Warehouse warehouse = Warehouse.builder()
             .userId(userId)
             .name(NAME)
             .space(SPACE)

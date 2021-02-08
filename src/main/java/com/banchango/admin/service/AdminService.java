@@ -74,7 +74,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public WarehouseInsertRequestResponseListDto getWarehouses(String token, PageRequest pageRequest, WarehouseStatus status) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        List<Warehouses> warehouses;
+        List<Warehouse> warehouses;
 
         if(status == null) warehouses = warehousesRepository.findByOrderByCreatedAtAsc(pageRequest);
         else warehouses  = warehousesRepository.findWarehousesByStatusOrderByCreatedAt(status, pageRequest);
@@ -87,11 +87,11 @@ public class AdminService {
     @Transactional(readOnly = true)
     public WarehouseAdminDetailResponseDto getSpecificWarehouseInfo(String token, Integer warehouseId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Warehouses warehouse = findWarehouseById.apply(warehouseId);
+        Warehouse warehouse = findWarehouseById.apply(warehouseId);
         return new WarehouseAdminDetailResponseDto(warehouse, noImageUrl);
     }
 
-    private void updateInsurances(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+    private void updateInsurances(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
         List<Insurance> insurances = insurancesRepository.findByWarehouseId(warehouse.getId());
         if(insurances.size() == requestDto.getInsurances().size()) {
             for(int i = 0; i < insurances.size(); i++) {
@@ -121,7 +121,7 @@ public class AdminService {
         }
     }
 
-    private void updateSecurityCompanies(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+    private void updateSecurityCompanies(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
         List<SecurityCompany> securityCompanies = securityCompaniesRepository.findByWarehouseId(warehouse.getId());
         if(securityCompanies.size() == requestDto.getSecurityCompanies().size()) {
             for(int i = 0; i < securityCompanies.size(); i++) {
@@ -151,7 +151,7 @@ public class AdminService {
         }
     }
 
-    private void updateDeliveryTypes(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+    private void updateDeliveryTypes(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
         List<DeliveryType> deliveryTypes = deliveryTypesRepository.findByWarehouseId(warehouse.getId());
         if(deliveryTypes.size() == requestDto.getDeliveryTypes().size()) {
             for(int i = 0; i < deliveryTypes.size(); i++) {
@@ -181,7 +181,7 @@ public class AdminService {
         }
     }
 
-    private void updateWarehouseConditions(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+    private void updateWarehouseConditions(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
         List<WarehouseCondition> warehouseConditions = warehouseConditionsRepository.findByWarehouseId(warehouse.getId());
         if(warehouseConditions.size() == requestDto.getWarehouseCondition().size()) {
             for(int i = 0; i < warehouseConditions.size(); i++) {
@@ -211,7 +211,7 @@ public class AdminService {
         }
     }
 
-    private void updateWarehouseFacilityUsages(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+    private void updateWarehouseFacilityUsages(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
         List<WarehouseFacilityUsage> warehouseFacilityUsages = warehouseFacilityUsagesRepository.findByWarehouseId(warehouse.getId());
         if(warehouseFacilityUsages.size() == requestDto.getWarehouseFacilityUsages().size()) {
             for(int i = 0; i < warehouseFacilityUsages.size(); i++) {
@@ -241,7 +241,7 @@ public class AdminService {
         }
     }
 
-    private void updateWarehouseUsageCautions(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+    private void updateWarehouseUsageCautions(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
         List<WarehouseUsageCautions> warehouseUsageCautions = warehouseUsageCautionsRepository.findByWarehouseId(warehouse.getId());
         if(warehouseUsageCautions.size() == requestDto.getWarehouseUsageCautions().size()) {
             for(int i = 0; i < warehouseUsageCautions.size(); i++) {
@@ -271,7 +271,7 @@ public class AdminService {
         }
     }
 
-    private void updateMainItemTypes(Warehouses warehouse, WarehouseAdminUpdateRequestDto requestDto) {
+    private void updateMainItemTypes(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
         List<MainItemType> mainItemTypes = mainItemTypesRepository.findByWarehouseId(warehouse.getId());
         if(mainItemTypes.size() == requestDto.getMainItemTypes().size()) {
             for(int i = 0; i < mainItemTypes.size(); i++) {
@@ -304,7 +304,7 @@ public class AdminService {
     @Transactional
     public WarehouseAdminDetailResponseDto updateWarehouse(WarehouseAdminUpdateRequestDto requestDto, String token, Integer warehouseId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Warehouses warehouse = findWarehouseById.apply(warehouseId);
+        Warehouse warehouse = findWarehouseById.apply(warehouseId);
         updateInsurances(warehouse, requestDto);
         updateSecurityCompanies(warehouse, requestDto);
         updateDeliveryTypes(warehouse, requestDto);
@@ -396,7 +396,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public ImagesAdminResponseDto getImages(String token, Integer warehouseId) {
         doubleCheckAdminAccess.apply(JwtTokenUtil.extractUserId(token));
-        Warehouses warehouse = findWarehouseById.apply(warehouseId);
+        Warehouse warehouse = findWarehouseById.apply(warehouseId);
         List<ImageInfoResponseDto> images = warehouse.getWarehouseImages()
             .stream().map(ImageInfoResponseDto::new).collect(Collectors.toList());
         ImagesAdminResponseDto responseDto = new ImagesAdminResponseDto();

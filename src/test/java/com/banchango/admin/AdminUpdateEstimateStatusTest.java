@@ -8,7 +8,7 @@ import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.estimates.EstimateStatus;
 import com.banchango.domain.estimates.Estimate;
 import com.banchango.domain.users.User;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.estimates.exception.EstimateNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimate estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
@@ -57,7 +57,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         User admin = userEntityFactory.createAdminWithShipperType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimate estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
@@ -81,7 +81,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimate estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
@@ -99,7 +99,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         User user = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(user);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         Estimate estimate = estimateEntityFactory.createReceptedWithEstimateItems(warehouse.getId(), user.getUserId());
 
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
@@ -121,7 +121,7 @@ public class AdminUpdateEstimateStatusTest extends ApiIntegrationTest {
         User admin = userEntityFactory.createAdminWithOwnerType();
         String adminAccessToken = JwtTokenUtil.generateAccessToken(admin);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithNoMainItemTypes(accessToken);
         EstimateStatusUpdateRequestDto estimateStatusUpdateDto = new EstimateStatusUpdateRequestDto(EstimateStatus.IN_PROGRESS);
         int estimateId = 0;
 

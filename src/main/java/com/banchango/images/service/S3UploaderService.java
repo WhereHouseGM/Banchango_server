@@ -9,7 +9,7 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseimages.WarehouseImage;
 import com.banchango.domain.warehouseimages.WarehouseImagesRepository;
 import com.banchango.domain.warehouses.WarehouseStatus;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.warehouses.exception.*;
@@ -95,8 +95,8 @@ public class S3UploaderService {
     }
 
     private boolean isUserAuthenticatedToModifyWarehouseInfo(Integer userId, Integer warehouseId) {
-        List<Warehouses> warehouses = warehousesRepository.findByUserId(userId);
-        for(Warehouses warehouse : warehouses) {
+        List<Warehouse> warehouses = warehousesRepository.findByUserId(userId);
+        for(Warehouse warehouse : warehouses) {
             if(warehouse.getId().equals(warehouseId)) {
                 if(warehouse.getUserId().equals(userId)) {
                     return true;
@@ -106,7 +106,7 @@ public class S3UploaderService {
         return false;
     }
 
-    private void checkWarehouseStatus(Warehouses warehouse) {
+    private void checkWarehouseStatus(Warehouse warehouse) {
         WarehouseStatus status = warehouse.getStatus();
         if(status.equals(WarehouseStatus.REJECTED) || status.equals(WarehouseStatus.DELETED)) {
             throw new WarehouseImageNotUpdatableException();
@@ -114,7 +114,7 @@ public class S3UploaderService {
     }
 
     private ImageInfoResponseDto saveImage(Integer warehouseId, MultipartFile file, Boolean isMain) {
-        Warehouses warehouse = findWarehouseById.apply(warehouseId);
+        Warehouse warehouse = findWarehouseById.apply(warehouseId);
         checkWarehouseStatus(warehouse);
         String url = uploadFile(file);
         WarehouseImage image = WarehouseImage.builder().url(url).isMain(isMain).warehouse(warehouse).build();
@@ -123,7 +123,7 @@ public class S3UploaderService {
     }
 
     private BasicMessageResponseDto deleteImage(Integer warehouseId, String fileName, Boolean isMain) {
-        Warehouses warehouse = findWarehouseById.apply(warehouseId);
+        Warehouse warehouse = findWarehouseById.apply(warehouseId);
         checkWarehouseStatus(warehouse);
         if (!isMain) {
             checkIfFileToRemoveExists(warehouseId, fileName);

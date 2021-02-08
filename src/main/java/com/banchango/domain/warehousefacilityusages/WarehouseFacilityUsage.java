@@ -1,6 +1,6 @@
 package com.banchango.domain.warehousefacilityusages;
 
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,10 +24,10 @@ public class WarehouseFacilityUsage {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
+    private Warehouse warehouse;
 
     @Builder
-    public WarehouseFacilityUsage(String content, Warehouses warehouse) {
+    public WarehouseFacilityUsage(String content, Warehouse warehouse) {
         this.content = content;
         this.warehouse = warehouse;
     }

@@ -8,7 +8,7 @@ import com.banchango.domain.users.User;
 import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.warehouses.dto.WarehouseUpdateRequestDto;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -142,7 +142,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
     public void put_WarehouseInfoIsUpdated_responseIsNotFound_ifWarehouseStatusIsDeleted() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createDeletedWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
+        Warehouse warehouse = warehouseEntityFactory.createDeletedWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -186,7 +186,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
     public void put_WarehouseInfoIsUpdated_responseIsUnAuthorized_ifTokenNotGiven() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
         String url = String.format("/v3/warehouses/%d", warehouseId);
         WarehouseUpdateRequestDto body = WarehouseUpdateRequestDto.builder()
@@ -232,7 +232,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
         String actualOwnerAccessToken = JwtTokenUtil.generateAccessToken(actualOwner);
 
-        Warehouses warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(actualOwnerAccessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
+        Warehouse warehouse = warehouseEntityFactory.createViewableWithMainItemTypes(actualOwnerAccessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -276,7 +276,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsInProgress() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
+        Warehouse warehouse = warehouseEntityFactory.createInProgressWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
         String url = String.format("/v3/warehouses/%d", warehouseId);
@@ -320,7 +320,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
     public void put_WarehouseInfoIsUpdated_responseIsForbidden_ifWarehouseStatusIsRejected() {
         User owner = userEntityFactory.createUserWithOwnerType();
         String accessToken = JwtTokenUtil.generateAccessToken(owner);
-        Warehouses warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
+        Warehouse warehouse = warehouseEntityFactory.createRejectedWithMainItemTypes(accessToken, new ItemType[]{ItemType.BOOK, ItemType.FOOD, ItemType.CLOTH});
         Integer warehouseId = warehouse.getId();
 
         String url = String.format("/v3/warehouses/%d", warehouseId);

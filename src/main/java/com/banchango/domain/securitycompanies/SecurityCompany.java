@@ -1,6 +1,6 @@
 package com.banchango.domain.securitycompanies;
 
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,10 +24,10 @@ public class SecurityCompany {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
+    private Warehouse warehouse;
 
     @Builder
-    public SecurityCompany(String name, Warehouses warehouse) {
+    public SecurityCompany(String name, Warehouse warehouse) {
         this.name = name;
         this.warehouse = warehouse;
     }

@@ -16,7 +16,7 @@ import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehouses.WarehouseStatus;
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import com.banchango.domain.warehouses.WarehousesRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautions;
 import com.banchango.tools.EmailContent;
@@ -52,7 +52,7 @@ public class WarehousesService {
         User user = findUserById.apply(userId);
 
 
-        Warehouses warehouse = Warehouses.builder()
+        Warehouse warehouse = Warehouse.builder()
                 .userId(userId)
                 .name(warehouseInsertRequestDto.getName())
                 .space(warehouseInsertRequestDto.getSpace())
@@ -75,7 +75,7 @@ public class WarehousesService {
                 .status(WarehouseStatus.IN_PROGRESS)
                 .build();
 
-        final Warehouses savedWarehouse = warehousesRepository.save(warehouse);
+        final Warehouse savedWarehouse = warehousesRepository.save(warehouse);
 
         List<MainItemType> mainItemTypes = warehouseInsertRequestDto.getMainItemTypes().stream()
             .map(type -> new MainItemType(type, savedWarehouse)).collect(Collectors.toList());
@@ -147,7 +147,7 @@ public class WarehousesService {
 
     @Transactional
     public void delete(Integer warehouseId, String accessToken) {
-        Warehouses warehouse = findWarehouseById.apply(warehouseId);
+        Warehouse warehouse = findWarehouseById.apply(warehouseId);
 
         int accessTokenUserId = JwtTokenUtil.extractUserId(accessToken);
         if(warehouse.getUserId() != accessTokenUserId) throw new WarehouseInvalidAccessException();
@@ -158,7 +158,7 @@ public class WarehousesService {
 
     @Transactional(readOnly = true)
     public WarehouseDetailResponseDto getSpecificWarehouseInfo(Integer warehouseId) {
-        Warehouses warehouse = warehousesRepository.findByIdAndStatus(warehouseId, WarehouseStatus.VIEWABLE).orElseThrow(WarehouseIdNotFoundException::new);
+        Warehouse warehouse = warehousesRepository.findByIdAndStatus(warehouseId, WarehouseStatus.VIEWABLE).orElseThrow(WarehouseIdNotFoundException::new);
 
         return new WarehouseDetailResponseDto(warehouse, noImageUrl);
     }
@@ -167,7 +167,7 @@ public class WarehousesService {
     public WarehouseDetailResponseDto updateWarehouse(String accessToken, Integer warehouseId, WarehouseUpdateRequestDto requestDto) {
         int userId = JwtTokenUtil.extractUserId(accessToken);
 
-        Warehouses warehouse = findWarehouseById.apply(warehouseId);
+        Warehouse warehouse = findWarehouseById.apply(warehouseId);
         if(warehouse.getStatus().equals(WarehouseStatus.DELETED)) throw new WarehouseNotFoundException();
         if(!warehouse.getStatus().equals(WarehouseStatus.VIEWABLE)) throw new WarehouseIsNotViewableException();
 

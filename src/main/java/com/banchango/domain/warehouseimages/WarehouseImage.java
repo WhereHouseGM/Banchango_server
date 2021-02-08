@@ -1,6 +1,6 @@
 package com.banchango.domain.warehouseimages;
 
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +25,10 @@ public class WarehouseImage {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
+    private Warehouse warehouse;
 
     @Builder
-    public WarehouseImage(String url, Boolean isMain, Warehouses warehouse) {
+    public WarehouseImage(String url, Boolean isMain, Warehouse warehouse) {
         this.url = url;
         this.isMain = isMain;
         this.warehouse = warehouse;

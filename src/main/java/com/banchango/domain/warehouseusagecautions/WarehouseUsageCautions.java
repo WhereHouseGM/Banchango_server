@@ -1,6 +1,6 @@
 package com.banchango.domain.warehouseusagecautions;
 
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,10 +24,10 @@ public class WarehouseUsageCautions {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
+    private Warehouse warehouse;
 
     @Builder
-    public WarehouseUsageCautions(String content, Warehouses warehouse) {
+    public WarehouseUsageCautions(String content, Warehouse warehouse) {
         this.content = content;
         this.warehouse = warehouse;
     }

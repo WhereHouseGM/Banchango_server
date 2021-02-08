@@ -1,6 +1,6 @@
 package com.banchango.domain.insurances;
 
-import com.banchango.domain.warehouses.Warehouses;
+import com.banchango.domain.warehouses.Warehouse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +23,10 @@ public class Insurance {
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouses warehouse;
+    private Warehouse warehouse;
 
     @Builder
-    public Insurance(String name, Warehouses warehouse) {
+    public Insurance(String name, Warehouse warehouse) {
         this.name = name;
         this.warehouse = warehouse;
     }

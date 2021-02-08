@@ -23,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Warehouses extends BaseTimeEntity {
+public class Warehouse extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -129,7 +129,7 @@ public class Warehouses extends BaseTimeEntity {
     private List<MainItemType> mainItemTypes = new ArrayList<>();
 
     @Builder
-    public Warehouses(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, WarehouseStatus status, String blogUrl) {
+    public Warehouse(String name, Integer space, String address, String addressDetail, String description, Integer availableWeekdays, String openAt, String closeAt, String availableTimeDetail, Boolean cctvExist, Boolean doorLockExist, AirConditioningType airConditioningType, Boolean workerExist, Boolean canPark, Integer userId, Double latitude, Double longitude, WarehouseType warehouseType, Integer minReleasePerMonth, WarehouseStatus status, String blogUrl) {
         this.name = name;
         this.space = space;
         this.address = address;
