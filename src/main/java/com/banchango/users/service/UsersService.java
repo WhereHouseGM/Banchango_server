@@ -39,7 +39,7 @@ public class UsersService {
         }
         boolean isUserDeleted = withdrawsRepository.findByUserId(userId).isPresent();
 
-        return new UserInfoResponseDto(findByUserId(userId), isUserDeleted);
+        return new UserInfoResponseDto(findByUserId.apply(userId), isUserDeleted);
     }
 
     @Transactional(readOnly = true)
@@ -47,7 +47,7 @@ public class UsersService {
         UserSigninResponseDto responseDto = new UserSigninResponseDto();
         Users user = usersRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword()).orElseThrow(UserNotFoundException::new);
 
-        boolean isUserDeleted = withdrawsRespository.findByUserId(user.getUserId()).isPresent();
+        boolean isUserDeleted = withdrawsRepository.findByUserId(user.getUserId()).isPresent();
         if(isUserDeleted) throw new UserNotFoundException("탈퇴한 사용자입니다");
 
         UserInfoResponseDto userInfoDto = new UserInfoResponseDto(user, false);
@@ -108,7 +108,7 @@ public class UsersService {
     private void deleteUser(int userId, UserWithdrawRequestDto userWithdrawRequestDto) {
         Users user = findByUserId.apply(userId);
 
-        Optional<Withdraws> optionalWithdraws = withdrawsRespository.findByUserId(userId);
+        Optional<Withdraws> optionalWithdraws = withdrawsRepository.findByUserId(userId);
         if(optionalWithdraws.isPresent()) throw new UserAlreayWithdrawnException();
 
         Withdraws withdraw = Withdraws.builder()
@@ -116,7 +116,7 @@ public class UsersService {
             .cause(userWithdrawRequestDto.getCause())
             .build();
 
-        withdrawsRespository.save(withdraw);
+        withdrawsRepository.save(withdraw);
     }
 
     private void deleteWarehousesOwnedByUser(int userId) {

@@ -8,7 +8,6 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.Users;
 import com.banchango.users.dto.ChangePasswordRequestDto;
-import com.banchango.users.exception.UserIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

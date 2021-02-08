@@ -9,7 +9,6 @@ import com.banchango.domain.users.Users;
 import com.banchango.factory.request.UserUpdateRequestFactory;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserUpdateRequestDto;
-import com.banchango.users.exception.UserIdNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -20,7 +20,6 @@ import com.banchango.estimates.dto.EstimateSearchDto;
 import com.banchango.estimates.exception.EstimateNotFoundException;
 import com.banchango.tools.EmailContent;
 import com.banchango.users.exception.ForbiddenUserIdException;
-import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.dto.WarehouseSummaryDto;
 import com.banchango.warehouses.exception.WarehouseIsNotViewableException;
 import lombok.RequiredArgsConstructor;
