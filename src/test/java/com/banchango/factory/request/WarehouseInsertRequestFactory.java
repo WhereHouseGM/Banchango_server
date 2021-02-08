@@ -1,7 +1,7 @@
 package com.banchango.factory.request;
 
 import com.banchango.domain.mainitemtypes.ItemType;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.warehouses.dto.WarehouseInsertRequestDto;
@@ -30,7 +30,7 @@ public class WarehouseInsertRequestFactory {
     private static final Double LATITUDE = 22.2;
     private static final Double LONGITUDE = 33.3;
     private static final List<String> DELIVERY_TYPES = new ArrayList<>();
-    private static final List<WarehouseCondition> WAREHOUSE_CONDITION = new ArrayList<>();
+    private static final List<WarehouseConditionType> WAREHOUSE_CONDITION = new ArrayList<>();
     private static final List<String> WAREHOUSE_FACILITY_USAGES = new ArrayList<>();
     private static final List<String> INSURANCES = new ArrayList<>();
     private static final List<String> SECURITY_COMPANIES = new ArrayList<>();

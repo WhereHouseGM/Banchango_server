@@ -22,14 +22,14 @@ public class WarehouseConditions {
     @Column(nullable = false, name = "name")
     @Enumerated(EnumType.STRING)
     @Setter
-    private WarehouseCondition condition;
+    private WarehouseConditionType condition;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouses warehouse;
 
     @Builder
-    public WarehouseConditions(WarehouseCondition condition, Warehouses warehouse) {
+    public WarehouseConditions(WarehouseConditionType condition, Warehouses warehouse) {
         this.condition=condition;
         this.warehouse = warehouse;
     }

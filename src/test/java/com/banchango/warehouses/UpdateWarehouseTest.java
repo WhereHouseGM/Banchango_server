@@ -5,7 +5,7 @@ import com.banchango.auth.token.JwtTokenUtil;
 import com.banchango.common.dto.ErrorResponseDto;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.users.User;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.domain.warehouses.Warehouses;
@@ -119,7 +119,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .canPark(false)
                 .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+                .warehouseCondition(Arrays.asList(new WarehouseConditionType[]{WarehouseConditionType.BONDED, WarehouseConditionType.HAZARDOUS}))
                 .minReleasePerMonth(101)
                 .latitude(11.11)
                 .longitude(33.33)
@@ -163,7 +163,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .canPark(false)
                 .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+                .warehouseCondition(Arrays.asList(new WarehouseConditionType[]{WarehouseConditionType.BONDED, WarehouseConditionType.HAZARDOUS}))
                 .minReleasePerMonth(101)
                 .latitude(11.11)
                 .longitude(33.33)
@@ -206,7 +206,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .canPark(false)
                 .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+                .warehouseCondition(Arrays.asList(new WarehouseConditionType[]{WarehouseConditionType.BONDED, WarehouseConditionType.HAZARDOUS}))
                 .minReleasePerMonth(101)
                 .latitude(11.11)
                 .longitude(33.33)
@@ -253,7 +253,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .canPark(false)
                 .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+                .warehouseCondition(Arrays.asList(new WarehouseConditionType[]{WarehouseConditionType.BONDED, WarehouseConditionType.HAZARDOUS}))
                 .minReleasePerMonth(101)
                 .latitude(11.11)
                 .longitude(33.33)
@@ -297,7 +297,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .canPark(false)
                 .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+                .warehouseCondition(Arrays.asList(new WarehouseConditionType[]{WarehouseConditionType.BONDED, WarehouseConditionType.HAZARDOUS}))
                 .minReleasePerMonth(101)
                 .latitude(11.11)
                 .longitude(33.33)
@@ -341,7 +341,7 @@ public class UpdateWarehouseTest extends ApiIntegrationTest {
                 .canPark(false)
                 .mainItemTypes(Arrays.asList(new ItemType[]{ItemType.COSMETIC, ItemType.COLD_STORAGE, ItemType.ELECTRONICS}))
                 .warehouseType(WarehouseType.FULFILLMENT)
-                .warehouseCondition(Arrays.asList(new WarehouseCondition[]{WarehouseCondition.BONDED, WarehouseCondition.HAZARDOUS}))
+                .warehouseCondition(Arrays.asList(new WarehouseConditionType[]{WarehouseConditionType.BONDED, WarehouseConditionType.HAZARDOUS}))
                 .minReleasePerMonth(101)
                 .latitude(11.11)
                 .longitude(33.33)

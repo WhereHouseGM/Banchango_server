@@ -7,7 +7,7 @@ import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.UserType;
 import com.banchango.domain.users.User;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import com.banchango.factory.request.WarehouseInsertRequestFactory;
@@ -107,9 +107,9 @@ public class InsertWarehouseTest extends ApiIntegrationTest {
         mainItemTypes.add(ItemType.CLOTH);
         mainItemTypes.add(ItemType.BOOK);
 
-        List<WarehouseCondition> warehouseConditions = new ArrayList<>();
-        warehouseConditions.add(WarehouseCondition.LOW_TEMPERATURE);
-        warehouseConditions.add(WarehouseCondition.ROOM_TEMPERATURE);
+        List<WarehouseConditionType> warehouseConditions = new ArrayList<>();
+        warehouseConditions.add(WarehouseConditionType.LOW_TEMPERATURE);
+        warehouseConditions.add(WarehouseConditionType.ROOM_TEMPERATURE);
 
         List<String> strings = new ArrayList<>();
         strings.add("one");

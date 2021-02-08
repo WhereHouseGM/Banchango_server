@@ -1,7 +1,7 @@
 package com.banchango.warehouses.dto;
 
 import com.banchango.domain.mainitemtypes.ItemType;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehouseimages.WarehouseImages;
 import com.banchango.domain.warehouses.WarehouseType;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class WarehouseSearchDto {
     private String address;
     private Integer warehouseId;
-    private List<WarehouseCondition> warehouseCondition;
+    private List<WarehouseConditionType> warehouseCondition;
     private Integer minReleasePerMonth;
     private String name;
     private WarehouseType warehouseType;
@@ -43,7 +43,7 @@ public class WarehouseSearchDto {
         // match가 true인 것들이 앞에 오도록 정렬시켜주는 함수
         sortMainItemTypeByMatchTrue(mainItemTypes);
 
-        List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
+        List<WarehouseConditionType> warehouseConditionNames = warehouse.getWarehouseConditions()
             .stream()
             .map(WarehouseConditions::getCondition)
             .collect(Collectors.toList());

@@ -6,7 +6,7 @@ import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompany;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouses.*;
@@ -41,7 +41,7 @@ public class WarehouseEntityFactory {
     public static final String[] INSURANCES = {"INSURANCE_1", "INSURANCE_2", "INSURANCE_3"};
     public static final String[] SECURITY_COMPANIES = {"SEC_COMP_1", "SEC_COMP_2", "SEC_COMP_3"};
     public static final String[] DELIVERY_TYPES = {"DELIVERY_1", "DELIVERY_2", "DELIVERY_3"};
-    public static final WarehouseCondition[] WAREHOUSE_CONDITIONS = {WarehouseCondition.ROOM_TEMPERATURE, WarehouseCondition.LOW_TEMPERATURE};
+    public static final WarehouseConditionType[] WAREHOUSE_CONDITIONS = {WarehouseConditionType.ROOM_TEMPERATURE, WarehouseConditionType.LOW_TEMPERATURE};
     public static final String[] WAREHOUSE_FACILITY_USAGES = {"FACILITY_1"};
     public static final String[] WAREHOUSE_USAGE_CAUTIONS = {"CAUTION_1", "CAUTION_2", "CAUTION_3"};
 
@@ -68,7 +68,7 @@ public class WarehouseEntityFactory {
     public static final String[] NEW_INSURANCES = {"NEW_INSURANCE_1", "NEW_INSURANCE_2", "NEW_INSURANCE_3"};
     public static final String[] NEW_SECURITY_COMPANIES = {"NEW_SEC_COMP_1", "NEW_SEC_COMP_2"};
     public static final String[] NEW_DELIVERY_TYPES = {"NEW_DELIVERY_1", "NEW_DELIVERY_2", "NEW_DELIVERY_3", "NEW_DELIVERY_4"};
-    public static final WarehouseCondition[] NEW_WAREHOUSE_CONDITIONS = {WarehouseCondition.SAVAGE, WarehouseCondition.BONDED, WarehouseCondition.ROOM_TEMPERATURE};
+    public static final WarehouseConditionType[] NEW_WAREHOUSE_CONDITIONS = {WarehouseConditionType.SAVAGE, WarehouseConditionType.BONDED, WarehouseConditionType.ROOM_TEMPERATURE};
     public static final String[] NEW_WAREHOUSE_FACILITY_USAGES = {"NEW_WH_FACILITY_USAGE_1", "NEW_WH_FACILITY_USAGE_2", "NEW_WH_FACILITY_USAGE_3"};
     public static final String[] NEW_WAREHOUSE_USAGE_CAUTIONS = {"NEW_WH_USAGE_CAUTION_1", "NEW_WH_USAGE_CAUTION_2"};
     public static final ItemType[] NEW_MAIN_ITEM_TYPES = {ItemType.FOOD, ItemType.BOOK, ItemType.CLOTH};

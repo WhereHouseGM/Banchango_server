@@ -5,7 +5,7 @@ import com.banchango.domain.insurances.Insurance;
 import com.banchango.domain.mainitemtypes.ItemType;
 import com.banchango.domain.mainitemtypes.MainItemType;
 import com.banchango.domain.securitycompanies.SecurityCompany;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouseconditions.WarehouseConditions;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsages;
 import com.banchango.domain.warehouseimages.WarehouseImages;
@@ -51,7 +51,7 @@ public class WarehouseDetailResponseDto {
     private String mainImageUrl;
 
     private List<String> deliveryTypes = new ArrayList<>();
-    private List<WarehouseCondition> warehouseCondition = new ArrayList<>();
+    private List<WarehouseConditionType> warehouseCondition = new ArrayList<>();
     private List<String> warehouseFacilityUsages = new ArrayList<>();
     private List<String> warehouseUsageCautions = new ArrayList<>();
     private List<String> images = new ArrayList<>();
@@ -69,7 +69,7 @@ public class WarehouseDetailResponseDto {
             .map(DeliveryType::getName)
             .collect(Collectors.toList());
 
-        List<WarehouseCondition> warehouseConditionNames = warehouse.getWarehouseConditions()
+        List<WarehouseConditionType> warehouseConditionNames = warehouse.getWarehouseConditions()
             .stream()
             .map(WarehouseConditions::getCondition)
             .collect(Collectors.toList());

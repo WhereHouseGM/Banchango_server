@@ -2,7 +2,7 @@ package com.banchango.warehouses.dto;
 
 import com.banchango.common.validator.ValueOfEnum;
 import com.banchango.domain.mainitemtypes.ItemType;
-import com.banchango.domain.warehouseconditions.WarehouseCondition;
+import com.banchango.domain.warehouseconditions.WarehouseConditionType;
 import com.banchango.domain.warehouses.AirConditioningType;
 import com.banchango.domain.warehouses.WarehouseType;
 import lombok.Getter;
@@ -85,9 +85,9 @@ public abstract class WarehouseUpdateRequestParentDto {
     @NotNull(message = "deliveryTypes가 없습니다.")
     protected List<String> deliveryTypes;
 
-    @ValueOfEnum(enumClass = WarehouseCondition.class)
+    @ValueOfEnum(enumClass = WarehouseConditionType.class)
     @NotNull(message = "warehouseCondition이 없습니다.")
-    protected List<WarehouseCondition> warehouseCondition;
+    protected List<WarehouseConditionType> warehouseCondition;
 
     protected List<String> warehouseFacilityUsages;
 
