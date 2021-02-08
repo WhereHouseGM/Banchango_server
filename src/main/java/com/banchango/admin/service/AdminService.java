@@ -23,7 +23,7 @@ import com.banchango.domain.users.UserRole;
 import com.banchango.domain.users.User;
 import com.banchango.domain.users.UsersRepository;
 import com.banchango.domain.warehouseconditions.WarehouseCondition;
-import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
+import com.banchango.domain.warehouseconditions.WarehouseConditionRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsage;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsageRepository;
 import com.banchango.domain.warehouses.*;
@@ -62,7 +62,7 @@ public class AdminService {
     private final WarehouseUsageCautionRepository warehouseUsageCautionRepository;
     private final WarehouseFacilityUsageRepository warehouseFacilityUsageRepository;
     private final InsurancesRepository insurancesRepository;
-    private final WarehouseConditionsRepository warehouseConditionsRepository;
+    private final WarehouseConditionRepository warehouseConditionRepository;
 
     private final DoubleCheckAdminAccess doubleCheckAdminAccess;
     private final FindWarehouseById findWarehouseById;
@@ -182,7 +182,7 @@ public class AdminService {
     }
 
     private void updateWarehouseConditions(Warehouse warehouse, WarehouseAdminUpdateRequestDto requestDto) {
-        List<WarehouseCondition> warehouseConditions = warehouseConditionsRepository.findByWarehouseId(warehouse.getId());
+        List<WarehouseCondition> warehouseConditions = warehouseConditionRepository.findByWarehouseId(warehouse.getId());
         if(warehouseConditions.size() == requestDto.getWarehouseCondition().size()) {
             for(int i = 0; i < warehouseConditions.size(); i++) {
                 warehouseConditions.get(i).setCondition(requestDto.getWarehouseCondition().get(i));
@@ -196,7 +196,7 @@ public class AdminService {
                 WarehouseCondition newCondition = WarehouseCondition.builder()
                         .warehouse(warehouse).condition(requestDto.getWarehouseCondition().get(i))
                         .build();
-                warehouseConditionsRepository.save(newCondition);
+                warehouseConditionRepository.save(newCondition);
             }
         }
         else if(warehouseConditions.size() > requestDto.getWarehouseCondition().size()) {
@@ -206,7 +206,7 @@ public class AdminService {
             for(int i = requestDto.getWarehouseCondition().size(); i < warehouseConditions.size(); i++) {
                 Integer idOfConditionToRemove = warehouseConditions.get(i).getId();
                 warehouse.getWarehouseConditions().removeIf(condition -> condition.getId().equals(idOfConditionToRemove));
-                warehouseConditionsRepository.deleteById(idOfConditionToRemove);
+                warehouseConditionRepository.deleteById(idOfConditionToRemove);
             }
         }
     }

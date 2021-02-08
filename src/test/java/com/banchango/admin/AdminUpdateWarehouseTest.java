@@ -91,7 +91,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         assertEquals(deliveryTypesRepository.findByWarehouseId(warehouseId).stream().map(DeliveryType::getName).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_DELIVERY_TYPES));
         assertEquals(warehouseFacilityUsageRepository.findByWarehouseId(warehouseId).stream().map(WarehouseFacilityUsage::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_FACILITY_USAGES));
         assertEquals(warehouseUsageCautionRepository.findByWarehouseId(warehouseId).stream().map(WarehouseUsageCaution::getContent).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_USAGE_CAUTIONS));
-        assertEquals(warehouseConditionsRepository.findByWarehouseId(warehouseId).stream().map(WarehouseCondition::getCondition).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_CONDITIONS));
+        assertEquals(warehouseConditionRepository.findByWarehouseId(warehouseId).stream().map(WarehouseCondition::getCondition).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_WAREHOUSE_CONDITIONS));
         assertEquals(mainItemTypesRepository.findByWarehouseId(warehouseId).stream().map(MainItemType::getType).collect(Collectors.toList()), Arrays.asList(WarehouseEntityFactory.NEW_MAIN_ITEM_TYPES));
     }
 
@@ -143,7 +143,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> beforeDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
                 .stream().map(DeliveryType::getId).collect(Collectors.toList());
 
-        List<Integer> beforeWarehouseConditionsId = warehouseConditionsRepository.findByWarehouseId(warehouseId)
+        List<Integer> beforeWarehouseConditionsId = warehouseConditionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseCondition::getId).collect(Collectors.toList());
 
         List<Integer> beforeWarehouseFacilityUsagesId = warehouseFacilityUsageRepository.findByWarehouseId(warehouseId)
@@ -178,7 +178,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> updatedDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
                 .stream().map(DeliveryType::getId).collect(Collectors.toList());
 
-        List<Integer> updatedWarehouseConditionsId = warehouseConditionsRepository.findByWarehouseId(warehouseId)
+        List<Integer> updatedWarehouseConditionsId = warehouseConditionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseCondition::getId).collect(Collectors.toList());
 
         List<Integer> updatedWarehouseFacilityUsagesId = warehouseFacilityUsageRepository.findByWarehouseId(warehouseId)
@@ -240,7 +240,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> beforeDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
                 .stream().map(DeliveryType::getId).collect(Collectors.toList());
 
-        List<Integer> beforeWarehouseConditionsId = warehouseConditionsRepository.findByWarehouseId(warehouseId)
+        List<Integer> beforeWarehouseConditionsId = warehouseConditionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseCondition::getId).collect(Collectors.toList());
 
         List<Integer> beforeWarehouseFacilityUsagesId = warehouseFacilityUsageRepository.findByWarehouseId(warehouseId)
@@ -275,7 +275,7 @@ public class AdminUpdateWarehouseTest extends ApiIntegrationTest {
         List<Integer> updatedDeliveryTypesId = deliveryTypesRepository.findByWarehouseId(warehouseId)
                 .stream().map(DeliveryType::getId).collect(Collectors.toList());
 
-        List<Integer> updatedWarehouseConditionsId = warehouseConditionsRepository.findByWarehouseId(warehouseId)
+        List<Integer> updatedWarehouseConditionsId = warehouseConditionRepository.findByWarehouseId(warehouseId)
                 .stream().map(WarehouseCondition::getId).collect(Collectors.toList());
 
         List<Integer> updatedWarehouseFacilityUsagesId = warehouseFacilityUsageRepository.findByWarehouseId(warehouseId)

@@ -8,7 +8,7 @@ import com.banchango.domain.insurances.InsurancesRepository;
 import com.banchango.domain.mainitemtypes.MainItemTypesRepository;
 import com.banchango.domain.securitycompanies.SecurityCompaniesRepository;
 import com.banchango.domain.users.UsersRepository;
-import com.banchango.domain.warehouseconditions.WarehouseConditionsRepository;
+import com.banchango.domain.warehouseconditions.WarehouseConditionRepository;
 import com.banchango.domain.warehousefacilityusages.WarehouseFacilityUsageRepository;
 import com.banchango.domain.warehouses.WarehouseRepository;
 import com.banchango.domain.warehouseusagecautions.WarehouseUsageCautionRepository;
@@ -67,7 +67,7 @@ public abstract class ApiIntegrationTest {
     protected WarehouseFacilityUsageRepository warehouseFacilityUsageRepository;
 
     @Autowired
-    protected WarehouseConditionsRepository warehouseConditionsRepository;
+    protected WarehouseConditionRepository warehouseConditionRepository;
 
     @Autowired
     protected WithdrawRepository withdrawRepository;
