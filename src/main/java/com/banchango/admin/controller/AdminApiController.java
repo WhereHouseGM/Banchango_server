@@ -169,4 +169,16 @@ public class AdminApiController {
         PageRequest pageRequest = PageRequest.of(page, size);
         return adminService.getUsers(accessToken, pageRequest);
     }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/users/search")
+    public List<UserInfoResponseDto> searchUsersByCompanyName(
+            @RequestParam(name = "companyName") String companyName,
+            @RequestParam(name = "page") Integer page,
+            @RequestParam(name = "size") Integer size,
+            @RequestAttribute(name = "accessToken") String accessToken
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return adminService.searchUsersByCompanyName(accessToken, companyName, pageRequest);
+    }
 }
