@@ -35,10 +35,12 @@ import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
+import com.banchango.users.exception.UserIdNotFoundException;
 import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
 import com.banchango.warehouses.exception.WarehouseImageNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -404,5 +406,13 @@ public class AdminService {
         responseDto.setImages(images);
         responseDto.setWarehouseName(warehouse.getName());
         return responseDto;
+    }
+
+    @Transactional(readOnly = true)
+    public UserInfoResponseDto getUserInfo(String accessToken, Integer userId) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        boolean isDeleted = withdrawsRepository.findByUserId(userId).isPresent();
+        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        return new UserInfoResponseDto(user, isDeleted);
     }
 }

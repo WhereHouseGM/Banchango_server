@@ -10,6 +10,7 @@ import com.banchango.domain.warehouses.WarehouseStatus;
 import com.banchango.estimateitems.dto.EstimateItemSearchResponseDto;
 import com.banchango.images.dto.ImageInfoResponseDto;
 import com.banchango.images.service.S3UploaderService;
+import com.banchango.users.dto.UserInfoResponseDto;
 import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -156,5 +157,11 @@ public class AdminApiController {
         @RequestAttribute(name = "accessToken") String accessToken
     ) {
         return adminService.getImages(accessToken, warehouseId);
+    }
+
+    @ValidateRequired(roles = UserRole.ADMIN)
+    @GetMapping("/v3/admin/users/{userId}")
+    public UserInfoResponseDto getUserInfo(@PathVariable Integer userId, @RequestAttribute(name = "accessToken") String accessToken) {
+        return adminService.getUserInfo(accessToken, userId);
     }
 }
