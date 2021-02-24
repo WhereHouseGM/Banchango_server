@@ -408,11 +408,14 @@ public class AdminService {
         return responseDto;
     }
 
+
     @Transactional(readOnly = true)
-    public UserInfoResponseDto getUserInfo(String accessToken, Integer userId) {
+    public List<UserInfoResponseDto> getUsers(String accessToken, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
-        boolean isDeleted = withdrawsRepository.findByUserId(userId).isPresent();
-        Users user = usersRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
-        return new UserInfoResponseDto(user, isDeleted);
+        return usersRepository.findByRole(UserRole.USER, pageRequest)
+                .stream()
+                .map((user) -> new UserInfoResponseDto(user, false))
+                .filter((user) -> !withdrawsRepository.findByUserId(user.getUserId()).isPresent())
+                .collect(Collectors.toList());
     }
 }

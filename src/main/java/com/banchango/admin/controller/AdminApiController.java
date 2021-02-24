@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -160,8 +161,12 @@ public class AdminApiController {
     }
 
     @ValidateRequired(roles = UserRole.ADMIN)
-    @GetMapping("/v3/admin/users/{userId}")
-    public UserInfoResponseDto getUserInfo(@PathVariable Integer userId, @RequestAttribute(name = "accessToken") String accessToken) {
-        return adminService.getUserInfo(accessToken, userId);
+    @GetMapping("/v3/admin/users")
+    public List<UserInfoResponseDto> getUsers(
+            @RequestParam(name = "page") Integer page,
+            @RequestParam(name = "size") Integer size,
+            @RequestAttribute(name = "accessToken") String accessToken) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return adminService.getUsers(accessToken, pageRequest);
     }
 }
