@@ -415,4 +415,15 @@ public class AdminService {
                 .filter((user) -> !withdrawsRepository.findByUserId(user.getUserId()).isPresent())
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<UserInfoResponseDto> searchUsersByCompanyName(String accessToken, String companyName, PageRequest pageRequest) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        return usersRepository.findByCompanyNameContaining(companyName, pageRequest)
+                .stream()
+                .map((user) -> new UserInfoResponseDto(user, false))
+                .filter((user) -> !withdrawsRepository.findByUserId(user.getUserId()).isPresent())
+                .collect(Collectors.toList());
+
+    }
 }
