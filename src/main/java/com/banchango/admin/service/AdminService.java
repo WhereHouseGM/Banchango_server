@@ -37,7 +37,6 @@ import com.banchango.users.dto.UserSigninRequestDto;
 import com.banchango.users.dto.UserSigninResponseDto;
 import com.banchango.users.exception.UserNotFoundException;
 import com.banchango.warehouses.exception.WarehouseIdNotFoundException;
-import com.banchango.warehouses.exception.WarehouseImageNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -404,5 +403,16 @@ public class AdminService {
         responseDto.setImages(images);
         responseDto.setWarehouseName(warehouse.getName());
         return responseDto;
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<UserInfoResponseDto> getUsers(String accessToken, PageRequest pageRequest) {
+        doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
+        return usersRepository.findByRole(UserRole.USER, pageRequest)
+                .stream()
+                .map((user) -> new UserInfoResponseDto(user, false))
+                .filter((user) -> !withdrawsRepository.findByUserId(user.getUserId()).isPresent())
+                .collect(Collectors.toList());
     }
 }
