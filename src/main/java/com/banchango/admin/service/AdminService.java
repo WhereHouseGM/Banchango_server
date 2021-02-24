@@ -419,7 +419,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public List<UserInfoResponseDto> searchUsersByCompanyName(String accessToken, String companyName, PageRequest pageRequest) {
         doubleCheckAdminAccess(JwtTokenUtil.extractUserId(accessToken));
-        return usersRepository.findByCompanyNameContaining(companyName, pageRequest)
+        return usersRepository.findByCompanyNameContainingAndRole(companyName, UserRole.USER, pageRequest)
                 .stream()
                 .map((user) -> new UserInfoResponseDto(user, false))
                 .filter((user) -> !withdrawsRepository.findByUserId(user.getUserId()).isPresent())

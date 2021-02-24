@@ -21,5 +21,5 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     Optional<Users> findByEmailAndPasswordAndRole(String email, String password, UserRole role);
     List<Users> findByRole(UserRole role, Pageable pageable);
-    List<Users> findByCompanyNameContaining(String companyName, Pageable pageable);
+    List<Users> findByCompanyNameContainingAndRole(String companyName, UserRole role, Pageable pageable);
 }
